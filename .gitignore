@@ -1,0 +1,14 @@
+# Local machine-specific paths (never committed)
+configs/paths.yaml
+
+# Data and results
+data/
+results/
+
+# Model artifacts
+*.pt
+*.ckpt
+
+# Python caches
+__pycache__/
+.pytest_cache/

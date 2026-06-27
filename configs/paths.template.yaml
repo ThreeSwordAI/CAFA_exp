@@ -1,0 +1,6 @@
+# Copy to configs/paths.yaml and fill in, OR set the env vars. configs/paths.yaml is gitignored.
+#   export DATA_ROOT=/home/woody/<grp>/<user>/CAFA_data
+#   export RESULTS_ROOT=/home/vault/<grp>/<user>/CAFA_results
+data_root:    ${DATA_ROOT}
+results_root: ${RESULTS_ROOT}
+scratch_root: ${SCRATCH:-/tmp}
