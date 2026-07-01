@@ -338,3 +338,213 @@ def make_synthetic_mondrian(
         "T": int(T),
         "alpha": float(alpha),
     }
+
+# --------------------------------------------------------------------------- #
+# Step 4 -- cost-heterogeneous tabular AFA (additive; MNIST/synthetic above
+# are byte-identical).  A "feature" is one acquirable original column; one-hot
+# categoricals occupy a contiguous block of encoded columns (a feature reveals
+# its whole block).  These loaders return the encoded matrix + feature_groups
+# consumed by :func:`cafa.tabular.tabular_rollout`.
+# --------------------------------------------------------------------------- #
+__all__ += ["assign_feature_costs", "load_tabular_afa", "make_synthetic_tabular_afa"]
+
+
+def assign_feature_costs(
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    scheme: str,
+    feature_groups=None,
+    seed: int = 0,
+) -> np.ndarray:
+    """Per-feature acquisition costs ``[d]`` under a chosen cost scheme.
+
+    A cost scheme is a **modeling choice** reported transparently (run >= 2 for
+    robustness).  ``X_train`` is the *encoded* training matrix ``[N, n_cols]``;
+    ``feature_groups`` maps each feature to its encoded columns (``None`` ->
+    identity, one column per feature).
+
+    Schemes
+    -------
+    ``inverse_info`` (default, the interesting one)
+        Per-feature informativeness via ``mutual_info_classif`` on **train only**
+        (aggregated across a feature's one-hot columns by the max), normalised to
+        ``[0, 1]``, then ``cost = 1 + 9 * (1 - MI_norm) in [1, 10]`` -- informative
+        features are **expensive**, uninformative are **cheap**.  This makes
+        low-information stopping cheap-in-count and creates the regime where the
+        cheap-bucket over-promise *can* appear.
+    ``random``
+        Costs ``~ Uniform{1..10}`` (integer), seeded.
+    ``uniform``
+        All costs ``= 1`` (control; matches the image setting).
+    """
+    X_train = np.asarray(X_train, dtype=float)
+    n_cols = X_train.shape[1]
+    if feature_groups is None:
+        feature_groups = [np.array([j], dtype=int) for j in range(n_cols)]
+    d = len(feature_groups)
+    scheme = str(scheme).lower()
+
+    if scheme == "uniform":
+        return np.ones(d, dtype=float)
+
+    if scheme == "random":
+        rng = np.random.default_rng(int(seed))
+        return rng.integers(1, 11, size=d).astype(float)
+
+    if scheme == "inverse_info":
+        from sklearn.feature_selection import mutual_info_classif  # lazy import
+
+        mi_cols = mutual_info_classif(
+            X_train, np.asarray(y_train).ravel(), random_state=int(seed)
+        )
+        # Aggregate per feature (max over its encoded columns).
+        mi_feat = np.array([float(np.max(mi_cols[g])) for g in feature_groups])
+        rng_span = mi_feat.max() - mi_feat.min()
+        if rng_span <= 0:
+            mi_norm = np.zeros(d, dtype=float)
+        else:
+            mi_norm = (mi_feat - mi_feat.min()) / rng_span
+        return 1.0 + 9.0 * (1.0 - mi_norm)
+
+    raise ValueError(
+        f"unknown cost scheme {scheme!r}; expected 'inverse_info', 'random', 'uniform'."
+    )
+
+
+def load_tabular_afa(
+    name: str,
+    cfg: dict,
+    seed: int,
+    cost_scheme: str = "inverse_info",
+    download: bool = False,
+) -> dict:
+    """Load an OpenML tabular classification dataset as an AFA problem.
+
+    Standardises numeric columns and one-hot-encodes categoricals (fit on the
+    **train** split only), so a "feature" = one original column and acquiring a
+    categorical reveals its whole one-hot block.  Splits are disjoint
+    ``train`` / ``cal`` / ``test`` (asserted), reusing the same seeded partition
+    logic as :func:`load_mnist_afa`.
+
+    Returns a dict::
+
+        train / cal / test : (X_encoded [n, n_cols], y [n])
+        feature_costs : np.ndarray [d]         # per the cost scheme, on train
+        feature_groups : list[np.ndarray]      # encoded columns per feature
+        n_features : d   n_cols : int   n_classes : int
+        cost_scheme : str   name : str   seed : int
+
+    Paths come from :func:`cafa.config.load_paths` (``DATA_ROOT``).  ``download``
+    is passed through to ``fetch_openml``'s cache; pre-download on a login node.
+    """
+    from sklearn.datasets import fetch_openml
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+    from .config import load_paths
+
+    paths = load_paths()
+    data_home = str(paths.data_root)
+
+    ds = fetch_openml(name, version=2, data_home=data_home, as_frame=True)
+    frame = ds.frame.copy()
+    target_col = ds.target.name
+    y_raw = frame[target_col]
+    X_df = frame.drop(columns=[target_col])
+
+    # Encode labels to integers.
+    y_cats = y_raw.astype("category")
+    y = y_cats.cat.codes.to_numpy().astype(np.int64)
+    n_classes = int(y.max()) + 1
+
+    # Drop rows with missing values (keeps the AFA semantics clean).
+    keep = ~(X_df.isna().any(axis=1).to_numpy())
+    X_df = X_df.loc[keep].reset_index(drop=True)
+    y = y[keep]
+
+    num_cols = list(X_df.select_dtypes(include=["number"]).columns)
+    cat_cols = [c for c in X_df.columns if c not in num_cols]
+
+    protocol = (cfg or {}).get("protocol", {})
+    fractions = protocol.get("split_fractions", {"train": 0.6, "cal": 0.2, "test": 0.2})
+    n_total = X_df.shape[0]
+    train_idx, cal_idx, test_idx = _disjoint_split_indices(n_total, fractions, seed)
+
+    s_tr, s_ca, s_te = set(train_idx.tolist()), set(cal_idx.tolist()), set(test_idx.tolist())
+    assert s_tr.isdisjoint(s_ca) and s_tr.isdisjoint(s_te) and s_ca.isdisjoint(s_te), \
+        "train/cal/test index sets overlap"
+
+    # Fit transformers on TRAIN only; the encoded column layout is fixed by the
+    # fitted transformers and reused on cal/test.
+    scaler = StandardScaler()
+    try:
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    except TypeError:  # older sklearn
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse=False)
+
+    blocks = []            # list of (kind, original_col_name, encoded-width)
+    if num_cols:
+        scaler.fit(X_df.loc[train_idx, num_cols].to_numpy(dtype=float))
+    if cat_cols:
+        ohe.fit(X_df.loc[train_idx, cat_cols].astype(str).to_numpy())
+
+    def _encode(rows_idx):
+        parts = []
+        if num_cols:
+            parts.append(scaler.transform(X_df.loc[rows_idx, num_cols].to_numpy(dtype=float)))
+        if cat_cols:
+            parts.append(ohe.transform(X_df.loc[rows_idx, cat_cols].astype(str).to_numpy()))
+        return np.hstack(parts).astype(np.float32) if parts else np.zeros((len(rows_idx), 0), np.float32)
+
+    # Build feature_groups: numerics = 1 column each; each categorical = its block.
+    feature_groups = []
+    col = 0
+    for _ in num_cols:
+        feature_groups.append(np.array([col], dtype=int)); col += 1
+    if cat_cols:
+        cat_widths = [len(cats) for cats in ohe.categories_]
+        for w in cat_widths:
+            feature_groups.append(np.arange(col, col + w, dtype=int)); col += int(w)
+    n_cols = col
+
+    X_train = _encode(train_idx); X_cal = _encode(cal_idx); X_test = _encode(test_idx)
+    feature_costs = assign_feature_costs(
+        X_train, y[train_idx], cost_scheme, feature_groups=feature_groups, seed=seed
+    )
+
+    return {
+        "train": (X_train, y[train_idx]),
+        "cal": (X_cal, y[cal_idx]),
+        "test": (X_test, y[test_idx]),
+        "feature_costs": feature_costs,
+        "feature_groups": feature_groups,
+        "n_features": len(feature_groups),
+        "n_cols": int(n_cols),
+        "n_classes": n_classes,
+        "cost_scheme": str(cost_scheme),
+        "name": str(name),
+        "seed": int(seed),
+    }
+
+
+def make_synthetic_tabular_afa(
+    n: int, d: int = 8, n_classes: int = 2, n_informative: int = 3, seed: int = 0
+) -> dict:
+    """Small in-code synthetic tabular classifier (no download) for tests/smoke.
+
+    A linear-logit generator: the first ``n_informative`` features carry class
+    signal (decreasing weight), the rest are noise -- so mutual-information costs
+    are meaningful (informative features expensive under ``inverse_info``).  All
+    features are numeric (identity ``feature_groups``).
+
+    Returns ``dict(X [n, d], y [n], feature_groups=None, n_classes)``.
+    """
+    rng = np.random.default_rng(int(seed))
+    X = rng.standard_normal((int(n), int(d))).astype(np.float32)
+    n_informative = int(min(n_informative, d))
+    W = np.zeros((d, int(n_classes)), dtype=float)
+    for c in range(int(n_classes)):
+        w = rng.standard_normal(n_informative) * (1.0 / (1.0 + np.arange(n_informative)))
+        W[:n_informative, c] = w
+    logits = X @ W + 0.3 * rng.standard_normal((int(n), int(n_classes)))
+    y = logits.argmax(axis=1).astype(np.int64)
+    return {"X": X, "y": y, "feature_groups": None, "n_classes": int(n_classes)}

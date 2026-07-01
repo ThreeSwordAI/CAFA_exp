@@ -290,3 +290,80 @@ def per_bucket_cost(
         else:
             out[int(k)] = float(cost_matrix[mask, int(idx)].mean())
     return out
+
+# ---------------------------------------------------------------------------
+# Step 4 (H2 efficiency) additions -- numpy only, no torch.
+#
+# Helpers for the matched-risk cost comparison (does CAFA's certified stopping
+# beat the alpha-respecting heuristics at equal or better risk?) and Pareto
+# points on the realized (risk, cost) plane.  Existing helpers are untouched.
+# ---------------------------------------------------------------------------
+__all__ += [
+    "realized_risk_cost",
+    "validity_fraction",
+    "matched_risk_cost_gap",
+    "pareto_front",
+]
+
+
+def realized_risk_cost(losses: np.ndarray, costs: np.ndarray, lambda_idx) -> "tuple":
+    """Realized ``(risk, cost)`` at a selected grid index (``(nan, nan)`` if None).
+
+    Thin wrapper over :func:`risk_at_selected` / :func:`cost_at_selected` giving
+    a method's operating point on the test ``losses``/``costs`` matrices -- the
+    unit the H2 table and figure consume.
+    """
+    return risk_at_selected(losses, lambda_idx), cost_at_selected(costs, lambda_idx)
+
+
+def validity_fraction(realized_risks, alpha: float) -> float:
+    """Fraction of seeds whose realized risk **exceeds** ``alpha`` (the H2 axis).
+
+    A method is "valid" when this is ``<= delta``.  ``nan`` entries (a seed that
+    certified nothing) are ignored, matching the abstain convention; an all-nan
+    or empty input returns ``0.0``.
+    """
+    arr = np.asarray(list(realized_risks), dtype=float)
+    arr = arr[~np.isnan(arr)]
+    if arr.size == 0:
+        return 0.0
+    return float(np.mean(arr > float(alpha)))
+
+
+def matched_risk_cost_gap(
+    cafa_cost: float, heuristic_cost: float
+) -> float:
+    """Cost the heuristic pays *above* CAFA at matched (alpha-respecting) risk.
+
+    Positive means CAFA is cheaper.  ``nan`` propagates (either side abstained).
+    Used to summarise "CAFA-marginal costs less than the alpha-respecting
+    heuristics while carrying the guarantee".
+    """
+    return float(heuristic_cost) - float(cafa_cost)
+
+
+def pareto_front(points) -> list:
+    """Non-dominated ``(risk, cost)`` points (both minimised) for the H2 plot.
+
+    ``points`` is an iterable of ``(risk, cost)`` tuples; entries with any ``nan``
+    are dropped.  Returns the subset not dominated by another point (a point is
+    dominated if another has ``risk <=`` and ``cost <=`` with at least one
+    strict), sorted by risk.
+    """
+    pts = [
+        (float(r), float(c))
+        for (r, c) in points
+        if not (np.isnan(r) or np.isnan(c))
+    ]
+    front = []
+    for i, (ri, ci) in enumerate(pts):
+        dominated = False
+        for j, (rj, cj) in enumerate(pts):
+            if j == i:
+                continue
+            if rj <= ri and cj <= ci and (rj < ri or cj < ci):
+                dominated = True
+                break
+        if not dominated:
+            front.append((ri, ci))
+    return sorted(set(front))

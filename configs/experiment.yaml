@@ -25,3 +25,15 @@ training:
   lr: 0.001
   mask_min: 0
   mask_max: 49
+# --- Step 4 additions (cost-heterogeneous tabular + H2 baselines) ---------- #
+# `method`, `protocol`, `synthetic`, `datasets`/`backbones` above are unchanged.
+datasets_tabular:
+  - {name: adult, source: openml}        # start with one; add a second after it works
+baselines: [plugin_threshold, fixed_confidence, budget]
+fixed_confidence_t: [0.90, 0.95, 0.99]
+budget_k: [5, 10, 20]                     # fixed-depth budgets (clamped to d on tabular)
+cost_schemes: [inverse_info, random, uniform]
+training_tabular:
+  epochs: 40
+  batch_size: 256
+  lr: 0.001

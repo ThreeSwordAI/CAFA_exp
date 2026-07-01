@@ -285,3 +285,166 @@ def train_masked_predictor(
                 flush=True,
             )
     return history
+
+# --------------------------------------------------------------------------- #
+# Step 4 -- tabular masked predictor (additive; the CNN above is byte-identical)
+#
+# A small masked MLP for cost-heterogeneous tabular AFA.  It mirrors the
+# MaskedPredictor surface used by the rollout / policy / scores --
+# ``predict_proba(X, mask) -> [B, C]`` (numpy) and ``logits_from_features`` --
+# but over an encoded feature matrix ``[B, n_cols]`` gated by a column mask
+# (constant within each one-hot block).  A "feature" is one acquirable column
+# group; see :mod:`cafa.tabular`.
+# --------------------------------------------------------------------------- #
+__all__ += ["TabularMaskedPredictor", "train_tabular_predictor"]
+
+
+class TabularMaskedPredictor(nn.Module):
+    """A small masked MLP classifier over observed feature subsets.
+
+    Input  : ``X [B, n_cols]`` (encoded values) + ``mask [B, n_cols]`` (1.0 =
+             observed).  Hidden columns are zeroed and the mask is concatenated,
+             so the network distinguishes "value is truly 0" from "unobserved" --
+             the same trick as the CNN's mask channel, which makes empty-set and
+             full-set predictions both meaningful.
+    Output : class logits ``[B, n_classes]``.
+
+    Deliberately small (two hidden layers); tabular needs little.  Trained with
+    random *feature* masking (observed feature count ``~ Uniform{0..d}``) so every
+    observed-set size is a calibrated target.
+    """
+
+    def __init__(self, n_cols: int, n_classes: int, hidden: int = 128):
+        super().__init__()
+        self.n_cols = int(n_cols)
+        self.n_classes = int(n_classes)
+        self.net = nn.Sequential(
+            nn.Linear(2 * self.n_cols, hidden),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(inplace=True),
+            nn.Dropout(0.1),
+            nn.Linear(hidden, self.n_classes),
+        )
+
+    def build_inputs(self, X: torch.Tensor, mask: torch.Tensor) -> torch.Tensor:
+        """2*n_cols input: masked values concatenated with the column mask."""
+        masked = X * mask
+        return torch.cat([masked, mask], dim=1)
+
+    def forward(self, inputs: torch.Tensor) -> torch.Tensor:
+        if inputs.dim() != 2 or inputs.shape[1] != 2 * self.n_cols:
+            raise ValueError(
+                f"expected inputs [B, {2 * self.n_cols}]; got {tuple(inputs.shape)}."
+            )
+        return self.net(inputs)
+
+    def logits_from_features(
+        self, X: torch.Tensor, mask: torch.Tensor
+    ) -> torch.Tensor:
+        """Class logits ``[B, C]`` from encoded values and a column mask."""
+        return self.forward(self.build_inputs(X, mask))
+
+    @torch.no_grad()
+    def predict_proba(
+        self,
+        X: "np.ndarray | torch.Tensor",
+        mask: "np.ndarray | torch.Tensor",
+        device: "torch.device | str | None" = None,
+    ) -> np.ndarray:
+        """Softmax probabilities ``[B, C]`` (numpy) for the policy / scores / rollout."""
+        was_training = self.training
+        self.eval()
+        if device is None:
+            device = next(self.parameters()).device
+        X = torch.as_tensor(X, dtype=torch.float32, device=device)
+        mask = torch.as_tensor(mask, dtype=torch.float32, device=device)
+        logits = self.logits_from_features(X, mask)
+        probs = F.softmax(logits, dim=1)
+        if was_training:
+            self.train()
+        return probs.detach().cpu().numpy()
+
+
+def _random_feature_col_masks(
+    batch_size: int,
+    feature_groups,
+    generator: torch.Generator,
+    device: "torch.device | str",
+) -> torch.Tensor:
+    """Random *feature*-level masks expanded to column masks ``[B, n_cols]``.
+
+    For each sample draw ``k ~ Uniform{0..d}`` observed features and mark a random
+    ``k``-subset; every encoded column inherits its feature's bit (whole one-hot
+    blocks flip together, matching deployment).
+    """
+    d = len(feature_groups)
+    n_cols = int(sum(len(g) for g in feature_groups))
+    k = torch.randint(0, d + 1, (batch_size, 1), generator=generator, device=device)
+    keys = torch.rand(batch_size, d, generator=generator, device=device)
+    ranks = keys.argsort(dim=1).argsort(dim=1)
+    feat_mask = (ranks < k).to(torch.float32)                 # [B, d]
+    col_mask = torch.zeros(batch_size, n_cols, device=device)
+    for a, cols in enumerate(feature_groups):
+        idx = torch.as_tensor(list(cols), dtype=torch.long, device=device)
+        col_mask[:, idx] = feat_mask[:, a : a + 1]
+    return col_mask
+
+
+def train_tabular_predictor(
+    model: "TabularMaskedPredictor",
+    X_train: np.ndarray,
+    y_train: np.ndarray,
+    feature_groups,
+    *,
+    epochs: int = 30,
+    batch_size: int = 256,
+    lr: float = 1e-3,
+    device: "torch.device | str" = "cpu",
+    seed: int = 0,
+    log_every: int = 0,
+) -> dict:
+    """Train ``model`` in place with random feature masking; return a history.
+
+    ``X_train`` is the encoded matrix ``[N, n_cols]``; ``feature_groups`` maps
+    each feature to its columns.  Each minibatch draws a fresh per-sample feature
+    mask (expanded to columns), zeroes hidden columns via the mask channel, and
+    minimises cross-entropy.  All randomness is seeded.
+    """
+    device = torch.device(device)
+    model.to(device)
+    model.train()
+
+    X = torch.as_tensor(np.asarray(X_train), dtype=torch.float32)
+    y = torch.as_tensor(np.asarray(y_train), dtype=torch.long)
+    N = X.shape[0]
+
+    opt = torch.optim.Adam(model.parameters(), lr=float(lr))
+    loss_fn = nn.CrossEntropyLoss()
+    cpu_gen = torch.Generator(device="cpu").manual_seed(int(seed))
+    mask_gen = torch.Generator(device=device).manual_seed(int(seed) + 1)
+
+    history: dict[str, list] = {"epoch_loss": [], "epoch_acc": []}
+    for epoch in range(int(epochs)):
+        perm = torch.randperm(N, generator=cpu_gen)
+        running_loss, running_correct, seen = 0.0, 0, 0
+        for start in range(0, N, batch_size):
+            idx = perm[start : start + batch_size]
+            xb = X[idx].to(device)
+            yb = y[idx].to(device)
+            mb = _random_feature_col_masks(xb.shape[0], feature_groups, mask_gen, device)
+            logits = model.logits_from_features(xb, mb)
+            loss = loss_fn(logits, yb)
+            opt.zero_grad()
+            loss.backward()
+            opt.step()
+            running_loss += float(loss.item()) * xb.shape[0]
+            running_correct += int((logits.argmax(1) == yb).sum().item())
+            seen += xb.shape[0]
+        history["epoch_loss"].append(running_loss / max(seen, 1))
+        history["epoch_acc"].append(running_correct / max(seen, 1))
+        if log_every and (epoch % log_every == 0 or epoch == epochs - 1):
+            print(f"[train-tab] epoch {epoch + 1:>3}/{epochs}  "
+                  f"loss={history['epoch_loss'][-1]:.4f}  "
+                  f"masked_train_acc={history['epoch_acc'][-1]:.4f}", flush=True)
+    return history

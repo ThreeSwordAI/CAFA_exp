@@ -308,6 +308,190 @@ def figure_c(cfg, results_root, out_dir):
 
 
 # --------------------------------------------------------------------------- #
+# Step 4 figures (read step4_*.json written by scripts/run_mondrian.py)
+# --------------------------------------------------------------------------- #
+def _sanitize(name):
+    return str(name).replace(":", "-").replace("/", "-")
+
+
+def _load_step4_grouped(metrics_dir):
+    """Group step4 records by (dataset, policy, cost_scheme)."""
+    from collections import defaultdict
+    groups = defaultdict(list)
+    files = sorted(glob.glob(str(metrics_dir / "step4_*.json"))) if metrics_dir else []
+    for fp in files:
+        try:
+            rec = json.loads(Path(fp).read_text())
+        except Exception:  # noqa: BLE001
+            continue
+        groups[(rec.get("dataset"), rec.get("policy"), rec.get("cost_scheme"))].append(rec)
+    return groups
+
+
+# Marker/colour style per method family for the risk-cost plane.
+_H2_STYLE = {
+    "cafa_marginal":         dict(marker="o", color="#2471a3", s=90, label="CAFA-marginal"),
+    "cafa_mondrian":         dict(marker="s", color="#148f77", s=80, label="CAFA-Mondrian"),
+    "plugin_threshold":      dict(marker="X", color="#c0392b", s=80, label="plugin"),
+    "oracle_cheapest_valid": dict(marker="*", color="#1e8449", s=170, label="oracle-cheapest"),
+    "oracle_full_feature":   dict(marker="P", color="#6c3483", s=90, label="oracle-full"),
+}
+
+
+def _mean_pair(recs, key):
+    rs, cs = [], []
+    for r in recs:
+        m = r.get("methods", {}).get(key)
+        if not m:
+            continue
+        rr, cc = m.get("realized_risk"), m.get("realized_cost")
+        if rr is not None and not (isinstance(rr, float) and np.isnan(rr)):
+            rs.append(rr)
+        if cc is not None and not (isinstance(cc, float) and np.isnan(cc)):
+            cs.append(cc)
+    if not rs or not cs:
+        return None
+    return float(np.mean(rs)), float(np.mean(cs))
+
+
+def figure_h2(metrics_dir, out_dir):
+    """One risk-cost scatter per cell: each method a point (mean over seeds).
+
+    x = realized risk (vertical alpha line), y = realized cost (horizontal
+    oracle-cheapest cost floor).  Certified CAFA methods vs heuristics vs
+    non-deployable oracles are styled distinctly.
+    """
+    groups = _load_step4_grouped(metrics_dir)
+    if not groups:
+        print("  [Figure H2] no step4_*.json found -- skipping.")
+        return []
+    written = []
+    for (ds, pol, cs), recs in sorted(groups.items(), key=lambda kv: tuple(map(str, kv[0]))):
+        alpha = float(recs[0].get("alpha", 0.10))
+        present = set()
+        for r in recs:
+            present.update(r.get("methods", {}).keys())
+        fixed = sorted(m for m in present if m.startswith("fixed_conf_"))
+        budget = sorted((m for m in present if m.startswith("budget_")),
+                        key=lambda s: float(s.split("_")[-1]))
+
+        fig, ax = plt.subplots(figsize=(7.4, 5.0))
+        # Heuristic families first (behind), then oracles/CAFA on top.
+        for m in fixed:
+            mp = _mean_pair(recs, m)
+            if mp:
+                ax.scatter(mp[0], mp[1], marker="^", color="#e67e22", s=60,
+                           label="fixed-confidence" if m == fixed[0] else None, zorder=3)
+                ax.annotate(m.replace("fixed_conf_", "t="), mp, fontsize=7,
+                            xytext=(4, 2), textcoords="offset points", color="#a04000")
+        for m in budget:
+            mp = _mean_pair(recs, m)
+            if mp:
+                ax.scatter(mp[0], mp[1], marker="D", color="#7f8c8d", s=45,
+                           label="fixed-budget" if m == budget[0] else None, zorder=3)
+                ax.annotate(m.replace("budget_", "k="), mp, fontsize=7,
+                            xytext=(4, 2), textcoords="offset points", color="#566573")
+        for key, st in _H2_STYLE.items():
+            mp = _mean_pair(recs, key)
+            if mp:
+                st = dict(st)
+                lbl = st.pop("label")
+                ax.scatter(mp[0], mp[1], label=lbl, zorder=5, **st)
+
+        ax.axvline(alpha, color="black", ls="--", lw=1, label=f"target $\\alpha$ = {alpha:g}")
+        floor = _mean_pair(recs, "oracle_cheapest_valid")
+        if floor:
+            ax.axhline(floor[1], color="#1e8449", ls=":", lw=1,
+                       label="oracle cost floor")
+        # Shade the alpha-violating half-plane.
+        ax.axvspan(alpha, max(alpha * 2, ax.get_xlim()[1]), color="#fdecea", zorder=0)
+
+        ax.set_xlabel("realized test risk")
+        ax.set_ylabel("realized test cost")
+        ax.set_title(f"Figure H2 -- risk vs cost: {ds} | {pol} | {cs} "
+                     f"({len(recs)} seeds)")
+        ax.legend(fontsize=8, loc="best")
+        ax.grid(alpha=0.3)
+        path = out_dir / f"figH2_{_sanitize(ds)}_{pol}_{cs}.png"
+        fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
+        written.append(path)
+        print(f"  [Figure H2] {path}")
+    return written
+
+
+def figure_step4_buckets(metrics_dir, out_dir):
+    """Per-bucket marginal-vs-Mondrian realized risk + full-acq fallback, per cell.
+
+    The Step-4 analogue of Figure C, reading the step4 schema
+    (``per_bucket.marginal_risk`` / ``per_bucket.mondrian_risk`` /
+    ``fallback_full_acq_risk_by_bucket``).
+    """
+    groups = _load_step4_grouped(metrics_dir)
+    if not groups:
+        print("  [Figure S4-buckets] no step4_*.json found -- skipping.")
+        return []
+
+    def _isnum(v):
+        return v is not None and not (isinstance(v, float) and np.isnan(v))
+
+    written = []
+    for (ds, pol, cs), recs in sorted(groups.items(), key=lambda kv: tuple(map(str, kv[0]))):
+        alpha = float(recs[0].get("alpha", 0.10))
+        from collections import defaultdict
+        marg = defaultdict(list); mond = defaultdict(list)
+        mond_abstain = defaultdict(int); fb = defaultdict(list)
+        for r in recs:
+            pb = r.get("per_bucket", {})
+            for k, v in (pb.get("marginal_risk") or {}).items():
+                if _isnum(v):
+                    marg[int(k)].append(v)
+            for k, v in (pb.get("mondrian_risk") or {}).items():
+                if _isnum(v):
+                    mond[int(k)].append(v)
+                else:
+                    mond_abstain[int(k)] += 1
+            for k, v in (r.get("fallback_full_acq_risk_by_bucket") or {}).items():
+                if _isnum(v):
+                    fb[int(k)].append(v)
+        labels = sorted(set(marg) | set(mond) | set(mond_abstain))
+        if not labels:
+            continue
+        n = len(recs)
+        mm = [float(np.mean(marg[k])) if marg.get(k) else np.nan for k in labels]
+        mo = [float(np.mean(mond[k])) if mond.get(k) else np.nan for k in labels]
+        fbm = {k: float(np.mean(v)) for k, v in fb.items() if v}
+
+        fig, ax = plt.subplots(figsize=(7.6, 4.8))
+        x = np.arange(len(labels)); w = 0.38
+        ax.bar(x - w / 2, np.nan_to_num(mm, nan=0.0), w, color="#c0392b", label="marginal")
+        for xi, k, mv in zip(x, labels, mo):
+            na = mond_abstain.get(k, 0)
+            if na >= n:
+                ax.bar(xi + w / 2, alpha, w, facecolor="white", edgecolor="#148f77",
+                       hatch="//", label="Mondrian" if xi == x[0] else None)
+                ax.text(xi + w / 2, alpha * 0.5, f"abstains\n{na}/{n}", ha="center",
+                        va="center", fontsize=7, color="#0e6251")
+            else:
+                ax.bar(xi + w / 2, 0.0 if np.isnan(mv) else mv, w, color="#148f77",
+                       label="Mondrian" if xi == x[0] else None)
+            if k in fbm and na > 0:
+                ax.hlines(fbm[k], xi, xi + w, color="#b9770e", lw=2,
+                          label="full-acq fallback" if not any(
+                              kk in fbm and mond_abstain.get(kk, 0) > 0
+                              for kk in labels[:labels.index(k)]) else None)
+        ax.axhline(alpha, color="black", ls="--", lw=1, label=f"target $\\alpha$ = {alpha:g}")
+        ax.set_xticks(x); ax.set_xticklabels([f"bucket {k}" for k in labels])
+        ax.set_ylabel("mean realized test risk")
+        ax.set_title(f"Step-4 per-bucket: {ds} | {pol} | {cs} ({n} seeds)")
+        ax.legend(fontsize=8, loc="best"); ax.grid(alpha=0.3, axis="y")
+        path = out_dir / f"figS4buckets_{_sanitize(ds)}_{pol}_{cs}.png"
+        fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
+        written.append(path)
+        print(f"  [Figure S4-buckets] {path}")
+    return written
+
+
+# --------------------------------------------------------------------------- #
 def _resolve_out_dir(arg_out_dir):
     """Figures dir: --out-dir, else ${results_root}/figures, else ./results/figures.
 
@@ -360,24 +544,36 @@ def _load_synthetic_cfg():
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Step 3 Mondrian figures.")
+    ap = argparse.ArgumentParser(description="Step 3 + Step 4 figures.")
     ap.add_argument("--out-dir", default=None, help="override output directory")
+    ap.add_argument("--metrics-dir", default=None,
+                    help="override metrics dir for Figure C / H2 / S4 "
+                         "(default: ${results_root}/metrics)")
     ap.add_argument("--gamma-trials", type=int, default=40,
                     help="resplits averaged per gamma for the synthetic figures")
+    ap.add_argument("--skip-synthetic", action="store_true",
+                    help="skip Figures A & B (only read metrics: C, H2, S4-buckets)")
     args = ap.parse_args()
 
     cfg = _load_synthetic_cfg()
     out_dir, results_root = _resolve_out_dir(args.out_dir)
     print(f"Writing figures to {out_dir}")
 
-    pool, edges, cheap = _build_pool(cfg)
-    print(f"  edges={np.round(edges, 3).tolist()}  cheap bucket label={cheap}")
+    if not args.skip_synthetic:
+        pool, edges, cheap = _build_pool(cfg)
+        print(f"  edges={np.round(edges, 3).tolist()}  cheap bucket label={cheap}")
+        pa = figure_a(cfg, edges, cheap, out_dir, args.gamma_trials)
+        print(f"  [Figure A] {pa}")
+        pb = figure_b(cfg, pool, edges, cheap, out_dir, args.gamma_trials)
+        print(f"  [Figure B] {pb}")
 
-    pa = figure_a(cfg, edges, cheap, out_dir, args.gamma_trials)
-    print(f"  [Figure A] {pa}")
-    pb = figure_b(cfg, pool, edges, cheap, out_dir, args.gamma_trials)
-    print(f"  [Figure B] {pb}")
     figure_c(cfg, results_root, out_dir)
+
+    # Step-4 figures (skip silently if no step4 metrics yet).
+    metrics_dir = (Path(args.metrics_dir) if args.metrics_dir
+                   else (Path(results_root) / "metrics" if results_root else None))
+    figure_h2(metrics_dir, out_dir)
+    figure_step4_buckets(metrics_dir, out_dir)
 
 
 if __name__ == "__main__":
