@@ -278,10 +278,130 @@ def ltt_select(
 # --------------------------------------------------------------------------- #
 # Stubs -- implemented in later steps (do NOT implement now)
 # --------------------------------------------------------------------------- #
-def mondrian_select(*args, **kwargs):
-    """Step 3: per-bucket (Mondrian) risk control -- group-conditional LTT across
-    cost / stop-depth buckets for per-budget coverage."""
-    raise NotImplementedError("mondrian_select is implemented in Step 3.")
+@dataclass
+class MondrianResult:
+    """Result of :func:`mondrian_select` -- one LTT selection per bucket.
+
+    Attributes
+    ----------
+    per_bucket : dict[int, SelectionResult]
+        Bucket label -> the full :class:`SelectionResult` returned by
+        :func:`ltt_select` restricted to that bucket's rows.
+    bucket_sizes : dict[int, int]
+        Bucket label -> number of calibration rows in the bucket.
+    lambda_idx_by_bucket : dict[int, int or None]
+        Bucket label -> selected grid index for that bucket (``None`` if the
+        bucket certified no threshold; the safe fallback is full acquisition).
+    alpha, delta : float
+        Target risk level and the *overall* error budget passed in.
+    procedure : str
+        FWER procedure used within each bucket ("fixed_sequence" or
+        "bonferroni").
+    joint : bool
+        If ``True`` each bucket was certified at ``delta / K`` (Bonferroni over
+        the ``K`` buckets) so coverage holds *simultaneously* across all
+        buckets; if ``False`` each bucket is controlled marginally at ``delta``.
+    """
+
+    per_bucket: dict
+    bucket_sizes: dict
+    lambda_idx_by_bucket: dict
+    alpha: float
+    delta: float
+    procedure: str
+    joint: bool
+
+
+def mondrian_select(
+    losses: np.ndarray,
+    costs: np.ndarray,
+    grid: np.ndarray,
+    alpha: float,
+    delta: float,
+    bucket_id: np.ndarray,
+    bound: str = "hb",
+    procedure: str = "fixed_sequence",
+    joint: bool = False,
+) -> "MondrianResult":
+    """Per-bucket ("Mondrian") risk control: group-conditional LTT.
+
+    Partitions the calibration rows by ``bucket_id`` and runs the *frozen*
+    :func:`ltt_select` independently within each bucket, so every bucket gets its
+    own certified threshold and risk is controlled *conditional on the bucket*
+    (e.g. per cost / stop-depth stratum) rather than only on average.  This is
+    the fix for the heterogeneity failure mode where a single marginal threshold
+    over-covers cheap strata and under-covers others.
+
+    No new statistical machinery is introduced: each bucket is exactly an
+    :func:`ltt_select` call.  With ``joint=False`` each bucket is certified at
+    level ``delta`` (per-bucket / marginal-per-bucket control).  With
+    ``joint=True`` each bucket is certified at ``delta / K`` for ``K`` buckets, a
+    Bonferroni correction giving *simultaneous* control across all buckets.
+
+    Parameters
+    ----------
+    losses, costs : np.ndarray, shape [n, G]
+        Per-row, per-threshold losses in ``[0, 1]`` and non-negative costs --
+        the same matrices :func:`ltt_select` consumes.
+    grid : np.ndarray, shape [G]
+        Ascending threshold grid.
+    alpha, delta : float
+        Target risk level and overall error budget.
+    bucket_id : np.ndarray, shape [n]
+        Integer bucket label per row (e.g. from
+        :func:`cafa.metrics.reference_buckets`).
+    bound : str, default "hb"
+        p-value bound forwarded to :func:`ltt_select`.
+    procedure : str, default "fixed_sequence"
+        FWER procedure forwarded to :func:`ltt_select`.
+    joint : bool, default False
+        Whether to Bonferroni-correct across buckets (``delta / K``).
+
+    Returns
+    -------
+    MondrianResult
+        Per-bucket selections and bookkeeping (see :class:`MondrianResult`).
+    """
+    losses = np.asarray(losses, dtype=float)
+    costs = np.asarray(costs, dtype=float)
+    bucket_id = np.asarray(bucket_id)
+    if bucket_id.shape[0] != losses.shape[0]:
+        raise ValueError(
+            "bucket_id length must match the number of rows in losses."
+        )
+
+    buckets = np.unique(bucket_id)
+    K = int(buckets.size)
+    level = float(delta) / K if joint else float(delta)
+
+    per_bucket: dict = {}
+    bucket_sizes: dict = {}
+    lambda_idx_by_bucket: dict = {}
+    for k in buckets:
+        mask = bucket_id == k
+        res = ltt_select(
+            losses[mask],
+            costs[mask],
+            grid,
+            alpha,
+            level,
+            bound=bound,
+            procedure=procedure,
+        )
+        label = int(k)
+        per_bucket[label] = res
+        bucket_sizes[label] = int(mask.sum())
+        lambda_idx_by_bucket[label] = res.lambda_idx
+
+    return MondrianResult(
+        per_bucket=per_bucket,
+        bucket_sizes=bucket_sizes,
+        lambda_idx_by_bucket=lambda_idx_by_bucket,
+        alpha=float(alpha),
+        delta=float(delta),
+        procedure=procedure,
+        joint=bool(joint),
+    )
 
 
 def weighted_ltt_select(*args, **kwargs):

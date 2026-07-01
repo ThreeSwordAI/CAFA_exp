@@ -13,6 +13,7 @@ import numpy as np
 
 __all__ = [
     "make_synthetic_afa",
+    "make_synthetic_mondrian",
     "risk_curve",
     "load_mnist_afa",
     "patchify_images",
@@ -258,3 +259,82 @@ def load_mnist_afa(cfg: dict, seed: int, download: bool = False) -> dict:
         "seed": int(seed),
     }
     return out
+
+def make_synthetic_mondrian(
+    n: int,
+    T: int,
+    alpha: float = 0.10,
+    gamma: float = 0.0,
+    lambda_ref: float = 0.5,
+    n_buckets: int = 5,
+    min_per_bucket: int = 50,
+    seed: int = 0,
+) -> dict:
+    """Synthetic AFA trajectories with *bucket-dependent* miscalibration.
+
+    Builds a population whose stopping score rises at an instance-specific rate
+    and whose *true* accuracy is depressed, near the start of acquisition, by a
+    bucket-correlated amount ``gamma``.  This makes a single marginal threshold
+    under-cover the fastest-rising ("cheap") instances while over-covering the
+    rest -- the exact heterogeneity that per-bucket (Mondrian) control is meant
+    to fix.  Because the true accuracy is known, the *true* per-bucket risk at
+    any threshold can be computed exactly (no held-out estimation noise).
+
+    Construction (``s = 0 .. T``)::
+
+        beta_i        ~ Uniform(0.05, 0.5)                  # rise rate
+        scores[i, s]  = 1 - exp(-beta_i * s)                # in [0, 1), increasing
+        true_acc[i,s] = clip(scores[i,s] - gamma*(1 - s/T), 0, 1)
+        correct[i,s]  ~ Bernoulli(true_acc[i, s])
+        cum_cost[i,s] = s                                   # one unit per step
+
+    At ``gamma = 0`` the score *is* the true accuracy (perfectly calibrated, no
+    heterogeneity).  As ``gamma`` grows the penalty ``gamma*(1 - s/T)`` is
+    largest at shallow depth ``s`` -- so instances that cross ``lambda_ref``
+    early (low reference depth, the cheap bucket) are the most over-confident,
+    and a marginal threshold calibrated on the mixture fails them.
+
+    Buckets are assigned by reference depth at ``lambda_ref`` using the
+    equal-width default of :func:`cafa.metrics.reference_buckets`; pass the
+    returned ``scores`` to :func:`cafa.metrics.quantile_bucket_edges` instead if
+    an equal-mass partition is wanted (the cheap stratum is then a clean
+    minority).
+
+    Returns
+    -------
+    dict with keys
+        ``scores``   : [n, T+1] float, stopping scores in ``[0, 1)``
+        ``true_acc`` : [n, T+1] float, exact accuracy used to draw ``correct``
+        ``correct``  : [n, T+1] float in {0, 1}
+        ``cum_cost`` : [n, T+1] float, ``cum_cost[i, s] = s``
+        ``bucket_id``: [n] int, reference-depth bucket (equal-width default)
+        ``edges``    : interior depth edges applied by ``reference_buckets``
+        ``gamma``, ``T``, ``alpha`` : the inputs, echoed for bookkeeping
+    """
+    from .metrics import reference_buckets  # local import: avoid load-order coupling
+
+    rng = np.random.default_rng(seed)
+    s = np.arange(int(T) + 1, dtype=float)[None, :]          # [1, T+1]
+    beta = rng.uniform(0.05, 0.5, size=(int(n), 1))          # [n, 1]
+
+    scores = 1.0 - np.exp(-beta * s)                         # [n, T+1]
+    frac_remaining = 1.0 - s / float(T)                      # [1, T+1], 1 at s=0 -> 0 at s=T
+    true_acc = np.clip(scores - float(gamma) * frac_remaining, 0.0, 1.0)
+    correct = (rng.uniform(0.0, 1.0, size=scores.shape) < true_acc).astype(float)
+    cum_cost = np.tile(s, (int(n), 1)).astype(float)         # cum_cost[i, s] = s
+
+    bucket_id, edges = reference_buckets(
+        scores, lambda_ref=lambda_ref, n_buckets=n_buckets, min_per_bucket=min_per_bucket
+    )
+
+    return {
+        "scores": scores,
+        "true_acc": true_acc,
+        "correct": correct,
+        "cum_cost": cum_cost,
+        "bucket_id": bucket_id,
+        "edges": edges,
+        "gamma": float(gamma),
+        "T": int(T),
+        "alpha": float(alpha),
+    }

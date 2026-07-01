@@ -20,15 +20,25 @@ from .data import (
     load_mnist_afa,
     make_observed_tensors,
     make_synthetic_afa,
+    make_synthetic_mondrian,
     patchify_images,
     risk_curve,
 )
 from .risk_control import (
+    MondrianResult,
     SelectionResult,
     hoeffding_bentkus_pvalue,
     ltt_select,
     mondrian_select,
     weighted_ltt_select,
+)
+from .metrics import (
+    per_bucket_cost,
+    per_bucket_risk,
+    quantile_bucket_edges,
+    reference_buckets,
+    reference_depth,
+    stops_from_grid_np,
 )
 from .scores import get_score_fn
 
@@ -38,9 +48,18 @@ __all__ = [
     "ltt_select",
     "SelectionResult",
     "mondrian_select",
+    "MondrianResult",
     "weighted_ltt_select",
+    # --- per-bucket (Mondrian) helpers (Step 3; numpy-only) ---
+    "stops_from_grid_np",
+    "reference_depth",
+    "reference_buckets",
+    "quantile_bucket_edges",
+    "per_bucket_risk",
+    "per_bucket_cost",
     # --- synthetic + MNIST data ---
     "make_synthetic_afa",
+    "make_synthetic_mondrian",
     "risk_curve",
     "load_mnist_afa",
     "patchify_images",
