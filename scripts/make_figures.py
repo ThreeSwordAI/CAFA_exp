@@ -328,6 +328,27 @@ def _load_step4_grouped(metrics_dir):
     return groups
 
 
+def _load_step4_grouped_lr(metrics_dir):
+    """Group step4 records by (dataset, policy, cost_scheme, lambda_ref).
+
+    Step 5: the bucketing / Mondrian view changes with lambda_ref, so per-bucket
+    figures must NOT mix lambda_ref resolutions (that would average buckets from
+    different stratifications and mislead).  H2 quantities are lambda_ref-invariant
+    and still use the coarser grouping above.
+    """
+    from collections import defaultdict
+    groups = defaultdict(list)
+    files = sorted(glob.glob(str(metrics_dir / "step4_*.json"))) if metrics_dir else []
+    for fp in files:
+        try:
+            rec = json.loads(Path(fp).read_text())
+        except Exception:  # noqa: BLE001
+            continue
+        groups[(rec.get("dataset"), rec.get("policy"), rec.get("cost_scheme"),
+                rec.get("lambda_ref"))].append(rec)
+    return groups
+
+
 # Marker/colour style per method family for the risk-cost plane.
 _H2_STYLE = {
     "cafa_marginal":         dict(marker="o", color="#2471a3", s=90, label="CAFA-marginal"),
@@ -426,7 +447,7 @@ def figure_step4_buckets(metrics_dir, out_dir):
     (``per_bucket.marginal_risk`` / ``per_bucket.mondrian_risk`` /
     ``fallback_full_acq_risk_by_bucket``).
     """
-    groups = _load_step4_grouped(metrics_dir)
+    groups = _load_step4_grouped_lr(metrics_dir)
     if not groups:
         print("  [Figure S4-buckets] no step4_*.json found -- skipping.")
         return []
@@ -435,7 +456,9 @@ def figure_step4_buckets(metrics_dir, out_dir):
         return v is not None and not (isinstance(v, float) and np.isnan(v))
 
     written = []
-    for (ds, pol, cs), recs in sorted(groups.items(), key=lambda kv: tuple(map(str, kv[0]))):
+    for (ds, pol, cs, lr), recs in sorted(groups.items(),
+                                          key=lambda kv: tuple(map(str, kv[0]))):
+        lr_s = "na" if lr is None else f"{lr:g}"
         alpha = float(recs[0].get("alpha", 0.10))
         from collections import defaultdict
         marg = defaultdict(list); mond = defaultdict(list)
@@ -482,9 +505,10 @@ def figure_step4_buckets(metrics_dir, out_dir):
         ax.axhline(alpha, color="black", ls="--", lw=1, label=f"target $\\alpha$ = {alpha:g}")
         ax.set_xticks(x); ax.set_xticklabels([f"bucket {k}" for k in labels])
         ax.set_ylabel("mean realized test risk")
-        ax.set_title(f"Step-4 per-bucket: {ds} | {pol} | {cs} ({n} seeds)")
+        ax.set_title(f"Step-4 per-bucket: {ds} | {pol} | {cs} | "
+                     f"$\\lambda_{{ref}}$={lr_s} ({n} seeds)")
         ax.legend(fontsize=8, loc="best"); ax.grid(alpha=0.3, axis="y")
-        path = out_dir / f"figS4buckets_{_sanitize(ds)}_{pol}_{cs}.png"
+        path = out_dir / f"figS4buckets_{_sanitize(ds)}_{pol}_{cs}_lr{lr_s}.png"
         fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)
         written.append(path)
         print(f"  [Figure S4-buckets] {path}")

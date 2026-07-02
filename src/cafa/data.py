@@ -548,3 +548,207 @@ def make_synthetic_tabular_afa(
     logits = X @ W + 0.3 * rng.standard_normal((int(n), int(n_classes)))
     y = logits.argmax(axis=1).astype(np.int64)
     return {"X": X, "y": y, "feature_groups": None, "n_classes": int(n_classes)}
+
+# --------------------------------------------------------------------------- #
+# Step 5 -- additive helpers (originals above are byte-identical).
+#
+# Two things Step 5 needs that Step 4 did not:
+#   (1) a *fixed*, dataset-agnostic rule for choosing a feasible risk target
+#       ``alpha`` from a dataset's full-acquisition risk floor (defuses the
+#       "tuned alpha" objection: alpha is a function of the floor, not of any
+#       result); and
+#   (2) OpenML fetch with a **per-dataset version / data_id** taken from the
+#       config, because ``load_tabular_afa`` (frozen-by-additive: its body is
+#       byte-identical) hard-codes ``version=2`` -- correct for ``adult`` but not
+#       for datasets whose only OpenML upload is ``version=1`` (e.g. MiniBooNE,
+#       spambase).  Since compute nodes are offline, the *fetched* version must
+#       match the *pre-cached* one, so the version has to be selectable.
+#
+# The original ``load_tabular_afa`` is NOT modified; ``load_tabular_afa_cfg``
+# delegates to it verbatim for the default (version=2, no data_id) case, so
+# ``adult`` is guaranteed bit-for-bit identical to Step 4, and only new-dataset
+# fetches take the version-aware path.
+# --------------------------------------------------------------------------- #
+__all__ += ["feasible_alpha_from_floor", "openml_spec_for", "load_tabular_afa_cfg"]
+
+_ALPHA_HEADROOM = 0.05   # margin above the achievable floor
+_ALPHA_STEP = 0.05       # alpha is rounded to a clean multiple of this
+
+
+def feasible_alpha_from_floor(
+    floor: float, headroom: float = _ALPHA_HEADROOM, step: float = _ALPHA_STEP
+) -> float:
+    """Fixed rule: a feasible risk target with headroom above the risk floor.
+
+    ``alpha = ceil_to_step(floor + headroom)`` -- i.e. the smallest clean
+    multiple of ``step`` that is >= ``floor + headroom``.  This is a **fixed
+    function of the floor**, applied identically to every dataset (it is not
+    tuned per result), which is exactly what defuses the tuned-alpha objection.
+
+    Examples (headroom=step=0.05)::
+
+        floor 0.147 -> 0.197 -> alpha 0.20        # adult
+        floor 0.050 -> 0.100 -> alpha 0.10        # a low-error dataset (tight alpha)
+        floor 0.005 -> 0.055 -> alpha 0.10
+
+    Returns a float in ``(0, 1]`` rounded to 4 decimals.  A trivially-easy
+    dataset (floor ~ 0) still yields ``alpha = headroom`` rounded up to a clean
+    step; H3's abstention story simply may not appear there (a legitimate
+    boundary to report, not a failure).
+    """
+    import math  # local: keep the module header byte-identical (additive rule)
+
+    floor = float(floor)
+    if not math.isfinite(floor):
+        raise ValueError(f"floor must be finite; got {floor!r}.")
+    floor = max(0.0, floor)
+    target = floor + float(headroom)
+    # Round the quotient before ceil to avoid float dust (e.g. 3.0000000001).
+    n_steps = math.ceil(round(target / float(step), 9))
+    alpha = n_steps * float(step)
+    alpha = min(1.0, max(float(step), alpha))
+    return round(alpha, 4)
+
+
+def openml_spec_for(cfg: dict, name: str) -> dict:
+    """Resolve the OpenML fetch spec for ``name`` from ``datasets_tabular``.
+
+    Each ``configs/experiment.yaml -> datasets_tabular`` entry may carry an
+    optional ``version`` (int) and/or ``data_id`` (int).  Returns a dict with
+    keys ``version`` (default 2, matching the frozen ``load_tabular_afa``) and
+    ``data_id`` (default ``None``).  ``data_id`` takes precedence over
+    ``version`` when both are present (an OpenML data_id is unambiguous).
+    """
+    entries = (cfg or {}).get("datasets_tabular", []) or []
+    spec = {"version": 2, "data_id": None}
+    for e in entries:
+        if str(e.get("name")) == str(name):
+            if e.get("data_id") is not None:
+                spec["data_id"] = int(e["data_id"])
+            if e.get("version") is not None:
+                spec["version"] = int(e["version"])
+            break
+    return spec
+
+
+def _frame_to_afa(
+    frame, target_col: str, cfg: dict, seed: int, cost_scheme: str, name: str
+) -> dict:
+    """Encode a fetched OpenML ``frame`` into the AFA dict.
+
+    This is a faithful copy of the post-fetch body of :func:`load_tabular_afa`
+    (encoders fit on TRAIN only; disjoint splits; per-feature costs) so that the
+    version-aware path produces the identical structure.  Kept separate so the
+    original loader stays byte-identical.
+    """
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+    frame = frame.copy()
+    y_raw = frame[target_col]
+    X_df = frame.drop(columns=[target_col])
+
+    y_cats = y_raw.astype("category")
+    y = y_cats.cat.codes.to_numpy().astype(np.int64)
+    n_classes = int(y.max()) + 1
+
+    keep = ~(X_df.isna().any(axis=1).to_numpy())
+    X_df = X_df.loc[keep].reset_index(drop=True)
+    y = y[keep]
+
+    num_cols = list(X_df.select_dtypes(include=["number"]).columns)
+    cat_cols = [c for c in X_df.columns if c not in num_cols]
+
+    protocol = (cfg or {}).get("protocol", {})
+    fractions = protocol.get("split_fractions", {"train": 0.6, "cal": 0.2, "test": 0.2})
+    n_total = X_df.shape[0]
+    train_idx, cal_idx, test_idx = _disjoint_split_indices(n_total, fractions, seed)
+
+    s_tr, s_ca, s_te = set(train_idx.tolist()), set(cal_idx.tolist()), set(test_idx.tolist())
+    assert s_tr.isdisjoint(s_ca) and s_tr.isdisjoint(s_te) and s_ca.isdisjoint(s_te), \
+        "train/cal/test index sets overlap"
+
+    scaler = StandardScaler()
+    try:
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    except TypeError:  # older sklearn
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse=False)
+
+    if num_cols:
+        scaler.fit(X_df.loc[train_idx, num_cols].to_numpy(dtype=float))
+    if cat_cols:
+        ohe.fit(X_df.loc[train_idx, cat_cols].astype(str).to_numpy())
+
+    def _encode(rows_idx):
+        parts = []
+        if num_cols:
+            parts.append(scaler.transform(X_df.loc[rows_idx, num_cols].to_numpy(dtype=float)))
+        if cat_cols:
+            parts.append(ohe.transform(X_df.loc[rows_idx, cat_cols].astype(str).to_numpy()))
+        return np.hstack(parts).astype(np.float32) if parts else np.zeros((len(rows_idx), 0), np.float32)
+
+    feature_groups = []
+    col = 0
+    for _ in num_cols:
+        feature_groups.append(np.array([col], dtype=int)); col += 1
+    if cat_cols:
+        cat_widths = [len(cats) for cats in ohe.categories_]
+        for w in cat_widths:
+            feature_groups.append(np.arange(col, col + w, dtype=int)); col += int(w)
+    n_cols = col
+
+    X_train = _encode(train_idx); X_cal = _encode(cal_idx); X_test = _encode(test_idx)
+    feature_costs = assign_feature_costs(
+        X_train, y[train_idx], cost_scheme, feature_groups=feature_groups, seed=seed
+    )
+
+    return {
+        "train": (X_train, y[train_idx]),
+        "cal": (X_cal, y[cal_idx]),
+        "test": (X_test, y[test_idx]),
+        "feature_costs": feature_costs,
+        "feature_groups": feature_groups,
+        "n_features": len(feature_groups),
+        "n_cols": int(n_cols),
+        "n_classes": n_classes,
+        "cost_scheme": str(cost_scheme),
+        "name": str(name),
+        "seed": int(seed),
+    }
+
+
+def load_tabular_afa_cfg(
+    name: str,
+    cfg: dict,
+    seed: int,
+    cost_scheme: str = "inverse_info",
+    download: bool = False,
+) -> dict:
+    """Config-aware wrapper around :func:`load_tabular_afa`.
+
+    Resolves the OpenML ``version`` / ``data_id`` for ``name`` from
+    ``cfg['datasets_tabular']`` (see :func:`openml_spec_for`).  For the default
+    spec (``version=2`` and no ``data_id``) it **delegates verbatim** to the
+    frozen-by-additive :func:`load_tabular_afa`, so ``adult`` is bit-for-bit
+    unchanged.  For any other spec it fetches with the resolved version/data_id
+    and runs the identical encoding via :func:`_frame_to_afa`.
+
+    Same return contract as :func:`load_tabular_afa`.
+    """
+    spec = openml_spec_for(cfg, name)
+    if spec["data_id"] is None and int(spec["version"]) == 2:
+        # Golden path: identical to Step 4 for adult (and any v2/no-data_id set).
+        return load_tabular_afa(name, cfg, seed, cost_scheme=cost_scheme, download=download)
+
+    from sklearn.datasets import fetch_openml
+
+    from .config import load_paths
+
+    paths = load_paths()
+    data_home = str(paths.data_root)
+
+    if spec["data_id"] is not None:
+        ds = fetch_openml(data_id=int(spec["data_id"]), data_home=data_home, as_frame=True)
+    else:
+        ds = fetch_openml(name, version=int(spec["version"]), data_home=data_home, as_frame=True)
+
+    return _frame_to_afa(ds.frame, ds.target.name, cfg, seed, cost_scheme, name)

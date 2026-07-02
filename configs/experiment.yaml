@@ -28,11 +28,19 @@ training:
 # --- Step 4 additions (cost-heterogeneous tabular + H2 baselines) ---------- #
 # `method`, `protocol`, `synthetic`, `datasets`/`backbones` above are unchanged.
 datasets_tabular:
-  - {name: adult, source: openml}        # start with one; add a second after it works
+  # `alpha` per dataset is the FIXED-RULE feasible target (ceil-to-0.05 of
+  # floor+0.05); confirm/refresh it with `python scripts/alpha_probe.py` after
+  # the one-time fetch, then keep it fixed across the sweep.  `version` is the
+  # OpenML version to fetch (must match the login-node pre-download); adult stays
+  # on the frozen default (version 2) and is loaded via the byte-identical path.
+  - {name: adult,     source: openml, version: 2, alpha: 0.20}   # floor ~0.147 -> 0.20 (moderate)
+  - {name: MiniBooNE, source: openml, version: 1, alpha: 0.15}   # ~50 feats, moderate floor; refresh via alpha_probe
+  - {name: spambase,  source: openml, version: 1, alpha: 0.15}   # floor ~0.067 (probed) -> 0.15 by the fixed rule
 baselines: [plugin_threshold, fixed_confidence, budget]
 fixed_confidence_t: [0.90, 0.95, 0.99]
 budget_k: [5, 10, 20]                     # fixed-depth budgets (clamped to d on tabular)
-cost_schemes: [inverse_info, random, uniform]
+cost_schemes: [inverse_info, uniform]     # inverse_info primary + uniform control; add 'random' for the appendix
+lambda_ref_sweep: [0.5, 0.7, 0.9]         # Step-5 robustness sweep (Slurm-array path reads this; CLI uses --lambda-ref)
 training_tabular:
   epochs: 40
   batch_size: 256

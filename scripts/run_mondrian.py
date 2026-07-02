@@ -117,11 +117,11 @@ def get_or_rollout_tabular(traj_dir, ckpt_dir, *, name, policy, cost_scheme, see
         return {k: z[k] for k in z.files}
 
     import torch  # noqa: F401
-    from cafa.data import load_tabular_afa
+    from cafa.data import load_tabular_afa_cfg
     from cafa.models import TabularMaskedPredictor, train_tabular_predictor
     from cafa.tabular import get_tabular_policy, tabular_rollout
 
-    data = load_tabular_afa(name, cfg, seed=seed, cost_scheme=cost_scheme, download=False)
+    data = load_tabular_afa_cfg(name, cfg, seed=seed, cost_scheme=cost_scheme, download=False)
     X_tr, y_tr = data["train"]
     fgroups = data["feature_groups"]
     score_name = cfg["method"].get("procedure_score", "softmax")
@@ -291,19 +291,52 @@ def analyse_cell(arr, *, grid, method_cfg, mond_cfg, budget_k, fixed_t) -> dict:
 # --------------------------------------------------------------------------- #
 # Cell enumeration for --cell (path-free slurm decode)
 # --------------------------------------------------------------------------- #
+def _dataset_alpha(cfg, dataset):
+    """Feasible-target alpha for a dataset, honouring the per-dataset override.
+
+    Step 5 records a fixed-rule alpha (ceil-to-0.05 of floor+0.05) per tabular
+    dataset in ``datasets_tabular``.  Return that value for a ``tabular:<name>``
+    dataset when set; otherwise (and for ``mnist``) fall back to the global
+    ``method.alpha``.  Used only by the ``--cell`` slurm path, which has no
+    ``--alpha`` flag to carry the per-dataset target.
+    """
+    default = float(cfg["method"]["alpha"])
+    if isinstance(dataset, str) and dataset.startswith("tabular:"):
+        name = dataset.split(":", 1)[1]
+        for d in cfg.get("datasets_tabular", []):
+            if d.get("name") == name and d.get("alpha") is not None:
+                return float(d["alpha"])
+    return default
+
+
+def _lambda_ref_grid(cfg):
+    """lambda_ref values to sweep for the --cell path.
+
+    Prefer the Step-5 ``lambda_ref_sweep`` list; if absent, fall back to the
+    single configured ``method.mondrian.lambda_ref`` so the enumeration is
+    identical for pre-Step-5 configs (one lambda_ref per cell).
+    """
+    sweep = cfg.get("lambda_ref_sweep")
+    if not sweep:
+        sweep = [cfg.get("method", {}).get("mondrian", {}).get("lambda_ref", 0.5)]
+    return [float(x) for x in sweep]
+
+
 def build_cells(cfg):
     datasets = ["mnist"] + [f"tabular:{d['name']}" for d in cfg.get("datasets_tabular", [])]
     policies = ["greedy_entropy", "random"]
     schemes = list(cfg.get("cost_schemes", ["inverse_info", "random", "uniform"]))
     seeds = list(cfg["protocol"]["seeds"])
+    lambda_refs = _lambda_ref_grid(cfg)
     cells = []
     for ds in datasets:
         for pol in policies:
             for cs in schemes:
                 if ds == "mnist" and cs != "uniform":
                     continue  # MNIST costs are uniform; only that scheme is meaningful
-                for s in seeds:
-                    cells.append((ds, pol, cs, s))
+                for lr in lambda_refs:
+                    for s in seeds:
+                        cells.append((ds, pol, cs, s, lr))
     return cells
 
 
@@ -340,7 +373,13 @@ def run_one(dataset, policy, cost_scheme, seed, *, cfg, paths, device):
 
     metrics_dir = Path(paths.results_root) / "metrics"
     metrics_dir.mkdir(parents=True, exist_ok=True)
-    fname = f"step4_{_sanitize(dataset)}_{policy}_{cost_scheme}_seed{seed}.json"
+    # Step 5: the lambda_ref robustness sweep runs the SAME (dataset,policy,scheme,
+    # seed) cell at several lambda_ref values (only the bucketing / Mondrian view
+    # changes).  Tag the filename with lambda_ref so those runs coexist instead of
+    # overwriting one another; the aggregator groups by the lambda_ref recorded
+    # inside each JSON.
+    lam_ref = float(cfg.get("method", {}).get("mondrian", {}).get("lambda_ref", 0.5))
+    fname = f"step4_{_sanitize(dataset)}_{policy}_{cost_scheme}_lr{lam_ref:g}_seed{seed}.json"
     (metrics_dir / fname).write_text(json.dumps(rec, indent=2))
     cm = rec["methods"]["cafa_marginal"]; pl = rec["methods"]["plugin_threshold"]
     print(f"[{fname}] CAFA-marg risk={cm['realized_risk']} cost={cm['realized_cost']} | "
@@ -360,7 +399,7 @@ def parse_args(argv=None):
     g.add_argument("--seed-index", type=int, default=None)
     g.add_argument("--all-seeds", action="store_true")
     g.add_argument("--cell", type=int, default=None,
-                   help="Slurm array index -> (dataset, policy, cost_scheme, seed).")
+                   help="Slurm array index -> (dataset, policy, cost_scheme, seed, lambda_ref).")
     p.add_argument("--device", default="cpu")
     # Optional overrides of configs/experiment.yaml (recorded into each JSON, so
     # the aggregator reports each cell against the alpha it actually ran with).
@@ -405,9 +444,19 @@ def main(argv=None) -> int:
         if not (0 <= args.cell < len(cells)):
             print(f"ERROR: --cell {args.cell} out of range [0, {len(cells)}).", file=sys.stderr)
             return 1
-        ds, pol, cs, seed = cells[args.cell]
+        ds, pol, cs, seed, lr = cells[args.cell]
+        # The array path uses config, not CLI overrides (STEP4_HANDOFF §6): stamp
+        # this cell's lambda_ref and the dataset's fixed-rule alpha into cfg unless
+        # the caller already set them on the command line (CLI wins, applied above
+        # by _apply_overrides).
+        if args.lambda_ref is None:
+            cfg["method"]["mondrian"]["lambda_ref"] = lr
+        if args.alpha is None:
+            cfg["method"]["alpha"] = _dataset_alpha(cfg, ds)
         print(f"cell {args.cell}/{len(cells)} -> dataset={ds} policy={pol} "
-              f"cost_scheme={cs} seed={seed}")
+              f"cost_scheme={cs} seed={seed} "
+              f"lambda_ref={cfg['method']['mondrian']['lambda_ref']:g} "
+              f"alpha={cfg['method']['alpha']:g}")
         run_one(ds, pol, cs, seed, cfg=cfg, paths=paths, device=args.device)
         return 0
 

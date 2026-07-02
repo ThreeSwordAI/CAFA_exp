@@ -64,6 +64,14 @@ def parse_args(argv=None):
         default=None,
         help="Override metrics dir (default: ${RESULTS_ROOT}/metrics).",
     )
+    p.add_argument(
+        "--report",
+        choices=["step4", "step5"],
+        default="step5",
+        help="Which aggregation to run (default: step5 = per-bucket Mondrian + "
+             "cross-dataset go/no-go readout; step4 = original per-cell H2 view). "
+             "Ignored when --legacy-g2 is set.",
+    )
     return p.parse_args(argv)
 
 
@@ -425,12 +433,23 @@ def _framing_fork(dataset, policy, scheme, rows, bucket_rows, alpha, delta):
     elif real_cost_win and plugin_unsafe:
         print("real cost win AND plugin unsafe -> EFFICIENCY paper "
               "(cost savings + per-budget validity).")
-    elif cheap_under:
-        print("cost win modest; under-coverage hits a CHEAP stratum "
-              "-> Mondrian-necessity paper (per-budget validity, synthetic-style).")
     else:
-        print("cost win modest; under-coverage stays on the HARD/deep stratum "
-              "(MNIST-style) -> per-budget validity + honest abstention paper.")
+        # caveat §12.6 fix: the cost-win magnitude (from the ratio) and the
+        # plugin's safety are INDEPENDENT facts and must not be conflated.
+        # Reaching this branch only means we are not in the (real cost win AND
+        # plugin unsafe) case -- the cost win may still be large, with the plugin
+        # merely happening to be safe in this regime.  State each separately.
+        if real_cost_win:
+            cost_phrase = ("cost win is LARGE (ratio < 0.85), but the plugin also "
+                           "happens to be safe in this regime")
+        else:
+            cost_phrase = "cost win is modest (ratio >= 0.85)"
+        if cheap_under:
+            print(f"{cost_phrase}; under-coverage hits a CHEAP stratum "
+                  "-> Mondrian-necessity paper (per-budget validity, synthetic-style).")
+        else:
+            print(f"{cost_phrase}; under-coverage stays on the HARD/deep stratum "
+                  "(MNIST-style) -> per-budget validity + honest abstention paper.")
 
 
 def run_step4(args) -> int:
@@ -473,11 +492,447 @@ def run_step4(args) -> int:
     return 0
 
 
+# --------------------------------------------------------------------------- #
+# Step 5: lambda_ref-aware loading, per-bucket Mondrian (default), blended-gate
+# demotion, and the pre-committed cross-dataset go/no-go readout.
+#
+# All Step-5 additions below are NEW symbols; the Step-4 loaders / tables /
+# run_step4 above are unchanged (run_step4 stays reachable via --report step4).
+# --------------------------------------------------------------------------- #
+def _load_step5(metrics_dir, args):
+    """Like ``_load_step4`` but keyed by ``(dataset, policy, cost_scheme, lambda_ref)``.
+
+    The Step-5 sweep runs the same ``(dataset, policy, scheme, seed)`` cell at
+    several ``lambda_ref`` values; grouping on the ``lambda_ref`` recorded inside
+    each JSON keeps them distinct and is robust to filename conventions.
+    """
+    recs = defaultdict(list)
+    for fp in sorted(glob.glob(str(metrics_dir / "step4_*.json"))):
+        try:
+            rec = json.loads(Path(fp).read_text())
+        except Exception as exc:  # noqa: BLE001
+            print(f"WARNING: could not read {fp}: {exc}", file=sys.stderr)
+            continue
+        ds, pol, cs = rec.get("dataset"), rec.get("policy"), rec.get("cost_scheme")
+        lr = rec.get("lambda_ref")
+        if args.dataset and ds != args.dataset:
+            continue
+        if args.policy and pol != args.policy:
+            continue
+        if args.cost_scheme and cs != args.cost_scheme:
+            continue
+        recs[(ds, pol, cs, lr)].append(rec)
+    return recs
+
+
+def _n_buckets_formed(rec):
+    """Number of non-empty score-buckets that actually formed in a record.
+
+    The 'policy-hides-failures' insight is about how many strata *form*, not the
+    configured ``n_buckets``.  Prefer the per-bucket test sizes; fall back to the
+    count of per-bucket marginal entries.
+    """
+    sizes = rec.get("bucket_sizes_test")
+    if isinstance(sizes, dict):
+        return sum(1 for v in sizes.values() if v)
+    if isinstance(sizes, list):
+        return sum(1 for v in sizes if v)
+    pb = (rec.get("per_bucket") or {}).get("marginal_risk") or {}
+    return len(pb)
+
+
+def _headline_h2_rows(rows):
+    """H2 headline rows with the blended CAFA-Mondrian gate removed (caveat §12.4).
+
+    The single blended CAFA-Mondrian number is a stratum-weighting artifact (it
+    can read FAIL on greedy / PASS on random purely from how strata are weighted)
+    and must not appear as a headline result.  The per-bucket Mondrian report
+    replaces it; the blended figure is shown separately, labeled a diagnostic.
+    """
+    return [r for r in rows if r[0] != "CAFA-Mondrian"]
+
+
+def _blended_mondrian_row(rows):
+    for r in rows:
+        if r[0] == "CAFA-Mondrian":
+            return r
+    return None
+
+
+def _mondrian_bucket_report(cell, alpha):
+    """Per-bucket Mondrian aggregation across a cell's seeds.
+
+    Returns ``(rows, n_seeds)`` where each row summarises one score-bucket:
+    how often Mondrian certified it, the mean certified lambda_idx / risk / cost,
+    and the mean full-acquisition fallback risk (the proof of (in)feasibility).
+    This is the Step-5 default replacement for the blended gate.
+    """
+    n_seeds = len(cell)
+    seen = defaultdict(int); cert = defaultdict(int)
+    lam = defaultdict(list); mrisk = defaultdict(list)
+    mcost = defaultdict(list); fb = defaultdict(list)
+    for r in cell:
+        pb = r.get("per_bucket", {}) or {}
+        lidx = pb.get("mondrian_lambda_idx") or {}
+        mr = pb.get("mondrian_risk") or {}
+        mc = pb.get("mondrian_cost") or {}
+        fbk = r.get("fallback_full_acq_risk_by_bucket") or {}
+        for b in set(lidx) | set(mr) | set(mc) | set(fbk):
+            seen[b] += 1
+            li = lidx.get(b)
+            if li is not None:
+                cert[b] += 1
+                lam[b].append(li)
+                if mr.get(b) is not None:
+                    mrisk[b].append(mr[b])
+                if mc.get(b) is not None:
+                    mcost[b].append(mc[b])
+            if fbk.get(b) is not None:
+                fb[b].append(fbk[b])
+    rows = []
+    for b in sorted(seen, key=lambda s: int(s)):
+        rows.append({
+            "bucket": b, "seen": seen[b], "cert": cert[b],
+            "mean_lambda_idx": _mean(lam[b]),
+            "mean_mond_risk": _mean(mrisk[b]),
+            "mean_mond_cost": _mean(mcost[b]),
+            "mean_fallback": _mean(fb[b]),
+        })
+    return rows, n_seeds
+
+
+def _bucket_status(row, alpha):
+    """Human-readable per-bucket Mondrian status."""
+    fb = row["mean_fallback"]
+    infeasible = (not math.isnan(fb)) and fb > alpha
+    if row["cert"] == 0:
+        return ("ABSTAIN (infeasible: full-acq > alpha)" if infeasible
+                else "abstains (no lambda certifies)")
+    if row["cert"] < row["seen"]:
+        return "partial certification across seeds"
+    return "certified"
+
+
+def _print_mondrian_bucket_report(rows, n_seeds, alpha):
+    print("PER-BUCKET MONDRIAN  (default report; replaces the blended gate)")
+    print(f"{'bucket':>7}{'cert/seen':>11}{'lam_idx':>9}{'mondRisk':>11}"
+          f"{'mondCost':>11}{'fallback':>11}   status")
+    print("-" * 78)
+    for row in rows:
+        cs = f"{row['cert']}/{row['seen']}"
+        lam_s = f"{'--':>9}" if math.isnan(row['mean_lambda_idx']) else f"{row['mean_lambda_idx']:>9.1f}"
+        mr_s = f"{'--':>11}" if math.isnan(row['mean_mond_risk']) else f"{row['mean_mond_risk']:>11.5f}"
+        mc_s = f"{'--':>11}" if math.isnan(row['mean_mond_cost']) else f"{row['mean_mond_cost']:>11.4f}"
+        fb_s = f"{'--':>11}" if math.isnan(row['mean_fallback']) else f"{row['mean_fallback']:>11.5f}"
+        print(f"{row['bucket']:>7}{cs:>11}{lam_s}{mr_s}{mc_s}{fb_s}   {_bucket_status(row, alpha)}")
+    print("-" * 78)
+    print(f"(alpha={alpha}; certify feasible strata with their lambda_idx/cost, "
+          f"abstain on infeasible strata with the full-acq fallback as proof; "
+          f"{n_seeds} seeds)")
+
+
+def _dataset_floor_alpha(dataset_recs):
+    """(floor, alpha, alpha_consistent) for a dataset from its records.
+
+    floor = mean oracle_full_feature realized risk (the full-acquisition
+    population risk floor); alpha = the value recorded in the JSONs (checked for
+    consistency across the dataset's cells).
+    """
+    floors, alphas = [], []
+    for r in dataset_recs:
+        m = (r.get("methods") or {}).get("oracle_full_feature")
+        if m and m.get("realized_risk") is not None:
+            floors.append(m["realized_risk"])
+        if r.get("alpha") is not None:
+            alphas.append(float(r["alpha"]))
+    floor = _mean(floors)
+    alpha = alphas[0] if alphas else float("nan")
+    alpha_consistent = (len(set(round(a, 6) for a in alphas)) <= 1) if alphas else True
+    return floor, alpha, alpha_consistent
+
+
+def _cafa_marginal_h2(dataset_recs, policy, cost_scheme, alpha):
+    """H2 numbers for CAFA-marginal in one (policy, cost_scheme) regime.
+
+    lambda_ref does not affect the marginal selector, so we aggregate over all
+    lambda_ref values (identical trajectories) to use every available seed.
+    Returns dict or None if the regime is absent.
+    """
+    risks, costs, full_costs = [], [], []
+    for r in dataset_recs:
+        if r.get("policy") != policy or r.get("cost_scheme") != cost_scheme:
+            continue
+        cm = (r.get("methods") or {}).get("cafa_marginal")
+        of = (r.get("methods") or {}).get("oracle_full_feature")
+        if cm and cm.get("realized_risk") is not None:
+            risks.append(cm["realized_risk"]); costs.append(cm.get("realized_cost"))
+        if of and of.get("realized_cost") is not None:
+            full_costs.append(of["realized_cost"])
+    if not risks:
+        return None
+    n = len(risks)
+    n_viol = sum(1 for x in risks if x > alpha)
+    mean_cost = _mean(costs); mean_full = _mean(full_costs)
+    ratio = (mean_cost / mean_full) if (mean_full and not math.isnan(mean_full)) else float("nan")
+    return {"n": n, "valid_frac": 1.0 - n_viol / n, "mean_cost": mean_cost,
+            "mean_full_cost": mean_full, "cost_ratio": ratio}
+
+
+def _plugin_regime(dataset_recs, policy, cost_scheme, alpha, delta):
+    """Whether the plugin is unsafe in one regime: returns 'unsafe'|'safe'|'abstain'|None."""
+    risks = []
+    for r in dataset_recs:
+        if r.get("policy") != policy or r.get("cost_scheme") != cost_scheme:
+            continue
+        pl = (r.get("methods") or {}).get("plugin_threshold")
+        if pl and pl.get("realized_risk") is not None:
+            risks.append(pl["realized_risk"])
+    if not risks:
+        return None
+    n_viol = sum(1 for x in risks if x > alpha)
+    viol_frac = n_viol / len(risks)
+    return "unsafe" if viol_frac > delta else "safe"
+
+
+def _bucket_counts_by_policy(dataset_recs):
+    """{lambda_ref: {policy: mean_n_buckets}} using the primary (inverse_info) scheme.
+
+    Bucketing is on readiness scores, not cost, so the count is cost-scheme
+    invariant; we read it off the primary scheme when present, else any scheme.
+    """
+    grp = defaultdict(lambda: defaultdict(list))  # lr -> policy -> [n_buckets]
+    have_primary = any(r.get("cost_scheme") == "inverse_info" for r in dataset_recs)
+    for r in dataset_recs:
+        if have_primary and r.get("cost_scheme") != "inverse_info":
+            continue
+        lr = r.get("lambda_ref"); pol = r.get("policy")
+        grp[lr][pol].append(_n_buckets_formed(r))
+    out = {}
+    for lr in sorted(grp, key=lambda x: (x is None, x)):
+        out[lr] = {pol: _mean(v) for pol, v in grp[lr].items()}
+    return out
+
+
+def _h3_abstention(dataset_recs, alpha, lambda_refs=(0.7, 0.9)):
+    """Does a hard stratum with full-acq fallback > alpha exist where Mondrian abstains?
+
+    Scans the fine-resolution cells (lambda_ref in ``lambda_refs``); returns
+    (present: bool, detail: str).
+    """
+    hits = []
+    for lr in lambda_refs:
+        cells = defaultdict(list)  # (pol,cs) -> recs at this lr
+        for r in dataset_recs:
+            if r.get("lambda_ref") == lr:
+                cells[(r.get("policy"), r.get("cost_scheme"))].append(r)
+        for (pol, cs), cell in cells.items():
+            rows, _ = _mondrian_bucket_report(cell, alpha)
+            for row in rows:
+                fb = row["mean_fallback"]
+                if (not math.isnan(fb)) and fb > alpha and row["cert"] == 0:
+                    hits.append(f"lr={lr:g}/{pol}: bucket {row['bucket']} "
+                                f"fallback={fb:.3f}>alpha, Mondrian abstains")
+    if hits:
+        return True, "; ".join(hits[:4]) + (" ..." if len(hits) > 4 else "")
+    return False, "no stratum with full-acq fallback > alpha at lambda_ref in " + str(list(lambda_refs))
+
+
+def _cross_dataset_readout(all_recs, alpha_rule):
+    """Task 5: pre-committed, honest go/no-go readout across datasets.
+
+    Prints, per dataset: {floor, alpha} (and whether alpha matches the fixed
+    rule); H2 (CAFA-marginal validity + cost ratio vs full + which policy regime
+    the plugin is unsafe in); H3 (hard-stratum abstention at fine resolution);
+    the insight (bucket count by policy at each lambda_ref); and one-line honest
+    verdicts on whether each phenomenon reproduces.
+    """
+    datasets = sorted({k[0] for k in all_recs}, key=str)
+    print()
+    print("#" * 78)
+    print("CROSS-DATASET GO/NO-GO READOUT  (pre-committed; honest)")
+    print("#" * 78)
+
+    h3_datasets = []
+    for ds in datasets:
+        drecs = [r for k, cell in all_recs.items() if k[0] == ds for r in cell]
+        # per-dataset delta (consistent across cells)
+        delta = float(drecs[0].get("delta", 0.10)) if drecs else 0.10
+        floor, alpha, alpha_ok = _dataset_floor_alpha(drecs)
+        rule_alpha = alpha_rule(floor) if not math.isnan(floor) else float("nan")
+
+        print()
+        print("=" * 78)
+        print(f"DATASET: {ds}")
+        print("=" * 78)
+        floor_s = "n/a" if math.isnan(floor) else f"{floor:.4f}"
+        alpha_s = "n/a" if math.isnan(alpha) else f"{alpha:g}"
+        rule_s = "n/a" if math.isnan(rule_alpha) else f"{rule_alpha:g}"
+        match = "" if math.isnan(rule_alpha) else (
+            "  (matches fixed rule)" if abs(rule_alpha - alpha) < 1e-9
+            else f"  (WARNING: fixed rule would give {rule_s}; recorded alpha differs)")
+        print(f"  floor (full-acq risk) = {floor_s}   alpha = {alpha_s}"
+              f"   [rule: ceil0.05(floor+0.05) = {rule_s}]{match}")
+        if not alpha_ok:
+            print("  WARNING: alpha is not consistent across this dataset's JSONs.")
+
+        # --- H2 (primary = greedy_entropy + inverse_info; plus the random regime).
+        prim = _cafa_marginal_h2(drecs, "greedy_entropy", "inverse_info", alpha)
+        if prim is None:
+            # fall back to whatever greedy regime exists
+            prim = (_cafa_marginal_h2(drecs, "greedy_entropy", "uniform", alpha))
+        plugin_greedy = _plugin_regime(drecs, "greedy_entropy", "inverse_info", alpha, delta) \
+            or _plugin_regime(drecs, "greedy_entropy", "uniform", alpha, delta)
+        plugin_random = _plugin_regime(drecs, "random", "inverse_info", alpha, delta) \
+            or _plugin_regime(drecs, "random", "uniform", alpha, delta)
+        if prim is not None:
+            unsafe_where = []
+            if plugin_greedy == "unsafe":
+                unsafe_where.append("greedy")
+            if plugin_random == "unsafe":
+                unsafe_where.append("random")
+            plug_txt = ("plugin unsafe under " + "+".join(unsafe_where)
+                        if unsafe_where else "plugin safe in all measured regimes")
+            print(f"  H2: CAFA-marginal valid on {prim['valid_frac']*100:.0f}% of "
+                  f"{prim['n']} seeds (>= 1-delta={1-delta:g} required); "
+                  f"mean cost={prim['mean_cost']:.3f} vs full={prim['mean_full_cost']:.3f} "
+                  f"(ratio={prim['cost_ratio']:.2f}); {plug_txt}.")
+        else:
+            print("  H2: no CAFA-marginal records for this dataset (cannot assess).")
+
+        # --- H3 (fine-resolution hard-stratum abstention).
+        h3_present, h3_detail = _h3_abstention(drecs, alpha)
+        print(f"  H3: {'PRESENT' if h3_present else 'absent'} -- {h3_detail}.")
+        if h3_present:
+            h3_datasets.append(ds)
+
+        # --- The insight (bucket count by policy at each lambda_ref).
+        bc = _bucket_counts_by_policy(drecs)
+        print("  INSIGHT (mean #buckets formed, by policy x lambda_ref):")
+        collapse_note = []
+        for lr, per_pol in bc.items():
+            lr_s = "?" if lr is None else f"{lr:g}"
+            g = per_pol.get("greedy_entropy"); rnd = per_pol.get("random")
+            g_s = "--" if g is None or math.isnan(g) else f"{g:.1f}"
+            r_s = "--" if rnd is None or math.isnan(rnd) else f"{rnd:.1f}"
+            print(f"      lambda_ref={lr_s}:  greedy={g_s}   random={r_s}")
+            if lr is not None and abs(lr - 0.5) < 1e-9 and g is not None and not math.isnan(g) and g <= 1.5:
+                collapse_note.append("greedy collapses toward 1 bucket at lambda_ref=0.5")
+        # policy-hides-failures = greedy fewer buckets than random (where both present)
+        fewer = [lr for lr, pp in bc.items()
+                 if pp.get("greedy_entropy") is not None and pp.get("random") is not None
+                 and not math.isnan(pp["greedy_entropy"]) and not math.isnan(pp["random"])
+                 and pp["greedy_entropy"] < pp["random"]]
+
+        # --- Honest per-dataset verdicts.
+        print("  VERDICT:")
+        if prim is not None:
+            h2_ok = prim["valid_frac"] >= (1 - delta) - 1e-9
+            h2_cheap = (not math.isnan(prim["cost_ratio"])) and prim["cost_ratio"] < 0.85
+            print(f"    - H2 reproduces: {'YES' if h2_ok else 'NO'} "
+                  f"(marginal {'valid' if h2_ok else 'INVALID'}"
+                  f"{', cheap stopping' if h2_cheap else ', but cost win not < 0.85'}).")
+        else:
+            print("    - H2 reproduces: UNKNOWN (no records).")
+        print(f"    - H3 (hard-stratum abstention) reproduces: "
+              f"{'YES' if h3_present else 'NO'}.")
+        hides = bool(fewer)
+        extra = ("; " + "; ".join(sorted(set(collapse_note)))) if collapse_note else ""
+        print(f"    - policy-hides-failures reproduces: {'YES' if hides else 'NO'} "
+              f"(greedy < random buckets at lambda_ref {[f'{x:g}' for x in fewer]}){extra}.")
+
+    # --- Pre-committed consequence statement.
+    print()
+    print("=" * 78)
+    print("PRE-COMMITTED CONSEQUENCE:")
+    new_datasets = [d for d in datasets if d != "tabular:adult"]
+    h3_beyond_adult = [d for d in h3_datasets if d != "tabular:adult"]
+    if not new_datasets:
+        print("  Only adult present here -- run the two new datasets on the cluster to")
+        print("  populate this readout before the writeup.")
+    else:
+        if not h3_beyond_adult:
+            print("  H3 (hard-stratum abstention) appears on NO new dataset beyond adult.")
+            print("  Per the pre-commit, this reshapes the paper: H3 would be an")
+            print("  adult-specific phenomenon, to be reported plainly, not buried.")
+        else:
+            print(f"  H3 reproduces beyond adult on: {h3_beyond_adult} -- the hard-stratum")
+            print("  abstention story generalizes; proceed to the writeup as framed.")
+    print("=" * 78)
+
+
+def run_step5(args) -> int:
+    """Step-5 default report: per-bucket Mondrian per cell + cross-dataset readout."""
+    from cafa.data import feasible_alpha_from_floor  # additive Step-5 helper
+
+    metrics_dir = _resolve_metrics_dir(args)
+    print(f"metrics dir : {metrics_dir}")
+    recs = _load_step5(metrics_dir, args)
+    if not recs:
+        print("No step4_*.json files found yet.")
+        print("Run scripts/run_mondrian.py across the {policy} x {lambda_ref} x "
+              "{cost} sweep first, then re-run this.")
+        print("The cross-dataset readout (H2 cost, H3 abstention, the insight) is "
+              "PENDING the cluster run.")
+        return 1
+
+    n_cells = len(recs)
+    print(f"found {sum(len(v) for v in recs.values())} record(s) across "
+          f"{n_cells} (dataset,policy,scheme,lambda_ref) cell(s).")
+
+    def _key(k):
+        ds, pol, cs, lr = k
+        return (str(ds), str(pol), str(cs), (lr is None, lr))
+
+    for key in sorted(recs, key=_key):
+        ds, pol, cs, lr = key
+        cell = recs[key]
+        alpha = float(cell[0].get("alpha", 0.10))
+        delta = float(cell[0].get("delta", 0.10))
+        lr_s = "?" if lr is None else f"{lr:g}"
+        print()
+        print("=" * 78)
+        print(f"CELL  dataset={ds}  policy={pol}  cost_scheme={cs}  "
+              f"lambda_ref={lr_s}  (seeds={len(cell)})")
+        print("=" * 78)
+
+        rows = _h2_table(cell, alpha, delta)
+        _print_h2_table(_headline_h2_rows(rows), alpha, delta)
+
+        blended = _blended_mondrian_row(rows)
+        if blended is not None:
+            _, _, bn, bvalid, brisk, bcost, bviol = blended
+            bvalid_s = "--" if math.isnan(bvalid) else f"{bvalid:.3f}"
+            print(f"[diagnostic only, NOT a result] blended CAFA-Mondrian: "
+                  f"valid={bvalid_s} over {bn} seeds "
+                  f"(single-number gate is a stratum-weighting artifact; see the "
+                  f"per-bucket report below).")
+
+        print()
+        brows, n_seeds = _mondrian_bucket_report(cell, alpha)
+        _print_mondrian_bucket_report(brows, n_seeds, alpha)
+
+        # Reuse the (Task-4 corrected) framing fork for the per-cell verdict.
+        bucket_rows = _per_bucket_summary(cell, alpha)
+        _framing_fork(ds, f"{pol} (lr={lr_s})", cs, rows, bucket_rows, alpha, delta)
+
+    _cross_dataset_readout(recs, feasible_alpha_from_floor)
+
+    print()
+    print("=" * 78)
+    print("Reminder: CAFA-marginal carries the LTT validity guarantee and the")
+    print("per-bucket Mondrian report certifies/abstains per stratum; the blended")
+    print("CAFA-Mondrian number is a demoted diagnostic; oracle-* see test labels.")
+    print("=" * 78)
+    return 0
+
+
 def main(argv=None) -> int:
     args = parse_args(argv)
     if args.legacy_g2:
         return run_g2_legacy(args)
-    return run_step4(args)
+    if getattr(args, "report", "step5") == "step4":
+        return run_step4(args)
+    return run_step5(args)
 
 
 if __name__ == "__main__":
