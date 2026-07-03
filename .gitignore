@@ -12,3 +12,11 @@ results/
 # Python caches
 __pycache__/
 .pytest_cache/
+
+# --- v2 pipeline outputs (produced on the cluster; pushed back selectively) ---
+# Results are copied into results_committed/ (tracked) by the operator for the
+# paper artifact; the raw output dirs are not committed.
+metrics_v2/
+analysis_v2/
+figures_v2/
+# NOTE: configs/committed_v2_*.json and repro/*.lock.txt ARE tracked (not ignored).

@@ -64,7 +64,7 @@ class Trajectories:
 # Policies (order features; do not modify the predictor)
 # --------------------------------------------------------------------------- #
 class GreedyEntropyPolicy:
-    """EDDI-style myopic greedy acquisition by expected predictive entropy.
+    """Myopic mean-imputation greedy acquisition by expected predictive entropy.
 
     At each step, for every not-yet-acquired patch ``a``: impute patch ``a`` with
     its **per-patch training mean** (precomputed once), run the predictor on the

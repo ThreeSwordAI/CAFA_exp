@@ -1,4 +1,8 @@
 #!/usr/bin/env python
+# DEPRECATED (kept for provenance). Superseded by the v2 pipeline (see README +
+# CLAUDE_CODE_WORKORDER.md). Known issues in the legacy pipeline: per-seed
+# full-pool reshuffle (MNIST leakage), cal-fit stratum edges, clairvoyant tabular
+# greedy (pre-fix), lambda_ref-duplicated marginal counting. Do not use for paper numbers.
 """Step 3 -- per-bucket ("Mondrian") risk control on MNIST-as-AFA (reporting).
 
 For each protocol seed this script:

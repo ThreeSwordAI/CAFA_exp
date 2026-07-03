@@ -1,138 +1,294 @@
-# CAFA — Conformal Active Feature Acquisition (CAFA)
+# CAFA -- Distribution-free risk-controlled stopping for Active Feature Acquisition
 
-A distribution-free stopping rule for active feature acquisition: instead of stopping acquisition on a heuristic confidence threshold, CAFA selects the **cheapest** threshold whose prediction-at-stop **provably** controls a target risk α with confidence 1−δ, using Learn-then-Test.
+## 1. What this is
 
-> **Status: Step 2** — the real machinery that produces the selector's input arrays on MNIST: a **masked predictor**, one **acquisition policy** (EDDI-style greedy entropy) + a random baseline, readiness **scores**, and a **rollout** that turns *(predictor, policy, score)* into the `(loss, cost, stop_depth)` matrices the frozen selector consumes. The pure risk-control core from Step 1 is unchanged and still gated by G1.
+CAFA is a distribution-free stopping rule for active feature acquisition. A
+frozen masked predictor and a frozen acquisition policy generate per-instance
+acquisition trajectories; Learn-then-Test (Hoeffding-Bentkus p-values with
+fixed-sequence FWER control) certifies stopping thresholds `lambda` whose
+prediction-at-stop controls a target risk `alpha` at confidence `1 - delta`; the
+cheapest certified `lambda` is deployed.
 
----
-
-## What's in this step
-
-**Frozen from Step 1 (do not edit):**
-- **`src/cafa/risk_control.py`** — the pure method. Hoeffding–Bentkus p-values, FWER control (fixed-sequence / Bonferroni), and selection of the cheapest risk-valid stopping threshold. `numpy`/`scipy` only — no torch.
-- **`tests/test_risk_control.py`** — the Step-1 validity gate (**G1**).
-
-**New in Step 2:**
-- **`src/cafa/models.py`** — `MaskedPredictor`, a small 2-channel CNN that classifies from any observed subset of the 49 patches (incl. empty/full), trained with random patch masking. Owns the patch geometry shared across the package.
-- **`src/cafa/acquisition.py`** — `GreedyEntropyPolicy` (primary, deterministic, myopic EDDI-style) and `RandomPolicy`, the `rollout` that records per-step readiness/correctness/cost, and `stops_from_grid` that derives the selector's `(losses, costs, stop_depth)` arrays from one rollout.
-- **`src/cafa/scores.py`** — readiness scores `softmax` (default), `margin`, `entropy` (all in `[0,1]`), plus a `set_size` stub; `get_score_fn(name)` dispatcher.
-- **`src/cafa/data.py`** — adds `load_mnist_afa` (patchified MNIST, **disjoint** train/cal/test per seed, uniform per-feature costs); synthetic Step-1 code is untouched.
-- **`scripts/train_backbone.py`**, **`scripts/run_experiment.py`** — train the predictor once, then run the end-to-end MNIST experiment per protocol seed.
-- **`tests/test_pipeline.py`** — fast smoke test (dummy predictor, no training): rollout → grid → `ltt_select` wired with correct shapes/semantics.
-
-### MNIST as an AFA problem
-Each 28×28 image is a **7×7 grid of 4×4 patches = 49 features**; acquiring a patch reveals its 16 pixels. Uniform cost `c_a = 1` per patch (`cost_model: uniform`).
+> Guarantee. For the deployed threshold `lambda_hat`,
+> `P_over_calibration_draws( R(lambda_hat) > alpha ) <= delta`.
+> The per-stratum-valid variant (CAFA-IUT) strengthens this to
+> `P( exists stratum k : R(lambda_hat | k) > alpha ) <= delta` -- one `lambda`
+> certified simultaneously against every reference-depth stratum, with no
+> per-stratum routing.
 
 ---
 
-## Install
+## 2. Status -- v2 repair + rigor release
+
+This release makes the fixes for five evidence-invalidating issues *structural*
+(asserted, pre-committed, cached, reproducible) rather than patched. The pure
+risk-control core (`src/cafa/risk_control.py`) is byte-frozen and unchanged.
+
+- C1 -- the tabular greedy policy scored candidates using their *true* value
+  (clairvoyant). Fixed: candidates are imputed at their train column means; no
+  unpaid value reaches the predictor.
+- C2 -- every seed re-permuted the whole 70k pool, leaking ~60% of cal/test into
+  train. Fixed: fixed-train / resplit-heldout -- one backbone per
+  `(dataset, train_seed)`; only the heldout pool is resplit.
+- C3 -- Mondrian stratum edges were fit on the calibration set used for
+  selection. Fixed: edges are committed from an independent probe split
+  (seed 777) before any selection runs.
+- C4 -- per-stratum threshold *routing* was circular / not deployable. Fixed:
+  the deployable per-stratum-valid object is CAFA-IUT (a single certified
+  `lambda`); per-stratum thresholds are audit-only.
+- C5 -- a hand-set `alpha` violated the project's own fixed-`alpha` rule. Fixed:
+  `alpha` is computed only by `feasible_alpha_from_floor` on the probe and
+  committed to JSON (value: TBD-RUN, produced on the cluster).
+
+---
+
+## 3. Repo layout
+
+```
+CAFA_exp/
+  CLAUDE_CODE_WORKORDER.md      # authoritative spec for the v2 release
+  src/cafa/
+    risk_control.py             # * FROZEN -- pure LTT selector (arrays in, selection out)
+    risk_control_ext.py         # v2: CAFA-IUT (composes only frozen primitives)
+    splits.py                   # v2: fixed-train / probe / resplit + disjointness asserts
+    pool.py                     # v2: pool-rollout cache format + post-hoc cost math
+    policies_v2.py              # v2: epsilon-greedy mixture (tabular)
+    repro_utils.py              # v2: file_sha256 helper
+    data.py                     # + load_mnist_pool / load_tabular_pool (v2; legacy loaders intact)
+    tabular.py                  # C1 fix (mean-imputation greedy)
+    acquisition.py              # image policies + rollout (frozen loop; honest docstring)
+    models.py, scores.py, metrics.py, config.py
+  scripts/
+    train_backbone_v2.py        # v2 backbone (fixed train split)
+    run_pool_rollout.py         # v2 rollout of the whole heldout pool (records `order`)
+    probe_commit.py             # v2 commit alpha / edges / costs (pre-committed)
+    run_eval_sweep.py           # v2 resplit engine -> metrics_v2/*.json
+    analyze_results.py          # v2 -> analysis_v2/RESULTS.md + CSVs
+    make_figures_v2.py          # v2 figures F1-F4
+    verify_bugs.py              # v2 verification-first bug script (C1/C2/freeze)
+    run_experiment, run_mondrian[_mnist], aggregate_results, make_figures,
+    alpha_probe, step5_*        # DEPRECATED -- kept for provenance, do not use
+  hpc/  train.slurm, sweep.slurm (legacy) ; pool_rollout.slurm, eval_sweep.slurm (v2)
+  repro/  make_manifest.sh, verify_freeze.sh, MANIFEST.sha256, BUGLOG.md, requirements.lock.txt
+  configs/  experiment.yaml (+ protocol_v2 block) ; committed_v2_*.json (written by probe_commit)
+  results_committed/            # tracked; operator copies final RESULTS.md + JSONs here
+  tests/
+    test_risk_control.py        # * FROZEN -- G1 validity gate
+    test_policy_honesty.py, test_splits_v2.py, test_pool_v2.py,
+    test_iut.py, test_probe_commit.py   # v2 tests
+    test_mondrian.py, test_baselines.py, test_pipeline.py
+```
+
+---
+
+## 4. Environment
 
 ```bash
 # FAU NHR (TinyGPU / Alex): add torch to the existing vault env (do NOT recreate it).
 module load python/3.12-conda
 source activate "$CAFA_ENV"
-pip install torch torchvision
-#   ...or the CUDA build:
-#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-
-# On a laptop instead:
-# conda env create -f environment.yml && conda activate cafa
+pip install torch torchvision        # or the CUDA build via the pytorch index-url
+# On a laptop instead: conda env create -f environment.yml && conda activate cafa
 ```
 
-`environment.yml` now lists `torch` + `torchvision` (pip section). The pure path (risk control, synthetic data, metrics, scores) still imports without torch; `cafa.models` / `cafa.acquisition` import torch lazily on first use.
+The torch-free path (risk control, splits, pool math, probe, eval sweep,
+analysis, figures) imports without torch; `cafa.models` / `cafa.acquisition`
+import torch lazily. Record the exact environment once on the cluster:
+
+```bash
+pip freeze > repro/requirements.lock.txt     # then commit
+```
 
 ---
 
-## Paths (nothing machine-specific is committed)
-
-All paths come from environment variables; the repo ships only `configs/paths.template.yaml`.
+## 5. Data download (one-time, login node with internet)
 
 ```bash
-export DATA_ROOT=/home/woody/iwi5/<user>/CAFA_data       # data on woody
-export RESULTS_ROOT=/home/vault/iwi5/<user>/CAFA_results # results on vault
-export CAFA_ENV=/home/vault/iwi5/<user>/envs/cafa        # conda env on vault
-export CAFA_REPO=/home/hpc/iwi5/<user>/my_repos/CAFA_exp
-```
-
-`config.py` resolves env vars first, then a local (gitignored) `configs/paths.yaml`. Checkpoints land in `${RESULTS_ROOT}/checkpoints`, per-seed metrics in `${RESULTS_ROOT}/metrics`.
-
----
-
-## Run the gates
-
-### G1 + smoke test (no GPU, no download)
-
-```bash
-export PYTHONPATH="$PWD/src:$PYTHONPATH"
-pytest -q                       # G1 (test_risk_control.py) + smoke test (test_pipeline.py)
-```
-
-### End-to-end on MNIST (G2)
-
-```bash
-# one-time, on a login node (internet): download MNIST into $DATA_ROOT
+# MNIST (torchvision) into $DATA_ROOT
 python -c "import torchvision,os; r=os.environ['DATA_ROOT']; \
   torchvision.datasets.MNIST(r,train=True,download=True); \
   torchvision.datasets.MNIST(r,train=False,download=True)"
 
-# train the masked predictor once (CPU is fine for MNIST; --download also works)
-python scripts/train_backbone.py --dataset mnist --backbone greedy_entropy --download --device cpu
-
-# run every protocol seed and print the G2 summary
-python scripts/run_experiment.py --dataset mnist --backbone greedy_entropy --all-seeds --device cpu
-```
-
-Use `--device cuda` on a GPU node (e.g. `salloc.tinygpu --gres=gpu:1 --time=00:30:00`, no `--mem`/partition flags). On the cluster, submit via `hpc/train.slurm` and `hpc/sweep.slurm` (path-free; pass log paths at submit time).
-
-**G2 (the exit gate):** the `--all-seeds` summary reports the fraction of seeds whose **held-out realized risk exceeds α** — this must be **≤ δ** — together with mean realized cost and mean stop depth (which should be **< 49**, i.e. the policy stops early and saves cost). If validity fails (> δ), it is a pipeline bug (split leakage, a non-frozen model, or a shape/semantics error in `stops_from_grid`) — fix the pipeline, **not** the selector.
-
----
-
-## Layout (Step 2)
-
-```
-CAFA_exp/
-├── README.md
-├── environment.yml             # python + numpy/scipy/pyyaml/pytest + torch/torchvision
-├── .gitignore
-├── configs/
-│   ├── paths.template.yaml     # placeholders only — no real paths
-│   └── experiment.yaml         # method + protocol + datasets/backbones/scores/training
-├── src/cafa/
-│   ├── __init__.py             # pure exports eager; models/acquisition lazy (torch)
-│   ├── config.py               # env-var path resolution + experiment config + seeding
-│   ├── data.py                 # synthetic (Step 1) + load_mnist_afa (Step 2)
-│   ├── risk_control.py         # ★ FROZEN — the method (pure arrays)
-│   ├── metrics.py              # risk/cost/violation + cost-at-selected / pareto-point
-│   ├── models.py               # ★ MaskedPredictor + patch geometry
-│   ├── acquisition.py          # ★ policies + rollout + stops_from_grid
-│   └── scores.py               # readiness scores + get_score_fn
-├── scripts/
-│   ├── train_backbone.py       # train the masked predictor → checkpoint + metadata
-│   └── run_experiment.py       # rollout → grid → ltt_select → realized test risk (G2)
-├── hpc/
-│   ├── train.slurm             # path-free; log paths at submit time
-│   └── sweep.slurm             # array job over protocol seeds
-└── tests/
-    ├── test_risk_control.py    # ★ FROZEN — G1 validity gate
-    └── test_pipeline.py        # smoke test: rollout → stops_from_grid → ltt_select
+# OpenML tabular (adult v2, MiniBooNE v1, spambase v1) into $DATA_ROOT (cached for offline nodes)
+python -c "from sklearn.datasets import fetch_openml; import os; h=os.environ['DATA_ROOT']; \
+  fetch_openml('adult',version=2,data_home=h,as_frame=True); \
+  fetch_openml('MiniBooNE',version=1,data_home=h,as_frame=True); \
+  fetch_openml('spambase',version=1,data_home=h,as_frame=True)"
 ```
 
 ---
 
-## Roadmap
+## 6. Pipeline (the exact cluster command sequence)
 
-| Step | Adds |
+Environment (once per session):
+
+```bash
+module load python/3.12-conda
+source activate "$CAFA_ENV"
+export CAFA_REPO=~/my_repos/CAFA_exp        # adjust
+cd "$CAFA_REPO"
+export PYTHONPATH="$PWD/src:$PYTHONPATH"
+# DATA_ROOT / RESULTS_ROOT already exported per legacy setup
+```
+
+Phase 0 -- verify before compute (login node, ~5 min):
+
+```bash
+pytest -q                                    # all tests incl. new v2 tests must pass
+bash repro/make_manifest.sh                  # FIRST TIME ONLY (records frozen hashes)
+python scripts/verify_bugs.py                # expect: C1 PASS, C2 legacy table + v2 PASS, freeze PASS
+pip freeze > repro/requirements.lock.txt     # commit this
+```
+
+Gate: proceed only if everything passes. Append verify output to repro/BUGLOG.md and commit.
+
+Phase 1a -- backbones (primary train seed):
+
+```bash
+python scripts/train_backbone_v2.py --dataset mnist            --train-seed 0 --device cuda   # or cpu
+for d in adult MiniBooNE spambase; do
+  python scripts/train_backbone_v2.py --dataset tabular:$d --train-seed 0 --device cpu
+done
+```
+
+Phase 1b -- pool rollouts (8 cells; GPU for MNIST recommended):
+
+```bash
+sbatch --array=0-7 hpc/pool_rollout.slurm
+# equivalently, serially: python scripts/run_pool_rollout.py --cell K --device cpu   (K=0..7)
+```
+
+Phase 1c -- probe commit (login node, seconds; COMMIT the JSONs it writes):
+
+```bash
+for d in mnist tabular:adult tabular:MiniBooNE tabular:spambase; do
+  python scripts/probe_commit.py --dataset $d --train-seed 0
+done
+git add configs/committed_v2_*.json && git commit -m "v2: committed probe artifacts (alpha, edges, costs)"
+```
+
+Phase 1d -- eval sweep + analysis (CPU, fast):
+
+```bash
+sbatch --array=0-7 hpc/eval_sweep.slurm      # or serially: run_eval_sweep.py --cell K
+python scripts/analyze_results.py
+python scripts/make_figures_v2.py
+```
+
+Phase 1e -- SEND RESULTS FOR THE FORK REVIEW. Copy `analysis_v2/RESULTS.md`
+(and, if size permits, `metrics_v2/`) into `results_committed/`, commit, and send
+to the reviewer. Do not draft paper text before the fork verdict.
+
+Phase 2 -- epsilon-greedy axis (queue anytime after 1d):
+
+```bash
+sbatch --array=8-15 hpc/pool_rollout.slurm    # eps cells per the runner's documented list
+python scripts/probe_commit.py --dataset $d --train-seed 0 --extend-edges   # edges only; alpha/floor unchanged
+sbatch --array=... hpc/eval_sweep.slurm       # eps cells
+python scripts/analyze_results.py && python scripts/make_figures_v2.py
+```
+
+Phase 3 -- robustness backbones (ts 1, 2), later: rerun 1a-1d with
+`--train-seed 1` / `2`; analysis auto-groups by ts; `alpha` stays the ts=0
+committed value.
+
+Phase 4 -- score ablation (spambase/margin), later: pool-rollout cell 16 + one
+eval cell per the config's `score_ablation`.
+
+---
+
+## 7. Split & pre-commitment scheme
+
+```
+pool (dataset)
+  |-- fixed_train_heldout(train_seed)  -->  train(ts) (60%)  -->  backbone (one per dataset,ts)
+  |
+  +-- heldout (40%)
+        |-- probe_eval_split(probe_seed=777)
+        |     |-- probe (10% of heldout)  -->  COMMIT: {alpha, stratum edges, feature costs}
+        |     |                                 (configs/committed_v2_*.json)
+        |     +-- eval  (90% of heldout)  -->  100 x resplit_cal_test  -->  cal / test
+        |
+        +-- invariant: train, probe, eval pairwise disjoint (asserted at load);
+                       (train + probe) never enters selection or evaluation;
+                       edges / alpha / costs are functions of (train, probe) only.
+```
+
+---
+
+## 8. Methods glossary
+
+- cafa_marginal -- the frozen LTT selector: one certified `lambda` controlling
+  marginal risk; `P(R(lambda_hat) > alpha) <= delta`.
+- cafa_iut -- the deployable per-stratum-valid method: a single `lambda`
+  certified simultaneously against every stratum via the intersection-union test
+  (union-null p-value = max over strata of the frozen per-stratum HB p-value),
+  guaranteeing `P(exists k: R(lambda_hat | k) > alpha) <= delta`; global
+  abstention -> full acquisition when a stratum is `alpha`-infeasible.
+- mondrian_audit -- the frozen per-bucket selector run per reference-depth
+  stratum (joint=False and joint=True). Audit only: per-stratum risk / certify /
+  abstain are reported, but no per-stratum *cost* operating point is computed
+  (the routing is circular; see C4).
+- baselines -- plugin (empirical-risk threshold, no correction), fixed
+  confidence, fixed budget. None carries a finite-sample guarantee.
+- oracles -- cheapest-valid (uses test labels; cost floor) and full-feature
+  (risk floor). Non-deployable reference bounds.
+- Cost-blindness lemma -- in the scalar (`lambda`-only) family, cost is monotone
+  in the grid index, so the cheapest certified `lambda` equals the smallest
+  certified index; the cost minimisation is effectively cost-blind here (stated,
+  not hidden).
+
+---
+
+## 9. Outputs schema
+
+- `metrics_v2/{dsname}_ts{ts}_{policy}.json` --
+  `{meta, alpha, delta, grid, lambda_refs: {lr: {population: {...}, resplits: [{seed, schemes: {...}, mondrian_audit, marginal_per_stratum_risk, iut_per_stratum_risk, ...}]}}}`.
+- `analysis_v2/RESULTS.md` (+ `h2_table.csv`, `audit_table.csv`,
+  `fork_strata.csv`, `detection_scatter.csv`) -- header, H2 validity/efficiency
+  (Wilson CIs), per-stratum audit (three-way verdicts), IUT-vs-marginal, fork
+  metrics, binning ablation, GATES.
+- `figures_v2/F1..F4.{pdf,png}` -- realized (risk, cost); per-stratum risk;
+  strata-count + depth IQR; detection scatter.
+
+All empirical values are computed on the cluster; the repo ships no numbers
+(placeholders read `TBD-RUN`).
+
+---
+
+## 10. Tests & gates
+
+```bash
+pytest -q                     # G1 (frozen) + v2 tests (splits, pool, IUT, honesty, probe)
+python scripts/verify_bugs.py # C1 honesty, C2 leak-vs-v2, freeze check
+bash repro/verify_freeze.sh   # frozen files match repro/MANIFEST.sha256
+```
+
+The RESULTS.md GATES block reports, per dataset: marginal violation fraction vs
+`delta` (Wilson upper bound) and IUT any-stratum violation vs `delta`.
+
+---
+
+## 11. Reproducibility (fixed seeds)
+
+| stream | seed / rule |
 |---|---|
-| 1 | core method + synthetic validity gate (no DL) |
-| **2 (here)** | masked predictor + one acquisition policy + rollout, end-to-end on MNIST (TinyGPU) |
-| 3 | per-budget (Mondrian) coverage — the contribution's centerpiece |
-| 4 | all datasets, second backbone, all baselines, full array sweep |
-| 5 | covariate-shift robustness (weighted-CAFA) + ablations |
-| 6 | figures finalized + reproducibility polish → publication repo |
+| train split (backbone) | `train_seed` (primary 0; robustness 1, 2) |
+| probe split | `probe_seed = 777` (fixed) |
+| resplit cal/test | `1_000_000 + resplit_seed` (offset avoids collisions) |
+| random policy | `train_seed` |
+| epsilon-greedy policy | `10_000 + round(1000 * epsilon)` |
+
+Every random draw is seeded from these named values; identical inputs reproduce
+identical outputs. Disjointness and edge-provenance are runtime assertions.
 
 ---
 
-## Design rule that carries through every step
+## 12. Deprecated / provenance
 
-`src/cafa/risk_control.py` is **pure** — arrays in, selection out — and is **not edited after Step 3**. Everything else (data, models, policies) exists only to feed it `(loss, cost)` matrices. That isolation is what makes the guarantee testable in Step 1 and what lets the method run unchanged on any dataset later.
+The legacy scripts (`run_experiment.py`, `run_mondrian.py`,
+`run_mondrian_mnist.py`, `aggregate_results.py`, `make_figures.py`,
+`alpha_probe.py`, `step5_*`) carry a DEPRECATED header and are retained only for
+provenance. They contain the pre-fix pipeline (per-seed reshuffle, cal-fit edges,
+clairvoyant tabular greedy, `lambda_ref`-duplicated marginal counting) and must
+not be used for paper numbers. Use the v2 pipeline in section 6.

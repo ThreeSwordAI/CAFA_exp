@@ -752,3 +752,215 @@ def load_tabular_afa_cfg(
         ds = fetch_openml(name, version=int(spec["version"]), data_home=data_home, as_frame=True)
 
     return _frame_to_afa(ds.frame, ds.target.name, cfg, seed, cost_scheme, name)
+
+# --------------------------------------------------------------------------- #
+# WO-3 -- v2 pool loaders (ADDITIVE; load_mnist_afa / load_tabular_afa[_cfg]
+# above are byte-identical and untouched).
+#
+# The v2 scheme is fixed-train / probe / resplit (see cafa.splits):
+#   * ``fixed_train_heldout`` gives a train split that depends ONLY on
+#     ``train_seed`` (one backbone per (dataset, train_seed)); the 40% heldout is
+#     the only thing resplit -- this structurally fixes C2 (per-seed full-pool
+#     reshuffle leaked training rows into cal/test).
+#   * ``probe_eval_split`` carves a fixed 10% probe (seed 777) out of the
+#     heldout; the probe alone commits alpha / stratum edges / feature costs
+#     (C3/C5), and cal/test resplits touch only the remaining 90% eval pool.
+# Positions are computed over the HELDOUT arrays (not global indices), so
+# downstream code slices ``X_held[probe_pos]`` / ``X_held[eval_pos]``.
+# --------------------------------------------------------------------------- #
+__all__ += ["load_mnist_pool", "load_tabular_pool"]
+
+
+def load_mnist_pool(cfg: dict, train_seed: int, download: bool = False) -> dict:
+    """Load patchified MNIST as a fixed-train / probe / eval pool (v2).
+
+    Pool = official MNIST train+test concatenated exactly as
+    :func:`load_mnist_afa` (``/255.0`` then patchify).  The train split is fixed
+    by ``train_seed`` alone; the heldout arrays are returned in fixed order with
+    probe/eval *positions* into them.  Costs are uniform (one per patch).
+
+    See the module contract (WO-3) for the returned dict keys.
+    """
+    import torchvision  # noqa: WPS433  (lazy: keep the pure path torch-free)
+
+    from .config import load_paths
+    from .splits import (
+        assert_disjoint,
+        fixed_train_heldout,
+        probe_eval_split,
+        split_digest,
+    )
+
+    paths = load_paths()
+    data_root = str(paths.data_root)
+
+    pv = (cfg or {}).get("protocol_v2", {})
+    train_frac = float(pv.get("train_frac", 0.6))
+    probe_frac = float(pv.get("probe_frac", 0.10))
+    probe_seed = int(pv.get("probe_seed", 777))
+
+    train_ds = torchvision.datasets.MNIST(data_root, train=True, download=download)
+    test_ds = torchvision.datasets.MNIST(data_root, train=False, download=download)
+    imgs = np.concatenate(
+        [train_ds.data.numpy().astype(np.float32), test_ds.data.numpy().astype(np.float32)],
+        axis=0,
+    )
+    labels = np.concatenate(
+        [train_ds.targets.numpy().astype(np.int64), test_ds.targets.numpy().astype(np.int64)],
+        axis=0,
+    )
+    imgs = imgs / 255.0
+    X_all = patchify_images(imgs)
+    n_total = X_all.shape[0]
+
+    train_idx, heldout_idx = fixed_train_heldout(n_total, train_frac, train_seed)
+    probe_pos, eval_pos = probe_eval_split(np.arange(heldout_idx.size), probe_frac, probe_seed)
+    global_probe = heldout_idx[probe_pos]
+    global_eval = heldout_idx[eval_pos]
+    assert_disjoint(train=train_idx, probe=global_probe, eval=global_eval)
+
+    return {
+        "train": (X_all[train_idx], labels[train_idx]),
+        "heldout": (X_all[heldout_idx], labels[heldout_idx]),
+        "heldout_index": heldout_idx,
+        "probe_pos": probe_pos,
+        "eval_pos": eval_pos,
+        "feature_costs_by_scheme": {"uniform": np.ones(N_PATCHES, dtype=float)},
+        "feature_groups": None,
+        "n_classes": 10,
+        "n_patches": N_PATCHES,
+        "patch_grid": PATCH_GRID,
+        "patch_dim": PATCH_DIM,
+        "name": "mnist",
+        "train_seed": int(train_seed),
+        "split_digest": {
+            "train": split_digest(train_idx),
+            "probe": split_digest(global_probe),
+            "eval": split_digest(global_eval),
+        },
+    }
+
+
+def load_tabular_pool(
+    name: str, cfg: dict, train_seed: int, download: bool = False
+) -> dict:
+    """Load an OpenML tabular dataset as a fixed-train / probe / eval pool (v2).
+
+    Reuses the config-aware OpenML fetch (:func:`openml_spec_for`) and the same
+    standardise-numeric / one-hot-categorical encoding as
+    :func:`load_tabular_afa`, but fits the scaler/OHE on the **fixed train
+    split** (train_seed only) and computes per-feature costs for **all three
+    schemes** (``uniform``, ``inverse_info``, ``random`` seeded at 0) on that
+    train split.  The heldout arrays carry probe/eval positions into them.
+
+    See the module contract (WO-3) for the returned dict keys.
+    """
+    from sklearn.datasets import fetch_openml
+    from sklearn.preprocessing import OneHotEncoder, StandardScaler
+
+    from .config import load_paths
+    from .splits import (
+        assert_disjoint,
+        fixed_train_heldout,
+        probe_eval_split,
+        split_digest,
+    )
+
+    paths = load_paths()
+    data_home = str(paths.data_root)
+
+    spec = openml_spec_for(cfg, name)
+    if spec["data_id"] is not None:
+        ds = fetch_openml(data_id=int(spec["data_id"]), data_home=data_home, as_frame=True)
+    else:
+        ds = fetch_openml(name, version=int(spec["version"]), data_home=data_home, as_frame=True)
+
+    frame = ds.frame.copy()
+    target_col = ds.target.name
+    y_raw = frame[target_col]
+    X_df = frame.drop(columns=[target_col])
+
+    y_cats = y_raw.astype("category")
+    y = y_cats.cat.codes.to_numpy().astype(np.int64)
+    n_classes = int(y.max()) + 1
+
+    keep = ~(X_df.isna().any(axis=1).to_numpy())
+    X_df = X_df.loc[keep].reset_index(drop=True)
+    y = y[keep]
+
+    num_cols = list(X_df.select_dtypes(include=["number"]).columns)
+    cat_cols = [c for c in X_df.columns if c not in num_cols]
+
+    pv = (cfg or {}).get("protocol_v2", {})
+    train_frac = float(pv.get("train_frac", 0.6))
+    probe_frac = float(pv.get("probe_frac", 0.10))
+    probe_seed = int(pv.get("probe_seed", 777))
+
+    n_total = X_df.shape[0]
+    train_idx, heldout_idx = fixed_train_heldout(n_total, train_frac, train_seed)
+    probe_pos, eval_pos = probe_eval_split(np.arange(heldout_idx.size), probe_frac, probe_seed)
+    global_probe = heldout_idx[probe_pos]
+    global_eval = heldout_idx[eval_pos]
+    assert_disjoint(train=train_idx, probe=global_probe, eval=global_eval)
+
+    # Encoders are fit on the FIXED TRAIN split only (encoded layout is a
+    # function of train_seed alone -- the single source of truth for the trainer).
+    scaler = StandardScaler()
+    try:
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+    except TypeError:  # older sklearn
+        ohe = OneHotEncoder(handle_unknown="ignore", sparse=False)
+    if num_cols:
+        scaler.fit(X_df.loc[train_idx, num_cols].to_numpy(dtype=float))
+    if cat_cols:
+        ohe.fit(X_df.loc[train_idx, cat_cols].astype(str).to_numpy())
+
+    def _encode(rows_idx):
+        parts = []
+        if num_cols:
+            parts.append(scaler.transform(X_df.loc[rows_idx, num_cols].to_numpy(dtype=float)))
+        if cat_cols:
+            parts.append(ohe.transform(X_df.loc[rows_idx, cat_cols].astype(str).to_numpy()))
+        return np.hstack(parts).astype(np.float32) if parts else np.zeros((len(rows_idx), 0), np.float32)
+
+    feature_groups = []
+    col = 0
+    for _ in num_cols:
+        feature_groups.append(np.array([col], dtype=int)); col += 1
+    if cat_cols:
+        cat_widths = [len(cats) for cats in ohe.categories_]
+        for w in cat_widths:
+            feature_groups.append(np.arange(col, col + w, dtype=int)); col += int(w)
+    n_cols = col
+
+    X_train = _encode(train_idx)
+    y_train = y[train_idx]
+    X_held = _encode(heldout_idx)
+    y_held = y[heldout_idx]
+
+    feature_costs_by_scheme = {
+        scheme: assign_feature_costs(
+            X_train, y_train, scheme, feature_groups=feature_groups, seed=0
+        )
+        for scheme in ("uniform", "inverse_info", "random")
+    }
+
+    return {
+        "train": (X_train, y_train),
+        "heldout": (X_held, y_held),
+        "heldout_index": heldout_idx,
+        "probe_pos": probe_pos,
+        "eval_pos": eval_pos,
+        "feature_costs_by_scheme": feature_costs_by_scheme,
+        "feature_groups": feature_groups,
+        "n_features": len(feature_groups),
+        "n_classes": n_classes,
+        "n_cols": int(n_cols),
+        "name": str(name),
+        "train_seed": int(train_seed),
+        "split_digest": {
+            "train": split_digest(train_idx),
+            "probe": split_digest(global_probe),
+            "eval": split_digest(global_eval),
+        },
+    }

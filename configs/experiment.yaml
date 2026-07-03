@@ -45,3 +45,24 @@ training_tabular:
   epochs: 40
   batch_size: 256
   lr: 0.001
+# --- v2 protocol (fixed-train / probe / resplit; see CLAUDE_CODE_WORKORDER.md) ---
+protocol_v2:
+  train_frac: 0.6
+  probe_frac: 0.10          # of the heldout pool; probe_seed fixed below
+  probe_seed: 777
+  train_seed_primary: 0
+  train_seeds_robustness: [1, 2]
+  n_resplits: 100
+  cal_frac_of_eval: 0.5
+mondrian_v2:
+  lambda_refs: [0.5, 0.7, 0.9]
+  n_buckets_primary: 5
+  n_buckets_ablation: [3, 8]
+  min_per_bucket_ablation: [25, 50, 100]
+  edges_source: probe        # documentation of D3; code reads committed JSONs
+iut:
+  enabled: true
+policies_v2:
+  epsilons: [0.25, 0.5]
+score_ablation:
+  cells: [{dataset: "tabular:spambase", policy: greedy_entropy, score: margin}]

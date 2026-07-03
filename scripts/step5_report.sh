@@ -1,4 +1,8 @@
 #!/bin/bash
+# DEPRECATED (kept for provenance). Superseded by the v2 pipeline (see README +
+# CLAUDE_CODE_WORKORDER.md). Known issues in the legacy pipeline: per-seed
+# full-pool reshuffle (MNIST leakage), cal-fit stratum edges, clairvoyant tabular
+# greedy (pre-fix), lambda_ref-duplicated marginal counting. Do not use for paper numbers.
 # ===========================================================================
 # Step-5 report -- run AFTER scripts/step5_sweep_tinygpu.sh (all 40 tasks) has
 # finished.  Produces:

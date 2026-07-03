@@ -102,24 +102,31 @@ def expand_feature_mask(
 # Policies (order features; do not modify the predictor)
 # --------------------------------------------------------------------------- #
 class TabularGreedyEntropyPolicy:
-    """EDDI-style myopic greedy acquisition by expected predictive entropy.
+    """Myopic mean-imputation entropy policy (cost-unaware, deployable).
 
-    Mirrors :class:`cafa.acquisition.GreedyEntropyPolicy` for tabular features:
-    for every not-yet-acquired feature ``a`` it forms the hypothetical observed
-    set ``O u {a}`` with ``a``'s columns imputed at their (standardised) mean --
-    which is the zeroed value the masked predictor already uses -- runs the
-    predictor, and acquires ``a* = argmin_a H(predictor)``.  The **true** columns
-    of ``a*`` are then revealed.  Deterministic given the predictor.
+    For every unacquired feature a, form the hypothetical observed set
+    O u {a} with a's encoded columns imputed at their TRAIN means (computed
+    on the fixed train split: ~0 for standardized numerics, category
+    frequencies for one-hot blocks), score the predictor's entropy, and
+    acquire argmin. The candidate's TRUE value is never consulted before
+    acquisition ("no unpaid value reaches the scorer").
     """
 
     name = "greedy_entropy"
 
-    def __init__(self, cand_chunk: int = 16):
+    def __init__(self, col_means: np.ndarray, cand_chunk: int = 16):
+        cm = np.asarray(col_means, dtype=np.float32).ravel()
+        if cm.ndim != 1 or cm.size == 0:
+            raise ValueError("col_means must be a non-empty 1-D [n_cols] array.")
+        self.col_means = cm
         self.cand_chunk = int(cand_chunk)
 
     @classmethod
     def from_training_data(cls, X_train, seed: int = 0):
-        return cls()
+        X = np.asarray(X_train, dtype=np.float32)
+        if X.ndim != 2:
+            raise ValueError(f"X_train must be [N, n_cols]; got {X.shape}.")
+        return cls(col_means=X.mean(axis=0))
 
     def select_next(self, predictor, X, observed_feat, feature_groups, device):
         """Choose the next feature per instance among the unobserved ones.
@@ -136,16 +143,20 @@ class TabularGreedyEntropyPolicy:
         B, n_cols = X.shape
         d = observed_feat.shape[1]
         base_col_mask = expand_feature_mask(observed_feat, feature_groups)  # [B, n_cols]
+        X_obs = X * base_col_mask          # true values ONLY where already paid for
 
         ent = np.full((B, d), np.inf, dtype=float)
-        # Evaluate candidate features in chunks: for each candidate we reveal its
-        # columns in the *mask only* (values imputed at mean == the zeroed value),
-        # so the base masked input is reused and one predict per candidate suffices.
+        # For each candidate we reveal its columns in the mask AND impute those
+        # columns at their TRAIN means -- so the predictor scores a hypothetical
+        # mean-imputed reveal, never the candidate's true (unpaid) value.
         for a in range(d):
             cand_mask = base_col_mask.copy()
             cand_mask[:, feature_groups[a]] = 1.0
+            X_cand = X_obs.copy()
+            # INVARIANT (C1): X_cand[:, group_a] contains train means, never X[:, group_a].
+            X_cand[:, feature_groups[a]] = self.col_means[feature_groups[a]][None, :]
             probs = np.asarray(
-                predictor.predict_proba(X, cand_mask, device=device), dtype=float
+                predictor.predict_proba(X_cand, cand_mask, device=device), dtype=float
             )
             pc = np.clip(probs, _EPS, 1.0)
             ent[:, a] = -(probs * np.log(pc)).sum(axis=1)
@@ -217,9 +228,11 @@ def tabular_rollout(
     if isinstance(score_fn, str):
         score_fn = get_score_fn(score_fn)
     if isinstance(policy, str):
-        # Symmetric with ``score_fn``: allow a policy name. Use ``X`` itself as
-        # the training reference for imputation/dim (callers with a separate
-        # training split should pass a constructed policy instead).
+        # TEST-ONLY convenience: allow a policy name and build it from ``X``
+        # itself.  This leaks nothing statistically (the col-means are population
+        # statistics of the same rows), but PRODUCTION code must pass a policy
+        # constructed from the fixed TRAIN split via ``from_training_data`` so the
+        # imputation means never see cal/test rows.  Existing tests rely on this.
         policy = get_tabular_policy(policy, X_train=X)
 
     X_np = np.asarray(X, dtype=np.float32)
