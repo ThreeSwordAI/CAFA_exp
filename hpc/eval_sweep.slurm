@@ -3,8 +3,9 @@
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
-# CPU array over the WO-10 Phase-1 cells (run_eval_sweep.py --cell):
+# CPU array over the run_eval_sweep.py --cell list:
 #   Phase-1 : --array=0-7    (4 datasets x 2 policies)
+#   Phase-2 : --array=8-15   ([adult, MiniBooNE, spambase, mnist] x eps in {0.25, 0.5})
 #   sbatch --array=0-7 --output="$RESULTS_ROOT/logs/%x_%A_%a.out" \
 #          --error="$RESULTS_ROOT/logs/%x_%A_%a.err" hpc/eval_sweep.slurm
 # The eval sweep is torch-free and CPU-only; no --gres / no --mem (tinygpu convention).

@@ -136,7 +136,16 @@ def section_freeze() -> bool:
         actual = file_sha256(_REPO / rel)
         want = expected.get(rel) or expected.get(rel.replace("/", "\\"))
         match = (want is not None and actual == want)
-        print(f"  {rel}: {'match' if match else 'MISMATCH'} ({actual[:12]}...)")
+        note = ""
+        if not match and want is not None:
+            # Windows checkouts may hold CRLF while the manifest was made on an
+            # LF working tree; the freeze is about CONTENT, so retry normalized.
+            import hashlib
+            lf = (_REPO / rel).read_bytes().replace(b"\r\n", b"\n")
+            if hashlib.sha256(lf).hexdigest() == want:
+                match = True
+                note = " (match after CRLF->LF normalization; content identical)"
+        print(f"  {rel}: {'match' if match else 'MISMATCH'} ({actual[:12]}...){note}")
         if not match:
             ok = False
     print(f"  Freeze {'PASS' if ok else 'FAIL'}\n")

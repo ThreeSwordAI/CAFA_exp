@@ -1,9 +1,11 @@
 # CAFA v2 -- Project Update
 
-Date: 2026-07-11 (Phase 1 complete on cluster + full local replication)
-Scope: everything from the v2 repair work order through the first full results.
-Canonical results: `results_committed/RESULTS.md` (cluster). Local replication:
-`analysis_v2/RESULTS.md` + `figures_v2/` (this machine, not pushed).
+Date: 2026-07-12 (Phase 1 complete on cluster + local replication;
+Phase 2 [policy-quality axis] complete locally -- see Section 11)
+Scope: everything from the v2 repair work order through the Phase-2 readout.
+Canonical Phase-1 results: `results_committed/RESULTS.md` (cluster). Local
+runs: `analysis_v2/RESULTS.md`, `analysis_v2/PHASE2_READOUT.md`, `figures_v2/`
+(this machine, not pushed).
 
 ---
 
@@ -33,6 +35,13 @@ Canonical results: `results_committed/RESULTS.md` (cluster). Local replication:
 - The concentration "insight" (greedy concentrates depth vs random) is
   **mixed**: clear on adult (3 vs 5 strata, entropy 0.42 vs 0.77), absent or
   reversed elsewhere. This is fork-review material, not a settled claim.
+- **Phase 2 (epsilon axis, local run) settles it at outcome 2 -- MIXED:**
+  policy quality concentrates the depth distribution on 3 of 4 datasets
+  (aggregate Spearman rho(quality, entropy@0.5) = -0.757, p = 0.0007), but the
+  **detection frontier never moved with epsilon within any dataset** -- the
+  "better policy delays detection" claim has no within-dataset support on the
+  4-point axis. mnist reverses the entropy trend at lambda_ref = 0.9 (the
+  Phase-1 reversal persists). Details in Section 11.
 
 ---
 
@@ -139,10 +148,20 @@ pipeline; all were accepted and fixed structurally:
   three-way), depth concentration (IQR, normalized entropy), detection
   outcomes, binning ablation (25-seed subset), detection-power scatter data.
 
+### Run additionally (Phase 2, local only so far -- Section 11)
+
+- epsilon-greedy mixtures eps {0.25, 0.5} x 4 datasets: 8 pool rollouts +
+  determinism check, probe `--extend-edges`, 8 eval cells, Phase-2 analysis
+  (`scripts/phase2_analyze.py`), readout + figures. Cluster run still pending
+  (cells/arrays documented; local is the pilot).
+
 ### Not run yet (built and queued, or deferred by design)
 
-- **Phase 2**: epsilon-greedy mixtures (eps 0.25/0.5) -- code + cells 8-15
-  ready, `--extend-edges` path implemented; not submitted.
+- **Phase 2 on the cluster** (canonical ts=0 environment): arrays 8-15 for
+  `hpc/pool_rollout.slurm` and `hpc/eval_sweep.slurm`.
+- **Phase 2b** (finer axis, eps {0.1, 0.75}): only if the 4-point trend were
+  borderline -- the local verdict (frontier flat within datasets) suggests 2b
+  would refine the concentration curve, not flip the frontier conclusion.
 - **Phase 3**: robustness backbones train_seed {1,2} -- one command per seed.
 - **Phase 4**: score ablation (spambase, margin score) -- cell 16 ready.
 - **Deferred by decision D13 (documented, not implemented)**: (lambda,beta)
@@ -285,6 +304,13 @@ certify on the tabular datasets.
   results_committed/) -- the per-resplit JSONs exist only on the cluster and
   this PC. Needs a deliberate `git add -f` or a rename if the reviewer wants
   them.
+- Freeze-check portability (Windows): the committed `repro/MANIFEST.sha256`
+  hashes the LF working tree (cluster); Windows checks the same files out with
+  CRLF, so the raw-byte comparison false-alarmed. Verified the git blob (LF)
+  content matches the cluster hashes exactly (`c37ab6...`, `3ec125...`) -- the
+  freeze holds; `verify_bugs.py` now retries with CRLF->LF normalization and
+  reports it did so. (Earlier, the same script needed a fix for Git Bash's
+  `*filename` binary-mode prefix in sha256sum output.)
 
 ---
 
@@ -320,7 +346,9 @@ Cannot claim yet (needs fork review / more runs):
 | Canonical results (cluster) | `results_committed/RESULTS.md` |
 | Committed probe artifacts (canonical, ts=0) | `configs/committed_v2_*.json` |
 | Local replication report + CSVs | `analysis_v2/` (gitignored) |
+| Phase-2 readout + summary + determinism record | `analysis_v2/PHASE2_READOUT.md`, `phase2_summary.csv`, `phase2_determinism.txt` |
 | Local figures F1-F4 (pdf+png, per dataset) | `figures_v2/` (gitignored) |
+| Phase-2 figures | `figures_v2/F3_phase2_*`, `F3_phase2_frontier.*`, `F4_phase2.*` |
 | Local per-resplit metrics | `metrics_v2/` (gitignored) |
 | Local probe commits + manifest (reference) | `results/local_committed/` |
 | Pool caches / checkpoints (local) | `results/pool_v2/`, `results/checkpoints_v2/` |
@@ -329,21 +357,150 @@ Cannot claim yet (needs fork review / more runs):
 | Environment lock (cluster) | `repro/requirements.lock.txt` |
 
 Uncommitted local diffs (intentional, not pushed): `.gitignore` (+`.venv/`),
-`scripts/verify_bugs.py` (sha256sum `*` prefix parsing fix).
+`scripts/verify_bugs.py` (sha256sum `*` prefix + CRLF-normalization fixes),
+`scripts/run_eval_sweep.py` (Phase-2 cells 8-15), `hpc/eval_sweep.slurm`
+(Phase-2 array comment), new `scripts/phase2_analyze.py`, `project_update.md`.
 
 ---
 
 ## 10. Next steps
 
-1. **Send for fork review** (Phase 1e): `results_committed/RESULTS.md` +, if
-   wanted, the metrics JSONs (force-add or copy under a non-ignored name).
-   Explicitly flag: (a) the two borderline marginal cells and the dependence
-   caveat; (b) plugin-unsafe being conditional on tight alpha; (c) the mixed
-   concentration evidence. The fork verdict decides the paper's framing.
-2. **Phase 2** (pre-approved to queue): `sbatch --array=8-15
-   hpc/pool_rollout.slurm`, then `probe_commit.py --extend-edges`, eval, and
-   re-analysis.
+1. **Send for fork review** (Phase 1e): `results_committed/RESULTS.md` +
+   `analysis_v2/PHASE2_READOUT.md` (+, if wanted, the metrics JSONs --
+   force-add or copy under a non-ignored name). Explicitly flag: (a) the
+   borderline marginal cells and the dependence caveat; (b) plugin-unsafe
+   being conditional on tight alpha; (c) the Phase-2 verdict (outcome 2,
+   Section 11) including the flat within-dataset frontier and the
+   between-dataset confound in the aggregate Spearman.
+2. **Phase 2 on the cluster** (canonical): `sbatch --array=8-15
+   hpc/pool_rollout.slurm`, `probe_commit.py --extend-edges` x4,
+   `sbatch --array=8-15 hpc/eval_sweep.slurm` (keep the --gres line TinyGPU
+   requires), then `analyze_results.py` + `phase2_analyze.py`. Commit the
+   extended `configs/committed_v2_*.json` and the Phase-2 readout.
 3. **Phase 3** robustness backbones (`--train-seed 1/2`; alpha stays ts=0).
 4. **Phase 4** score ablation (spambase/margin, cell 16).
-5. Housekeeping: commit the verify_bugs parser fix and the `.gitignore` line;
-   decide how to version the cluster `metrics_v2/` JSONs.
+5. Housekeeping: commit the code diffs listed above; decide how to version the
+   cluster `metrics_v2/` JSONs (the Phase-2 instructions require they reach
+   git).
+
+---
+
+## 11. Phase 2 -- the policy-quality axis (local run, 2026-07-12)
+
+### 11.1 What Phase 2 asks
+
+Phase 1 tested concentration at two extremes (greedy eps=0 vs random eps=1)
+and got mixed evidence. Phase 2 builds a 4-point policy-quality axis
+eps in {0, 0.25, 0.5, 1.0} per dataset and asks: as policy quality increases,
+(a) does the reference-depth distribution concentrate, and (b) does the
+minimal lambda_ref needed to detect the infeasible stratum (the detection
+frontier) rise -- i.e. does a better policy make the hidden failure harder to
+see? Three pre-committed outcomes: 1 = monotone and clean (insight
+resurrects), 2 = mixed (reported observation), 3 = flat/reversed (dropped).
+
+Quality is measured independently of concentration (avoiding tautology):
+`quality_auc` = normalized area under accuracy-at-budget; `steps_to_90` =
+smallest depth reaching 90% of full-acquisition accuracy.
+
+### 11.2 What ran (this laptop, RTX 3050, venv from Phase 1)
+
+New code (additive): `scripts/phase2_analyze.py` (metric families A/B/C,
+frontier, lemma face, Spearman, fork verdict, F3/F4 Phase-2 figures);
+`run_eval_sweep.py` cell list extended to 8-15 (mirrors the rollout cells);
+`hpc/eval_sweep.slurm` documents the Phase-2 array. Frozen core untouched
+(verified before and after).
+
+Pipeline executed: 8 epsilon rollouts (cells 8-15) + a determinism re-run of
+cell 8 -> `probe_commit --extend-edges` x4 (probe seed 777; alpha/floor
+untouched, edges for all 4 policies now in each committed JSON) -> 8 eval
+cells -> `analyze_results` + `make_figures_v2` + `phase2_analyze` ->
+`pytest -q` (41 passed) + `verify_bugs.py` (ALL PASS). Local committed configs
+were used for a self-consistent local axis and archived to
+`results/local_committed/`; the cluster canonical configs were restored
+afterwards.
+
+### 11.3 Fork verdict: OUTCOME 2 (mixed) -- with an important nuance
+
+Per-dataset monotonicity (points ordered by quality_auc; entropy at
+lambda_ref = 0.9; frontier = min lambda_ref with a detected infeasible
+stratum):
+
+| dataset | quality_auc range (worst->best) | entropy@0.9 trend | frontier across eps | monotone? |
+|---|---|---|---|---|
+| tabular-adult | 0.8122 -> 0.8187 | 0.786 -> 0.602 (falls) | 0.9 at every eps | yes |
+| tabular-MiniBooNE | 0.8648 -> 0.8966 | 0.835 -> 0.699 (falls) | 0.9 at every eps | yes |
+| tabular-spambase | 0.8636 -> 0.8830 | 0.934 -> 0.818 (falls) | not detected at any eps | yes |
+| mnist | 0.6411 -> 0.7029 | 0.789 -> 0.859 (RISES) | 0.7 at every eps | no (entropy reverses) |
+
+Aggregate over all 16 (dataset, eps) points ("not detected" encoded 1.0):
+
+- rho(quality_auc, min_lambda_ref_detected) = **0.671** (p = 0.0044)
+- rho(quality_auc, entropy@0.5) = **-0.757** (p = 0.0007)
+- rho(quality_auc, entropy@0.7) = -0.542 (p = 0.0301)
+- rho(quality_auc, entropy@0.9) = -0.079 (p = 0.7700)
+
+**The honest reading (stated in the readout, must survive into any paper
+text):**
+
+1. **Concentration is real but threshold-dependent.** Better policies
+   concentrate the reference-depth distribution strongly at shallow/mid
+   reference thresholds (rho -0.76 at 0.5, -0.54 at 0.7) and not at deep ones
+   (rho -0.08 at 0.9). mnist reverses at 0.9, exactly as in Phase 1.
+2. **The detection frontier did NOT move with epsilon within any dataset**
+   (mnist 0.7 at every eps; adult/MiniBooNE 0.9 at every eps; spambase never).
+   The positive aggregate frontier correlation (0.671) is therefore driven by
+   *between-dataset* differences (which conflate dataset difficulty with
+   policy quality), not by policy quality shifting the frontier -- on this
+   axis, "better policy -> harder to detect" has **no within-dataset
+   support**. The lambda_ref grid {0.5, 0.7, 0.9} is also coarse; a frontier
+   shift smaller than one grid step is invisible.
+3. Curiosity worth keeping: on mnist the myopic greedy is NOT the best policy
+   by quality_auc (eps=0.25 scores 0.7029 vs greedy 0.6980; greedy's
+   steps_to_90 = 37 is the worst on mnist). The quality axis is therefore not
+   perfectly ordered by epsilon on mnist -- the monotonicity test used
+   quality_auc ordering, as specified.
+
+Consequence for the paper framing (per the pre-committed outcomes): the
+concentration observation is reportable at "3 of 4 datasets, strongest at
+shallow reference thresholds"; the frontier/detection-delay claim should NOT
+be made from this evidence. The paper stands on audit + IUT + H2, with
+concentration as a quantified observation.
+
+### 11.4 Certificate gates on the epsilon cells (delta = 0.10, Wilson UB)
+
+- **IUT any-stratum: 16/16 PASS** (max observed 0.037).
+- Marginal: 14/16 PASS. FAILs: mnist/eps=0 (0.120 [UB 0.162], the known
+  Phase-1 local borderline) and mnist/eps=0.5 (0.090 [UB 0.128] -- point
+  estimate below delta; UB above). Same resplit-dependence caveat as Phase 1:
+  resplits share one finite eval pool, violations cluster with the backbone
+  draw. To be flagged, not smoothed.
+- New-cell eval summaries: adult 2/100 violations at every eps; MiniBooNE
+  0/100; spambase 6/100 (eps 0.25) and 0/100 (eps 0.5); mnist 0/100 (eps 0.25)
+  and 9/100 (eps 0.5). IUT abstention switches on exactly where an infeasible
+  stratum appears (lambda_ref 0.9 tabular; 0.7+ mnist), as designed.
+
+### 11.5 Invariant checks (Phase-2 instructions Sec. "Checks & gates")
+
+- **Freeze:** git-blob (LF) content of both frozen files matches the cluster
+  manifest exactly; `pytest -q` 41 passed; `verify_bugs.py` ALL PASS.
+- **Policy determinism:** cell 8 (adult, eps=0.25) re-rolled from the same
+  seed -> `order`, `scores`, `correct` byte-identical (PASS; recorded in
+  `analysis_v2/phase2_determinism.txt` and embedded in the readout). Policy
+  RNG seed = 10_000 + round(1000*eps), fixed per rollout; the deployed policy
+  is a frozen measurable function of x via the cached order.
+- **Cost-blindness:** structural -- rollouts never see costs; per-scheme costs
+  derived post-hoc from `order`.
+- **Split hygiene / edge provenance:** disjointness asserted at load for every
+  new cell; epsilon-policy edges committed from the probe (seed 777) via
+  `--extend-edges` BEFORE any eval selection, loaded from JSON, never refit.
+
+### 11.6 Phase-2 caveats and what would strengthen it
+
+- Local-only so far: the cluster (canonical) Phase-2 run is pending; expect
+  small boundary differences (local backbones differ; local adult alpha is
+  0.25 vs cluster 0.20).
+- 4 epsilon points per dataset, frontier measured on a 3-point lambda_ref
+  grid: a finer lambda_ref grid (not just Phase 2b's finer epsilon grid) is
+  what could actually resolve a within-dataset frontier shift, if one exists.
+- The aggregate frontier Spearman should not be quoted without the
+  between-dataset confound caveat (Sec. 11.3, point 2).

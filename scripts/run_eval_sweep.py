@@ -114,10 +114,19 @@ def r6(x):
 
 
 def build_cells():
+    """Cell list; order fixed and mirrored with run_pool_rollout.build_cells.
+
+    Phase-1 cells 0-7 : [mnist, adult, MiniBooNE, spambase] x [greedy_entropy, random]
+    Phase-2 cells 8-15: [adult, MiniBooNE, spambase, mnist] x eps in {0.25, 0.5}
+    """
     cells = []
     for ds in ["mnist"] + _TAB:
         for pol in ["greedy_entropy", "random"]:
             cells.append({"dataset": ds, "policy_token": pol, "score": None})
+    for ds in _TAB + ["mnist"]:
+        for eps in [0.25, 0.5]:
+            cells.append({"dataset": ds, "policy_token": eps_greedy_policy_token(eps),
+                          "score": None})
     return cells
 
 
