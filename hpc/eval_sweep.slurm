@@ -1,5 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=cafa_eval_sweep
+#SBATCH --gres=gpu:1
 #SBATCH --cpus-per-task=4
 #SBATCH --time=01:00:00
 # CPU array over the WO-10 Phase-1 cells (run_eval_sweep.py --cell):
