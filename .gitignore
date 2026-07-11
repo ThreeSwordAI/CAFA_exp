@@ -1,5 +1,6 @@
 # Local machine-specific paths (never committed)
 configs/paths.yaml
+hpc/env.local.sh
 
 # Data and results
 data/

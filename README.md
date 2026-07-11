@@ -131,6 +131,14 @@ export PYTHONPATH="$PWD/src:$PYTHONPATH"
 # DATA_ROOT / RESULTS_ROOT already exported per legacy setup
 ```
 
+One-time batch-job setup (sbatch jobs start with a clean shell and do NOT
+inherit your login exports; the v2 slurm scripts read this file instead):
+
+```bash
+cp hpc/env.local.template.sh hpc/env.local.sh
+$EDITOR hpc/env.local.sh                    # set CAFA_ENV / DATA_ROOT / RESULTS_ROOT
+```
+
 Phase 0 -- verify before compute (login node, ~5 min):
 
 ```bash

@@ -9,12 +9,19 @@
 #   Phase-5 : --array=16     ((tabular:spambase, greedy_entropy, score=margin))
 #   sbatch --array=0-7 --output="$RESULTS_ROOT/logs/%x_%A_%a.out" \
 #          --error="$RESULTS_ROOT/logs/%x_%A_%a.err" hpc/pool_rollout.slurm
-# Preamble copied verbatim from hpc/sweep.slurm (FAU NHR conventions; no --mem on tinygpu).
+# Preamble copied from hpc/sweep.slurm (FAU NHR conventions; no --mem on tinygpu),
+# hardened for batch jobs that do NOT inherit the login shell's exports:
+# the repo comes from $SLURM_SUBMIT_DIR (submit from the repo root) and the
+# env vars (CAFA_ENV, DATA_ROOT, RESULTS_ROOT) come from hpc/env.local.sh
+# (gitignored; copy hpc/env.local.template.sh and fill in your paths).
 set -euo pipefail
 source /etc/profile
 module load python/3.12-conda
-source activate "$CAFA_ENV"
-cd "$CAFA_REPO"
+cd "${CAFA_REPO:-$SLURM_SUBMIT_DIR}"
+if [ -f hpc/env.local.sh ]; then source hpc/env.local.sh; fi
+source activate "${CAFA_ENV:?CAFA_ENV not set - create hpc/env.local.sh from hpc/env.local.template.sh}"
+: "${DATA_ROOT:?DATA_ROOT not set - add it to hpc/env.local.sh}"
+: "${RESULTS_ROOT:?RESULTS_ROOT not set - add it to hpc/env.local.sh}"
 export PYTHONUNBUFFERED=1
-export PYTHONPATH="$CAFA_REPO/src:${PYTHONPATH:-}"   # ADJUST IF NEEDED (or $SLURM_SUBMIT_DIR/src)
+export PYTHONPATH="$PWD/src:${PYTHONPATH:-}"
 python scripts/run_pool_rollout.py --cell "$SLURM_ARRAY_TASK_ID" --device "${CAFA_DEVICE:-cuda}"
