@@ -1,6 +1,6 @@
-### Starting TaskPrologue of job 1727632 on tg068 at Fri Jul  3 03:24:06 AM CEST 2026
-Running on cores 6-7,14-15,22-23,30-31 with governor ondemand
-Fri Jul  3 03:24:06 2026       
+### Starting TaskPrologue of job 1735177 on tg060 at Sat Jul 11 04:08:00 PM CEST 2026
+Running on cores 2-3,10-11,18-19,26-27 with governor ondemand
+Sat Jul 11 16:08:00 2026       
 +-----------------------------------------------------------------------------------------+
 | NVIDIA-SMI 610.43.02              KMD Version: 610.43.02     CUDA UMD Version: 13.3     |
 +-----------------------------------------+------------------------+----------------------+
@@ -8,8 +8,8 @@ Fri Jul  3 03:24:06 2026
 | Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
 |                                         |                        |               MIG M. |
 |=========================================+========================+======================|
-|   0  NVIDIA GeForce RTX 2080 Ti     On  |   00000000:AF:00.0 Off |                  N/A |
-| 28%   27C    P8             13W /  250W |       1MiB /  11264MiB |      0%      Default |
+|   0  NVIDIA GeForce RTX 2080 Ti     On  |   00000000:3B:00.0 Off |                  N/A |
+| 28%   28C    P8              3W /  250W |       1MiB /  11264MiB |      0%      Default |
 |                                         |                        |                  N/A |
 +-----------------------------------------+------------------------+----------------------+
 
@@ -22,25 +22,28 @@ Fri Jul  3 03:24:06 2026
 +-----------------------------------------------------------------------------------------+
 ### Finished TaskPrologue
 
-/var/tmp/slurmd_spool/job1727632/slurm_script: line 16: CAFA_ENV: unbound variable
+cell 2/17 -> dataset=tabular:adult policy=greedy_entropy epsilon=None score=None
+[pool] saved cache -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v2/tabular-adult_ts0_greedy_entropy_softmax.npz  (n=18089, T=14)
 === JOB_STATISTICS ===
-=== current date     : Fri Jul  3 03:24:06 AM CEST 2026
-= Job-ID             : 1727632 on tinygpu
+=== current date     : Sat Jul 11 04:08:38 PM CEST 2026
+= Job-ID             : 1735177 on tinygpu
 = Job-Name           : cafa_pool_rollout
 = Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/pool_rollout.slurm
 = Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
 = Queue/Partition    : work
 = Slurm account      : iwi5 with QOS=normal
 = Requested resources:  for 02:00:00
-= Elapsed runtime    : 00:00:02
-= Total RAM usage    : 0.0 GiB of requested  GiB (%)   
-= Node list          : tg068
-= Subm/Elig/Start/End: 2026-07-03T03:23:58 / 2026-07-03T03:23:58 / 2026-07-03T03:24:04 / 2026-07-03T03:24:06
+= Elapsed runtime    : 00:01:03
+= Total RAM usage    : 0.6 GiB of requested  GiB (%)   
+= Node list          : tg060
+= Subm/Elig/Start/End: 2026-07-11T16:07:34 / 2026-07-11T16:07:35 / 2026-07-11T16:07:35 / 2026-07-11T16:08:38
 ======================
 === Quota infos ======
     Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
-    /home/hpc              43.3G   104.9G   209.7G        N/A     108K     500K   1,000K        N/A    
+    /home/hpc              43.3G   104.9G   209.7G        N/A     109K     500K   1,000K        N/A    
     /home/woody           235.9G  1000.0G  1500.0G        N/A     307K   5,000K   7,500K        N/A    
+    /home/vault           790.6G  1048.6G  2097.2G        N/A  43,934      200K     400K        N/A    
 ======================
 === GPU utilization ==
 gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA GeForce RTX 2080 Ti, 00000000:3B:00.0, 62686, 4 %, 0 %, 214 MiB, 24214 ms
