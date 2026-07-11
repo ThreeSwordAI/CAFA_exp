@@ -13,6 +13,7 @@ results/
 # Python caches
 __pycache__/
 .pytest_cache/
+.venv/
 
 # --- v2 pipeline outputs (produced on the cluster; pushed back selectively) ---
 # Results are copied into results_committed/ (tracked) by the operator for the

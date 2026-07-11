@@ -128,7 +128,9 @@ def section_freeze() -> bool:
         if not line:
             continue
         parts = line.split()
-        expected[parts[-1]] = parts[0]
+        # sha256sum may prefix the name with '*' (binary mode, e.g. on Git Bash).
+        name = parts[-1].lstrip("*")
+        expected[name] = parts[0]
     ok = True
     for rel in ("src/cafa/risk_control.py", "tests/test_risk_control.py"):
         actual = file_sha256(_REPO / rel)
