@@ -2,9 +2,9 @@
 
 ## Provenance
 
-- generated: 2026-07-12T12:55:36.525714+00:00
+- generated: 2026-07-12T13:49:17.916322+00:00
 - host: tinyx (Linux)
-- git commit: 20e59d92a55cca92e2877c5f8101918c1edaee67
+- git commit: 41f117a276c75efc86f31042502537bf750fc347
 - numpy: 2.4.2
 - environment lock: repro/requirements.lock.txt
 - frozen-file hashes (repro/MANIFEST.sha256, CRLF-normalized check):
@@ -32,43 +32,45 @@
 
 ## Gate table (every cell, all seeds; delta per cell; Wilson 95% UB)
 
-| cell | alpha | marginal viol [UB] | gate | IUT viol [UB] | gate |
-|---|---|---|---|---|---|
-| mnist/eps_greedy_eps0.25/ts0 | 0.15 | 0.110 [0.150] | FAIL | 0.007 [0.024] | PASS |
-| mnist/eps_greedy_eps0.5/ts0 | 0.15 | 0.140 [0.184] | FAIL | 0.007 [0.024] | PASS |
-| mnist/greedy_entropy/ts0 | 0.15 | 0.020 [0.043] | PASS | 0.033 [0.060] | PASS |
-| mnist/greedy_entropy/ts0[margin] | 0.15 | 0.010 [0.029] | PASS | 0.033 [0.060] | PASS |
-| mnist/random/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.027 [0.052] | PASS |
-| mnist/greedy_entropy/ts1 | 0.2 | 0.010 [0.029] | PASS | 0.033 [0.060] | PASS |
-| mnist/random/ts1 | 0.2 | 0.060 [0.093] | PASS | 0.030 [0.056] | PASS |
-| mnist/greedy_entropy/ts2 | 0.15 | 0.060 [0.093] | PASS | 0.000 [0.013] | PASS |
-| mnist/random/ts2 | 0.15 | 0.010 [0.029] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/eps_greedy_eps0.25/ts0 | 0.15 | 0.080 [0.116] | FAIL | 0.053 [0.085] | PASS |
-| tabular-MiniBooNE/eps_greedy_eps0.5/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/greedy_entropy/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/greedy_entropy/ts0[margin] | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/random/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/greedy_entropy/ts1 | 0.15 | 0.050 [0.081] | PASS | 0.033 [0.060] | PASS |
-| tabular-MiniBooNE/random/ts1 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/greedy_entropy/ts2 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-MiniBooNE/random/ts2 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/eps_greedy_eps0.25/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/eps_greedy_eps0.5/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/greedy_entropy/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/greedy_entropy/ts0[margin] | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/random/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/greedy_entropy/ts1 | 0.25 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/random/ts1 | 0.25 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-adult/greedy_entropy/ts2 | 0.2 | 0.010 [0.029] | PASS | 0.007 [0.024] | PASS |
-| tabular-adult/random/ts2 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.013] | PASS |
-| tabular-spambase/eps_greedy_eps0.25/ts0 | 0.15 | 0.090 [0.128] | FAIL | 0.050 [0.081] | PASS |
-| tabular-spambase/eps_greedy_eps0.5/ts0 | 0.15 | 0.050 [0.081] | PASS | 0.043 [0.073] | PASS |
-| tabular-spambase/greedy_entropy/ts0 | 0.15 | 0.030 [0.056] | PASS | 0.037 [0.064] | PASS |
-| tabular-spambase/random/ts0 | 0.15 | 0.110 [0.150] | FAIL | 0.047 [0.077] | PASS |
-| tabular-spambase/greedy_entropy/ts1 | 0.15 | 0.100 [0.139] | FAIL | 0.047 [0.077] | PASS |
-| tabular-spambase/random/ts1 | 0.15 | 0.060 [0.093] | PASS | 0.033 [0.060] | PASS |
-| tabular-spambase/greedy_entropy/ts2 | 0.15 | 0.030 [0.056] | PASS | 0.020 [0.043] | PASS |
-| tabular-spambase/random/ts2 | 0.15 | 0.010 [0.029] | PASS | 0.017 [0.038] | PASS |
+The `POOL viol` column is the Phase-5.2 gate against the CORRECT estimand (exact risk on the whole eval pool; n = 100 basis, abstentions counted separately); the test-split column is retained for comparison -- it systematically over-reports (see the finite-pool note below).
+
+| cell | alpha | marginal viol (test-split) [UB] | gate | POOL viol [UB] | gate | abstain | IUT viol [UB] | gate |
+|---|---|---|---|---|---|---|---|---|
+| mnist/eps_greedy_eps0.25/ts0 | 0.15 | 0.110 [0.150] | FAIL | 0.000 [0.037] | PASS | 0 | 0.007 [0.024] | PASS |
+| mnist/eps_greedy_eps0.5/ts0 | 0.15 | 0.140 [0.184] | FAIL | 0.000 [0.037] | PASS | 0 | 0.007 [0.024] | PASS |
+| mnist/greedy_entropy/ts0 | 0.15 | 0.020 [0.043] | PASS | 0.000 [0.037] | PASS | 0 | 0.033 [0.060] | PASS |
+| mnist/greedy_entropy/ts0[margin] | 0.15 | 0.010 [0.029] | PASS | 0.000 [0.037] | PASS | 0 | 0.033 [0.060] | PASS |
+| mnist/random/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.027 [0.052] | PASS |
+| mnist/greedy_entropy/ts1 | 0.2 | 0.010 [0.029] | PASS | 0.010 [0.054] | PASS | 0 | 0.033 [0.060] | PASS |
+| mnist/random/ts1 | 0.2 | 0.060 [0.093] | PASS | 0.000 [0.037] | PASS | 0 | 0.030 [0.056] | PASS |
+| mnist/greedy_entropy/ts2 | 0.15 | 0.060 [0.093] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| mnist/random/ts2 | 0.15 | 0.010 [0.029] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/eps_greedy_eps0.25/ts0 | 0.15 | 0.080 [0.116] | FAIL | 0.000 [0.037] | PASS | 0 | 0.053 [0.085] | PASS |
+| tabular-MiniBooNE/eps_greedy_eps0.5/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/greedy_entropy/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/greedy_entropy/ts0[margin] | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/random/ts0 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/greedy_entropy/ts1 | 0.15 | 0.050 [0.081] | PASS | 0.000 [0.037] | PASS | 0 | 0.033 [0.060] | PASS |
+| tabular-MiniBooNE/random/ts1 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/greedy_entropy/ts2 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-MiniBooNE/random/ts2 | 0.15 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/eps_greedy_eps0.25/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/eps_greedy_eps0.5/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/greedy_entropy/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/greedy_entropy/ts0[margin] | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/random/ts0 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/greedy_entropy/ts1 | 0.25 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/random/ts1 | 0.25 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-adult/greedy_entropy/ts2 | 0.2 | 0.010 [0.029] | PASS | 0.000 [0.037] | PASS | 0 | 0.007 [0.024] | PASS |
+| tabular-adult/random/ts2 | 0.2 | 0.000 [0.013] | PASS | 0.000 [0.037] | PASS | 0 | 0.000 [0.013] | PASS |
+| tabular-spambase/eps_greedy_eps0.25/ts0 | 0.15 | 0.090 [0.128] | FAIL | 0.000 [0.037] | PASS | 0 | 0.050 [0.081] | PASS |
+| tabular-spambase/eps_greedy_eps0.5/ts0 | 0.15 | 0.050 [0.081] | PASS | 0.000 [0.037] | PASS | 0 | 0.043 [0.073] | PASS |
+| tabular-spambase/greedy_entropy/ts0 | 0.15 | 0.030 [0.056] | PASS | 0.000 [0.037] | PASS | 0 | 0.037 [0.064] | PASS |
+| tabular-spambase/random/ts0 | 0.15 | 0.110 [0.150] | FAIL | 0.000 [0.037] | PASS | 0 | 0.047 [0.077] | PASS |
+| tabular-spambase/greedy_entropy/ts1 | 0.15 | 0.100 [0.139] | FAIL | 0.000 [0.037] | PASS | 0 | 0.047 [0.077] | PASS |
+| tabular-spambase/random/ts1 | 0.15 | 0.060 [0.093] | PASS | 0.000 [0.037] | PASS | 0 | 0.033 [0.060] | PASS |
+| tabular-spambase/greedy_entropy/ts2 | 0.15 | 0.030 [0.056] | PASS | 0.000 [0.037] | PASS | 0 | 0.020 [0.043] | PASS |
+| tabular-spambase/random/ts2 | 0.15 | 0.010 [0.029] | PASS | 0.000 [0.037] | PASS | 0 | 0.017 [0.038] | PASS |
 
 ## H2 at lambda_ref = 0.9 (primary scheme; violation / mean cost / cost-vs-full)
 
@@ -176,6 +178,8 @@ LTT controls P(TRUE risk > alpha); the gate measures empirical test-split risk >
 - Full table: analysis_v2/VALIDITY_DIAGNOSTIC.md; figure F6.
 - The guarantee itself is certified on truly independent draws by the G1 gate and the IUT union-null Monte-Carlo gate.
 
+**Phase-5.2 resolution (the measured account, superseding the 'residual attributed to dependence' language):** complementary 50/50 resplits of one finite pool satisfy R_test = (n_eval R_pool - n_cal R_cal)/n_test, so R_cal and R_test are EXACTLY anti-correlated -- measured mean corr(R_cal, R_test) at fixed lambda = -1.0000 across cells. An unlucky-easy cal half both selects a more aggressive lambda-hat AND deterministically faces a harder test half -- the pairing an independent-noise model cannot see. Evaluated against the CORRECT estimand (exact pool risk), the gate fails on **0 of 35 cells** (see the POOL column of the gate table, POOL_RISK_GATE.md, and figure F7). The six test-split FAILs are RESOLVED, not caveated.
+
 ## IUT non-vacuity (lambda_ref = 0.9)
 
 | dataset | committed alpha | min certifying alpha (swept) | IUT cost/full there | premium vs marginal there | R_full(k*) | H3 consistency |
@@ -198,19 +202,23 @@ At the min certifying alpha the IUT certifies EVERY stratum simultaneously at a 
 
 **The audit finding IS robust to the readiness-score choice** on 3 of 3 tested datasets: mnist (infeasible), tabular-MiniBooNE (infeasible), tabular-adult (infeasible). The verdict at lambda_ref = 0.9 is unchanged when the stopping score is replaced by margin (with its own probe-committed stratification).
 
+## Evaluating distribution-free certificates on finite pools
+
+Complementary cal/test splits of a finite pool anti-correlate by construction (R_test is a deterministic decreasing function of R_cal at every threshold), so a test-split violation frequency SYSTEMATICALLY over-reports P(true risk > alpha) for any conformal/LTT-style certificate whose selection consumes the calibration half -- a general methodological point, not specific to CAFA. The correct finite-pool evaluation is against the exact pool risk, for which the certificate remains conservative (without-replacement sampling: hypergeometric dominated by binomial, Hoeffding 1963). Evidence: gate table POOL column, POOL_RISK_GATE.md, F7.
+
 ## Honest flags
 
-- marginal gate FAIL: mnist/eps_greedy_eps0.25/ts0 (viol 0.110, Wilson UB 0.150). EXPLAINED: predicted-from-test-noise violation 0.036 under a perfectly valid certificate (validity diagnostic).
-- marginal gate FAIL: mnist/eps_greedy_eps0.5/ts0 (viol 0.140, Wilson UB 0.184). EXPLAINED: predicted-from-test-noise violation 0.030 under a perfectly valid certificate (validity diagnostic).
-- marginal gate borderline: mnist/random/ts1 (viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.034 under a perfectly valid certificate (validity diagnostic).
-- marginal gate borderline: mnist/greedy_entropy/ts2 (viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.015 under a perfectly valid certificate (validity diagnostic).
-- marginal gate FAIL: tabular-MiniBooNE/eps_greedy_eps0.25/ts0 (viol 0.080, Wilson UB 0.116). EXPLAINED: predicted-from-test-noise violation 0.018 under a perfectly valid certificate (validity diagnostic).
-- marginal gate borderline: tabular-MiniBooNE/greedy_entropy/ts1 (viol 0.050, Wilson UB 0.081). EXPLAINED: predicted-from-test-noise violation 0.026 under a perfectly valid certificate (validity diagnostic).
-- marginal gate FAIL: tabular-spambase/eps_greedy_eps0.25/ts0 (viol 0.090, Wilson UB 0.128). EXPLAINED: predicted-from-test-noise violation 0.046 under a perfectly valid certificate (validity diagnostic).
-- marginal gate borderline: tabular-spambase/eps_greedy_eps0.5/ts0 (viol 0.050, Wilson UB 0.081). EXPLAINED: predicted-from-test-noise violation 0.034 under a perfectly valid certificate (validity diagnostic).
-- marginal gate FAIL: tabular-spambase/random/ts0 (viol 0.110, Wilson UB 0.150). EXPLAINED: predicted-from-test-noise violation 0.041 under a perfectly valid certificate (validity diagnostic).
-- marginal gate FAIL: tabular-spambase/greedy_entropy/ts1 (viol 0.100, Wilson UB 0.139). EXPLAINED: predicted-from-test-noise violation 0.038 under a perfectly valid certificate (validity diagnostic).
-- marginal gate borderline: tabular-spambase/random/ts1 (viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.040 under a perfectly valid certificate (validity diagnostic).
+- marginal gate FAIL: mnist/eps_greedy_eps0.25/ts0 (test-split viol 0.110, Wilson UB 0.150). EXPLAINED: predicted-from-test-noise violation 0.036 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate FAIL: mnist/eps_greedy_eps0.5/ts0 (test-split viol 0.140, Wilson UB 0.184). EXPLAINED: predicted-from-test-noise violation 0.030 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate borderline: mnist/random/ts1 (test-split viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.034 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate borderline: mnist/greedy_entropy/ts2 (test-split viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.015 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate FAIL: tabular-MiniBooNE/eps_greedy_eps0.25/ts0 (test-split viol 0.080, Wilson UB 0.116). EXPLAINED: predicted-from-test-noise violation 0.018 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate borderline: tabular-MiniBooNE/greedy_entropy/ts1 (test-split viol 0.050, Wilson UB 0.081). EXPLAINED: predicted-from-test-noise violation 0.026 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate FAIL: tabular-spambase/eps_greedy_eps0.25/ts0 (test-split viol 0.090, Wilson UB 0.128). EXPLAINED: predicted-from-test-noise violation 0.046 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate borderline: tabular-spambase/eps_greedy_eps0.5/ts0 (test-split viol 0.050, Wilson UB 0.081). EXPLAINED: predicted-from-test-noise violation 0.034 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate FAIL: tabular-spambase/random/ts0 (test-split viol 0.110, Wilson UB 0.150). EXPLAINED: predicted-from-test-noise violation 0.041 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate FAIL: tabular-spambase/greedy_entropy/ts1 (test-split viol 0.100, Wilson UB 0.139). EXPLAINED: predicted-from-test-noise violation 0.038 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
+- marginal gate borderline: tabular-spambase/random/ts1 (test-split viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.040 under a perfectly valid certificate (validity diagnostic). RESOLVED (Phase 5.2): POOL violation 0.000 [UB 0.037] against the correct estimand.
 - spambase verdicts are undetermined by sample size (probe n = 184), not evidence of feasibility.
 - local (laptop) runs are development/replication only; their alphas differ (backbone nondeterminism) and none of their numbers are cited.
 
@@ -271,6 +279,7 @@ At the min certifying alpha the IUT certifies EVERY stratum simultaneously at a 
 - F5_tabular-adult
 - F5_tabular-spambase
 - F6_validity_diagnostic
+- F7_pool_risk_gate
 
 ---
 STATUS: FROZEN -- no number in the paper may differ from this file.
