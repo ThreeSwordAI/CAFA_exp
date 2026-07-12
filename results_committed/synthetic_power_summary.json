@@ -1,0 +1,64 @@
+{
+  "header": {
+    "generated": "2026-07-12T20:52:28.078842+00:00",
+    "host": "tinyx",
+    "git_commit": "7bdb1bf27fc39c0a0f806301e5cfbaad44f3d4e3",
+    "numpy": "2.4.2",
+    "alpha": 0.15,
+    "gamma": 0.05,
+    "B": 5000,
+    "seed": 20260712
+  },
+  "max_false_positive_rate_over_nulls": 0.05,
+  "n_grid_points": 280,
+  "family_calibration": [
+    {
+      "M": 10,
+      "scenario": "all_infeasible",
+      "n_k": 2000,
+      "family_reject_rate": 1.0,
+      "lo": 0.9980828823994873,
+      "hi": 1.0
+    },
+    {
+      "M": 10,
+      "scenario": "one_feasible",
+      "n_k": 2000,
+      "family_reject_rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.0019171176005129348
+    },
+    {
+      "M": 50,
+      "scenario": "all_infeasible",
+      "n_k": 2000,
+      "family_reject_rate": 0.9995,
+      "lo": 0.9971730649772383,
+      "hi": 0.9999117345398496
+    },
+    {
+      "M": 50,
+      "scenario": "one_feasible",
+      "n_k": 2000,
+      "family_reject_rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.0019171176005129348
+    },
+    {
+      "M": 100,
+      "scenario": "all_infeasible",
+      "n_k": 2000,
+      "family_reject_rate": 0.999,
+      "lo": 0.9963609898107715,
+      "hi": 0.9997257268239166
+    },
+    {
+      "M": 100,
+      "scenario": "one_feasible",
+      "n_k": 2000,
+      "family_reject_rate": 0.0,
+      "lo": 0.0,
+      "hi": 0.0019171176005129348
+    }
+  ]
+}

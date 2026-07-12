@@ -1,0 +1,86 @@
+{
+  "header": {
+    "generated": "2026-07-12T20:49:45.998644+00:00",
+    "host": "tinyx",
+    "git_commit": "7bdb1bf27fc39c0a0f806301e5cfbaad44f3d4e3",
+    "numpy": "2.4.2",
+    "metrics_dir": "results_committed/metrics",
+    "pool_dir": "/home/vault/iwi5/iwi5359h/CAFA_results/pool_v2"
+  },
+  "q1_kstar_rule": "k* in the frozen H3 tables = argmax over populated strata of the observed full-feature pool risk (make_canonical_results.py, phase3_report.py).",
+  "q2_kstar_uses_labels": "YES -- argmax-of-observed-risk consumes evaluation labels; pointwise intervals on that stratum are post-selection. DECISION: the confirmatory stratum for Phase 5.3 is the DEEPEST precommitted nonempty bucket (label-free, trajectory-defined); the argmax-risk stratum is reported as exploratory where the two differ.",
+  "q3_q4_lambda_ref_history": {
+    "lambda_ref_sweep_in_config": "6fa03f7 2026-07-03 Based on the review, edit",
+    "primary_equals_largest_rule_in_analyzer": "6fa03f7 2026-07-03 Based on the review, edit",
+    "first_canonical_metrics_commit": "eee8d9f 2026-07-12 canonical lock: phases 2-4 + alpha-sweep (cluster, ts0-2)\nc00aaf7 2026-07-12 Phase 3 done!",
+    "assessment": "The {0.5, 0.7, 0.9} sweep and the 'primary = largest configured lambda_ref' analyzer rule were committed in the tooling commits; whether those PRECEDE the first canonical results commit is read off the dates above. lambda_ref = 0.9 is reported as the fine-resolution analysis; all three lambda_refs are always computed and reported (105 IUT configurations in Phase 5.3)."
+  },
+  "q5_grid": "np.linspace(0.0, 1.0, 100) -- 100 thresholds, committed in configs/experiment.yaml (method.grid).",
+  "q6_lambda1": {
+    "definition": "stop at the first step t with score >= 1.0; rows never reaching 1.0 stop at T (full acquisition). Softmax scores can saturate to exactly 1.0 in float32, so lambda=1 is NOT guaranteed to equal the full-feature endpoint row-by-row; measured below.",
+    "measured": [
+      {
+        "dataset": "mnist",
+        "frac_rows_stopping_at_T_under_lambda1": 1.0,
+        "risk_at_lambda1": 0.08543650793650794,
+        "full_feature_risk": 0.08543650793650794,
+        "identical": true
+      },
+      {
+        "dataset": "tabular-adult",
+        "frac_rows_stopping_at_T_under_lambda1": 0.9956388206388206,
+        "risk_at_lambda1": 0.1507985257985258,
+        "full_feature_risk": 0.1507985257985258,
+        "identical": true
+      },
+      {
+        "dataset": "tabular-MiniBooNE",
+        "frac_rows_stopping_at_T_under_lambda1": 0.9962411635307434,
+        "risk_at_lambda1": 0.08339918416162997,
+        "full_feature_risk": 0.08339918416162997,
+        "identical": true
+      },
+      {
+        "dataset": "tabular-spambase",
+        "frac_rows_stopping_at_T_under_lambda1": 0.8822463768115942,
+        "risk_at_lambda1": 0.06099033816425121,
+        "full_feature_risk": 0.06099033816425121,
+        "identical": true
+      }
+    ]
+  },
+  "q7_threshold_to_predictions": "stop-index matrix: s(i, j) = first t with scores[i, t] >= grid[j] (else T); loss = 1 - correct[i, s]; identical code in run_eval_sweep/metrics.stops_from_grid_np.",
+  "q8_pool_risk": "mean of the loss column over ALL eval rows (exact on the fixed evaluation pool); per-stratum = same restricted to a probe-committed bucket.",
+  "q9_refusals": "lambda_idx = None => 'abstained'/refusal recorded explicitly; deployment falls back to FULL ACQUISITION and the system still predicts (certification refusal with full-acquisition fallback, NOT prediction abstention); fallback realized risk/cost recorded; never counted as a violation and never dropped.",
+  "q10_resplits": "100 unique resplits: independent seeded permutations (default_rng(1_000_000 + seed)) of the eval indices, split 50/50 -- random split assignments, not folds; marginal CAFA is lambda_ref-independent so the 100 outcomes are counted ONCE (never n = 300).",
+  "stratum_decision_table": [
+    {
+      "dataset": "mnist",
+      "deepest_nonempty": 4,
+      "argmax_risk_kstar": 4,
+      "coincide": true,
+      "n_deepest": 5479
+    },
+    {
+      "dataset": "tabular-adult",
+      "deepest_nonempty": 3,
+      "argmax_risk_kstar": 3,
+      "coincide": true,
+      "n_deepest": 6268
+    },
+    {
+      "dataset": "tabular-MiniBooNE",
+      "deepest_nonempty": 4,
+      "argmax_risk_kstar": 4,
+      "coincide": true,
+      "n_deepest": 9180
+    },
+    {
+      "dataset": "tabular-spambase",
+      "deepest_nonempty": 4,
+      "argmax_risk_kstar": 4,
+      "coincide": true,
+      "n_deepest": 249
+    }
+  ]
+}

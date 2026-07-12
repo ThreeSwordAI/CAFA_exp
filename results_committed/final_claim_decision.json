@@ -1,0 +1,149 @@
+{
+  "header": {
+    "generated": "2026-07-12T20:52:33.407981+00:00",
+    "host": "tinyx",
+    "git_commit": "7bdb1bf27fc39c0a0f806301e5cfbaad44f3d4e3",
+    "numpy": "2.4.2"
+  },
+  "scientific_outcome": "A",
+  "story": "STRONG: a marginally certified AFA system can conceal a trajectory-defined stratum for which no stopping threshold in the precommitted family meets the target; CAFA audits this family-wide failure and uses a common-threshold certificate that refuses when evidence does not support simultaneous validity.",
+  "decisions": [
+    {
+      "dataset": "mnist",
+      "committed_alpha": 0.15,
+      "primary_stratum_rule": "deepest precommitted nonempty bucket (label-free)",
+      "deepest_equals_argmax_kstar": true,
+      "lambda_ref_status": "fine-resolution analysis; sweep {0.5,0.7,0.9} committed in tooling (provenance json q3/q4)",
+      "endpoint_verdict": "failure",
+      "threshold_family_verdict": "failure",
+      "threshold_family_p": 1.36921550028183e-79,
+      "min_threshold_risk": 0.24785544807446613,
+      "argmin_lambda": 0.9090909090909092,
+      "depth_family_verdict": "failure",
+      "depth_family_p": 1.36921550028183e-79,
+      "min_depth_risk": 0.24785544807446613,
+      "plugin_pool_exceed": 0.0,
+      "plugin_pool_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "plugin_label": "not shown unreliable at this resolution",
+      "selected_rule_deepest_pool_risk_mean": 0.30057309728052567,
+      "selected_rule_deepest_ratio_to_alpha": 2.0038206485368377,
+      "iut_primary_cert_rate": 0.0,
+      "iut_primary_cert_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "iut_refusal_class": "A: refusal with certified family-wide failure",
+      "allowed_phrase": "On this stratum, no stopping threshold in the audited precommitted threshold family attains the target and no prefix depth along the frozen acquisition path attains it.",
+      "prohibited_phrase": "'no possible feature subset, policy, acquisition strategy, or budget can attain the target' (never licensed); 'no budget works' beyond the audited family"
+    },
+    {
+      "dataset": "tabular-MiniBooNE",
+      "committed_alpha": 0.15,
+      "primary_stratum_rule": "deepest precommitted nonempty bucket (label-free)",
+      "deepest_equals_argmax_kstar": true,
+      "lambda_ref_status": "fine-resolution analysis; sweep {0.5,0.7,0.9} committed in tooling (provenance json q3/q4)",
+      "endpoint_verdict": "failure",
+      "threshold_family_verdict": "failure",
+      "threshold_family_p": 3.178314386914752e-98,
+      "min_threshold_risk": 0.23344226579520697,
+      "argmin_lambda": 0.9393939393939394,
+      "depth_family_verdict": "failure",
+      "depth_family_p": 3.178314386914752e-98,
+      "min_depth_risk": 0.23344226579520697,
+      "plugin_pool_exceed": 0.0,
+      "plugin_pool_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "plugin_label": "not shown unreliable at this resolution",
+      "selected_rule_deepest_pool_risk_mean": 0.3554466230936821,
+      "selected_rule_deepest_ratio_to_alpha": 2.3696441539578808,
+      "iut_primary_cert_rate": 0.0,
+      "iut_primary_cert_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "iut_refusal_class": "A: refusal with certified family-wide failure",
+      "allowed_phrase": "On this stratum, no stopping threshold in the audited precommitted threshold family attains the target and no prefix depth along the frozen acquisition path attains it.",
+      "prohibited_phrase": "'no possible feature subset, policy, acquisition strategy, or budget can attain the target' (never licensed); 'no budget works' beyond the audited family"
+    },
+    {
+      "dataset": "tabular-adult",
+      "committed_alpha": 0.2,
+      "primary_stratum_rule": "deepest precommitted nonempty bucket (label-free)",
+      "deepest_equals_argmax_kstar": true,
+      "lambda_ref_status": "fine-resolution analysis; sweep {0.5,0.7,0.9} committed in tooling (provenance json q3/q4)",
+      "endpoint_verdict": "failure",
+      "threshold_family_verdict": "failure",
+      "threshold_family_p": 8.733138398189605e-93,
+      "min_threshold_risk": 0.3090299936183791,
+      "argmin_lambda": 0.8686868686868687,
+      "depth_family_verdict": "failure",
+      "depth_family_p": 4.8745709501276494e-93,
+      "min_depth_risk": 0.309189534141672,
+      "plugin_pool_exceed": 0.0,
+      "plugin_pool_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "plugin_label": "not shown unreliable at this resolution",
+      "selected_rule_deepest_pool_risk_mean": 0.31269942565411624,
+      "selected_rule_deepest_ratio_to_alpha": 1.5634971282705812,
+      "iut_primary_cert_rate": 0.0,
+      "iut_primary_cert_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "iut_refusal_class": "A: refusal with certified family-wide failure",
+      "allowed_phrase": "On this stratum, no stopping threshold in the audited precommitted threshold family attains the target and no prefix depth along the frozen acquisition path attains it.",
+      "prohibited_phrase": "'no possible feature subset, policy, acquisition strategy, or budget can attain the target' (never licensed); 'no budget works' beyond the audited family"
+    },
+    {
+      "dataset": "tabular-spambase",
+      "committed_alpha": 0.15,
+      "primary_stratum_rule": "deepest precommitted nonempty bucket (label-free)",
+      "deepest_equals_argmax_kstar": true,
+      "lambda_ref_status": "fine-resolution analysis; sweep {0.5,0.7,0.9} committed in tooling (provenance json q3/q4)",
+      "endpoint_verdict": "unresolved",
+      "threshold_family_verdict": "unresolved",
+      "threshold_family_p": 0.17935656493362384,
+      "min_threshold_risk": 0.17269076305220885,
+      "argmin_lambda": 0.8989898989898991,
+      "depth_family_verdict": "unresolved",
+      "depth_family_p": 0.17935656493362384,
+      "min_depth_risk": 0.17269076305220885,
+      "plugin_pool_exceed": 0.45,
+      "plugin_pool_ci": [
+        0.3561437510640346,
+        0.5475557296835656
+      ],
+      "plugin_label": "clearly unreliable",
+      "selected_rule_deepest_pool_risk_mean": 0.3851004016064256,
+      "selected_rule_deepest_ratio_to_alpha": 2.567336010709504,
+      "iut_primary_cert_rate": 0.0,
+      "iut_primary_cert_ci": [
+        0.0,
+        0.03699480747600191
+      ],
+      "iut_refusal_class": "C: refusal, unresolved",
+      "allowed_phrase": "The audit is unresolved at the available sample size.",
+      "prohibited_phrase": "'no possible feature subset, policy, acquisition strategy, or budget can attain the target' (never licensed); 'family-wide failure' (only endpoint/unresolved is certified here)"
+    }
+  ],
+  "prohibited_phrase_hits": [
+    "analysis_v2/PHASE3_REPORT.md:50",
+    "analysis_v2/RESULTS.md:2522",
+    "analysis_v2/RESULTS.md:2523",
+    "analysis_v2/RESULTS.md:2560",
+    "project_update.md:86",
+    "project_update.md:652",
+    "project_update.md:763",
+    "results_committed/PHASE3_REPORT.md:50",
+    "results_committed/RESULTS.md:2522",
+    "results_committed/RESULTS.md:2523",
+    "results_committed/RESULTS.md:2560"
+  ]
+}
