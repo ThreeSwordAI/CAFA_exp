@@ -1,9 +1,10 @@
 # CAFA v2 -- Project Update
 
-Date: 2026-07-12 (ALL COMPUTE CLOSED -- final re-freeze tag `canonical-v2.2`;
-Sections 11-12 the local pilots, Section 13 the canonical batch, Section 14
-the Phase-5 correction pass, Section 15 the Phase-5.2 pool-risk gate that
-resolved the last open hole)
+Date: 2026-07-12 (ALL COMPUTE CLOSED -- final claim-validity freeze tag
+`canonical-v2.3`; Sections 11-12 the local pilots, Section 13 the canonical
+batch, Section 14 the Phase-5 correction pass, Section 15 the Phase-5.2
+pool-risk gate, Section 16 the Phase-5.3 final claim-validity audit that
+selected the paper's licensed story: **Outcome A, family-wide failure**)
 Scope: everything from the v2 repair work order through the final re-freeze.
 THE single source for every paper number: `CANONICAL_RESULTS.md`
 (STATUS: FROZEN, tag `canonical-v2.2`), backed by 35 per-resplit metrics JSONs
@@ -70,6 +71,24 @@ Section 15.
   byte-identical order/correct; IUT passes ALL 35 cells; the mnist-greedy
   marginal worry did NOT recur (0.02/0.01/0.06 across seeds) but marginal
   DOES fail on the mnist epsilon cells and spambase.
+- **PHASE 5.3 (Section 16, the final claim-validity freeze, tag
+  canonical-v2.3): Outcome A is licensed.** On the deepest precommitted
+  (label-free) stratum, NO stopping threshold in the 100-threshold committed
+  family and NO forced acquisition depth attains the target on
+  mnist/MiniBooNE/adult (family IUT p-values 1.4e-79 / 3.2e-98 / 8.7e-93;
+  spambase unresolved, p = 0.18). The plugin headline CHANGED on the correct
+  estimand: pool exceedance at the committed alpha = 0/100 on the three
+  resolved datasets and 45/100 on spambase (the old test-half "0.35 on
+  mnist" was itself the complementary-split artifact); mnist's pool sweep is
+  NONMONOTONE (no single safety transition). Selected-rule deepest-stratum
+  POOL risks confirm the old values (0.3006/0.3554/0.3127/0.3851; ratios to
+  alpha 1.56-2.57 -- Figure 1 qualitative effect preserved). IUT accounting
+  corrected to 105 configurations: 61 certify non-vacuously; 60 refusal
+  configs split A:40 (refusal justified by certified family-wide failure) /
+  B:0 / C:20 (unresolved); exactly 1 conditional pool-failure among
+  certified selections (spambase ts1, n_cert = 1). Synthetic power: FPR
+  exactly controlled (max 0.0500 = gamma); the sufficient bound is
+  conservative and directionally predictive.
 - **PHASE 5.2 (Section 15, the final re-freeze, tag canonical-v2.2):** the
   six marginal-gate FAILs are RESOLVED by measuring the correct estimand:
   **0 of 35 cells violate the pool-risk gate** (exact risk on the whole eval
@@ -83,7 +102,10 @@ Section 15.
   recorded value on all 3,500 resplits.
 - **PHASE 5 (Section 14, the corrected re-freeze, tag canonical-v2.1):**
   measuring AT the committed alpha (instead of inferring from the nearest
-  grid point) corrects the plugin verdict to **UNSAFE on 2 of 4** (mnist
+  grid point) corrected the plugin verdict on the TEST-HALF estimand
+  [SUPERSEDED by Section 16.3: on the POOL estimand the plugin's selected
+  threshold exceeds the target in 0/100 draws on mnist/MiniBooNE/adult and
+  45/100 on spambase] (test-half values were: mnist
   0.35 never-safe-in-range; spambase 0.45, transition (0.164, 0.169];
   MiniBooNE is SAFE -- its earlier "unsafe by 0.014" and the
   "flipped-between-environments" anecdote were both artifacts of the same
@@ -454,30 +476,26 @@ Uncommitted local diffs (intentional, not pushed): `.gitignore` (+`.venv/`),
 
 ## 10. Next steps
 
-1. **Write the paper.** Every number comes from `CANONICAL_RESULTS.md`
-   (STATUS: FROZEN, tag `canonical-v2.2`); the readouts in
-   `results_committed/` carry the per-table detail; figures F1-F7 in
-   `results_committed/figures/`. The spine: H2 (certified cheap stopping;
-   plugin unsafe AT the committed target on **2 of 4** datasets, BY
-   MEASUREMENT -- Section 14.2) + the audit (backbone-robust and score-robust
-   infeasible strata) + CAFA-IUT (35-for-35 gate record, with the
-   non-vacuity table showing where it certifies at a fraction of full cost --
-   Section 14.4) + the pool-risk gate (0/35 violations against the correct
-   estimand, with the measured rho = -1 anti-correlation as a general
-   finite-pool methodological subsection -- Section 15) + the
-   detection-power lemma (writing task). Concentration is a one-paragraph
-   quantified observation (canonical rho -0.746 at lambda_ref 0.5, weakening
-   to n.s. at 0.9; monotone on 1 of 4 datasets).
-2. **Honest flags that must survive into the paper** (Sections 13.6, 14.5,
-   15.3): the ten flagged marginal cells with their EXPLAINED + RESOLVED
-   annotations (test-split basis kept visible next to the pool gate);
-   spambase undetermined-by-sample-size and near-vacuous IUT certification;
-   the frontier flat-or-reversed detail vs the canonical file's "flat"
-   shorthand; the Section-13.3 retraction itself (the paper must cite the
-   MEASURED transitions only).
+1. **Write the paper from the licensed story (Outcome A -- Section 16.7).**
+   Every number comes from the `canonical-v2.3` artifact set
+   (`results_committed/`, `FINAL_CLAIM_DECISION.md`, figures F1-F15). The
+   spine: the FAMILY-WIDE audit (no committed threshold and no forced depth
+   attains the target on the deepest label-free stratum of three datasets;
+   spambase honestly unresolved -- Section 16.2) + corrected Figure 1
+   (selected-rule POOL stratum risks, ratios 1.56-2.37 -- Section 16.4) +
+   CAFA-IUT with the 105-configuration accounting (61 non-vacuous; refusals
+   A:40 / C:20 -- Section 16.5) + the finite-pool estimand methodology
+   (rho = -1 anti-correlation, pool gates, corrected plugin evaluation --
+   Sections 15-16.3) + the prospectively validated detection power
+   (Section 16.6). H2 cost efficiency and the concentration observation
+   support, not headline.
+2. **Honest flags that must survive**: spambase unresolved everywhere (incl.
+   its 1-certification pool failure, Section 16.5); the plugin headline
+   correction itself (test-half artifacts, Section 16.3); the deleted-claims
+   list (Section 16.7); test-half tables retained only as diagnostics.
 3. The laptop is now a replication check only. **No further experiments or
-   analyses -- Phase 5.2 was the last compute task.** The next artifact is
-   the paper.
+   analyses -- Phase 5.3 was the last compute task (stop rule 5).** The next
+   artifact is the paper.
 
 ---
 
@@ -649,8 +667,9 @@ stratum's verdict at lambda_ref = 0.9 reproduces at every train seed:
 | spambase (k*=4) | undetermined | 0.170 [0.137] / 0.157 [0.128] / 0.139 [0.107] |
 
 Every LCB on the three detecting datasets sits far above every committed
-alpha -- the infeasible stratum is a property of the data, not of a lucky
-backbone draw. Note adult's k* label shifts (3/4/3) while the verdict is
+alpha -- the stratum's verdict reproduces across backbone draws (licensed
+wording per Section 16; the earlier "property of the data" phrasing is
+superseded). Note adult's k* label shifts (3/4/3) while the verdict is
 stable; spambase is consistently undetermined (probe n = 184 -- too small to
 decide, honestly reported). IUT abstains ~1.00 at lambda_ref = 0.9 at every
 seed, consistent with the detected infeasibility.
@@ -759,9 +778,9 @@ under-coverage of the hard stratum, reproduced across backbone draws.
 Phase 4 (margin score, own probe-committed stratification): **robust 3/3**
 (mnist, MiniBooNE, adult all still infeasible), with the mechanics invariant
 ALL PASS -- `order` and `correct` byte-identical between softmax and margin
-rollouts (only the stopping score changed), alpha unchanged. The infeasible
-stratum is a property of the data, not of the backbone draw and not of the
-readiness-score choice.
+rollouts (only the stopping score changed), alpha unchanged. The stratum's
+failure verdict reproduces across backbone draws AND across readiness
+scores (licensed wording per Section 16; "property of the data" superseded).
 
 ### 13.3 The alpha-sweep (canonical anchors)
 
@@ -1029,11 +1048,114 @@ subsample; the hypergeometric mean is dominated by the binomial -- Hoeffding
 
 ### 15.4 Status
 
-**ALL COMPUTE FOR THE PROJECT IS CLOSED.** `CANONICAL_RESULTS.md`
-(tag `canonical-v2.2`) is the frozen, single source for every number the
-paper cites: provenance, committed targets, the 35-cell gate table with the
-pool-risk column, H2, H3 + cross-seed stability, IUT by lambda_ref, the
-measured alpha-sweep, the validity diagnostic with the Phase-5.2 resolution,
-IUT non-vacuity, Phase-2/Phase-4 verdicts, the finite-pool note, honest
-flags (explained AND resolved), and the figure index (F1-F7). The next
-artifact is the paper.
+Superseded note: Phase 5.3 (Section 16) reopened `canonical-v2.2` for the
+final claim-validity audit and re-froze as `canonical-v2.3`.
+
+---
+
+## 16. PHASE 5.3 -- the final claim-validity audit (cluster, 2026-07-12,
+tag canonical-v2.3): OUTCOME A
+
+Why v2.2 was reopened (the changelog required by the spec): (1) an endpoint
+failure does not prove every earlier stopping point fails -- the family-wide
+question had never been tested; (2) the plugin and hidden-stratum headlines
+still used the complementary test-half estimand the project itself
+criticizes; (3) IUT results pooled 105 configurations into 35 rows;
+(4) refusal, proven failure, and unresolved evidence were conflated;
+(5) the detection-power table was retrospective; (6) marginal intervals
+sometimes used n = 300; (7) k*/lambda_ref provenance was undocumented.
+Seven analysis scripts (no method, commitment, or cell changed; frozen core
+byte-identical; `git diff configs/` empty) answered all seven. All hard
+asserts passed: endpoint reproduction 4/4, plugin reconstruction 3,500/3,500,
+aggregate reconstruction on every (cell, lambda_ref, resplit).
+
+### 16.1 Provenance decisions (PHASE5_PROVENANCE.md)
+
+- The confirmatory stratum is the DEEPEST precommitted nonempty bucket
+  (trajectory-defined, label-free). Canonically it COINCIDES with the
+  argmax-risk k* on 4/4 primary cells, so the frozen H3 rows double as
+  confirmatory tests; the argmax rule alone would have been exploratory.
+- lambda_ref = 0.9 is the fine-resolution analysis (sweep {0.5, 0.7, 0.9}
+  committed in tooling before results); all three lambda_refs are always
+  published (the 105-config accounting).
+- Marginal statistics use the 100 unique resplits, never n = 300.
+
+### 16.2 Task 1 -- family-wide feasibility (the paper's central claim)
+
+Intersection-union test over ALL 100 committed thresholds (and separately
+all forced depths), exact one-sided binomial tails, gamma = 0.05, on the
+deepest stratum:
+
+| dataset | stratum (n_k) | min threshold-family risk | family p | THRESHOLD verdict | DEPTH verdict |
+|---|---|---|---|---|---|
+| mnist | 4 (5479) | 0.2479 | 1.4e-79 | **family-wide failure certified** | **certified** |
+| MiniBooNE | 4 (9180) | 0.2334 | 3.2e-98 | **certified** | **certified** |
+| adult | 3 (6268) | 0.3090 (at lambda 0.899, just below the endpoint 0.3092) | 8.7e-93 | **certified** | **certified** |
+| spambase | 4 (249) | 0.1727 | 1.8e-01 | unresolved | unresolved |
+
+Licensed wording: "no stopping threshold in the audited precommitted
+threshold family attains the target, and no prefix depth along the frozen
+acquisition path attains it" (three datasets). NEVER licensed: "no possible
+feature subset, policy, acquisition strategy, or budget". spambase: "the
+audit is unresolved at the available sample size."
+
+### 16.3 Task 2 -- the plugin on the correct estimand (headline CHANGED)
+
+Pool exceedance of the plugin-selected threshold at the committed alpha
+(100 calibration draws each; selection asserted identical to the original):
+**mnist 0.00 [0.000, 0.037]; MiniBooNE 0.00; adult 0.00; spambase 0.45
+[0.356, 0.548] (clearly unreliable).** The old "plugin unsafe on 2 of 4" is
+DELETED -- mnist's test-half 0.35 was itself the complementary-split
+artifact. Pool alpha-sweep transitions: mnist NONMONOTONE (three crossings;
+no single safety transition exists); MiniBooNE single crossing in
+(0.1044, 0.1344]; adult safe everywhere swept; spambase single crossing in
+(0.1500, 0.1643] -- the committed alpha sits at the unreliable edge.
+Descriptive labels only; 0/100 is never called "safe".
+
+### 16.4 Task 3 -- selected-rule stratum risk (Figure 1 corrected, effect preserved)
+
+Mean POOL risk of the marginally selected rule on the deepest stratum:
+mnist **0.3006**, MiniBooNE **0.3554**, adult **0.3127**, spambase 0.3851 --
+within 0.001 of the old test-half values, so Figure 1's qualitative effect
+is fully preserved on the correct estimand (F1_pool_corrected; whiskers =
+variation across calibration selections). Corrected ratio-to-alpha range on
+the resolved datasets: **1.56-2.37** (spambase 2.57, unresolved).
+
+### 16.5 Task 4 -- IUT over 105 configurations (replaces "35/35")
+
+61/105 configurations certify non-vacuously; the 60 configurations that
+ever refuse split into **A: 40 refusals justified by certified family-wide
+failure, B: 0 endpoint-only, C: 20 unresolved** (all spambase-related or
+shallow-lambda small-strata). Exactly ONE conditional pool-failure among
+certified selections in the whole grid: spambase/greedy/ts1 at lambda 0.9,
+which certified once in 100 resplits and that single certification failed
+(n_cert = 1 -- no interval printed). Terminology fixed everywhere:
+"certification refusal with full-acquisition fallback" (the system still
+predicts; it does not abstain from prediction).
+
+### 16.6 Task 6 -- controlled synthetic power (prospective)
+
+Bernoulli grid (5 q x 6 Delta + 2 nulls x 7 n, B = 5000): max empirical
+false-positive rate over ALL null points = **0.0500 = gamma (PASS)**; power
+increases in q, Delta, n as predicted; the theorem's sufficient bound is
+conservative but directionally predictive (never a minimum requirement).
+Family-size calibration (M in {10, 50, 100}) included as a calibration study.
+
+### 16.7 The licensed story (FINAL_CLAIM_DECISION.md; selected FROM the data)
+
+**Outcome A -- STRONG:** "A marginally certified AFA system can conceal a
+trajectory-defined stratum for which no stopping threshold in the
+precommitted family meets the target. CAFA audits this family-wide failure
+and uses a common-threshold certificate that refuses when evidence does not
+support simultaneous validity." Deleted claims: "plugin unsafe on 2 of 4"
+(replaced by exact pool exceedances); "property of the data" (replaced by
+"reproduces across backbone draws and readiness scores"); any "no budget
+works" generalization beyond the audited family; "0/35 IUT" as an
+inferential summary (replaced by the 105-config accounting).
+
+### 16.8 Status
+
+**ALL COMPUTE FOR THE PROJECT IS CLOSED at tag `canonical-v2.3`.** The
+claim-decision artifact (`results_committed/FINAL_CLAIM_DECISION.md` + json)
+is the story's single source; `RESULTS_FOR_PAPER.md` was rewritten from it.
+The next artifact is the paper.
