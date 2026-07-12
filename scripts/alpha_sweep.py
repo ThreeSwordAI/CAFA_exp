@@ -1,34 +1,40 @@
 #!/usr/bin/env python
-"""Phase 3 companion -- the alpha-sweep (post-hoc on cached rollouts; Task 2).
+"""Alpha-sweep (post-hoc on cached rollouts) -- Phase-5 corrected version.
 
 For each dataset (backbone train_seed ts, honest greedy, primary cost scheme)
-sweep the risk target alpha over a grid anchored to the COMMITTED probe floor
-(offsets above the floor). Note the committed fixed-rule alpha is
-ceil_0.05(floor + 0.05), which generally sits ABOVE the +0.05 grid point; it is
-marked separately in the tables and on F5.
+sweep the risk target alpha over a grid anchored to the COMMITTED probe floor.
 Everything is post-hoc on the frozen pool cache and the pre-committed stratum
 edges -- no retraining, no re-rollout.
 
-Per alpha, over the n_resplits cal/test resplits:
-  * plugin violation rate (Wilson 95% CI)  -- the safe/unsafe transition curve;
-  * cafa_marginal violation rate (must stay <= delta everywhere), abstention,
-    mean cost + cost ratio vs full;
-  * oracle-cheapest cost (the floor);
-  * CAFA-IUT abstention rate and cost premium vs marginal -- the
-    "price of honesty" curve;
-  * number of alpha-infeasible strata at lambda_ref = 0.9 (population CP LCB).
+Phase-5 corrections (Task 1):
+  * --include-committed-alpha : each dataset's committed alpha is an EXPLICIT
+    grid point, so the committed target is MEASURED, never interpolated (the
+    MiniBooNE contradiction in the first frozen file came from inferring the
+    committed target's side from the nearest grid point).
+  * --bracket : after the coarse pass, bisect (3 refinement points) between
+    the last unsafe and first safe alpha, so the reported transition carries a
+    stated resolution, e.g. "transition in (0.140, 0.150], resolution 0.010".
+  * automated H2 cross-check: the plugin violation measured at the committed
+    alpha must EQUAL the plugin violation in the metrics JSON (H2) for the
+    same cell -- asserted per dataset and written into the transitions CSV so
+    the two tables can never silently diverge again.
 
-Outputs: analysis_v2/alpha_sweep.csv, analysis_v2/ALPHA_SWEEP.md (with the
-sentence-ready plugin-transition statement per dataset), figures_v2/F5_<ds>.*
+Per alpha, over the n_resplits cal/test resplits: plugin violation (Wilson
+95% CI); cafa_marginal violation/abstention/cost ratio; oracle-cheapest cost;
+CAFA-IUT abstention + cost premium; number of alpha-infeasible strata at
+lambda_ref = 0.9.
 
-ENVIRONMENT RULE: the grid is anchored to the floor in the committed JSON the
-run sees -- anchor to the CLUSTER floor for canonical numbers; a sweep around
-a local floor is a development artifact only.
+Outputs: analysis_v2/alpha_sweep.csv (one row per evaluated alpha, with
+is_committed / is_bracket flags), analysis_v2/alpha_sweep_transitions.csv
+(one row per dataset: measured verdict at the committed alpha + bracketed
+transition + H2 cross-check), analysis_v2/ALPHA_SWEEP.md, figures_v2/F5_<ds>.*
+
+ENVIRONMENT RULE: anchor to the committed floor the run sees -- cluster
+anchors for canonical numbers; local sweeps are development artifacts.
 
 Usage:
-    python scripts/alpha_sweep.py --dataset tabular:adult --grid-from-floor
-    python scripts/alpha_sweep.py --all --grid-from-floor
-    python scripts/alpha_sweep.py --all --grid-from-floor --offsets 0.02,0.05,0.08,0.11,0.15,0.20
+    python scripts/alpha_sweep.py --all --grid-from-floor \
+        --include-committed-alpha --bracket [--metrics-dir results_committed/metrics]
 """
 
 from __future__ import annotations
@@ -58,8 +64,9 @@ from cafa.splits import probe_eval_split, resplit_cal_test  # noqa: E402
 
 _DATASETS = ["mnist", "tabular:adult", "tabular:MiniBooNE", "tabular:spambase"]
 _DEFAULT_OFFSETS = (0.02, 0.05, 0.08, 0.11, 0.15, 0.20)
-_LR_STRATA = "0.9"      # lambda_ref used for the infeasible-strata count + IUT
+_LR_STRATA = "0.9"
 _Z = 1.96
+_BISECT_STEPS = 3
 
 
 def dsname_of(dataset: str) -> str:
@@ -99,8 +106,24 @@ def _fmt(x, nd=4):
     return f"{x:.{nd}f}"
 
 
-def sweep_one(dataset: str, train_seed: int, policy: str, offsets, cfg, paths):
-    """Run the alpha-sweep for one dataset; returns per-alpha aggregate rows."""
+def h2_plugin_violation(metrics_dir: Path, dsname: str, ts: int, policy: str,
+                        alpha: float) -> "float | None":
+    """Plugin violation in the metrics JSON (H2), lambda_ref block 0.9, primary scheme."""
+    p = Path(metrics_dir) / f"{dsname}_ts{ts}_{policy}.json"
+    if not p.exists():
+        return None
+    data = json.loads(p.read_text())
+    blk = data["lambda_refs"].get(_LR_STRATA)
+    if blk is None:
+        return None
+    scheme = "inverse_info" if "inverse_info" in data["meta"]["schemes"] else "uniform"
+    risks = [r["schemes"][scheme]["plugin"]["realized_risk"] for r in blk["resplits"]]
+    return float(np.mean([1.0 if (x is not None and x > alpha) else 0.0 for x in risks]))
+
+
+def sweep_one(dataset: str, train_seed: int, policy: str, offsets, cfg, paths,
+              include_committed: bool, bracket: bool, metrics_dir: Path):
+    """Sweep one dataset; returns (rows sorted by alpha, transition record)."""
     ts = int(train_seed)
     dsname = dsname_of(dataset)
     method_cfg = cfg["method"]
@@ -135,14 +158,13 @@ def sweep_one(dataset: str, train_seed: int, policy: str, offsets, cfg, paths):
     T = Tp1 - 1
 
     s_full = stop_index_matrix(scores_e, grid)
-    rows = np.arange(n_eval)[:, None]
-    losses_full = 1.0 - correct_e[rows, s_full]
+    rows_ix = np.arange(n_eval)[:, None]
+    losses_full = 1.0 - correct_e[rows_ix, s_full]
     cc = cum_cost_from_order(order_e, feature_costs_by_scheme[primary_scheme])
-    costs_full = cc[rows, s_full]
+    costs_full = cc[rows_ix, s_full]
     full_acq_loss = 1.0 - correct_e[:, T]
     full_cost = float(cc[:, T].mean())
 
-    # Pre-committed quantile-5 edges at the strata lambda_ref (probe, seed 777).
     q5 = committed["edges"].get(policy, {}).get(_LR_STRATA, {}).get("quantile", {}).get("5", [])
     bucket_full, _ = reference_buckets(scores_e, float(_LR_STRATA), 5, 50,
                                        edges=np.asarray(q5, dtype=float))
@@ -153,12 +175,9 @@ def sweep_one(dataset: str, train_seed: int, policy: str, offsets, cfg, paths):
         err = int(round(float(np.sum(full_acq_loss[mask]))))
         stratum_stats.append((n_k, err))
 
-    # Pre-compute resplit index sets once (alpha-independent).
     resplit_ix = [resplit_cal_test(np.arange(n_eval), rs, cal_frac) for rs in range(n_resplits)]
 
-    alphas = sorted({round(min(0.999, floor + float(o)), 4) for o in offsets})
-    out_rows = []
-    for alpha in alphas:
+    def eval_alpha(alpha: float) -> dict:
         n_infeasible = sum(1 for n_k, err in stratum_stats if n_k > 0 and cp_lcb(err, n_k) > alpha)
         marg_viol = marg_abst = plug_viol = iut_abst = 0
         marg_costs, plug_costs, iut_costs, oracle_costs = [], [], [], []
@@ -205,40 +224,99 @@ def sweep_one(dataset: str, train_seed: int, policy: str, offsets, cfg, paths):
         mv_, mlo, mhi = wilson(marg_viol, n)
         marg_cost = float(np.mean(marg_costs))
         iut_cost = float(np.mean(iut_costs))
-        out_rows.append({
+        return {
             "dataset": dsname, "train_seed": ts, "policy": policy,
             "scheme": primary_scheme, "floor": floor, "committed_alpha": committed_alpha,
-            "alpha": alpha, "alpha_minus_floor": round(alpha - floor, 4),
+            "alpha": round(alpha, 4), "alpha_minus_floor": round(alpha - floor, 4),
+            "is_committed": int(abs(alpha - committed_alpha) < 1e-9),
+            "is_bracket": 0,
             "plugin_viol": pv_, "plugin_lo": plo, "plugin_hi": phi,
             "marg_viol": mv_, "marg_lo": mlo, "marg_hi": mhi,
             "marg_abstain": marg_abst / n,
             "marg_cost": marg_cost, "marg_cost_ratio_full": marg_cost / full_cost,
             "oracle_cost": float(np.mean(oracle_costs)),
             "iut_abstain": iut_abst / n, "iut_cost": iut_cost,
+            "iut_cost_ratio_full": iut_cost / full_cost,
             "iut_premium_vs_marginal": (iut_cost / marg_cost) if marg_cost else float("nan"),
             "n_infeasible_strata_lr0.9": n_infeasible,
             "delta": delta, "n_resplits": n,
-        })
-        print(f"[alpha-sweep] {dsname} alpha={alpha:.3f} (floor+{alpha - floor:.3f}): "
-              f"plugin_viol={pv_:.2f} marg_viol={mv_:.2f} iut_abstain={iut_abst / n:.2f} "
-              f"infeasible@0.9={n_infeasible}", flush=True)
-    return out_rows
+        }
+
+    alphas = {round(min(0.999, floor + float(o)), 4) for o in offsets}
+    if include_committed:
+        alphas.add(round(committed_alpha, 4))
+    rows = {}
+    for a in sorted(alphas):
+        rows[a] = eval_alpha(a)
+        r = rows[a]
+        print(f"[alpha-sweep] {dsname} alpha={a:.3f} (floor+{a - floor:.3f})"
+              f"{' [committed]' if r['is_committed'] else ''}: "
+              f"plugin_viol={r['plugin_viol']:.2f} marg_viol={r['marg_viol']:.2f} "
+              f"iut_abstain={r['iut_abstain']:.2f} infeasible@0.9={r['n_infeasible_strata_lr0.9']}",
+              flush=True)
+
+    # ---- bracket the plugin transition (safe := plugin_viol <= delta) ----
+    delta_v = rows[next(iter(rows))]["delta"]
+    transition_lo = transition_hi = None
+    if bracket:
+        srt = sorted(rows)
+        first_safe = next((i for i, a in enumerate(srt) if rows[a]["plugin_viol"] <= delta_v), None)
+        if first_safe is None:
+            transition_lo, transition_hi = srt[-1], None       # never safe in range
+        elif first_safe == 0:
+            transition_lo, transition_hi = None, srt[0]        # safe from the smallest alpha
+        else:
+            lo, hi = srt[first_safe - 1], srt[first_safe]
+            for _ in range(_BISECT_STEPS):
+                mid = round((lo + hi) / 2.0, 4)
+                if mid in rows or mid in (lo, hi):
+                    break
+                r = eval_alpha(mid)
+                r["is_bracket"] = 1
+                rows[mid] = r
+                print(f"[alpha-sweep] {dsname} bracket alpha={mid:.4f}: "
+                      f"plugin_viol={r['plugin_viol']:.2f}", flush=True)
+                if r["plugin_viol"] <= delta_v:
+                    hi = mid
+                else:
+                    lo = mid
+            transition_lo, transition_hi = lo, hi
+
+    # ---- measured verdict at the committed alpha + H2 cross-check ----
+    committed_key = round(committed_alpha, 4)
+    crow = rows.get(committed_key)
+    h2_v = h2_plugin_violation(metrics_dir, dsname, ts, policy, committed_alpha)
+    crosscheck = None
+    if crow is not None and h2_v is not None:
+        crosscheck = abs(crow["plugin_viol"] - h2_v) < 1e-9
+        status = "PASS" if crosscheck else "FAIL"
+        print(f"[alpha-sweep] {dsname} H2 cross-check: sweep plugin viol at committed "
+              f"alpha = {crow['plugin_viol']:.3f}, H2 = {h2_v:.3f} -> {status}", flush=True)
+        assert crosscheck, (
+            f"CROSS-TABLE INCONSISTENCY on {dsname}: alpha-sweep plugin violation at the "
+            f"committed alpha ({crow['plugin_viol']:.4f}) != H2 table ({h2_v:.4f})."
+        )
+
+    transition = {
+        "dataset": dsname, "train_seed": ts, "floor": floor,
+        "committed_alpha": committed_alpha,
+        "plugin_viol_at_committed": None if crow is None else crow["plugin_viol"],
+        "plugin_lo_at_committed": None if crow is None else crow["plugin_lo"],
+        "plugin_hi_at_committed": None if crow is None else crow["plugin_hi"],
+        "verdict_at_committed": (None if crow is None else
+                                 ("SAFE" if crow["plugin_viol"] <= delta_v else "UNSAFE")),
+        "transition_lo": transition_lo, "transition_hi": transition_hi,
+        "resolution": (None if (transition_lo is None or transition_hi is None)
+                       else round(transition_hi - transition_lo, 4)),
+        "h2_plugin_viol": h2_v,
+        "h2_crosscheck": ("PASS" if crosscheck else
+                          ("FAIL" if crosscheck is not None else "n/a")),
+        "delta": delta_v,
+    }
+    return [rows[a] for a in sorted(rows)], transition
 
 
-def plugin_transition(rows):
-    """Smallest alpha at which plugin's violation rate is <= delta (the safe onset).
-
-    Rows must be ascending in alpha. Returns (transition_alpha, note); None if
-    plugin never becomes safe in the swept range.
-    """
-    delta = rows[0]["delta"]
-    for r in rows:
-        if r["plugin_viol"] <= delta:
-            return r["alpha"]
-    return None
-
-
-def make_f5(rows_by_ds, fig_dir: Path):
+def make_f5(rows_by_ds, transitions, fig_dir: Path):
     for dsname, rows in rows_by_ds.items():
         rows = sorted(rows, key=lambda r: r["alpha"])
         a = [r["alpha"] for r in rows]
@@ -255,14 +333,21 @@ def make_f5(rows_by_ds, fig_dir: Path):
                 [r["marg_hi"] - r["marg_viol"] for r in rows]]
         ax1.errorbar(a, pv, yerr=perr, marker="o", capsize=3, label="plugin")
         ax1.errorbar(a, mv, yerr=merr, marker="s", capsize=3, label="cafa_marginal")
+        crow = next((r for r in rows if r["is_committed"]), None)
+        if crow is not None:
+            ax1.scatter([crow["alpha"]], [crow["plugin_viol"]], marker="*", s=200,
+                        zorder=5, label="plugin AT committed alpha (measured)")
+        tr = transitions.get(dsname, {})
+        if tr.get("transition_lo") is not None and tr.get("transition_hi") is not None:
+            ax1.axvspan(tr["transition_lo"], tr["transition_hi"], alpha=0.15, color="orange",
+                        label=f"transition bracket (res {tr['resolution']:g})")
         ax1.axhline(delta, linestyle="--", color="k", label=f"delta={delta:g}")
         ax1.axvline(committed_alpha, linestyle=":", color="gray",
                     label=f"committed alpha={committed_alpha:g}")
-        ax1.axvline(floor, linestyle="-", color="gray", linewidth=0.8,
-                    label=f"floor={floor:.3f}")
+        ax1.axvline(floor, linestyle="-", color="gray", linewidth=0.8, label=f"floor={floor:.3f}")
         ax1.set_xlabel("alpha"); ax1.set_ylabel("violation rate (Wilson 95%)")
-        ax1.set_title("safe/unsafe transition")
-        ax1.legend(fontsize=7)
+        ax1.set_title("safe/unsafe transition (measured)")
+        ax1.legend(fontsize=6)
 
         ab = [r["iut_abstain"] for r in rows]
         pr = [r["iut_premium_vs_marginal"] for r in rows]
@@ -286,22 +371,27 @@ def make_f5(rows_by_ds, fig_dir: Path):
 
 
 def main(argv=None) -> int:
-    ap = argparse.ArgumentParser(description="CAFA v2 alpha-sweep (post-hoc).")
+    ap = argparse.ArgumentParser(description="CAFA v2 alpha-sweep (post-hoc, corrected).")
     ap.add_argument("--dataset", default=None, help="mnist | tabular:<name>")
-    ap.add_argument("--all", action="store_true", help="sweep every Phase-1 dataset.")
+    ap.add_argument("--all", action="store_true")
     ap.add_argument("--train-seed", type=int, default=0)
     ap.add_argument("--policy", default="greedy_entropy")
     ap.add_argument("--grid-from-floor", action="store_true",
                     help="anchor the alpha grid to the committed probe floor (required mode).")
-    ap.add_argument("--offsets", default=",".join(str(o) for o in _DEFAULT_OFFSETS),
-                    help="comma-separated offsets above the floor.")
+    ap.add_argument("--include-committed-alpha", action="store_true",
+                    help="measure at the committed alpha explicitly (Phase-5 correction).")
+    ap.add_argument("--bracket", action="store_true",
+                    help="bisect the plugin transition to a stated resolution.")
+    ap.add_argument("--offsets", default=",".join(str(o) for o in _DEFAULT_OFFSETS))
+    ap.add_argument("--metrics-dir", default="metrics_v2",
+                    help="metrics JSONs for the H2 cross-check (use results_committed/metrics "
+                         "on the cluster).")
     ap.add_argument("--out", default="analysis_v2")
     ap.add_argument("--figures", default="figures_v2")
     args = ap.parse_args(argv)
 
     if not args.grid_from_floor:
-        print("ERROR: only --grid-from-floor mode is supported (the grid must be "
-              "anchored to the committed floor).", file=sys.stderr)
+        print("ERROR: only --grid-from-floor mode is supported.", file=sys.stderr)
         return 1
     datasets = _DATASETS if args.all else ([args.dataset] if args.dataset else [])
     if not datasets:
@@ -314,67 +404,75 @@ def main(argv=None) -> int:
     out_dir = Path(args.out); out_dir.mkdir(parents=True, exist_ok=True)
     fig_dir = Path(args.figures); fig_dir.mkdir(parents=True, exist_ok=True)
 
-    all_rows = []
-    rows_by_ds = {}
+    all_rows, rows_by_ds, transitions = [], {}, {}
     for ds in datasets:
-        rows = sweep_one(ds, args.train_seed, args.policy, offsets, cfg, paths)
+        rows, tr = sweep_one(ds, args.train_seed, args.policy, offsets, cfg, paths,
+                             args.include_committed_alpha, args.bracket,
+                             Path(args.metrics_dir))
         all_rows.extend(rows)
         rows_by_ds[dsname_of(ds)] = rows
+        transitions[dsname_of(ds)] = tr
 
-    # CSV
-    fieldnames = list(all_rows[0].keys())
     with open(out_dir / "alpha_sweep.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=fieldnames)
-        w.writeheader()
-        w.writerows(all_rows)
+        w = csv.DictWriter(f, fieldnames=list(all_rows[0].keys()))
+        w.writeheader(); w.writerows(all_rows)
+    with open(out_dir / "alpha_sweep_transitions.csv", "w", newline="") as f:
+        trs = list(transitions.values())
+        w = csv.DictWriter(f, fieldnames=list(trs[0].keys()))
+        w.writeheader(); w.writerows(trs)
 
-    # Markdown report with the sentence-ready transition statements.
-    lines = ["# CAFA v2 -- ALPHA SWEEP (post-hoc on cached rollouts)\n",
-             "_Grid anchored to the committed probe floor. The committed fixed-rule "
-             "alpha is ceil_0.05(floor + 0.05) and generally sits above the +0.05 "
-             "grid point; it is stated per dataset below and marked on F5. Same "
-             "frozen trajectories, same pre-committed strata edges; delta = "
-             f"{all_rows[0]['delta']:g}; n_resplits = {all_rows[0]['n_resplits']}._\n"]
+    # ---- markdown report ----
+    n_unsafe = sum(1 for t in transitions.values() if t["verdict_at_committed"] == "UNSAFE")
+    lines = ["# CAFA v2 -- ALPHA SWEEP (corrected: measured at the committed alpha)\n",
+             "_Grid anchored to the committed probe floor, with the committed alpha as an "
+             "explicit MEASURED grid point and the plugin transition bracketed by bisection. "
+             "The verdict at the committed target is by measurement, never inference; the "
+             "plugin violation at the committed alpha is asserted equal to the H2 table "
+             f"(cross-check column). delta = {all_rows[0]['delta']:g}; n_resplits = "
+             f"{all_rows[0]['n_resplits']}._\n"]
     for dsname, rows in rows_by_ds.items():
         rows = sorted(rows, key=lambda r: r["alpha"])
+        tr = transitions[dsname]
         lines.append(f"## {dsname} (ts{rows[0]['train_seed']}, {rows[0]['policy']}, "
                      f"{rows[0]['scheme']}; floor = {_fmt(rows[0]['floor'])}, "
                      f"committed alpha = {rows[0]['committed_alpha']:g})\n")
-        lines.append("| alpha | alpha-floor | plugin viol [95% CI] | marginal viol [95% CI] | "
-                     "marg abstain | marg cost/full | oracle cost | IUT abstain | "
-                     "IUT premium | infeasible strata @0.9 |")
-        lines.append("|---|---|---|---|---|---|---|---|---|---|")
+        lines.append("| alpha | note | plugin viol [95% CI] | marginal viol [95% CI] | "
+                     "marg abstain | marg cost/full | IUT abstain | IUT cost/full | "
+                     "infeasible strata @0.9 |")
+        lines.append("|---|---|---|---|---|---|---|---|---|")
         for r in rows:
+            note = "COMMITTED" if r["is_committed"] else ("bracket" if r["is_bracket"] else "")
             lines.append(
-                f"| {r['alpha']:.3f} | +{r['alpha_minus_floor']:.3f} | "
+                f"| {r['alpha']:.4f} | {note} | "
                 f"{_fmt(r['plugin_viol'], 2)} [{_fmt(r['plugin_lo'], 2)}, {_fmt(r['plugin_hi'], 2)}] | "
                 f"{_fmt(r['marg_viol'], 2)} [{_fmt(r['marg_lo'], 2)}, {_fmt(r['marg_hi'], 2)}] | "
                 f"{_fmt(r['marg_abstain'], 2)} | {_fmt(r['marg_cost_ratio_full'], 3)} | "
-                f"{_fmt(r['oracle_cost'], 2)} | {_fmt(r['iut_abstain'], 2)} | "
-                f"{_fmt(r['iut_premium_vs_marginal'], 2)} | {r['n_infeasible_strata_lr0.9']} |")
+                f"{_fmt(r['iut_abstain'], 2)} | {_fmt(r['iut_cost_ratio_full'], 3)} | "
+                f"{r['n_infeasible_strata_lr0.9']} |")
         lines.append("")
-        trans = plugin_transition(rows)
-        ca = rows[0]["committed_alpha"]
-        if trans is None:
-            lines.append(f"- Plugin transition: plugin remains UNSAFE across the whole swept "
-                         f"range on {dsname}; the committed alpha {ca:g} sits in the unsafe "
-                         "regime -- the certificate is doing real work at the committed target.")
+        if tr["transition_hi"] is None:
+            tr_txt = f"plugin never becomes safe in the swept range (last point {tr['transition_lo']:.4f})"
+        elif tr["transition_lo"] is None:
+            tr_txt = f"plugin already safe at the smallest swept alpha ({tr['transition_hi']:.4f}); transition below the range"
         else:
-            margin = ca - trans
-            side = "SAFE" if margin >= 0 else "UNSAFE"
-            lines.append(f"- Plugin transition on {dsname}: plugin flips safe at alpha ~ "
-                         f"{trans:.3f} (floor + {trans - rows[0]['floor']:.3f}); the committed "
-                         f"alpha {ca:g} lands {abs(margin):.3f} {'above' if margin >= 0 else 'below'} "
-                         f"the transition (committed target is in the {side} regime). The "
-                         "transition point is a property of the risk-curve geometry near "
-                         "alpha -- unknowable a priori, which is the argument for a "
-                         "certificate over a tuned threshold.")
+            tr_txt = (f"transition in ({tr['transition_lo']:.4f}, {tr['transition_hi']:.4f}], "
+                      f"resolution {tr['resolution']:g}")
+        lines.append(f"- MEASURED at the committed alpha {tr['committed_alpha']:g}: plugin "
+                     f"violation {_fmt(tr['plugin_viol_at_committed'], 3)} "
+                     f"[{_fmt(tr['plugin_lo_at_committed'], 3)}, {_fmt(tr['plugin_hi_at_committed'], 3)}] "
+                     f"-> **{tr['verdict_at_committed']}**; {tr_txt}; H2 cross-check: "
+                     f"{tr['h2_crosscheck']} (H2 value {_fmt(tr['h2_plugin_viol'], 3)}).")
         lines.append("")
+    lines.append(f"**Corrected headline: the alpha at which the uncorrected heuristic flips "
+                 f"from safe to unsafe lands at a different, a-priori unknowable offset on "
+                 f"each dataset, and the principled fixed rule lands inside the UNSAFE regime "
+                 f"on {n_unsafe} of {len(transitions)} datasets (by measurement).**")
     (out_dir / "ALPHA_SWEEP.md").write_text("\n".join(lines))
 
-    make_f5(rows_by_ds, fig_dir)
-    print(f"[alpha-sweep] wrote {out_dir / 'ALPHA_SWEEP.md'}, alpha_sweep.csv, F5_* figures.",
-          flush=True)
+    make_f5(rows_by_ds, transitions, fig_dir)
+    print(f"[alpha-sweep] wrote ALPHA_SWEEP.md, alpha_sweep.csv, "
+          f"alpha_sweep_transitions.csv, F5_* (committed-target UNSAFE on "
+          f"{n_unsafe}/{len(transitions)}).", flush=True)
     return 0
 
 
