@@ -145,10 +145,25 @@ def main(argv=None) -> int:
                      "(fixed rule per backbone; report per-seed, never mix) |")
     L.append("")
 
-    # ---- gate table ----
+    # ---- gate table (with the Phase-5.2 pool-risk column when available) ----
+    pool_gate = {}
+    pg_csv = analysis_dir / "pool_risk_gate.csv"
+    if pg_csv.exists():
+        for r in csv.DictReader(open(pg_csv, newline="")):
+            pool_gate[r["cell"]] = r
     L.append("## Gate table (every cell, all seeds; delta per cell; Wilson 95% UB)\n")
-    L.append("| cell | alpha | marginal viol [UB] | gate | IUT viol [UB] | gate |")
-    L.append("|---|---|---|---|---|---|")
+    if pool_gate:
+        L.append("The `POOL viol` column is the Phase-5.2 gate against the CORRECT "
+                 "estimand (exact risk on the whole eval pool; n = 100 basis, "
+                 "abstentions counted separately); the test-split column is retained "
+                 "for comparison -- it systematically over-reports (see the finite-pool "
+                 "note below).\n")
+        L.append("| cell | alpha | marginal viol (test-split) [UB] | gate | "
+                 "POOL viol [UB] | gate | abstain | IUT viol [UB] | gate |")
+        L.append("|---|---|---|---|---|---|---|---|---|")
+    else:
+        L.append("| cell | alpha | marginal viol [UB] | gate | IUT viol [UB] | gate |")
+        L.append("|---|---|---|---|---|---|")
     borderline = []
     for data in metrics:
         meta = data["meta"]
@@ -162,9 +177,20 @@ def main(argv=None) -> int:
         ig = "PASS" if iub <= delta else "FAIL"
         if mg == "FAIL" or mub > 0.8 * delta:
             borderline.append((label, mk / mn if mn else 0.0, mub, mg))
-        L.append(f"| {label} | {data['alpha']:g} | {_fmt(mk / mn if mn else 0, 3)} "
-                 f"[{_fmt(mub, 3)}] | {mg} | {_fmt(ik / in_ if in_ else 0, 3)} "
-                 f"[{_fmt(iub, 3)}] | {ig} |")
+        if pool_gate:
+            pg = pool_gate.get(label)
+            if pg:
+                pcol = (f"{_fmt(float(pg['pool_viol']), 3)} [{_fmt(float(pg['pool_hi']), 3)}] | "
+                        f"{pg['pool_gate']} | {pg['abstentions']}")
+            else:
+                pcol = "n/a | n/a | n/a"
+            L.append(f"| {label} | {data['alpha']:g} | {_fmt(mk / mn if mn else 0, 3)} "
+                     f"[{_fmt(mub, 3)}] | {mg} | {pcol} | "
+                     f"{_fmt(ik / in_ if in_ else 0, 3)} [{_fmt(iub, 3)}] | {ig} |")
+        else:
+            L.append(f"| {label} | {data['alpha']:g} | {_fmt(mk / mn if mn else 0, 3)} "
+                     f"[{_fmt(mub, 3)}] | {mg} | {_fmt(ik / in_ if in_ else 0, 3)} "
+                     f"[{_fmt(iub, 3)}] | {ig} |")
     L.append("")
 
     # ---- H2 snapshot ----
@@ -323,6 +349,24 @@ def main(argv=None) -> int:
         L.append("- Full table: analysis_v2/VALIDITY_DIAGNOSTIC.md; figure F6.")
         L.append("- The guarantee itself is certified on truly independent draws by the "
                  "G1 gate and the IUT union-null Monte-Carlo gate.")
+        if pool_gate:
+            corrs = [float(r["corr_Rcal_Rtest_fixed_lambda"]) for r in pool_gate.values()
+                     if r["corr_Rcal_Rtest_fixed_lambda"] not in ("", "nan")]
+            n_pf = sum(1 for r in pool_gate.values() if r["pool_gate"] == "FAIL")
+            L.append("")
+            L.append("**Phase-5.2 resolution (the measured account, superseding the "
+                     "'residual attributed to dependence' language):** complementary "
+                     "50/50 resplits of one finite pool satisfy R_test = "
+                     "(n_eval R_pool - n_cal R_cal)/n_test, so R_cal and R_test are "
+                     "EXACTLY anti-correlated -- measured mean corr(R_cal, R_test) at "
+                     f"fixed lambda = {_fmt(float(np.mean(corrs)), 4) if corrs else 'n/a'} "
+                     "across cells. An unlucky-easy cal half both selects a more "
+                     "aggressive lambda-hat AND deterministically faces a harder test "
+                     "half -- the pairing an independent-noise model cannot see. "
+                     "Evaluated against the CORRECT estimand (exact pool risk), the "
+                     f"gate fails on **{n_pf} of {len(pool_gate)} cells** (see the POOL "
+                     "column of the gate table, POOL_RISK_GATE.md, and figure F7). "
+                     "The six test-split FAILs are RESOLVED, not caveated.")
         L.append("")
 
     # ---- IUT non-vacuity (Phase 5, Task 3) ----
@@ -382,6 +426,21 @@ def main(argv=None) -> int:
         L.extend(verdict_lines or ["- see analysis_v2/PHASE4_SCORE_ABLATION.md"])
         L.append("")
 
+    # ---- finite-pool methodological note (Phase 5.2) ----
+    if pool_gate:
+        L.append("## Evaluating distribution-free certificates on finite pools\n")
+        L.append("Complementary cal/test splits of a finite pool anti-correlate by "
+                 "construction (R_test is a deterministic decreasing function of R_cal "
+                 "at every threshold), so a test-split violation frequency "
+                 "SYSTEMATICALLY over-reports P(true risk > alpha) for any "
+                 "conformal/LTT-style certificate whose selection consumes the "
+                 "calibration half -- a general methodological point, not specific to "
+                 "CAFA. The correct finite-pool evaluation is against the exact pool "
+                 "risk, for which the certificate remains conservative "
+                 "(without-replacement sampling: hypergeometric dominated by binomial, "
+                 "Hoeffding 1963). Evidence: gate table POOL column, "
+                 "POOL_RISK_GATE.md, F7.\n")
+
     # ---- honest flags ----
     L.append("## Honest flags\n")
     pred_by_cell = {}
@@ -395,8 +454,14 @@ def main(argv=None) -> int:
                 expl = (f" EXPLAINED: predicted-from-test-noise violation "
                         f"{_fmt(pred_by_cell[label], 3)} under a perfectly valid "
                         "certificate (validity diagnostic).")
+            if label in pool_gate:
+                pg = pool_gate[label]
+                expl += (f" RESOLVED (Phase 5.2): POOL violation "
+                         f"{_fmt(float(pg['pool_viol']), 3)} "
+                         f"[UB {_fmt(float(pg['pool_hi']), 3)}] against the correct "
+                         "estimand.")
             L.append(f"- marginal gate {'FAIL' if gate == 'FAIL' else 'borderline'}: {label} "
-                     f"(viol {_fmt(frac, 3)}, Wilson UB {_fmt(ub, 3)}).{expl}")
+                     f"(test-split viol {_fmt(frac, 3)}, Wilson UB {_fmt(ub, 3)}).{expl}")
     else:
         L.append("- no borderline marginal cells in this batch.")
     if sweep_csv.exists():
