@@ -1,55 +1,67 @@
-# CAFA v2 -- ALPHA SWEEP (post-hoc on cached rollouts)
+# CAFA v2 -- ALPHA SWEEP (corrected: measured at the committed alpha)
 
-_Grid anchored to the committed probe floor. The committed fixed-rule alpha is ceil_0.05(floor + 0.05) and generally sits above the +0.05 grid point; it is stated per dataset below and marked on F5. Same frozen trajectories, same pre-committed strata edges; delta = 0.1; n_resplits = 100._
+_Grid anchored to the committed probe floor, with the committed alpha as an explicit MEASURED grid point and the plugin transition bracketed by bisection. The verdict at the committed target is by measurement, never inference; the plugin violation at the committed alpha is asserted equal to the H2 table (cross-check column). delta = 0.1; n_resplits = 100._
 
 ## mnist (ts0, greedy_entropy, uniform; floor = 0.0779, committed alpha = 0.15)
 
-| alpha | alpha-floor | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | oracle cost | IUT abstain | IUT premium | infeasible strata @0.9 |
-|---|---|---|---|---|---|---|---|---|---|
-| 0.098 | +0.020 | 0.46 [0.37, 0.56] | 0.03 [0.01, 0.08] | 0.00 | 0.773 | 35.47 | 1.00 | 1.29 | 1 |
-| 0.128 | +0.050 | 0.17 [0.11, 0.26] | 0.05 [0.02, 0.11] | 0.00 | 0.587 | 27.76 | 1.00 | 1.70 | 1 |
-| 0.158 | +0.080 | 0.15 [0.09, 0.23] | 0.04 [0.02, 0.10] | 0.00 | 0.485 | 22.87 | 1.00 | 2.06 | 1 |
-| 0.188 | +0.110 | 0.40 [0.31, 0.50] | 0.00 [0.00, 0.04] | 0.00 | 0.407 | 19.26 | 1.00 | 2.46 | 1 |
-| 0.228 | +0.150 | 0.17 [0.11, 0.26] | 0.03 [0.01, 0.08] | 0.00 | 0.333 | 15.68 | 1.00 | 3.00 | 1 |
-| 0.278 | +0.200 | 0.15 [0.09, 0.23] | 0.07 [0.03, 0.14] | 0.00 | 0.256 | 12.06 | 0.00 | 2.27 | 0 |
+| alpha | note | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | IUT abstain | IUT cost/full | infeasible strata @0.9 |
+|---|---|---|---|---|---|---|---|---|
+| 0.0979 |  | 0.46 [0.37, 0.56] | 0.03 [0.01, 0.08] | 0.00 | 0.773 | 1.00 | 1.000 | 1 |
+| 0.1279 |  | 0.17 [0.11, 0.26] | 0.05 [0.02, 0.11] | 0.00 | 0.587 | 1.00 | 1.000 | 1 |
+| 0.1500 | COMMITTED | 0.35 [0.26, 0.45] | 0.02 [0.01, 0.07] | 0.00 | 0.507 | 1.00 | 1.000 | 1 |
+| 0.1579 |  | 0.15 [0.09, 0.23] | 0.04 [0.02, 0.10] | 0.00 | 0.485 | 1.00 | 1.000 | 1 |
+| 0.1879 |  | 0.40 [0.31, 0.50] | 0.00 [0.00, 0.04] | 0.00 | 0.407 | 1.00 | 1.000 | 1 |
+| 0.2279 |  | 0.17 [0.11, 0.26] | 0.03 [0.01, 0.08] | 0.00 | 0.333 | 1.00 | 1.000 | 1 |
+| 0.2779 |  | 0.15 [0.09, 0.23] | 0.07 [0.03, 0.14] | 0.00 | 0.256 | 0.00 | 0.581 | 0 |
 
-- Plugin transition: plugin remains UNSAFE across the whole swept range on mnist; the committed alpha 0.15 sits in the unsafe regime -- the certificate is doing real work at the committed target.
+- MEASURED at the committed alpha 0.15: plugin violation 0.350 [0.264, 0.447] -> **UNSAFE**; plugin never becomes safe in the swept range (last point 0.2779); H2 cross-check: PASS (H2 value 0.350).
 
 ## tabular-adult (ts0, greedy_entropy, inverse_info; floor = 0.1465, committed alpha = 0.2)
 
-| alpha | alpha-floor | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | oracle cost | IUT abstain | IUT premium | infeasible strata @0.9 |
-|---|---|---|---|---|---|---|---|---|---|
-| 0.167 | +0.020 | 0.04 [0.02, 0.10] | 0.04 [0.02, 0.10] | 0.00 | 0.469 | 34.44 | 1.00 | 2.13 | 1 |
-| 0.197 | +0.050 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.361 | 34.36 | 1.00 | 2.77 | 1 |
-| 0.227 | +0.080 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.361 | 34.36 | 1.00 | 2.77 | 1 |
-| 0.257 | +0.110 | 0.01 [0.00, 0.05] | 0.01 [0.00, 0.05] | 0.00 | 0.187 | 0.35 | 1.00 | 5.35 | 1 |
-| 0.296 | +0.150 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.000 | 0.00 | 1.00 | n/a | 1 |
-| 0.346 | +0.200 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.000 | 0.00 | 0.00 | n/a | 0 |
+| alpha | note | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | IUT abstain | IUT cost/full | infeasible strata @0.9 |
+|---|---|---|---|---|---|---|---|---|
+| 0.1665 |  | 0.04 [0.02, 0.10] | 0.04 [0.02, 0.10] | 0.00 | 0.469 | 1.00 | 1.000 | 1 |
+| 0.1965 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.361 | 1.00 | 1.000 | 1 |
+| 0.2000 | COMMITTED | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.361 | 1.00 | 1.000 | 1 |
+| 0.2265 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.361 | 1.00 | 1.000 | 1 |
+| 0.2565 |  | 0.01 [0.00, 0.05] | 0.01 [0.00, 0.05] | 0.00 | 0.187 | 1.00 | 1.000 | 1 |
+| 0.2965 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.000 | 1.00 | 1.000 | 1 |
+| 0.3465 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.000 | 0.00 | 0.361 | 0 |
 
-- Plugin transition on tabular-adult: plugin flips safe at alpha ~ 0.167 (floor + 0.020); the committed alpha 0.2 lands 0.034 above the transition (committed target is in the SAFE regime). The transition point is a property of the risk-curve geometry near alpha -- unknowable a priori, which is the argument for a certificate over a tuned threshold.
+- MEASURED at the committed alpha 0.2: plugin violation 0.000 [0.000, 0.037] -> **SAFE**; plugin already safe at the smallest swept alpha (0.1665); transition below the range; H2 cross-check: PASS (H2 value 0.000).
 
 ## tabular-MiniBooNE (ts0, greedy_entropy, inverse_info; floor = 0.0844, committed alpha = 0.15)
 
-| alpha | alpha-floor | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | oracle cost | IUT abstain | IUT premium | infeasible strata @0.9 |
-|---|---|---|---|---|---|---|---|---|---|
-| 0.104 | +0.020 | 0.28 [0.20, 0.37] | 0.07 [0.03, 0.14] | 0.00 | 0.167 | 48.42 | 1.00 | 5.98 | 1 |
-| 0.134 | +0.050 | 0.16 [0.10, 0.24] | 0.13 [0.08, 0.21] | 0.00 | 0.055 | 17.26 | 1.00 | 18.16 | 1 |
-| 0.164 | +0.080 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 17.01 | 1.00 | 20.05 | 1 |
-| 0.194 | +0.110 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 17.01 | 1.00 | 20.05 | 1 |
-| 0.234 | +0.150 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 17.01 | 1.00 | 20.05 | 0 |
-| 0.284 | +0.200 | 0.05 [0.02, 0.11] | 0.05 [0.02, 0.11] | 0.00 | 0.038 | 0.85 | 0.00 | 4.26 | 0 |
+| alpha | note | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | IUT abstain | IUT cost/full | infeasible strata @0.9 |
+|---|---|---|---|---|---|---|---|---|
+| 0.1044 |  | 0.28 [0.20, 0.37] | 0.07 [0.03, 0.14] | 0.00 | 0.167 | 1.00 | 1.000 | 1 |
+| 0.1344 |  | 0.16 [0.10, 0.24] | 0.13 [0.08, 0.21] | 0.00 | 0.055 | 1.00 | 1.000 | 1 |
+| 0.1363 | bracket | 0.02 [0.01, 0.07] | 0.02 [0.01, 0.07] | 0.00 | 0.053 | 1.00 | 1.000 | 1 |
+| 0.1383 | bracket | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.051 | 1.00 | 1.000 | 1 |
+| 0.1422 | bracket | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 1.00 | 1.000 | 1 |
+| 0.1500 | COMMITTED | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 1.00 | 1.000 | 1 |
+| 0.1644 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 1.00 | 1.000 | 1 |
+| 0.1944 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 1.00 | 1.000 | 1 |
+| 0.2344 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.050 | 1.00 | 1.000 | 0 |
+| 0.2844 |  | 0.05 [0.02, 0.11] | 0.05 [0.02, 0.11] | 0.00 | 0.038 | 0.00 | 0.163 | 0 |
 
-- Plugin transition on tabular-MiniBooNE: plugin flips safe at alpha ~ 0.164 (floor + 0.080); the committed alpha 0.15 lands 0.014 below the transition (committed target is in the UNSAFE regime). The transition point is a property of the risk-curve geometry near alpha -- unknowable a priori, which is the argument for a certificate over a tuned threshold.
+- MEASURED at the committed alpha 0.15: plugin violation 0.000 [0.000, 0.037] -> **SAFE**; transition in (0.1344, 0.1363], resolution 0.0019; H2 cross-check: PASS (H2 value 0.000).
 
 ## tabular-spambase (ts0, greedy_entropy, inverse_info; floor = 0.0543, committed alpha = 0.15)
 
-| alpha | alpha-floor | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | oracle cost | IUT abstain | IUT premium | infeasible strata @0.9 |
-|---|---|---|---|---|---|---|---|---|---|
-| 0.074 | +0.020 | 0.53 [0.43, 0.62] | 0.07 [0.03, 0.14] | 0.69 | 0.810 | 104.49 | 1.00 | 1.24 | 1 |
-| 0.104 | +0.050 | 0.45 [0.36, 0.55] | 0.06 [0.03, 0.12] | 0.00 | 0.203 | 60.52 | 1.00 | 4.93 | 1 |
-| 0.134 | +0.080 | 0.44 [0.35, 0.54] | 0.07 [0.03, 0.14] | 0.00 | 0.128 | 30.39 | 1.00 | 7.79 | 1 |
-| 0.164 | +0.110 | 0.21 [0.14, 0.30] | 0.04 [0.02, 0.10] | 0.00 | 0.068 | 19.28 | 1.00 | 14.66 | 0 |
-| 0.204 | +0.150 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.045 | 18.76 | 0.97 | 21.54 | 0 |
-| 0.254 | +0.200 | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.045 | 18.76 | 0.40 | 12.21 | 0 |
+| alpha | note | plugin viol [95% CI] | marginal viol [95% CI] | marg abstain | marg cost/full | IUT abstain | IUT cost/full | infeasible strata @0.9 |
+|---|---|---|---|---|---|---|---|---|
+| 0.0743 |  | 0.53 [0.43, 0.62] | 0.07 [0.03, 0.14] | 0.69 | 0.810 | 1.00 | 1.000 | 1 |
+| 0.1043 |  | 0.45 [0.36, 0.55] | 0.06 [0.03, 0.12] | 0.00 | 0.203 | 1.00 | 1.000 | 1 |
+| 0.1343 |  | 0.44 [0.35, 0.54] | 0.07 [0.03, 0.14] | 0.00 | 0.128 | 1.00 | 1.000 | 1 |
+| 0.1500 | COMMITTED | 0.45 [0.36, 0.55] | 0.03 [0.01, 0.08] | 0.00 | 0.091 | 1.00 | 1.000 | 0 |
+| 0.1643 |  | 0.21 [0.14, 0.30] | 0.04 [0.02, 0.10] | 0.00 | 0.068 | 1.00 | 1.000 | 0 |
+| 0.1693 | bracket | 0.07 [0.03, 0.14] | 0.05 [0.02, 0.11] | 0.00 | 0.063 | 1.00 | 1.000 | 0 |
+| 0.1743 | bracket | 0.03 [0.01, 0.08] | 0.03 [0.01, 0.08] | 0.00 | 0.057 | 0.99 | 0.993 | 0 |
+| 0.1843 | bracket | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.049 | 0.99 | 0.993 | 0 |
+| 0.2043 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.045 | 0.97 | 0.978 | 0 |
+| 0.2543 |  | 0.00 [0.00, 0.04] | 0.00 [0.00, 0.04] | 0.00 | 0.045 | 0.40 | 0.554 | 0 |
 
-- Plugin transition on tabular-spambase: plugin flips safe at alpha ~ 0.204 (floor + 0.150); the committed alpha 0.15 lands 0.054 below the transition (committed target is in the UNSAFE regime). The transition point is a property of the risk-curve geometry near alpha -- unknowable a priori, which is the argument for a certificate over a tuned threshold.
+- MEASURED at the committed alpha 0.15: plugin violation 0.450 [0.356, 0.548] -> **UNSAFE**; transition in (0.1643, 0.1693], resolution 0.005; H2 cross-check: PASS (H2 value 0.450).
+
+**Corrected headline: the alpha at which the uncorrected heuristic flips from safe to unsafe lands at a different, a-priori unknowable offset on each dataset, and the principled fixed rule lands inside the UNSAFE regime on 2 of 4 datasets (by measurement).**

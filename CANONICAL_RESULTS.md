@@ -2,9 +2,9 @@
 
 ## Provenance
 
-- generated: 2026-07-12T11:57:17.831066+00:00
+- generated: 2026-07-12T12:55:36.525714+00:00
 - host: tinyx (Linux)
-- git commit: b5d8b649023e21cfaea4319fd6a265bee9540ccd
+- git commit: 20e59d92a55cca92e2877c5f8101918c1edaee67
 - numpy: 2.4.2
 - environment lock: repro/requirements.lock.txt
 - frozen-file hashes (repro/MANIFEST.sha256, CRLF-normalized check):
@@ -143,16 +143,49 @@ Cross-seed stability: mnist: STABLE (infeasible); tabular-MiniBooNE: STABLE (inf
 | tabular-spambase | 0.7 | 0.80 | 9.856 |
 | tabular-spambase | 0.9 | 1.00 | 10.946 |
 
-## Alpha-sweep: plugin transition vs committed alpha (ts0, greedy)
+## Alpha-sweep (corrected): MEASURED verdict at the committed alpha (ts0, greedy)
 
-| dataset | floor | committed alpha | plugin transition (first safe alpha) | position of committed target |
-|---|---|---|---|---|
-| mnist | 0.0779 | 0.15 | never safe in range | UNSAFE across the whole swept range |
-| tabular-MiniBooNE | 0.0844 | 0.15 | 0.164 (floor + 0.080) | UNSAFE by 0.014 |
-| tabular-adult | 0.1465 | 0.2 | 0.167 (floor + 0.020) | SAFE by 0.034 |
-| tabular-spambase | 0.0543 | 0.15 | 0.204 (floor + 0.150) | UNSAFE by 0.054 |
+| dataset | floor | committed alpha | plugin viol AT committed alpha [95% CI] | verdict (measured) | transition bracket | H2 cross-check |
+|---|---|---|---|---|---|---|
+| mnist | 0.0779 | 0.15 | 0.350 [0.264, 0.447] | **UNSAFE** | never safe in range (last 0.2779) | PASS |
+| tabular-MiniBooNE | 0.0844 | 0.15 | 0.000 [0.000, 0.037] | **SAFE** | (0.1344, 0.1363], res 0.0019 | PASS |
+| tabular-adult | 0.1465 | 0.2 | 0.000 [0.000, 0.037] | **SAFE** | below the swept range (safe at 0.1665) | PASS |
+| tabular-spambase | 0.0543 | 0.15 | 0.450 [0.356, 0.548] | **UNSAFE** | (0.1643, 0.1693], res 0.005 | PASS |
 
-Price of honesty: see the IUT abstention/premium columns of analysis_v2/ALPHA_SWEEP.md and the F5 figures (abstention ~1.0 while any stratum is alpha-infeasible; ~0 once alpha clears the hardest stratum).
+The alpha at which the uncorrected heuristic flips from safe to unsafe lands at a different, a-priori unknowable offset per dataset; the principled fixed rule lands inside the UNSAFE regime on 2 of 4 datasets (BY MEASUREMENT at the committed alpha; the verdicts are asserted equal to the H2 table by the cross-check column).
+
+Price of honesty: see analysis_v2/ALPHA_SWEEP.md and F5 (IUT abstention ~1.0 while any stratum is alpha-infeasible; ~0 once alpha clears the hardest stratum).
+
+## Validity-estimator diagnostic (marginal gate, all cells)
+
+LTT controls P(TRUE risk > alpha); the gate measures empirical test-split risk > alpha, and cost-minimising selection deploys the least-conservative certified threshold (true risk just below alpha by construction) -- so test-split violation frequencies OVERSTATE P(true risk > alpha). predicted = Phi((R_pool(lambda_hat) - alpha) / SE_test) is the rate expected from test-split noise alone under a perfectly valid certificate.
+
+- Agreement over 35 cells: corr(predicted, observed) = 0.762; mean |observed - predicted| = 0.019.
+- Cells with observed violation above delta, predicted vs observed:
+  - mnist/eps_greedy_eps0.5/ts0: predicted 0.030, observed 0.140 [0.085, 0.221] (mean margin alpha - R_pool = 0.0084, SE_test = 0.0031)
+  - mnist/eps_greedy_eps0.25/ts0: predicted 0.036, observed 0.110 [0.063, 0.186] (mean margin alpha - R_pool = 0.0080, SE_test = 0.0031)
+  - tabular-spambase/random/ts0: predicted 0.041, observed 0.110 [0.063, 0.186] (mean margin alpha - R_pool = 0.0252, SE_test = 0.0115)
+  - tabular-spambase/greedy_entropy/ts1: predicted 0.038, observed 0.100 [0.055, 0.174] (mean margin alpha - R_pool = 0.0268, SE_test = 0.0114)
+  - tabular-spambase/eps_greedy_eps0.25/ts0: predicted 0.046, observed 0.090 [0.048, 0.162] (mean margin alpha - R_pool = 0.0242, SE_test = 0.0115)
+  - tabular-MiniBooNE/eps_greedy_eps0.25/ts0: predicted 0.018, observed 0.080 [0.041, 0.150] (mean margin alpha - R_pool = 0.0070, SE_test = 0.0023)
+  - mnist/random/ts1: predicted 0.034, observed 0.060 [0.028, 0.125] (mean margin alpha - R_pool = 0.0090, SE_test = 0.0035)
+  - mnist/greedy_entropy/ts2: predicted 0.015, observed 0.060 [0.028, 0.125] (mean margin alpha - R_pool = 0.0118, SE_test = 0.0031)
+  - tabular-spambase/random/ts1: predicted 0.040, observed 0.060 [0.028, 0.125] (mean margin alpha - R_pool = 0.0254, SE_test = 0.0115)
+  - tabular-MiniBooNE/greedy_entropy/ts1: predicted 0.026, observed 0.050 [0.022, 0.112] (mean margin alpha - R_pool = 0.0073, SE_test = 0.0023)
+  - tabular-spambase/eps_greedy_eps0.5/ts0: predicted 0.034, observed 0.050 [0.022, 0.112] (mean margin alpha - R_pool = 0.0254, SE_test = 0.0115)
+- Full table: analysis_v2/VALIDITY_DIAGNOSTIC.md; figure F6.
+- The guarantee itself is certified on truly independent draws by the G1 gate and the IUT union-null Monte-Carlo gate.
+
+## IUT non-vacuity (lambda_ref = 0.9)
+
+| dataset | committed alpha | min certifying alpha (swept) | IUT cost/full there | premium vs marginal there | R_full(k*) | H3 consistency |
+|---|---|---|---|---|---|---|
+| mnist | 0.15 | 0.2779 | 0.581 | 2.27 | 0.2479 | PASS |
+| tabular-MiniBooNE | 0.15 | 0.2844 | 0.163 | 4.26 | 0.2334 | PASS |
+| tabular-adult | 0.2 | 0.3465 | 0.361 | n/a | 0.3092 | PASS |
+| tabular-spambase | 0.15 | 0.1743 | 0.993 | 17.28 | 0.1727 | PASS |
+
+At the min certifying alpha the IUT certifies EVERY stratum simultaneously at a cost below full acquisition; below it, the hardest stratum is intrinsically alpha-infeasible (H3 fallback bound) and abstention is the only honest deployment. IUT gate cells with abstention 1.0 at a lambda_ref are labelled VACUOUS in analysis_v2/IUT_NONVACUITY.md (correctness-by-abstention).
 
 ## Phase 2 (epsilon axis) -- concentration + the flat frontier
 
@@ -167,17 +200,17 @@ Price of honesty: see the IUT abstention/premium columns of analysis_v2/ALPHA_SW
 
 ## Honest flags
 
-- marginal gate FAIL: mnist/eps_greedy_eps0.25/ts0 (viol 0.110, Wilson UB 0.150) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate FAIL: mnist/eps_greedy_eps0.5/ts0 (viol 0.140, Wilson UB 0.184) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate borderline: mnist/random/ts1 (viol 0.060, Wilson UB 0.093) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate borderline: mnist/greedy_entropy/ts2 (viol 0.060, Wilson UB 0.093) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate FAIL: tabular-MiniBooNE/eps_greedy_eps0.25/ts0 (viol 0.080, Wilson UB 0.116) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate borderline: tabular-MiniBooNE/greedy_entropy/ts1 (viol 0.050, Wilson UB 0.081) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate FAIL: tabular-spambase/eps_greedy_eps0.25/ts0 (viol 0.090, Wilson UB 0.128) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate borderline: tabular-spambase/eps_greedy_eps0.5/ts0 (viol 0.050, Wilson UB 0.081) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate FAIL: tabular-spambase/random/ts0 (viol 0.110, Wilson UB 0.150) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate FAIL: tabular-spambase/greedy_entropy/ts1 (viol 0.100, Wilson UB 0.139) -- resplits share a finite eval pool; violations cluster with the backbone draw.
-- marginal gate borderline: tabular-spambase/random/ts1 (viol 0.060, Wilson UB 0.093) -- resplits share a finite eval pool; violations cluster with the backbone draw.
+- marginal gate FAIL: mnist/eps_greedy_eps0.25/ts0 (viol 0.110, Wilson UB 0.150). EXPLAINED: predicted-from-test-noise violation 0.036 under a perfectly valid certificate (validity diagnostic).
+- marginal gate FAIL: mnist/eps_greedy_eps0.5/ts0 (viol 0.140, Wilson UB 0.184). EXPLAINED: predicted-from-test-noise violation 0.030 under a perfectly valid certificate (validity diagnostic).
+- marginal gate borderline: mnist/random/ts1 (viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.034 under a perfectly valid certificate (validity diagnostic).
+- marginal gate borderline: mnist/greedy_entropy/ts2 (viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.015 under a perfectly valid certificate (validity diagnostic).
+- marginal gate FAIL: tabular-MiniBooNE/eps_greedy_eps0.25/ts0 (viol 0.080, Wilson UB 0.116). EXPLAINED: predicted-from-test-noise violation 0.018 under a perfectly valid certificate (validity diagnostic).
+- marginal gate borderline: tabular-MiniBooNE/greedy_entropy/ts1 (viol 0.050, Wilson UB 0.081). EXPLAINED: predicted-from-test-noise violation 0.026 under a perfectly valid certificate (validity diagnostic).
+- marginal gate FAIL: tabular-spambase/eps_greedy_eps0.25/ts0 (viol 0.090, Wilson UB 0.128). EXPLAINED: predicted-from-test-noise violation 0.046 under a perfectly valid certificate (validity diagnostic).
+- marginal gate borderline: tabular-spambase/eps_greedy_eps0.5/ts0 (viol 0.050, Wilson UB 0.081). EXPLAINED: predicted-from-test-noise violation 0.034 under a perfectly valid certificate (validity diagnostic).
+- marginal gate FAIL: tabular-spambase/random/ts0 (viol 0.110, Wilson UB 0.150). EXPLAINED: predicted-from-test-noise violation 0.041 under a perfectly valid certificate (validity diagnostic).
+- marginal gate FAIL: tabular-spambase/greedy_entropy/ts1 (viol 0.100, Wilson UB 0.139). EXPLAINED: predicted-from-test-noise violation 0.038 under a perfectly valid certificate (validity diagnostic).
+- marginal gate borderline: tabular-spambase/random/ts1 (viol 0.060, Wilson UB 0.093). EXPLAINED: predicted-from-test-noise violation 0.040 under a perfectly valid certificate (validity diagnostic).
 - spambase verdicts are undetermined by sample size (probe n = 184), not evidence of feasibility.
 - local (laptop) runs are development/replication only; their alphas differ (backbone nondeterminism) and none of their numbers are cited.
 
@@ -237,6 +270,7 @@ Price of honesty: see the IUT abstention/premium columns of analysis_v2/ALPHA_SW
 - F5_tabular-MiniBooNE
 - F5_tabular-adult
 - F5_tabular-spambase
+- F6_validity_diagnostic
 
 ---
 STATUS: FROZEN -- no number in the paper may differ from this file.

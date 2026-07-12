@@ -1,0 +1,5 @@
+dataset,committed_alpha,min_certifying_alpha_lr0.9,abstention_there,iut_cost_ratio_full_there,iut_premium_there,marg_cost_ratio_full_there,R_full_kstar,R_full_kstar_lcb,h3_consistent
+mnist,0.15,0.2779,0.0,0.5811795108519596,2.268145770845109,0.2562355199222547,0.247855,0.23827,PASS
+tabular-MiniBooNE,0.15,0.2844,0.0,0.16346889539851067,4.258507554507239,0.03838642841562976,0.233442,0.226189,PASS
+tabular-adult,0.2,0.3465,0.0,0.36062700843183315,nan,0.0,0.30919,0.299575,PASS
+tabular-spambase,0.15,0.1743,0.99,0.9927127348153615,17.28305794322142,0.057438489072746124,0.172691,0.134359,PASS

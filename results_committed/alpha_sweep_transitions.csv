@@ -1,0 +1,5 @@
+dataset,train_seed,floor,committed_alpha,plugin_viol_at_committed,plugin_lo_at_committed,plugin_hi_at_committed,verdict_at_committed,transition_lo,transition_hi,resolution,h2_plugin_viol,h2_crosscheck,delta
+mnist,0,0.077857,0.15,0.35,0.2636410465347802,0.4474573957080203,UNSAFE,0.2779,,,0.35,PASS,0.1
+tabular-adult,0,0.14649,0.2,0.0,0.0,0.03699480747600191,SAFE,,0.1665,,0.0,PASS,0.1
+tabular-MiniBooNE,0,0.084374,0.15,0.0,0.0,0.03699480747600191,SAFE,0.1344,0.1363,0.0019,0.0,PASS,0.1
+tabular-spambase,0,0.054348,0.15,0.45,0.3561437510640346,0.5475557296835656,UNSAFE,0.1643,0.1693,0.005,0.45,PASS,0.1
