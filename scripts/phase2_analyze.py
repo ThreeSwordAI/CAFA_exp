@@ -123,8 +123,13 @@ def collect(metrics_dir: Path, paths, cfg):
         policy = meta["policy"]
         eps = eps_of_policy(policy)
         if eps is None:
-            continue    # not on the epsilon axis (e.g. score ablation)
+            continue    # not on the epsilon axis
+        if meta.get("score", "softmax") != "softmax":
+            continue    # score-ablation cells are a different stopping rule, not axis points
         ts = int(meta["train_seed"])
+        if ts != 0:
+            continue    # the epsilon axis is a ts=0 experiment; ts1/ts2 (Phase 3)
+                        # metrics share (dataset, eps) keys and must not pollute it
         alpha = float(data["alpha"])
         delta = float(data["delta"])
 

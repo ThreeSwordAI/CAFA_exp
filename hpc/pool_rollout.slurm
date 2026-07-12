@@ -6,7 +6,10 @@
 # Array over the WO-8 cell list (run_pool_rollout.py --cell):
 #   Phase-1 : --array=0-7    (4 datasets x 2 policies; MNIST is the GPU-worthwhile cell)
 #   Phase-2 : --array=8-15   (tabular x3 + mnist, x eps in {0.25, 0.5})
-#   Phase-5 : --array=16     ((tabular:spambase, greedy_entropy, score=margin))
+#   Phase-4 : --array=17-19  ([adult, MiniBooNE, mnist] x greedy, score=margin)
+#             --array=16     (spambase margin -- optional)
+# Optional script argument $1 = train seed (default 0), e.g. Phase 3:
+#   sbatch --array=0-7 hpc/pool_rollout.slurm 1
 #   sbatch --array=0-7 --output="$RESULTS_ROOT/logs/%x_%A_%a.out" \
 #          --error="$RESULTS_ROOT/logs/%x_%A_%a.err" hpc/pool_rollout.slurm
 # Preamble copied from hpc/sweep.slurm (FAU NHR conventions; no --mem on tinygpu),
@@ -24,4 +27,4 @@ source activate "${CAFA_ENV:?CAFA_ENV not set - create hpc/env.local.sh from hpc
 : "${RESULTS_ROOT:?RESULTS_ROOT not set - add it to hpc/env.local.sh}"
 export PYTHONUNBUFFERED=1
 export PYTHONPATH="$PWD/src:${PYTHONPATH:-}"
-python scripts/run_pool_rollout.py --cell "$SLURM_ARRAY_TASK_ID" --device "${CAFA_DEVICE:-cuda}"
+python scripts/run_pool_rollout.py --cell "$SLURM_ARRAY_TASK_ID" --train-seed "${1:-0}" --device "${CAFA_DEVICE:-cuda}"

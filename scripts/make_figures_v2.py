@@ -45,7 +45,9 @@ def load_metrics(metrics_dir: Path):
     for p in sorted(metrics_dir.glob("*.json")):
         data = json.loads(p.read_text())
         m = data["meta"]
-        out[(m["dsname"], m["policy"], int(m["train_seed"]))] = data
+        score = m.get("score", "softmax")
+        ds_eff = m["dsname"] + (f"[{score}]" if score != "softmax" else "")
+        out[(ds_eff, m["policy"], int(m["train_seed"]))] = data
     return out
 
 

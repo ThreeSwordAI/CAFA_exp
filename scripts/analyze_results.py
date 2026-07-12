@@ -250,7 +250,12 @@ def main(argv=None) -> int:
         sha = str(meta.get("cache_meta", {}).get("checkpoint_sha256", ""))[:12]
         lines.append(f"| {meta['dataset']} | {meta['policy']} | {meta['train_seed']} | "
                      f"{_fmt(data['alpha'])} | {_fmt(data['delta'])} | {meta['n_resplits']} | {sha} |")
-        by_ds_policy[(meta["dsname"], meta["policy"], int(meta["train_seed"]))] = (p, data)
+        # A non-default readiness score is a different stratification/stopping
+        # rule -> its own group key (e.g. "tabular-adult[margin]"), so a score
+        # ablation never overwrites the canonical softmax entry.
+        score = meta.get("score", "softmax")
+        ds_eff = meta["dsname"] + (f"[{score}]" if score != "softmax" else "")
+        by_ds_policy[(ds_eff, meta["policy"], int(meta["train_seed"]))] = (p, data)
     lines.append("")
 
     # ---- (2) H2 table ----
@@ -407,12 +412,15 @@ def main(argv=None) -> int:
     else:
         any_ablation = False
         for (dsname, policy, ts), (p, data) in sorted(by_ds_policy.items()):
-            committed_path = Path("configs") / f"committed_v2_{dsname}_ts{ts}.json"
+            score = data["meta"].get("score", "softmax")
+            if score != "softmax":
+                continue   # ablation edges are committed for the base score only
+            real_ds = data["meta"]["dsname"]
+            committed_path = Path("configs") / f"committed_v2_{real_ds}_ts{ts}.json"
             if not committed_path.exists():
                 continue
             committed = json.loads(committed_path.read_text())
-            score = data["meta"].get("score", "softmax")
-            abl = ablation_verdicts(dsname, policy, score, ts, committed, cfg, paths, float(data["alpha"]))
+            abl = ablation_verdicts(real_ds, policy, score, ts, committed, cfg, paths, float(data["alpha"]))
             if abl is None:
                 continue
             any_ablation = True

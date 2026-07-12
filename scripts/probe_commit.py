@@ -138,11 +138,21 @@ def commit(*, dataset, train_seed, score, pool_dir, out_path, cfg,
             print(f"ERROR: --extend-edges but {out_path} does not exist yet.", file=sys.stderr)
             return 2
         committed = json.loads(out_path.read_text())
+        alpha_before = committed.get("alpha")
         committed.setdefault("edges", {})
-        committed["edges"].update(edges)
+        # A non-default readiness score defines a DIFFERENT stratification, so
+        # its edges live under "<policy>@<score>" -- never under the plain
+        # policy key, which stays reserved for the committed base score.
+        base_score = committed.get("score", "softmax")
+        keyed = {(tok if score == base_score else f"{tok}@{score}"): v
+                 for tok, v in edges.items()}
+        committed["edges"].update(keyed)
         committed["edges_extended"] = datetime.now(timezone.utc).isoformat()
+        # --extend-edges must never touch alpha / floor / costs (pre-commitment).
+        assert committed.get("alpha") == alpha_before
         out_path.write_text(json.dumps(committed, indent=2))
-        print(f"[probe] extended edges for policies {sorted(edges)} -> {out_path}", flush=True)
+        print(f"[probe] extended edges for keys {sorted(keyed)} -> {out_path} "
+              f"(alpha unchanged: {alpha_before})", flush=True)
         return 0
 
     if out_path.exists() and not force:

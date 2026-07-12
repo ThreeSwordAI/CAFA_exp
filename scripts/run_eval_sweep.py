@@ -116,8 +116,10 @@ def r6(x):
 def build_cells():
     """Cell list; order fixed and mirrored with run_pool_rollout.build_cells.
 
-    Phase-1 cells 0-7 : [mnist, adult, MiniBooNE, spambase] x [greedy_entropy, random]
-    Phase-2 cells 8-15: [adult, MiniBooNE, spambase, mnist] x eps in {0.25, 0.5}
+    Phase-1 cells 0-7   : [mnist, adult, MiniBooNE, spambase] x [greedy_entropy, random]
+    Phase-2 cells 8-15  : [adult, MiniBooNE, spambase, mnist] x eps in {0.25, 0.5}
+    Phase-4 cell  16    : (spambase, greedy_entropy, score=margin)  [optional]
+    Phase-4 cells 17-19 : [adult, MiniBooNE, mnist] x (greedy_entropy, score=margin)
     """
     cells = []
     for ds in ["mnist"] + _TAB:
@@ -127,6 +129,10 @@ def build_cells():
         for eps in [0.25, 0.5]:
             cells.append({"dataset": ds, "policy_token": eps_greedy_policy_token(eps),
                           "score": None})
+    cells.append({"dataset": "tabular:spambase", "policy_token": "greedy_entropy",
+                  "score": "margin"})
+    for ds in ["tabular:adult", "tabular:MiniBooNE", "mnist"]:
+        cells.append({"dataset": ds, "policy_token": "greedy_entropy", "score": "margin"})
     return cells
 
 
@@ -164,7 +170,19 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths):
         s: np.asarray(v, dtype=float) for s, v in committed["feature_costs_by_scheme"].items()
     }
     schemes = list(feature_costs_by_scheme.keys())
-    edges_for_policy = committed["edges"].get(policy_token, {})
+    # Edges are stratification-specific: a non-default readiness score has its
+    # own probe-committed edge set under the key "<policy>@<score>" (written by
+    # probe_commit --extend-edges --score <score>); the default score keeps the
+    # plain policy key. This prevents a score ablation from ever consuming (or
+    # overwriting) the canonical softmax edges.
+    base_score = committed.get("score", "softmax")
+    edge_key = policy_token if score_name == base_score else f"{policy_token}@{score_name}"
+    edges_for_policy = committed["edges"].get(edge_key, {})
+    if not edges_for_policy:
+        raise KeyError(
+            f"no committed edges under key {edge_key!r} in {committed_path}; "
+            "run probe_commit (--extend-edges [--score ...]) first."
+        )
 
     cache_path = Path(paths.results_root) / "pool_v2" / f"{dsname}_ts{ts}_{policy_token}_{score_name}.npz"
     if not cache_path.exists():
@@ -378,7 +396,10 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths):
 
     metrics_dir = Path("metrics_v2")
     metrics_dir.mkdir(parents=True, exist_ok=True)
-    out_path = metrics_dir / f"{dsname}_ts{ts}_{policy_token}.json"
+    # Non-default scores get their own file so a score ablation never
+    # overwrites the canonical (softmax) metrics for the same cell.
+    suffix = "" if score_name == base_score else f"_{score_name}"
+    out_path = metrics_dir / f"{dsname}_ts{ts}_{policy_token}{suffix}.json"
     out_path.write_text(json.dumps(out, indent=2))
     print(f"[eval] wrote {out_path}", flush=True)
     return out_path

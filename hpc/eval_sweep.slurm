@@ -6,6 +6,9 @@
 # CPU array over the run_eval_sweep.py --cell list:
 #   Phase-1 : --array=0-7    (4 datasets x 2 policies)
 #   Phase-2 : --array=8-15   ([adult, MiniBooNE, spambase, mnist] x eps in {0.25, 0.5})
+#   Phase-4 : --array=17-19  ([adult, MiniBooNE, mnist] x greedy, score=margin); 16 = spambase (optional)
+# Optional script argument $1 = train seed (default 0), e.g. Phase 3:
+#   sbatch --array=0-7 hpc/eval_sweep.slurm 1
 #   sbatch --array=0-7 --output="$RESULTS_ROOT/logs/%x_%A_%a.out" \
 #          --error="$RESULTS_ROOT/logs/%x_%A_%a.err" hpc/eval_sweep.slurm
 # The eval sweep is torch-free and CPU-only; no --gres / no --mem (tinygpu convention).
@@ -24,4 +27,4 @@ source activate "${CAFA_ENV:?CAFA_ENV not set - create hpc/env.local.sh from hpc
 : "${RESULTS_ROOT:?RESULTS_ROOT not set - add it to hpc/env.local.sh}"
 export PYTHONUNBUFFERED=1
 export PYTHONPATH="$PWD/src:${PYTHONPATH:-}"
-python scripts/run_eval_sweep.py --cell "$SLURM_ARRAY_TASK_ID"
+python scripts/run_eval_sweep.py --cell "$SLURM_ARRAY_TASK_ID" --train-seed "${1:-0}"

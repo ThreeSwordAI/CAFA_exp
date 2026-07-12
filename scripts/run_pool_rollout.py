@@ -17,7 +17,10 @@ Usage
 Cell list (fixed order; documented for the slurm arrays and Sec. F):
     Phase-1 cells 0-7   : [mnist, adult, MiniBooNE, spambase] x [greedy_entropy, random]
     Phase-2 cells 8-15  : [adult, MiniBooNE, spambase, mnist] x eps in {0.25, 0.5}
-    Phase-5 cell  16    : (tabular:spambase, greedy_entropy, score=margin)
+    Phase-4 cell  16    : (tabular:spambase, greedy_entropy, score=margin)  [optional]
+    Phase-4 cells 17-19 : [adult, MiniBooNE, mnist] x (greedy_entropy, score=margin)
+                          -- the corrected score-ablation scope: run where the
+                          audit DETECTS (spambase is undetermined; cell 16 optional)
 
 Cache path:
     ${RESULTS_ROOT}/pool_v2/{dsname}_ts{ts}_{policy_token}_{score}.npz
@@ -162,8 +165,11 @@ def build_cells():
     for ds in _TAB + ["mnist"]:                        # Phase 2: cells 8-15
         for eps in [0.25, 0.5]:
             cells.append({"dataset": ds, "policy": "eps_greedy", "epsilon": eps, "score": None})
-    cells.append({"dataset": "tabular:spambase", "policy": "greedy_entropy",   # Phase 5: cell 16
+    cells.append({"dataset": "tabular:spambase", "policy": "greedy_entropy",   # Phase 4: cell 16 (optional)
                   "epsilon": None, "score": "margin"})
+    for ds in ["tabular:adult", "tabular:MiniBooNE", "mnist"]:                 # Phase 4: cells 17-19
+        cells.append({"dataset": ds, "policy": "greedy_entropy",
+                      "epsilon": None, "score": "margin"})
     return cells
 
 
