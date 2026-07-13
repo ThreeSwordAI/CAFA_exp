@@ -1016,8 +1016,11 @@ subsample; the hypergeometric mean is dominated by the binomial -- Hoeffding
   (n = 100 basis, abstentions counted separately -- zero abstentions on the
   affected cells). Test-split basis for comparison: 11/35 cells cross delta
   by Wilson UB at n = 100 (the main table's six FAILs are the pooled-basis
-  subset). The certificate never actually deployed an alpha-violating
-  threshold; the old gate was measuring the estimator, not the guarantee.
+  subset). [Precision note per reviewphase_0_1_reply.md: "0 of 35 cells
+  fail" is the GATE statement; per-cell counts are 34/35 at exactly 0/100
+  with one cell (mnist/greedy/ts1) at 1/100, Wilson UB 0.0545 -- never write
+  "0/100 in every cell".] The old gate was measuring the estimator, not the
+  guarantee.
 - **The anti-correlation is measured, not asserted: corr(R_cal, R_test) =
   -1.0000 on every one of the 35 cells** (range -1.0000 to -1.0000), shown
   in F7 panel (a); panel (b) shows the six FAILs collapsing onto the
@@ -1090,7 +1093,7 @@ deepest stratum:
 |---|---|---|---|---|---|
 | mnist | 4 (5479) | 0.2479 | 1.4e-79 | **family-wide failure certified** | **certified** |
 | MiniBooNE | 4 (9180) | 0.2334 | 3.2e-98 | **certified** | **certified** |
-| adult | 3 (6268) | 0.3090 (at lambda 0.899, just below the endpoint 0.3092) | 8.7e-93 | **certified** | **certified** |
+| adult | 3 (6268) | 0.3090 (plateau lambda 0.869-0.889, just below the endpoint 0.3092; "0.899" was the local pilot's argmin -- corrected per reviewphase_0_1_reply.md) | 8.7e-93 | **certified** | **certified** |
 | spambase | 4 (249) | 0.1727 | 1.8e-01 | unresolved | unresolved |
 
 Licensed wording: "no stopping threshold in the audited precommitted

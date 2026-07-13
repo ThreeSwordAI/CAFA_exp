@@ -106,8 +106,9 @@ headlines now use the CORRECT (full-pool) estimand, IUT is accounted over
    cal/test halves of a finite pool anti-correlate exactly (measured
    rho = -1.0000 on all 35 cells), so test-split gates systematically
    over-report violations for ANY conformal/LTT certificate. On the correct
-   pool estimand: the marginal certificate fails 0/35 cells, and the plugin
-   headline CHANGES (Section 6).
+   pool estimand: the marginal certificate passes the validity gate in all
+   35 cells (34 at exactly 0/100; worst cell 1/100 -- Section 10), and the
+   plugin headline CHANGES (Section 6).
 6. **Detection power is prospectively validated:** controlled Bernoulli
    simulation (B = 5000/grid point), max false-positive rate over all null
    points = 0.0500 = gamma (exact control); power rises in stratum mass,
@@ -126,13 +127,15 @@ one-sided binomial tails; per-dataset p-values (no cross-dataset FWER claim).
 |---|---|---|---|---|---|---|---|---|---|
 | mnist | 4 (5479, 0.2174) | 0.15 | 0.2479 (~0.9-1.0) | 0.2479 [LCB 0.2383] | 1.4e-79 | **failure certified** | 0.2479 (t=49) | (same order) | **certified** |
 | MiniBooNE | 4 (9180, 0.1961) | 0.15 | 0.2334 | 0.2334 [LCB 0.2262] | 3.2e-98 | **certified** | 0.2334 (t=50) | -- | **certified** |
-| adult | 3 (6268, 0.3850) | 0.20 | 0.3090 (lambda 0.899) | 0.3092 [LCB 0.2996] | 8.7e-93 | **certified** | ~0.3090 (t<T) | -- | **certified** |
+| adult | 3 (6268, 0.3850) | 0.20 | 0.3090 (plateau lambda 0.869-0.889) | 0.3092 [LCB 0.2996] | 8.7e-93 | **certified** | ~0.3090 (t<T) | -- | **certified** |
 | spambase | 4 (249, 0.1504) | 0.15 | 0.1727 (lambda 1.0) | 0.1727 [LCB 0.1344] | 1.8e-01 | unresolved | 0.1727 (t=T) | -- | unresolved |
 
 Small details: adult's curve has its minimum slightly BELOW the full
-endpoint (0.3090 at lambda 0.899 vs 0.3092 at full) -- more information is
-not monotonically better, which is exactly why the family-wide test (not
-just the endpoint) was needed. Full curves (all 105 configs, threshold +
+endpoint (0.309030 on a three-threshold plateau at lambda in {0.8687,
+0.8788, 0.8889} vs 0.309190 at full; the earlier "at lambda 0.899" was the
+LOCAL pilot's argmin -- corrected per reviewphase_0_1_reply.md) -- more
+information is not monotonically better, which is exactly why the
+family-wide test (not just the endpoint) was needed. Full curves (all 105 configs, threshold +
 depth) in `family_wide_threshold_curves.csv` / `family_wide_depth_curves.csv`;
 figures F8/F9. Endpoint reproduction vs the frozen H3 rows: asserted exact,
 4/4.
@@ -314,8 +317,12 @@ Bernoulli grid: q in {0.02..0.40} x Delta in {0.01..0.15} (+ nulls 0,
 
 ## 10. Gate summary (correct denominators)
 
-- Marginal certificate, POOL estimand, 100 unique resplits: **0/35 cells
-  violate** (every cell 0.000 [Wilson UB 0.037]).
+- Marginal certificate, POOL estimand, 100 unique resplits: **all 35 cells
+  PASS the precommitted validity gate** (Wilson UB <= delta). 34/35 cells
+  have exactly 0/100 violations; the one exception is
+  mnist/greedy_entropy/ts1 with 1/100 (rate 0.010, Wilson UB 0.0545).
+  NEVER write "0/100 in every cell" (corrected per
+  reviewphase_0_1_reply.md, contradiction C10).
 - IUT: per-configuration accounting in Section 7 (never pooled across
   lambda_refs; conditional denominators = n_certified).
 - Plugin: Section 6 (descriptive benchmark, not a guarantee).
@@ -384,10 +391,12 @@ Main-paper candidates: F1_pool_corrected, F8 (mnist), F12 or F13, F11
 6. "Complementary calibration/test halves of a finite pool anti-correlate
    exactly (measured rho = -1.0000), so test-split violation frequencies
    systematically over-report for any conformal/LTT certificate; on the
-   correct pool estimand our marginal certificate fails 0 of 35 cells, and
-   the plugin's apparent unreliability on mnist (0.35) vanishes (0/100) --
-   its true failure mode is small pools (spambase 45/100) and a nonmonotone
-   safety profile no pilot can predict."
+   correct pool estimand our marginal certificate satisfies its precommitted
+   validity gate in all 35 cells (34 with zero violations in 100 draws;
+   worst cell 1/100, Wilson UB 0.054), and the plugin's apparent
+   unreliability on mnist (0.35) vanishes (0/100) -- its true failure mode
+   is small pools (spambase 45/100) and a nonmonotone safety profile no
+   pilot can predict."
 7. "A controlled Bernoulli study confirms the audit's exact false-positive
    control (max FPR = gamma) and shows detection power rising in stratum
    mass, margin, and sample size, with the sufficient bound conservative
