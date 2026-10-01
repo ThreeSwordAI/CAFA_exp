@@ -11,9 +11,9 @@
 
 - Phase 0: done — nine v3 test files 32 passed (29 torch-free + 3 torch); whole suite 80 passed; synthetic Type-II and feasible end-to-end pass (§5).
 - Phase 1 smoke: done — all three dataset kinds (tabular / patches / RGB) train and roll out on CUDA; no crash-level bug. One resource fix (Imagenette greedy policy did 2× the documented forward passes) and several reporting/provenance fixes in the Phase-3 scripts, each with a regression test (§4).
-- Phase 1 real: TBD-RUN (in progress)
-- Phase 2: TBD-RUN (running in background)
-- Phase 3: TBD-RUN
+- Phase 1 real (seed 0): 7 backbones done (CUBE and MiniBooNE miss their full-observation targets even after the one allowed 60-epoch retrain; CUBE's target is above the generator's Bayes accuracy 0.97025); tabular caches done (5 datasets × 2 policies, greedy = random full-acquisition accuracy exactly); MNIST / FashionMNIST rollouts and Imagenette in progress (§6.3).
+- Phase 2: done — all acceptance checks met (§7, `results_v3/planted/PLANTED_VALIDATION.md`).
+- Phase 3: in progress — commits + 100-draw sweeps for the 5 tabular datasets; MiniBooNE greedy and random exceed δ in test stratum-violation rate at λ_ref `dep` (0.110 / 0.120); independent diagnosis found no implementation bug (`results_v3/diagnostics/`), reported as a result (§8).
 
 ## 2. Environment
 
@@ -132,7 +132,42 @@ Fixed-policy fp32 vs. `--policy-amp` on the same 32 rows: first-step picks ident
 
 ### 6.3 Real runs
 
-TBD-RUN
+(Interim — regenerated with `python scripts/report_v3.py --backbones --caches` at each update; MNIST / FashionMNIST / Imagenette rows are added when they finish.)
+
+Backbones (seed 0; full-observation accuracy on the first 5,000 train rows for tabular, 2,000 for patches, 512 for RGB, as printed by `train_backbone_v3.py`):
+
+| cell | epochs | masked train acc | full-obs train acc | target | pass | seconds | log |
+|---|---|---|---|---|---|---|---|
+| backbones:csv:physionet:na:ts0 | config (40) | 0.8706 | 0.8936 | 0.86 | pass | 30.7 | `results_v3/logs/backbones_csv-physionet_na_ts0.log` |
+| backbones:cube:na:ts0 | config (40) | 0.6450 | 0.9524 | 0.98 | miss | 24.3 | `results_v3/logs/backbones_cube_na_ts0.log` |
+| backbones:tabular:adult:na:ts0 | config (40) | 0.8161 | 0.8626 | 0.85 | pass | 56.7 | `results_v3/logs/backbones_tabular-adult_na_ts0.log` |
+| backbones:csv:diabetes:na:ts0 | config (40) | 0.8651 | 0.9094 | 0.85 | pass | 195.3 | `results_v3/logs/backbones_csv-diabetes_na_ts0.log` |
+| backbones:tabular:MiniBooNE:na:ts0 | config (40) | 0.8625 | 0.9146 | 0.93 | miss | 280.3 | `results_v3/logs/backbones_tabular-MiniBooNE_na_ts0.log` |
+| backbones:mnist:na:ts0 | config (30) | 0.9093 | 0.9995 | 0.995 | pass | 1533.4 | `results_v3/logs/backbones_mnist_na_ts0.log` |
+| backbones:fashionmnist:na:ts0 | config (30) | 0.8930 | 0.9755 | 0.93 | pass | 1602.9 | `results_v3/logs/backbones_fashionmnist_na_ts0.log` |
+| retrain60:backbones:cube:na:ts0 | 60 | 0.6532 | 0.9598 | 0.98 | miss (kept) | 49.8 | `results_v3/logs/retrain60_backbones_cube_na_ts0.log` |
+| retrain60:backbones:tabular:MiniBooNE:na:ts0 | 60 | 0.8684 | 0.9158 | 0.93 | miss (kept) | 379.6 | `results_v3/logs/retrain60_backbones_tabular-MiniBooNE_na_ts0.log` |
+
+Target misses (instruction §4.2: raise epochs once, then keep and report): CUBE and MiniBooNE were retrained once with `--epochs 60` (CLI override for those two datasets only; the config's `training_v3.tabular.epochs: 40` is unchanged, so the passing tabular cells are untouched). Both still miss and the 60-epoch checkpoints are the ones used; the 40-epoch checkpoints are kept at `$RESULTS_ROOT\checkpoints_v3_superseded\{cube,tabular-MiniBooNE}_ts0_ep40.pt`. CUBE diagnosis: the exact Bayes classifier of the generator (`generate_cube(20000, 123)`, class-conditional Gaussian likelihoods) has accuracy 0.97025 on all 20,000 rows, so the 0.98 target is above the Bayes ceiling (`results_v3/diagnostics/cube_bayes_accuracy.json`). MiniBooNE: the v2 AAAI backbone's heldout full-acquisition accuracy is 0.915831 (`pool_v2/tabular-MiniBooNE_ts0_greedy_entropy_softmax.npz`); the v3 60-epoch backbone gives 0.922558 on heldout (below).
+
+Pool caches (seed 0; `$RESULTS_ROOT\pool_v3\`; heldout full-acquisition accuracy = mean of `correct[:, T]`):
+
+| dataset | seed | policy | n | T | heldout full-acq acc | rollout seconds | greedy = random (1e-12) | cache |
+|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | 0 | greedy_entropy | 36825 | 45 | 0.903870 | 487.8 |  | `pool_v3/csv-diabetes_ts0_greedy_entropy_softmax.npz` |
+| csv-diabetes | 0 | random | 36825 | 45 | 0.903870 | 28.0 | yes | `pool_v3/csv-diabetes_ts0_random_softmax.npz` |
+| csv-physionet | 0 | greedy_entropy | 4800 | 41 | 0.873333 | 44.6 |  | `pool_v3/csv-physionet_ts0_greedy_entropy_softmax.npz` |
+| csv-physionet | 0 | random | 4800 | 41 | 0.873333 | 6.3 | yes | `pool_v3/csv-physionet_ts0_random_softmax.npz` |
+| cube | 0 | greedy_entropy | 8000 | 20 | 0.953125 | 13.1 |  | `pool_v3/cube_ts0_greedy_entropy_softmax.npz` |
+| cube | 0 | random | 8000 | 20 | 0.953125 | 6.2 | yes | `pool_v3/cube_ts0_random_softmax.npz` |
+| tabular-MiniBooNE | 0 | greedy_entropy | 52026 | 50 | 0.922558 | 869.8 |  | `pool_v3/tabular-MiniBooNE_ts0_greedy_entropy_softmax.npz` |
+| tabular-MiniBooNE | 0 | random | 52026 | 50 | 0.922558 | 42.1 | yes | `pool_v3/tabular-MiniBooNE_ts0_random_softmax.npz` |
+| tabular-adult | 0 | greedy_entropy | 18089 | 14 | 0.852507 | 27.7 |  | `pool_v3/tabular-adult_ts0_greedy_entropy_softmax.npz` |
+| tabular-adult | 0 | random | 18089 | 14 | 0.852507 | 19.2 | yes | `pool_v3/tabular-adult_ts0_random_softmax.npz` |
+
+Heldout sizes (from the caches): PhysioNet 4,800, Diabetes 36,825, CUBE 8,000, MiniBooNE 52,026, Adult 18,089 (the `PHASES_V3.md` table says 19,537 for Adult; see §9).
+
+v2 "before" caches for E7: **present, not regenerated** — `$RESULTS_ROOT\pool_v2\{mnist,tabular-MiniBooNE,tabular-adult}_ts0_greedy_entropy_softmax.npz` were produced on TinyGPU (`cafa_pool_rollout.o1735175` etc., `created` 2026-07-11) and copied from the repo's git-ignored `results/pool_v2/`; their `checkpoint_sha256` equals the sha256 of `$RESULTS_ROOT\checkpoints_v2\*_ts0.pt` (e3d3c21f13fb / 3e05a708c0de / ed66f5dd5f2a). Heldout full-acquisition accuracy of the v2 caches: MNIST 0.899214, MiniBooNE 0.915831, Adult 0.852286.
 
 ## 7. Phase 2 results
 

@@ -82,3 +82,408 @@ CPU LOOP 2026-10-01T15:29:00: metrics for seeds 0 = 8 / 16
 [drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
 [drive_v3] sweep: ran 2, skipped 8 existing, 6 missing prerequisites
 CPU LOOP 2026-10-01T15:53:04: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T15:55:08: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T15:57:12: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T15:59:15: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:01:19: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:03:22: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:05:25: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:07:30: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:09:34: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:11:37: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:13:42: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:15:47: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:17:52: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:19:56: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:22:01: metrics for seeds 0 = 10 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 5 existing, 3 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:mnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:mnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_mnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:fashionmnist:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_fashionmnist_ts0.json', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 10 existing, 6 missing prerequisites
+CPU LOOP 2026-10-01T16:24:05: metrics for seeds 0 = 10 / 16
