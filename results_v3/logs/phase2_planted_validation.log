@@ -1,0 +1,26 @@
+[A] margin=0.03 n_k=  250 false-failure=0.000 (gamma 0.05)  cascade cert=0.200 viol=0.000 (delta 0.1)
+[A] margin=0.03 n_k=  500 false-failure=0.000 (gamma 0.05)  cascade cert=0.421 viol=0.000 (delta 0.1)
+[A] margin=0.03 n_k= 1000 false-failure=0.000 (gamma 0.05)  cascade cert=0.747 viol=0.000 (delta 0.1)
+[A] margin=0.03 n_k= 2000 false-failure=0.000 (gamma 0.05)  cascade cert=0.957 viol=0.000 (delta 0.1)
+[A] margin=0.03 n_k= 4000 false-failure=0.000 (gamma 0.05)  cascade cert=1.000 viol=0.005 (delta 0.1)
+[A] margin=0.05 n_k=  250 false-failure=0.000 (gamma 0.05)  cascade cert=0.574 viol=0.000 (delta 0.1)
+[A] margin=0.05 n_k=  500 false-failure=0.000 (gamma 0.05)  cascade cert=0.897 viol=0.000 (delta 0.1)
+[A] margin=0.05 n_k= 1000 false-failure=0.000 (gamma 0.05)  cascade cert=0.995 viol=0.002 (delta 0.1)
+[A] margin=0.05 n_k= 2000 false-failure=0.000 (gamma 0.05)  cascade cert=1.000 viol=0.004 (delta 0.1)
+[A] margin=0.05 n_k= 4000 false-failure=0.000 (gamma 0.05)  cascade cert=1.000 viol=0.003 (delta 0.1)
+[B/C] Delta=0.030 n_k=  250 nkD2=  0.23 power=0.000 (suff. n_k=12075)  escalation=0.866 unsafe|esc=0.000
+[B/C] Delta=0.030 n_k=  500 nkD2=  0.45 power=0.001 (suff. n_k=12075)  escalation=0.996 unsafe|esc=0.000
+[B/C] Delta=0.030 n_k= 1000 nkD2=  0.90 power=0.108 (suff. n_k=12075)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.030 n_k= 2000 nkD2=  1.80 power=0.743 (suff. n_k=12075)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.030 n_k= 4000 nkD2=  3.60 power=0.994 (suff. n_k=12075)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.050 n_k=  250 nkD2=  0.63 power=0.009 (suff. n_k=4347)  escalation=0.866 unsafe|esc=0.000
+[B/C] Delta=0.050 n_k=  500 nkD2=  1.25 power=0.273 (suff. n_k=4347)  escalation=0.997 unsafe|esc=0.000
+[B/C] Delta=0.050 n_k= 1000 nkD2=  2.50 power=0.926 (suff. n_k=4347)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.050 n_k= 2000 nkD2=  5.00 power=1.000 (suff. n_k=4347)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.050 n_k= 4000 nkD2= 10.00 power=1.000 (suff. n_k=4347)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.100 n_k=  250 nkD2=  2.50 power=0.843 (suff. n_k=1087)  escalation=0.866 unsafe|esc=0.000
+[B/C] Delta=0.100 n_k=  500 nkD2=  5.00 power=0.999 (suff. n_k=1087)  escalation=0.997 unsafe|esc=0.000
+[B/C] Delta=0.100 n_k= 1000 nkD2= 10.00 power=1.000 (suff. n_k=1087)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.100 n_k= 2000 nkD2= 20.00 power=1.000 (suff. n_k=1087)  escalation=1.000 unsafe|esc=0.000
+[B/C] Delta=0.100 n_k= 4000 nkD2= 40.00 power=1.000 (suff. n_k=1087)  escalation=1.000 unsafe|esc=0.000
+wrote results_v3\planted\planted_validation.csv and PLANTED_VALIDATION.md

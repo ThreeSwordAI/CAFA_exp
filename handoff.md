@@ -136,7 +136,52 @@ TBD-RUN
 
 ## 7. Phase 2 results
 
-TBD-RUN
+Command: `python scripts/planted_validation.py --output-dir results_v3/planted --n-replicates 1000` (CPU, background PID 18076, 13:19:07 → 14:01:32 local, ≈ 42 min, exit 0). Files: `results_v3/planted/PLANTED_VALIDATION.md`, `results_v3/planted/planted_validation.csv`, console `results_v3/logs/phase2_planted_validation.log`.
+
+`results_v3/planted/PLANTED_VALIDATION.md` (verbatim):
+
+```
+# Planted validation (E5)
+
+alpha=0.15, delta=0.1, gamma=0.05, T=30, replicates=1000, M=131
+
+| study | n_k | margin | false-failure (<= gamma) | cascade viol (<= delta) | power | n_k Delta^2 | sufficient n_k | escalation rate |
+|---|---|---|---|---|---|---|---|---|
+| A_level | 250 | -0.030 | 0.000 | 0.000 |  |  |  |  |
+| A_level | 500 | -0.030 | 0.000 | 0.000 |  |  |  |  |
+| A_level | 1000 | -0.030 | 0.000 | 0.000 |  |  |  |  |
+| A_level | 2000 | -0.030 | 0.000 | 0.000 |  |  |  |  |
+| A_level | 4000 | -0.030 | 0.000 | 0.005 |  |  |  |  |
+| A_level | 250 | -0.050 | 0.000 | 0.000 |  |  |  |  |
+| A_level | 500 | -0.050 | 0.000 | 0.000 |  |  |  |  |
+| A_level | 1000 | -0.050 | 0.000 | 0.002 |  |  |  |  |
+| A_level | 2000 | -0.050 | 0.000 | 0.004 |  |  |  |  |
+| A_level | 4000 | -0.050 | 0.000 | 0.003 |  |  |  |  |
+| B_power_C_route | 250 | 0.030 |  | 0.000 | 0.000 | 0.23 | 12075 | 0.866 |
+| B_power_C_route | 500 | 0.030 |  | 0.000 | 0.001 | 0.45 | 12075 | 0.996 |
+| B_power_C_route | 1000 | 0.030 |  | 0.000 | 0.108 | 0.90 | 12075 | 1.000 |
+| B_power_C_route | 2000 | 0.030 |  | 0.000 | 0.743 | 1.80 | 12075 | 1.000 |
+| B_power_C_route | 4000 | 0.030 |  | 0.000 | 0.994 | 3.60 | 12075 | 1.000 |
+| B_power_C_route | 250 | 0.050 |  | 0.000 | 0.009 | 0.63 | 4347 | 0.866 |
+| B_power_C_route | 500 | 0.050 |  | 0.000 | 0.273 | 1.25 | 4347 | 0.997 |
+| B_power_C_route | 1000 | 0.050 |  | 0.000 | 0.926 | 2.50 | 4347 | 1.000 |
+| B_power_C_route | 2000 | 0.050 |  | 0.000 | 1.000 | 5.00 | 4347 | 1.000 |
+| B_power_C_route | 4000 | 0.050 |  | 0.000 | 1.000 | 10.00 | 4347 | 1.000 |
+| B_power_C_route | 250 | 0.100 |  | 0.000 | 0.843 | 2.50 | 1087 | 0.866 |
+| B_power_C_route | 500 | 0.100 |  | 0.000 | 0.999 | 5.00 | 1087 | 0.997 |
+| B_power_C_route | 1000 | 0.100 |  | 0.000 | 1.000 | 10.00 | 1087 | 1.000 |
+| B_power_C_route | 2000 | 0.100 |  | 0.000 | 1.000 | 20.00 | 1087 | 1.000 |
+| B_power_C_route | 4000 | 0.100 |  | 0.000 | 1.000 | 40.00 | 1087 | 1.000 |
+```
+
+The `unsafe|esc` column is printed only on the console: it is `0.000` in all 15 study-B/C rows (`results_v3/logs/phase2_planted_validation.log`).
+
+| acceptance check (instruction §4.3) | observed | verdict |
+|---|---|---|
+| false-failure ≤ 0.05 everywhere | max 0.000 (10 study-A rows) | pass |
+| cascade violation ≤ 0.10 | max 0.005 (study A, margin −0.03, n_k 4000); 0.000 in all study-B/C rows | pass |
+| power increasing in n_kΔ² | monotone within each Δ; at n_kΔ² = 2.5: 0.926 (Δ = 0.05) and 0.843 (Δ = 0.10); at n_kΔ² ≥ 10: 1.000 (Δ = 0.05 and 0.10); Δ = 0.03 reaches 0.994 at n_kΔ² = 3.60 | pass for "1.0 at ≥ 10"; "≈ 0.9 at 2.5" is 0.926 / 0.843 |
+| escalation `unsafe|esc` ≈ 0 | 0.000 in every row; escalation rate 0.866 at n_k = 250 → 1.000 at n_k ≥ 1000 | pass |
 
 ## 8. Phase 3 results
 
