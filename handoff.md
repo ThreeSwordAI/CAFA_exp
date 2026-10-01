@@ -2,7 +2,7 @@
 
 - Dates: 2026-10-01 13:09 → 2026-10-02 ≈ 01:15 local (UTC+2); total wall time ≈ 12 h
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at session start)
-- Final content commit: `<<HASH>>` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
+- Final content commit: `d66522b` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
 - **Session ended at stop condition 5 of instruction §7** (a defect in the frozen p-value primitive `src/cafa/risk_control.py`; question in §9). One GPU job (Imagenette seed-0 greedy rollout) was left running at session end; see §3.
 
 ## 1. Executive summary
@@ -104,7 +104,7 @@ Every change to `src/cafa/` or the Phase-3 scripts was followed by a rerun of th
 
 Review method: before the first GPU run, a workflow ran five reviewers (one per file group: `models_v3`, `train_backbone_v3`, rollout, data loaders, Phase-3 scripts) and one adversarial verifier per reviewer's findings. Confirmed findings that were not fixed (they affect only the optional Phase 1d or are latent) are in §9.
 
-Diff of the branch vs its base at the content commit (`git diff --stat 550f8e2 <<HASH>>` restricted to code and docs, then per-directory totals and the overall shortstat):
+Diff of the branch vs its base at the content commit (`git diff --stat 550f8e2 d66522b` restricted to code and docs, then per-directory totals and the overall shortstat):
 
 ```
  .gitignore                           |   6 +-
