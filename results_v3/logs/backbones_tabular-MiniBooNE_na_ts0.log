@@ -1,0 +1,9 @@
+# python scripts/train_backbone_v3.py --dataset tabular:MiniBooNE --train-seed 0 --device cuda
+# start 2026-10-01T11:58:40.300872+00:00
+[train-tab] epoch   1/40  loss=0.4486  masked_train_acc=0.7980
+[train-tab] epoch  11/40  loss=0.3376  masked_train_acc=0.8476
+[train-tab] epoch  21/40  loss=0.3226  masked_train_acc=0.8572
+[train-tab] epoch  31/40  loss=0.3149  masked_train_acc=0.8596
+[train-tab] epoch  40/40  loss=0.3096  masked_train_acc=0.8625
+[train_v3] tabular:MiniBooNE ts0: masked_acc=0.8625 full_obs_acc=0.9146 -> F:\CAFA_results\checkpoints_v3\tabular-MiniBooNE_ts0.pt (sha256 f0d1a92f303d)
+# returncode 0

@@ -1,0 +1,61 @@
+[drive_v3] run backbones:csv:physionet:na:ts0: python scripts/train_backbone_v3.py --dataset csv:physionet --train-seed 0 --device cuda  (log results_v3\logs\backbones_csv-physionet_na_ts0.log)
+    [train-tab] epoch   1/40  loss=0.4578  masked_train_acc=0.8492
+    [train-tab] epoch  11/40  loss=0.3444  masked_train_acc=0.8651
+    [train-tab] epoch  21/40  loss=0.3359  masked_train_acc=0.8662
+    [train-tab] epoch  31/40  loss=0.3291  masked_train_acc=0.8700
+    [train-tab] epoch  40/40  loss=0.3262  masked_train_acc=0.8706
+    [train_v3] csv:physionet ts0: masked_acc=0.8706 full_obs_acc=0.8936 -> F:\CAFA_results\checkpoints_v3\csv-physionet_ts0.pt (sha256 d63ae9bd2870)
+[drive_v3] done backbones:csv:physionet:na:ts0: rc=0 in 30.7s
+[drive_v3] run backbones:cube:na:ts0: python scripts/train_backbone_v3.py --dataset cube --train-seed 0 --device cuda  (log results_v3\logs\backbones_cube_na_ts0.log)
+    [train-tab] epoch   1/40  loss=1.8571  masked_train_acc=0.3459
+    [train-tab] epoch  11/40  loss=0.8901  masked_train_acc=0.6419
+    [train-tab] epoch  21/40  loss=0.8640  masked_train_acc=0.6435
+    [train-tab] epoch  31/40  loss=0.8597  masked_train_acc=0.6474
+    [train-tab] epoch  40/40  loss=0.8578  masked_train_acc=0.6450
+    [train_v3] cube ts0: masked_acc=0.6450 full_obs_acc=0.9524 -> F:\CAFA_results\checkpoints_v3\cube_ts0.pt (sha256 7d2451a76d3c)
+[drive_v3] done backbones:cube:na:ts0: rc=0 in 24.3s
+[drive_v3] run backbones:tabular:adult:na:ts0: python scripts/train_backbone_v3.py --dataset tabular:adult --train-seed 0 --device cuda  (log results_v3\logs\backbones_tabular-adult_na_ts0.log)
+    [train-tab] epoch   1/40  loss=0.4565  masked_train_acc=0.7845
+    [train-tab] epoch  11/40  loss=0.4043  masked_train_acc=0.8102
+    [train-tab] epoch  21/40  loss=0.3949  masked_train_acc=0.8165
+    [train-tab] epoch  31/40  loss=0.3954  masked_train_acc=0.8138
+    [train-tab] epoch  40/40  loss=0.3954  masked_train_acc=0.8161
+    [train_v3] tabular:adult ts0: masked_acc=0.8161 full_obs_acc=0.8626 -> F:\CAFA_results\checkpoints_v3\tabular-adult_ts0.pt (sha256 da76a0a2142a)
+[drive_v3] done backbones:tabular:adult:na:ts0: rc=0 in 56.7s
+[drive_v3] run backbones:csv:diabetes:na:ts0: python scripts/train_backbone_v3.py --dataset csv:diabetes --train-seed 0 --device cuda  (log results_v3\logs\backbones_csv-diabetes_na_ts0.log)
+    [train-tab] epoch   1/40  loss=0.5233  masked_train_acc=0.8102
+    [train-tab] epoch  11/40  loss=0.3547  masked_train_acc=0.8595
+    [train-tab] epoch  21/40  loss=0.3396  masked_train_acc=0.8639
+    [train-tab] epoch  31/40  loss=0.3365  masked_train_acc=0.8641
+    [train-tab] epoch  40/40  loss=0.3322  masked_train_acc=0.8651
+    [train_v3] csv:diabetes ts0: masked_acc=0.8651 full_obs_acc=0.9094 -> F:\CAFA_results\checkpoints_v3\csv-diabetes_ts0.pt (sha256 f413bec68098)
+[drive_v3] done backbones:csv:diabetes:na:ts0: rc=0 in 195.3s
+[drive_v3] run backbones:tabular:MiniBooNE:na:ts0: python scripts/train_backbone_v3.py --dataset tabular:MiniBooNE --train-seed 0 --device cuda  (log results_v3\logs\backbones_tabular-MiniBooNE_na_ts0.log)
+    [train-tab] epoch   1/40  loss=0.4486  masked_train_acc=0.7980
+    [train-tab] epoch  11/40  loss=0.3376  masked_train_acc=0.8476
+    [train-tab] epoch  21/40  loss=0.3226  masked_train_acc=0.8572
+    [train-tab] epoch  31/40  loss=0.3149  masked_train_acc=0.8596
+    [train-tab] epoch  40/40  loss=0.3096  masked_train_acc=0.8625
+    [train_v3] tabular:MiniBooNE ts0: masked_acc=0.8625 full_obs_acc=0.9146 -> F:\CAFA_results\checkpoints_v3\tabular-MiniBooNE_ts0.pt (sha256 f0d1a92f303d)
+[drive_v3] done backbones:tabular:MiniBooNE:na:ts0: rc=0 in 280.3s
+[drive_v3] run backbones:mnist:na:ts0: python scripts/train_backbone_v3.py --dataset mnist --train-seed 0 --device cuda  (log results_v3\logs\backbones_mnist_na_ts0.log)
+    [train v2] epoch   1/30 loss=1.9363 masked_acc=0.3752
+    [train v2] epoch   6/30 loss=0.4029 masked_acc=0.8585
+    [train v2] epoch  11/30 loss=0.3317 masked_acc=0.8835
+    [train v2] epoch  16/30 loss=0.3024 masked_acc=0.8926
+    [train v2] epoch  21/30 loss=0.2813 masked_acc=0.8989
+    [train v2] epoch  26/30 loss=0.2566 masked_acc=0.9091
+    [train v2] epoch  30/30 loss=0.2502 masked_acc=0.9093
+    [train_v3] mnist ts0: masked_acc=0.9093 full_obs_acc=0.9995 -> F:\CAFA_results\checkpoints_v3\mnist_ts0.pt (sha256 83bb6ca14a7a)
+[drive_v3] done backbones:mnist:na:ts0: rc=0 in 1533.4s
+[drive_v3] run backbones:fashionmnist:na:ts0: python scripts/train_backbone_v3.py --dataset fashionmnist --train-seed 0 --device cuda  (log results_v3\logs\backbones_fashionmnist_na_ts0.log)
+    [train v2] epoch   1/30 loss=1.7560 masked_acc=0.4291
+    [train v2] epoch   6/30 loss=0.5647 masked_acc=0.7893
+    [train v2] epoch  11/30 loss=0.4460 masked_acc=0.8319
+    [train v2] epoch  16/30 loss=0.3978 masked_acc=0.8511
+    [train v2] epoch  21/30 loss=0.3509 masked_acc=0.8679
+    [train v2] epoch  26/30 loss=0.3060 masked_acc=0.8853
+    [train v2] epoch  30/30 loss=0.2887 masked_acc=0.8930
+    [train_v3] fashionmnist ts0: masked_acc=0.8930 full_obs_acc=0.9755 -> F:\CAFA_results\checkpoints_v3\fashionmnist_ts0.pt (sha256 0cfb3cca5dc5)
+[drive_v3] done backbones:fashionmnist:na:ts0: rc=0 in 1602.9s
+[drive_v3] backbones: ran 7, skipped 0 existing, 0 missing prerequisites

@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 0 --policy random --device cuda
+# start 2026-10-01T13:04:54.393062+00:00
+[rollout_v3] tabular:adult ts0 random: n=18089 T=14 full-acq acc=0.8525 -> F:\CAFA_results\pool_v3\tabular-adult_ts0_random_softmax.npz
+# returncode 0

@@ -1,0 +1,19 @@
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] run commit:csv:diabetes:na:ts0: python scripts/commit_v3.py --dataset csv:diabetes --train-seed 0  (log results_v3\logs\commit_csv-diabetes_na_ts0.log)
+    [commit_v3] csv:diabetes ts0: alpha=0.15 (floor 0.0972); n_cal_expected=8286; n_min(tier1)=275; policies=['greedy_entropy', 'random']
+    [commit_v3] wrote configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] done commit:csv:diabetes:na:ts0: rc=0 in 2.2s
+[drive_v3] skip (missing prerequisite) commit:tabular:MiniBooNE:na:ts0: ['F:\\CAFA_results\\pool_v3\\tabular-MiniBooNE_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\tabular-MiniBooNE_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:mnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\mnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\mnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:fashionmnist:na:ts0: ['F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\fashionmnist_ts0_random_softmax.npz']
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 1, skipped 3 existing, 4 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] run sweep:csv:diabetes:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset csv:diabetes --train-seed 0 --policy greedy_entropy  (log results_v3\logs\sweep_csv-diabetes_greedy_entropy_ts0.log)

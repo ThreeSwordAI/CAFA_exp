@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 0 --policy greedy_entropy --device cuda
+# start 2026-10-01T13:04:07.332961+00:00
+[rollout_v3] cube ts0 greedy_entropy: n=8000 T=20 full-acq acc=0.9531 -> F:\CAFA_results\pool_v3\cube_ts0_greedy_entropy_softmax.npz
+# returncode 0

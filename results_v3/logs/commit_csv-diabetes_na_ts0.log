@@ -1,0 +1,13 @@
+# python scripts/commit_v3.py --dataset csv:diabetes --train-seed 0
+# start 2026-10-01T13:14:23.791950+00:00
+[commit_v3] csv:diabetes ts0: alpha=0.15 (floor 0.0972); n_cal_expected=8286; n_min(tier1)=275; policies=['greedy_entropy', 'random']
+            greedy_entropy lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.72
+            greedy_entropy lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.72
+            greedy_entropy lambda_ref[0.9]=0.9000  G=2  tier3 starts at answered~0.07
+            greedy_entropy lambda_ref[dep]=0.7980  G=2  tier3 starts at answered~0.05
+                    random lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.72
+                    random lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.72
+                    random lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.12
+                    random lambda_ref[dep]=0.8283  G=4  tier3 starts at answered~0.34
+[commit_v3] wrote configs\committed_v3_csv-diabetes_ts0.json
+# returncode 0

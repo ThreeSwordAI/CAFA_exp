@@ -57,8 +57,10 @@ def cells(cfg: dict, phase: str, seeds, datasets, policies):
                 yield ds, pol, int(ts)
 
 
-def paths_for(phase: str, ds: str, pol, ts: int, rr: Path):
-    """(output path, list of prerequisite paths) for one cell."""
+def paths_for(phase: str, ds: str, pol, ts: int, rr: Path, policies=("greedy_entropy", "random")):
+    """(output path, list of prerequisite paths) for one cell.  A commit waits for the caches of
+    ALL policies (commit_v3 commits every cache present; a policy cache that appears later
+    would be missing from the one-time commit)."""
     dn = dsname_of(ds)
     ckpt = rr / "checkpoints_v3" / f"{dn}_ts{ts}.pt"
     cache = lambda p: rr / "pool_v3" / f"{dn}_ts{ts}_{p}_softmax.npz"  # noqa: E731
@@ -68,7 +70,7 @@ def paths_for(phase: str, ds: str, pol, ts: int, rr: Path):
     if phase == "rollouts":
         return cache(pol), [ckpt]
     if phase == "commit":
-        return committed, [cache("greedy_entropy")]
+        return committed, [cache(p) for p in policies]
     return rr / "metrics_v3" / f"{dn}_ts{ts}_{pol}_softmax.json", [committed, cache(pol)]
 
 
@@ -99,7 +101,7 @@ def main(argv=None) -> int:
 
     n_run = n_skip = n_prereq = 0
     for ds, pol, ts in cells(cfg, a.phase, seeds, a.datasets, a.policies):
-        out, prereqs = paths_for(a.phase, ds, pol, ts, rr)
+        out, prereqs = paths_for(a.phase, ds, pol, ts, rr, tuple(a.policies or cfg["policies_v3"]))
         cell = (f"{a.tag}:" if a.tag else "") + f"{a.phase}:{ds}:{pol or 'na'}:ts{ts}"
         if out.exists():
             print(f"[drive_v3] skip (exists) {cell} -> {out}")

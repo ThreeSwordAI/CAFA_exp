@@ -1,0 +1,48 @@
+moved F:\CAFA_results\checkpoints_v3\cube_ts0.pt -> F:\CAFA_results\checkpoints_v3_superseded\cube_ts0_ep40.pt
+moved F:\CAFA_results\checkpoints_v3\tabular-MiniBooNE_ts0.pt -> F:\CAFA_results\checkpoints_v3_superseded\tabular-MiniBooNE_ts0_ep40.pt
+[drive_v3] run retrain60:backbones:cube:na:ts0: python scripts/train_backbone_v3.py --dataset cube --train-seed 0 --device cuda --epochs 60  (log results_v3\logs\retrain60_backbones_cube_na_ts0.log)
+    [train-tab] epoch   1/60  loss=1.8571  masked_train_acc=0.3459
+    [train-tab] epoch  11/60  loss=0.8901  masked_train_acc=0.6419
+    [train-tab] epoch  21/60  loss=0.8640  masked_train_acc=0.6435
+    [train-tab] epoch  31/60  loss=0.8597  masked_train_acc=0.6474
+    [train-tab] epoch  41/60  loss=0.8467  masked_train_acc=0.6527
+    [train-tab] epoch  51/60  loss=0.8511  masked_train_acc=0.6471
+    [train-tab] epoch  60/60  loss=0.8327  masked_train_acc=0.6532
+    [train_v3] cube ts0: masked_acc=0.6532 full_obs_acc=0.9598 -> F:\CAFA_results\checkpoints_v3\cube_ts0.pt (sha256 2abc6ed1d248)
+[drive_v3] done retrain60:backbones:cube:na:ts0: rc=0 in 49.8s
+[drive_v3] run retrain60:backbones:tabular:MiniBooNE:na:ts0: python scripts/train_backbone_v3.py --dataset tabular:MiniBooNE --train-seed 0 --device cuda --epochs 60  (log results_v3\logs\retrain60_backbones_tabular-MiniBooNE_na_ts0.log)
+    [train-tab] epoch   1/60  loss=0.4486  masked_train_acc=0.7980
+    [train-tab] epoch  11/60  loss=0.3376  masked_train_acc=0.8476
+    [train-tab] epoch  21/60  loss=0.3226  masked_train_acc=0.8572
+    [train-tab] epoch  31/60  loss=0.3149  masked_train_acc=0.8596
+    [train-tab] epoch  41/60  loss=0.3103  masked_train_acc=0.8624
+    [train-tab] epoch  51/60  loss=0.3025  masked_train_acc=0.8675
+    [train-tab] epoch  60/60  loss=0.2977  masked_train_acc=0.8684
+    [train_v3] tabular:MiniBooNE ts0: masked_acc=0.8684 full_obs_acc=0.9158 -> F:\CAFA_results\checkpoints_v3\tabular-MiniBooNE_ts0.pt (sha256 d23691461442)
+[drive_v3] done retrain60:backbones:tabular:MiniBooNE:na:ts0: rc=0 in 379.6s
+[drive_v3] backbones: ran 2, skipped 0 existing, 0 missing prerequisites
+[drive_v3] run rollouts:csv:physionet:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_csv-physionet_greedy_entropy_ts0.log)
+    [rollout_v3] csv:physionet ts0 greedy_entropy: n=4800 T=41 full-acq acc=0.8733 -> F:\CAFA_results\pool_v3\csv-physionet_ts0_greedy_entropy_softmax.npz
+[drive_v3] done rollouts:csv:physionet:greedy_entropy:ts0: rc=0 in 44.6s
+[drive_v3] run rollouts:csv:physionet:random:ts0: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 0 --policy random --device cuda  (log results_v3\logs\rollouts_csv-physionet_random_ts0.log)
+    [rollout_v3] csv:physionet ts0 random: n=4800 T=41 full-acq acc=0.8733 -> F:\CAFA_results\pool_v3\csv-physionet_ts0_random_softmax.npz
+[drive_v3] done rollouts:csv:physionet:random:ts0: rc=0 in 6.3s
+[drive_v3] run rollouts:cube:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_cube_greedy_entropy_ts0.log)
+    [rollout_v3] cube ts0 greedy_entropy: n=8000 T=20 full-acq acc=0.9531 -> F:\CAFA_results\pool_v3\cube_ts0_greedy_entropy_softmax.npz
+[drive_v3] done rollouts:cube:greedy_entropy:ts0: rc=0 in 13.1s
+[drive_v3] run rollouts:cube:random:ts0: python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 0 --policy random --device cuda  (log results_v3\logs\rollouts_cube_random_ts0.log)
+    [rollout_v3] cube ts0 random: n=8000 T=20 full-acq acc=0.9531 -> F:\CAFA_results\pool_v3\cube_ts0_random_softmax.npz
+[drive_v3] done rollouts:cube:random:ts0: rc=0 in 6.2s
+[drive_v3] run rollouts:tabular:adult:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_tabular-adult_greedy_entropy_ts0.log)
+    [rollout_v3] tabular:adult ts0 greedy_entropy: n=18089 T=14 full-acq acc=0.8525 -> F:\CAFA_results\pool_v3\tabular-adult_ts0_greedy_entropy_softmax.npz
+[drive_v3] done rollouts:tabular:adult:greedy_entropy:ts0: rc=0 in 27.7s
+[drive_v3] run rollouts:tabular:adult:random:ts0: python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 0 --policy random --device cuda  (log results_v3\logs\rollouts_tabular-adult_random_ts0.log)
+    [rollout_v3] tabular:adult ts0 random: n=18089 T=14 full-acq acc=0.8525 -> F:\CAFA_results\pool_v3\tabular-adult_ts0_random_softmax.npz
+[drive_v3] done rollouts:tabular:adult:random:ts0: rc=0 in 19.2s
+[drive_v3] run rollouts:csv:diabetes:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_csv-diabetes_greedy_entropy_ts0.log)
+    [rollout_v3] csv:diabetes ts0 greedy_entropy: n=36825 T=45 full-acq acc=0.9039 -> F:\CAFA_results\pool_v3\csv-diabetes_ts0_greedy_entropy_softmax.npz
+[drive_v3] done rollouts:csv:diabetes:greedy_entropy:ts0: rc=0 in 487.8s
+[drive_v3] run rollouts:csv:diabetes:random:ts0: python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 0 --policy random --device cuda  (log results_v3\logs\rollouts_csv-diabetes_random_ts0.log)
+    [rollout_v3] csv:diabetes ts0 random: n=36825 T=45 full-acq acc=0.9039 -> F:\CAFA_results\pool_v3\csv-diabetes_ts0_random_softmax.npz
+[drive_v3] done rollouts:csv:diabetes:random:ts0: rc=0 in 28.0s
+[drive_v3] run rollouts:tabular:MiniBooNE:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_tabular-MiniBooNE_greedy_entropy_ts0.log)

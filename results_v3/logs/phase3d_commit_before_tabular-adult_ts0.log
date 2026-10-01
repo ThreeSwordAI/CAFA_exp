@@ -1,0 +1,18 @@
+﻿[commit_v3] tabular:adult ts0: alpha=0.25 (floor 0.1559); n_cal_expected=4070; n_min(tier1)=428; policies=['eps_greedy_eps0.25', 'eps_greedy_eps0.5', 'greedy_entropy', 'random']
+        eps_greedy_eps0.25 lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.45
+        eps_greedy_eps0.25 lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.45
+        eps_greedy_eps0.25 lambda_ref[0.9]=0.9000  G=4  tier3 starts at answered~0.24
+        eps_greedy_eps0.25 lambda_ref[dep]=0.7576  G=2  tier3 starts at answered~0.19
+         eps_greedy_eps0.5 lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.45
+         eps_greedy_eps0.5 lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.45
+         eps_greedy_eps0.5 lambda_ref[0.9]=0.9000  G=4  tier3 starts at answered~0.24
+         eps_greedy_eps0.5 lambda_ref[dep]=0.7576  G=2  tier3 starts at answered~0.19
+            greedy_entropy lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.45
+            greedy_entropy lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.45
+            greedy_entropy lambda_ref[0.9]=0.9000  G=3  tier3 starts at answered~0.17
+            greedy_entropy lambda_ref[dep]=0.7576  G=2  tier3 starts at answered~0.22
+                    random lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.45
+                    random lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.45
+                    random lambda_ref[0.9]=0.9000  G=4  tier3 starts at answered~0.26
+                    random lambda_ref[dep]=0.7576  G=3  tier3 starts at answered~0.19
+[commit_v3] wrote configs\committed_v3before_tabular-adult_ts0.json

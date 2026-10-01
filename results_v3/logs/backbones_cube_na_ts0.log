@@ -1,0 +1,9 @@
+# python scripts/train_backbone_v3.py --dataset cube --train-seed 0 --device cuda
+# start 2026-10-01T11:54:04.030353+00:00
+[train-tab] epoch   1/40  loss=1.8571  masked_train_acc=0.3459
+[train-tab] epoch  11/40  loss=0.8901  masked_train_acc=0.6419
+[train-tab] epoch  21/40  loss=0.8640  masked_train_acc=0.6435
+[train-tab] epoch  31/40  loss=0.8597  masked_train_acc=0.6474
+[train-tab] epoch  40/40  loss=0.8578  masked_train_acc=0.6450
+[train_v3] cube ts0: masked_acc=0.6450 full_obs_acc=0.9524 -> F:\CAFA_results\checkpoints_v3\cube_ts0.pt (sha256 7d2451a76d3c)
+# returncode 0
