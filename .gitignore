@@ -22,3 +22,5 @@ metrics_v2/
 analysis_v2/
 figures_v2/
 # NOTE: configs/committed_v2_*.json and repro/*.lock.txt ARE tracked (not ignored).
+
+CAFA.zip
