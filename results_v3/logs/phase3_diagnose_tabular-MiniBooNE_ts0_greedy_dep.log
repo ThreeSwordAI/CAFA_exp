@@ -1,0 +1,21 @@
+﻿[diag] splits: digests match=True sizes match=True disjoint+cover=True
+[diag] lambda_ref=0.7475 edges=[2.0, 4.0] bucket ids numpy==reference_buckets: {'calpool': True, 'test': True}
+[diag] tier 1 param 0.9394: deployed in 2 draws, flagged 2 | k0: cal 0.0434 (n 9249) test 0.0464 (n 9414) pooled 0.0449; k1: cal 0.0613 (n 7279) test 0.0636 (n 7248) pooled 0.0624; k2: cal 0.1476 (n 6883) test 0.1616 (n 6750) pooled 0.1546
+[diag] tier 1 param 0.9495: deployed in 1 draws, flagged 1 | k0: cal 0.0423 (n 9249) test 0.0455 (n 9414) pooled 0.0439; k1: cal 0.0599 (n 7279) test 0.0614 (n 7248) pooled 0.0606; k2: cal 0.1462 (n 6883) test 0.1599 (n 6750) pooled 0.1529
+[diag] tier 1 param 0.9596: deployed in 1 draws, flagged 1 | k0: cal 0.0409 (n 9249) test 0.0437 (n 9414) pooled 0.0423; k1: cal 0.0588 (n 7279) test 0.0607 (n 7248) pooled 0.0598; k2: cal 0.1451 (n 6883) test 0.1607 (n 6750) pooled 0.1529
+[diag] tier 3 param 0.5290: deployed in 7 draws, flagged 7 | k0: cal 0.0353 (n 9199) test 0.0363 (n 9347) pooled 0.0358; k1: cal 0.0536 (n 7216) test 0.0544 (n 7169) pooled 0.0540; k2: cal 0.1391 (n 6749) test 0.1513 (n 6576) pooled 0.1451
+[diag] tier 3 param 0.5610: deployed in 63 draws, flagged 0 | k0: cal 0.0319 (n 9127) test 0.0339 (n 9292) pooled 0.0329; k1: cal 0.0494 (n 7144) test 0.0506 (n 7092) pooled 0.0500; k2: cal 0.1321 (n 6572) test 0.1431 (n 6410) pooled 0.1375
+[diag] tier 3 param 0.5835: deployed in 24 draws, flagged 0 | k0: cal 0.0293 (n 9087) test 0.0322 (n 9252) pooled 0.0308; k1: cal 0.0465 (n 7081) test 0.0485 (n 7050) pooled 0.0475; k2: cal 0.1265 (n 6441) test 0.1381 (n 6284) pooled 0.1323
+[diag] tier 3 param 0.6126: deployed in 2 draws, flagged 0 | k0: cal 0.0279 (n 9031) test 0.0294 (n 9187) pooled 0.0287; k1: cal 0.0428 (n 7008) test 0.0446 (n 6972) pooled 0.0437; k2: cal 0.1157 (n 6258) test 0.1294 (n 6120) pooled 0.1225
+[diag] draw 13: tier 3 cal⊂calpool,∉test=True | k0: n 4618 cal risk 0.0364 HB p 8.443e-141; k1: n 3570 cal risk 0.0507 HB p 5.247e-79; k2: n 3398 cal risk 0.1348 HB p 0.01738
+[diag] draw 19: tier 1 cal⊂calpool,∉test=True | k0: n 4598 cal risk 0.0428 HB p 1.993e-121; k1: n 3668 cal risk 0.0540 HB p 4.585e-75; k2: n 3440 cal risk 0.1366 HB p 0.03835
+[diag] draw 23: tier 3 cal⊂calpool,∉test=True | k0: n 4609 cal risk 0.0378 HB p 2.395e-136; k1: n 3640 cal risk 0.0574 HB p 1.515e-68; k2: n 3337 cal risk 0.1334 HB p 0.009271
+[diag] draw 26: tier 3 cal⊂calpool,∉test=True | k0: n 4630 cal risk 0.0371 HB p 8.557e-139; k1: n 3644 cal risk 0.0565 HB p 4.005e-70; k2: n 3317 cal risk 0.1314 HB p 0.003484
+[diag] draw 57: tier 3 cal⊂calpool,∉test=True | k0: n 4552 cal risk 0.0310 HB p 3.92e-156; k1: n 3660 cal risk 0.0525 HB p 1.135e-77; k2: n 3373 cal risk 0.1340 HB p 0.01227
+[diag] draw 62: tier 3 cal⊂calpool,∉test=True | k0: n 4623 cal risk 0.0381 HB p 8.456e-136; k1: n 3625 cal risk 0.0527 HB p 1.6e-76; k2: n 3331 cal risk 0.1348 HB p 0.01874
+[diag] draw 77: tier 1 cal⊂calpool,∉test=True | k0: n 4593 cal risk 0.0422 HB p 5.781e-123; k1: n 3629 cal risk 0.0592 HB p 2.511e-65; k2: n 3484 cal risk 0.1369 HB p 0.04176
+[diag] draw 79: tier 1 cal⊂calpool,∉test=True | k0: n 4622 cal risk 0.0428 HB p 4.535e-122; k1: n 3606 cal risk 0.0596 HB p 2.588e-64; k2: n 3478 cal risk 0.1363 HB p 0.03198
+[diag] draw 92: tier 1 cal⊂calpool,∉test=True | k0: n 4577 cal risk 0.0439 HB p 5.463e-118; k1: n 3641 cal risk 0.0569 HB p 1.609e-69; k2: n 3488 cal risk 0.1356 HB p 0.0266
+[diag] draw 98: tier 3 cal⊂calpool,∉test=True | k0: n 4564 cal risk 0.0353 HB p 1.417e-142; k1: n 3604 cal risk 0.0497 HB p 1.074e-81; k2: n 3428 cal risk 0.1339 HB p 0.01091
+[diag] draw 99: tier 3 cal⊂calpool,∉test=True | k0: n 4678 cal risk 0.0378 HB p 4.149e-138; k1: n 3535 cal risk 0.0580 HB p 1.12e-65; k2: n 3380 cal risk 0.1352 HB p 0.02155
+[diag] wrote results_v3/diagnostics/tabular-MiniBooNE_ts0_greedy_entropy_dep.json

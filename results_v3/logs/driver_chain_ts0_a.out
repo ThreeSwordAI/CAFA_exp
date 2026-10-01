@@ -46,3 +46,9 @@ moved F:\CAFA_results\checkpoints_v3\tabular-MiniBooNE_ts0.pt -> F:\CAFA_results
     [rollout_v3] csv:diabetes ts0 random: n=36825 T=45 full-acq acc=0.9039 -> F:\CAFA_results\pool_v3\csv-diabetes_ts0_random_softmax.npz
 [drive_v3] done rollouts:csv:diabetes:random:ts0: rc=0 in 28.0s
 [drive_v3] run rollouts:tabular:MiniBooNE:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_tabular-MiniBooNE_greedy_entropy_ts0.log)
+    [rollout_v3] tabular:MiniBooNE ts0 greedy_entropy: n=52026 T=50 full-acq acc=0.9226 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.npz
+[drive_v3] done rollouts:tabular:MiniBooNE:greedy_entropy:ts0: rc=0 in 869.8s
+[drive_v3] run rollouts:tabular:MiniBooNE:random:ts0: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 0 --policy random --device cuda  (log results_v3\logs\rollouts_tabular-MiniBooNE_random_ts0.log)
+    [rollout_v3] tabular:MiniBooNE ts0 random: n=52026 T=50 full-acq acc=0.9226 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts0_random_softmax.npz
+[drive_v3] done rollouts:tabular:MiniBooNE:random:ts0: rc=0 in 42.1s
+[drive_v3] run rollouts:mnist:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset mnist --train-seed 0 --policy greedy_entropy --device cuda  (log results_v3\logs\rollouts_mnist_greedy_entropy_ts0.log)

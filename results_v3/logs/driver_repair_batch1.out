@@ -1,0 +1,20 @@
+[commit_v3] tabular:MiniBooNE ts0: alpha=0.15 (floor 0.0851); n_cal_expected=11706; n_min(tier1)=275; policies=['eps_greedy_eps0.25', 'eps_greedy_eps0.5', 'greedy_entropy', 'random']
+        eps_greedy_eps0.25 lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.62
+        eps_greedy_eps0.25 lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.62
+        eps_greedy_eps0.25 lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.22
+        eps_greedy_eps0.25 lambda_ref[dep]=0.7273  G=4  tier3 starts at answered~0.31
+         eps_greedy_eps0.5 lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.62
+         eps_greedy_eps0.5 lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.62
+         eps_greedy_eps0.5 lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.34
+         eps_greedy_eps0.5 lambda_ref[dep]=0.7374  G=4  tier3 starts at answered~0.45
+            greedy_entropy lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.62
+            greedy_entropy lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.62
+            greedy_entropy lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.19
+            greedy_entropy lambda_ref[dep]=0.7273  G=4  tier3 starts at answered~0.43
+                    random lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.62
+                    random lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.62
+                    random lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.22
+                    random lambda_ref[dep]=0.7879  G=5  tier3 starts at answered~0.48
+[commit_v3] wrote configs\committed_v3before_tabular-MiniBooNE_ts0.json
+[repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.082, full 0.082) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
+[repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.082, full 0.082) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00

@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 0 --policy random --device cuda
+# start 2026-10-01T13:28:19.179338+00:00
+[rollout_v3] tabular:MiniBooNE ts0 random: n=52026 T=50 full-acq acc=0.9226 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts0_random_softmax.npz
+# returncode 0
