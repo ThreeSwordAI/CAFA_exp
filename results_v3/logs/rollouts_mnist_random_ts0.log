@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset mnist --train-seed 0 --policy random --device cuda
+# start 2026-10-01T17:47:13.155645+00:00
+[rollout_v3] mnist ts0 random: n=28000 T=49 full-acq acc=0.9949 -> F:\CAFA_results\pool_v3\mnist_ts0_random_softmax.npz
+# returncode 0

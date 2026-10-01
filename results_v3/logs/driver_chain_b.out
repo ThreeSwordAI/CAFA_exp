@@ -1,0 +1,2 @@
+CHAIN B start 2026-10-02T00:01:57
+[drive_v3] run backbones:image:imagenette:na:ts0: python scripts/train_backbone_v3.py --dataset image:imagenette --train-seed 0 --device cuda  (log results_v3\logs\backbones_image-imagenette_na_ts0.log)

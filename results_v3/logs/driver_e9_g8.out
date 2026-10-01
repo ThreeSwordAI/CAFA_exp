@@ -1,0 +1,21 @@
+[commit_v3] mnist ts0: alpha=0.1 (floor 0.0039); n_cal_expected=6300; n_min(tier1)=180; policies=['greedy_entropy', 'random']
+            greedy_entropy lambda_ref[0.5]=0.5000  G=3  tier3 starts at answered~0.95
+            greedy_entropy lambda_ref[0.7]=0.7000  G=5  tier3 starts at answered~1.00
+            greedy_entropy lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.93
+            greedy_entropy lambda_ref[dep]=0.7879  G=4  tier3 starts at answered~0.93
+                    random lambda_ref[0.5]=0.5000  G=7  tier3 starts at answered~0.98
+                    random lambda_ref[0.7]=0.7000  G=8  tier3 starts at answered~0.88
+                    random lambda_ref[0.9]=0.9000  G=8  tier3 starts at answered~0.91
+                    random lambda_ref[dep]=0.7879  G=8  tier3 starts at answered~0.93
+[commit_v3] wrote configs\committed_v3_G8_mnist_ts0.json
+[cascade] mnist ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] mnist ts0 greedy_entropy lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] mnist ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] mnist ts0 greedy_entropy lr[dep]=0.788 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] wrote F:\CAFA_results\metrics_v3_G8\mnist_ts0_greedy_entropy_softmax.json
+[repair:policy_change] lr[0.5]=0.500 deepest k=4: feasible (rmin 0.006, full 0.006) -> feasible (rmin 0.006, full 0.006); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
+[repair:policy_change] lr[0.7]=0.700 deepest k=4: feasible (rmin 0.008, full 0.008) -> feasible (rmin 0.008, full 0.008); tier1 1.00 -> 1.00; viol 0.00 -> 0.12
+[repair:policy_change] lr[0.9]=0.900 deepest k=4: feasible (rmin 0.013, full 0.013) -> feasible (rmin 0.013, full 0.013); tier1 1.00 -> 1.00; viol 0.00 -> 0.01
+[repair:policy_change] lr[dep]=0.788 deepest k=4: feasible (rmin 0.012, full 0.012) -> feasible (rmin 0.012, full 0.012); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
+wrote results_v3\repair\mnist_ts0_policy_change.json
+E9 G8 DONE
