@@ -1,0 +1,18 @@
+﻿wrote F:\CAFA_results\pool_v3\synthetic-planted_ts0_greedy_entropy_softmax.npz
+wrote F:\CAFA_results\pool_v3\synthetic-planted_ts0_random_softmax.npz
+[commit_v3] synthetic-planted ts0: alpha=0.1 (floor 0.0250); n_cal_expected=1800; n_min(tier1)=180; policies=['greedy_entropy', 'random']
+            greedy_entropy lambda_ref[0.5]=0.5000  G=3  tier3 starts at answered~1.00
+            greedy_entropy lambda_ref[0.7]=0.7000  G=4  tier3 starts at answered~1.00
+            greedy_entropy lambda_ref[0.9]=0.9000  G=4  tier3 starts at answered~1.00
+            greedy_entropy lambda_ref[dep]=0.4545  G=3  tier3 starts at answered~1.00
+                    random lambda_ref[0.5]=0.5000  G=3  tier3 starts at answered~1.00
+                    random lambda_ref[0.7]=0.7000  G=4  tier3 starts at answered~0.62
+                    random lambda_ref[0.9]=0.9000  G=4  tier3 starts at answered~0.60
+                    random lambda_ref[dep]=0.4545  G=3  tier3 starts at answered~1.00
+[commit_v3] wrote configs\committed_v3_synthetic-planted_ts0.json
+[cascade] synthetic-planted ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] synthetic-planted ts0 greedy_entropy lr[0.7]=0.700 G=4 | cert=0.95 tiers={'0': 0.05, '1': 0.95, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] synthetic-planted ts0 greedy_entropy lr[0.9]=0.900 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] synthetic-planted ts0 greedy_entropy lr[dep]=0.455 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] wrote F:\CAFA_results\metrics_v3\synthetic-planted_ts0_greedy_entropy_softmax.json
+wrote tables for 1 cells to results_v3\tables_smoke

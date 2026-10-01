@@ -24,3 +24,5 @@ figures_v2/
 # NOTE: configs/committed_v2_*.json and repro/*.lock.txt ARE tracked (not ignored).
 
 CAFA.zip
+# v3 session: local env script (machine-specific roots)
+set_env.ps1

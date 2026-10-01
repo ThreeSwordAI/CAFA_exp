@@ -1,0 +1,65 @@
+# v3 experiment config (AISTATS revision).  Additive to experiment.yaml: the
+# legacy blocks (method/protocol/protocol_v2/mondrian_v2/...) are copied so v2
+# scripts keep working; the new blocks drive the v3 scripts.
+method:
+  alpha: null                      # committed from the probe (feasible_alpha_from_floor); never set here
+  delta: 0.10
+  grid: {g_min: 0.0, g_max: 1.0, n: 100}
+  pvalue_bound: hoeffding_bentkus
+  procedure: fixed_sequence
+  procedure_score: softmax
+protocol_v2:                       # kept for the v2 scripts (probe identical in v3)
+  train_frac: 0.6
+  probe_frac: 0.10
+  probe_seed: 777
+  train_seed_primary: 0
+  train_seeds_robustness: [1, 2]
+  n_resplits: 100
+  cal_frac_of_eval: 0.5
+protocol_v3:
+  train_frac: 0.6
+  probe_frac: 0.10                 # of heldout; probe_seed 777 (v2-identical probe)
+  probe_seed: 777
+  test_frac_of_eval: 0.5           # eval remainder -> 50% calibration pool, 50% independent test
+  test_seed: 778
+  cal_frac_of_pool: 0.5            # each calibration draw = 50% of the pool
+  n_draws: 100
+  train_seeds: [0, 1, 2]
+strata_v3:
+  n_buckets_nominal: 5             # probe-quantile bins before the G-rule merges
+  lambda_refs_fixed: [0.5, 0.7, 0.9]
+  lambda_ref_primary: dep          # deployment-aligned (plug-in operating point on the probe)
+cascade:
+  delta_weights: [0.5, 0.25, 0.25] # delta_1 (stop), delta_2 (budget), delta_3 (escalation)
+  design_margin: 0.05              # margin in n_min(alpha, level, margin)
+  escalation_levels: 41            # answered-fraction grid: linspace(escalation_a_min, 1)
+  escalation_a_min: 0.05
+  escalation_order: probe          # tier-3 fixed-sequence order precommitted from the probe
+audit:
+  gamma: 0.05
+fixed_confidence_t: [0.90, 0.95, 0.99]
+budget_fracs: [0.25, 0.5, 0.75]    # fixed budgets as fractions of T (fixes the Adult inconsistency)
+cost_schemes: [uniform, inverse_info]
+datasets_v3:
+  - {name: mnist,            kind: image_patches, backbone: masked_cnn_v2, patch_grid: [7, 7]}
+  - {name: fashionmnist,     kind: image_patches, backbone: masked_cnn_v2, patch_grid: [7, 7]}
+  - {name: "image:imagenette", kind: image_rgb,   backbone: resnet18_patch, patch_grid: [7, 7], img_size: 224}
+  - {name: "tabular:MiniBooNE", kind: tabular_openml, backbone: masked_mlp, version: 1}
+  - {name: "csv:physionet",  kind: tabular_csv, backbone: masked_mlp, csv: physionet.csv}
+  - {name: "csv:diabetes",   kind: tabular_csv, backbone: masked_mlp, csv: diabetes.csv}
+  - {name: "cube",           kind: synthetic_cube, backbone: masked_mlp, n_samples: 20000, seed: 123}
+  - {name: "tabular:adult",  kind: tabular_openml, backbone: masked_mlp, version: 2}   # appendix continuity
+datasets_tabular:                  # read by the existing OpenML loader (cafa.data.load_tabular_pool); versions as in v2
+  - {name: adult,     source: openml, version: 2}
+  - {name: MiniBooNE, source: openml, version: 1}
+  - {name: spambase,  source: openml, version: 1}
+policies_v3: [greedy_entropy, random]        # + external orders (afabench_gdfs, afabench_aaco) via --orders-file
+training_v3:
+  image_patches: {epochs: 30, batch_size: 256, lr: 0.001, p_full: 0.20, width_mult: 2}
+  image_rgb:     {epochs: 12, batch_size: 64,  lr: 0.0003, p_full: 0.20, pretrained: true}
+  tabular:       {epochs: 40, batch_size: 256, lr: 0.001, hidden: 256}
+planted_validation:
+  T: 30
+  n_replicates: 1000
+  deltas: [0.03, 0.05, 0.10]
+  n_k: [250, 500, 1000, 2000, 4000]
