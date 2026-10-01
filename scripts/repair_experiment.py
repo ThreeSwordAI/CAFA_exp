@@ -67,7 +67,7 @@ def main(argv=None) -> int:
     p.add_argument("--committed", required=True, help="committed_v3 JSON of the BEFORE system")
     p.add_argument("--policy", default="greedy_entropy", help="policy key in the committed JSON")
     p.add_argument("--label", default="repair")
-    p.add_argument("--n-draws", type=int, default=50)
+    p.add_argument("--n-draws", type=int, default=None, help="default: protocol_v3.n_draws (100)")
     p.add_argument("--cost-scheme", default="uniform")
     p.add_argument("--config", default="configs/experiment_v3.yaml")
     p.add_argument("--output", default=None)
@@ -77,6 +77,8 @@ def main(argv=None) -> int:
     grid = build_grid(cfg["method"])
     gamma = float(cfg.get("audit", {}).get("gamma", 0.05))
     d_weights = tuple(cfg.get("cascade", {}).get("delta_weights", (0.5, 0.25, 0.25)))
+    # v3 fix: the default was 50 draws; the protocol fixes n_draws = 100 (as in run_cascade_sweep)
+    n_draws = int(a.n_draws or cfg.get("protocol_v3", {}).get("n_draws", 100))
     committed = json.loads(Path(a.committed).read_text())
     alpha, delta = float(committed["alpha"]), float(committed["delta"])
     sp = committed["split"]
@@ -91,7 +93,9 @@ def main(argv=None) -> int:
     calpool, test = pos["calpool"], pos["test"]
     costs = np.asarray(committed["feature_costs_by_scheme"].get(a.cost_scheme, [1.0] * T), dtype=float)
 
-    report = {"dataset": a.dataset, "train_seed": a.train_seed, "label": a.label, "alpha": alpha, "lambda_refs": {}}
+    report = {"dataset": a.dataset, "train_seed": a.train_seed, "label": a.label, "alpha": alpha,
+              "n_draws": n_draws, "before_cache": str(a.before_cache), "after_cache": str(a.after_cache),
+              "committed": str(a.committed), "policy": a.policy, "lambda_refs": {}}
     for lr_key, lr in committed["lambda_refs"][a.policy].items():
         e = np.asarray(committed["edges"][a.policy][lr_key]["edges"], dtype=float)
         mu = np.asarray(committed["escalation"][a.policy][lr_key]["mu_asc"], dtype=float)
@@ -108,7 +112,7 @@ def main(argv=None) -> int:
             deepest = max(aud)
             a_d = aud[deepest]
             stats = _cascade_stats(S[calpool], C[calpool], cc[calpool], grid, mu, order, alpha, delta,
-                                   bid_pool, bid_test, S[test], C[test], cc[test], calpool, a.n_draws,
+                                   bid_pool, bid_test, S[test], C[test], cc[test], calpool, n_draws,
                                    sp["cal_frac_of_pool"], d_weights)
             block[name] = {"deepest_stratum": int(deepest), "verdict": a_d.verdict,
                            "rmin_thr": a_d.rmin_thr, "rmin_depth": a_d.rmin_depth, "r_full": a_d.r_full,

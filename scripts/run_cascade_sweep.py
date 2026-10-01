@@ -109,6 +109,17 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
     cache = load_pool_cache(cache_path)
     n = int(cache["scores"].shape[0])
     assert n == int(committed["n_heldout"]), "cache size differs from the committed heldout size"
+    # v3 guards (provenance): never sweep a partial smoke cache, a cache from a different backbone
+    # than the one the commit was made on, or a policy the commit does not contain
+    if cache["meta"].get("max_rows"):
+        raise RuntimeError(f"{cache_path} is a partial --max-rows smoke cache; delete it and rerun the rollout.")
+    sha_c, sha_k = committed.get("cache_meta", {}).get("checkpoint_sha256"), cache["meta"].get("checkpoint_sha256")
+    if sha_c and sha_k and sha_c != sha_k:
+        raise RuntimeError(f"{cache_path} (checkpoint {sha_k[:12]}) does not match {committed_path} "
+                           f"(checkpoint {sha_c[:12]}); re-commit with --force after regenerating caches.")
+    if policy_token not in committed["lambda_refs"]:
+        raise RuntimeError(f"policy {policy_token!r} is not in {committed_path} (has {sorted(committed['lambda_refs'])}); "
+                           "its cache appeared after the commit -- re-commit with --force and say why.")
     pos = v3_positions(n, sp["probe_frac"], sp["probe_seed"], sp["test_frac_of_eval"], sp["test_seed"])
     calpool, test = pos["calpool"], pos["test"]
 
@@ -217,7 +228,7 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                 # Mondrian oracle: per-stratum LTT at delta/G (non-deployable; cost floor)
                 mon = mondrian_select(losses_cal, costs_cal, grid, alpha, delta, b_cal, joint=True)
                 losses_t, costs_t, _ = stops_from_grid_np(S_test, C_test, cc_test, grid)
-                mon_cost, mon_risk, mon_abst = [], [], 0
+                mon_cost, mon_risk, mon_abst, mon_ps = [], [], 0, {}
                 for k in np.unique(bid_test):
                     mt = bid_test == k
                     jj = mon.lambda_idx_by_bucket.get(int(k))
@@ -225,12 +236,23 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                         mon_abst += int(mt.sum()); mon_cost.append(cc_test[mt, T]); mon_risk.append(1.0 - C_test[mt, T])
                     else:
                         mon_cost.append(costs_t[mt, jj]); mon_risk.append(losses_t[mt, jj])
+                    # v3 fix: per-stratum test risk of the deployed Mondrian rule (abstained strata at
+                    # full acquisition, as in test_risk) -- the record had no stratum_violation key,
+                    # so the summary's stratum_violation_rate was always 0.0
+                    mon_ps[int(k)] = float(mon_risk[-1].mean())
                 bl["mondrian_oracle"] = {"test_risk": float(np.concatenate(mon_risk).mean()),
                                         "test_cost": float(np.concatenate(mon_cost).mean()),
-                                        "abstained_fraction": mon_abst / max(test.size, 1)}
+                                        "abstained_fraction": mon_abst / max(test.size, 1),
+                                        "stratum_violation": any_violation(mon_ps, res.k_cal, alpha)}
                 jo = oracle_cheapest_valid_select(losses_t, costs_t, grid, alpha)
-                bl["oracle_cheapest_valid"] = ({"lambda": float(grid[jo]), "test_cost": float(costs_t[:, jo].mean())}
-                                               if jo is not None else {"lambda": None})
+                if jo is not None:
+                    # v3 fix: record test_risk (the summary keeps only records with test_risk, so this
+                    # baseline was dropped: n=0, cost None) and the stratum violation
+                    ps, agg, cost = stratum_risks_of_threshold(S_test, C_test, cc_test, grid, jo, bid_test)
+                    bl["oracle_cheapest_valid"] = {"lambda": float(grid[jo]), "test_risk": agg, "test_cost": cost,
+                                                   "stratum_violation": any_violation(ps, res.k_cal, alpha)}
+                else:
+                    bl["oracle_cheapest_valid"] = {"lambda": None}
                 rec["baselines"] = bl
                 draws.append(rec)
 
@@ -257,10 +279,11 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
             names = sorted({k for r in draws for k in r["baselines"]})
             for name in names:
                 vals = [r["baselines"][name] for r in draws if "test_risk" in r["baselines"][name]]
+                sv = [v["stratum_violation"] for v in vals if "stratum_violation" in v]  # v3 fix: no False default
                 summ["baselines"][name] = {
                     "mean_test_risk": r6(np.mean([v["test_risk"] for v in vals])) if vals else None,
                     "mean_test_cost": r6(np.mean([v["test_cost"] for v in vals])) if vals else None,
-                    "stratum_violation_rate": r6(np.mean([v.get("stratum_violation", False) for v in vals])) if vals else None,
+                    "stratum_violation_rate": r6(np.mean(sv)) if sv else None,
                     "aggregate_violation_rate": r6(np.mean([v["test_risk"] > alpha for v in vals])) if vals else None,
                     "n": len(vals),
                 }

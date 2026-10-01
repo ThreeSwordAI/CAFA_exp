@@ -214,47 +214,64 @@ class GreedyEntropyImagePolicy:
 
     name = "greedy_entropy"
 
-    def __init__(self, mean_image: np.ndarray, patch_grid=(7, 7), img_size: int = 224, cand_chunk: int = 4):
+    def __init__(self, mean_image: np.ndarray, patch_grid=(7, 7), img_size: int = 224, cand_chunk: int = 4,
+                 amp: bool = False):
         self.mean_image = np.asarray(mean_image, dtype=np.float32)
         self.patch_grid = (int(patch_grid[0]), int(patch_grid[1]))
         self.img_size = int(img_size)
         self.cand_chunk = int(cand_chunk)
+        # v3 fix (resource): optional fp16 autocast for the hypothetical-reveal passes only
+        # (CUDA); the rollout's scoring passes stay fp32, so scores/correct are unaffected.
+        self.amp = bool(amp)
 
     @classmethod
     def from_training_data(cls, X_train_uint8: np.ndarray, patch_grid=(7, 7), img_size: int = 224,
-                           max_images: int = 2000):
+                           max_images: int = 2000, cand_chunk: int = 4, amp: bool = False):
         X = np.asarray(X_train_uint8)
         sel = X[: int(max_images)]
-        return cls(sel.astype(np.float32).mean(axis=0) / 255.0, patch_grid, img_size)
+        return cls(sel.astype(np.float32).mean(axis=0) / 255.0, patch_grid, img_size, cand_chunk=cand_chunk, amp=amp)
 
     @torch.no_grad()
     def select_next(self, predictor, X_norm: torch.Tensor, observed: torch.Tensor, device) -> torch.Tensor:
+        """Next patch per row: argmin over UNOBSERVED patches of the predictive entropy after a
+        mean-imputed hypothetical reveal; ties -> smallest patch index.
+
+        v3 fix (resource): only the unobserved candidates are evaluated (P - t per row at step t,
+        i.e. P(P+1)/2 passes per rollout as documented), instead of all P patches at every step
+        with the observed ones discarded afterwards (P^2 passes).  Candidates are kept in ascending
+        patch order, so the argmin and its tie-breaking equal the all-P version
+        (``tests/test_models_v3.py::test_greedy_image_policy_matches_reference``).
+        """
+        device = torch.device(device)
         B, _, S, _ = X_norm.shape
         P = self.patch_grid[0] * self.patch_grid[1]
         mean = torch.as_tensor(self.mean_image, device=device)[None]              # [1,3,S,S] in [0,1]
         mean_norm = predictor.normalize(mean)                                     # [1,3,S,S]
-        ent = torch.full((B, P), float("inf"), device=device)
-        for c0 in range(0, P, self.cand_chunk):
-            cands = list(range(c0, min(c0 + self.cand_chunk, P)))
-            kc = len(cands)
-            msk = observed.unsqueeze(1).expand(B, kc, P).clone()                  # [B,kc,P]
-            for j, a in enumerate(cands):
-                msk[:, j, a] = 1.0
-            flat_msk = msk.reshape(B * kc, P)
-            pm = patch_mask_to_pixel_mask(flat_msk, self.patch_grid, S)            # [B*kc,1,S,S]
+        unobs = observed < 0.5                                                    # [B,P]
+        nc = int(unobs.sum(dim=1).max().item())
+        # unobserved patch indices first, each row in ascending order (stable sort on 0/1 keys)
+        cand = torch.argsort((~unobs).to(torch.int8), dim=1, stable=True)[:, :nc]  # [B,nc]
+        valid = unobs.gather(1, cand)                                             # padding where a row has < nc
+        ent = torch.full((B, nc), float("inf"), device=device)
+        use_amp = self.amp and device.type == "cuda"
+        for c0 in range(0, nc, self.cand_chunk):
+            ci = cand[:, c0:c0 + self.cand_chunk]                                 # [B,kc]
+            kc = int(ci.shape[1])
+            cand_only = F.one_hot(ci, P).to(observed.dtype)                       # [B,kc,P]
+            msk = (observed.unsqueeze(1) + cand_only).clamp_max(1.0)              # [B,kc,P]
+            pm = patch_mask_to_pixel_mask(msk.reshape(B * kc, P), self.patch_grid, S)       # [B*kc,1,S,S]
             # candidate-only pixel mask -> where the candidate patch sits, use the mean
-            cand_only = torch.zeros(B, kc, P, device=device)
-            for j, a in enumerate(cands):
-                cand_only[:, j, a] = 1.0
             pm_c = patch_mask_to_pixel_mask(cand_only.reshape(B * kc, P), self.patch_grid, S)
             x = X_norm.unsqueeze(1).expand(B, kc, 3, S, S).reshape(B * kc, 3, S, S)
             x = torch.where(pm_c > 0.5, mean_norm.expand_as(x), x)
             inputs = torch.cat([x * pm, pm], dim=1)
-            probs = F.softmax(predictor(inputs), dim=1)
+            with torch.autocast(device_type=device.type, dtype=torch.float16, enabled=use_amp):
+                logits = predictor(inputs)
+            probs = F.softmax(logits.float(), dim=1)
             e = -(probs * torch.log(probs.clamp_min(_EPS))).sum(dim=1)
             ent[:, c0:c0 + kc] = e.view(B, kc)
-        ent = ent.masked_fill(observed > 0.5, float("inf"))
-        return ent.argmin(dim=1)
+        ent = ent.masked_fill(~valid, float("inf"))
+        return cand.gather(1, ent.argmin(dim=1, keepdim=True)).squeeze(1)
 
 
 class RandomImagePolicy:

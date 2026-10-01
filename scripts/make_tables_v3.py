@@ -47,7 +47,10 @@ def main(argv=None) -> int:
         blk = d["lambda_refs"].get(a.lambda_ref_key)
         if blk is None:
             continue
-        sch = blk["schemes"].get(a.scheme) or blk["schemes"][next(iter(blk["schemes"]))]
+        sch = blk["schemes"].get(a.scheme)
+        if sch is None:  # v3 fix: no silent fallback to another scheme (image cells are uniform-only)
+            print(f"skip {jp.name}: no cost scheme {a.scheme!r} (has {sorted(blk['schemes'])})")
+            continue
         s = sch["summary"]
         deepest = str(max(int(k) for k in blk["audit"]))
         aud = blk["audit"][deepest]

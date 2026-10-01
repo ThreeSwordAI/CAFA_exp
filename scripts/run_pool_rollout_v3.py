@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -56,6 +57,7 @@ def rollout_rgb_with_order(model, policy, score_fn, X_uint8, y, device, batch_si
     scores = np.zeros((N, T + 1), dtype=float)
     correct = np.zeros((N, T + 1), dtype=float)
     order = np.zeros((N, T), dtype=np.int64)
+    t_start = time.time()
     for start in range(0, N, batch_size):
         stop = min(start + batch_size, N)
         xb = torch.as_tensor(X_uint8[start:stop], device=device)
@@ -74,7 +76,7 @@ def rollout_rgb_with_order(model, policy, score_fn, X_uint8, y, device, batch_si
             observed = observed.clone()
             observed[torch.arange(B, device=device), nxt] = 1.0
         if (start // batch_size) % 10 == 0:
-            print(f"  [rgb rollout] {stop}/{N}", flush=True)
+            print(f"  [rgb rollout] {stop}/{N} ({time.time() - t_start:.0f}s)", flush=True)
     return scores, correct, order
 
 
@@ -161,6 +163,10 @@ def main(argv=None) -> int:
     p.add_argument("--device", default="cpu")
     p.add_argument("--batch-size", type=int, default=None)
     p.add_argument("--max-rows", type=int, default=None, help="roll out only the first rows (smoke tests)")
+    p.add_argument("--policy-amp", action="store_true",
+                   help="RGB greedy only: fp16 autocast for the policy's hypothetical-reveal passes "
+                        "(scoring passes stay fp32); recorded in the cache meta")
+    p.add_argument("--cand-chunk", type=int, default=4, help="RGB greedy only: candidates per forward pass")
     p.add_argument("--config", default="configs/experiment_v3.yaml")
     a = p.parse_args(argv)
 
@@ -207,7 +213,8 @@ def main(argv=None) -> int:
     elif kind == "image_rgb":
         from cafa.models_v3 import GreedyEntropyImagePolicy, RandomImagePolicy
         if a.policy == "greedy_entropy":
-            pol = GreedyEntropyImagePolicy.from_training_data(X_train, pool["patch_grid"], pool["img_size"])
+            pol = GreedyEntropyImagePolicy.from_training_data(X_train, pool["patch_grid"], pool["img_size"],
+                                                              cand_chunk=a.cand_chunk, amp=a.policy_amp)
         elif a.policy == "random":
             pol = RandomImagePolicy(seed=policy_seed)
         else:
@@ -228,6 +235,8 @@ def main(argv=None) -> int:
             "split_digest": pool["split_digest"], "heldout_digest": split_digest(pool["heldout_index"]),
             "feature_costs_by_scheme": {k: np.asarray(v).tolist() for k, v in pool["feature_costs_by_scheme"].items()},
             "T": int(order.shape[1]), "n": n, "orders_file": a.orders_file,
+            "max_rows": a.max_rows,  # v3: marks partial smoke caches (refused by commit_v3 / the sweep)
+            "batch_size": int(bs), "policy_amp": bool(a.policy_amp), "cand_chunk": int(a.cand_chunk),
             "numpy_version": np.__version__, "torch_version": torch.__version__,
             "created": datetime.now(timezone.utc).isoformat()}
     out_dir = Path(paths.results_root) / "pool_v3"

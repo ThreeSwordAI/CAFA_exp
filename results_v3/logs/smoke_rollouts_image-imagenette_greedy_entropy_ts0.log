@@ -1,0 +1,5 @@
+# python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --device cuda --max-rows 64 --batch-size 16
+# start 2026-10-01T11:27:23.512023+00:00
+  [rgb rollout] 16/64
+[rollout_v3] image:imagenette ts0 greedy_entropy: n=64 T=49 full-acq acc=0.8438 -> F:\CAFA_results\pool_v3\image-imagenette_ts0_greedy_entropy_softmax.npz
+# returncode 0

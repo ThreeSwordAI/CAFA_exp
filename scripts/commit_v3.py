@@ -115,6 +115,19 @@ def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg
 
     greedy = load_pool_cache(caches["greedy_entropy"])
     n = int(greedy["scores"].shape[0])
+    # v3 guards (provenance): refuse partial --max-rows smoke caches, and require every policy
+    # cache to cover the same heldout rows as the greedy cache (same n/T, digest and labels)
+    for tok, cpath in caches.items():
+        c = greedy if tok == "greedy_entropy" else load_pool_cache(cpath)
+        if c["meta"].get("max_rows"):
+            print(f"ERROR: {cpath} is a partial --max-rows smoke cache; delete it first.", file=sys.stderr)
+            return 4
+        dig = greedy["meta"].get("heldout_digest")  # absent only for synthetic smoke caches
+        same = (c["scores"].shape == greedy["scores"].shape and c["meta"].get("heldout_digest") == dig
+                and (dig is None or np.array_equal(c["y"], greedy["y"])))
+        if not same:
+            print(f"ERROR: {cpath} does not cover the same heldout rows as the greedy cache.", file=sys.stderr)
+            return 5
     T = int(greedy["correct"].shape[1] - 1)
     pos = v3_positions(n, probe_frac, probe_seed, test_frac, test_seed)
     probe_pos, calpool_pos, test_pos = pos["probe"], pos["calpool"], pos["test"]

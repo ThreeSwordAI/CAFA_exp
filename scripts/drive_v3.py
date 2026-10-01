@@ -81,6 +81,7 @@ def main(argv=None) -> int:
     p.add_argument("--device", default="cuda", help="passed to backbones/rollouts")
     p.add_argument("--extra-args", default="", help='appended to every command, e.g. "--batch-size 16"')
     p.add_argument("--config", default="configs/experiment_v3.yaml")
+    p.add_argument("--tag", default="", help='label for smoke runs, e.g. "smoke": logs/{tag}_{phase}_..., cell "{tag}:..."')
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args(argv)
 
@@ -99,7 +100,7 @@ def main(argv=None) -> int:
     n_run = n_skip = n_prereq = 0
     for ds, pol, ts in cells(cfg, a.phase, seeds, a.datasets, a.policies):
         out, prereqs = paths_for(a.phase, ds, pol, ts, rr)
-        cell = f"{a.phase}:{ds}:{pol or 'na'}:ts{ts}"
+        cell = (f"{a.tag}:" if a.tag else "") + f"{a.phase}:{ds}:{pol or 'na'}:ts{ts}"
         if out.exists():
             print(f"[drive_v3] skip (exists) {cell} -> {out}")
             n_skip += 1
@@ -119,7 +120,7 @@ def main(argv=None) -> int:
         if a.dry_run:
             print(f"[drive_v3] would run {cell}: {shown}")
             continue
-        log_path = logs / f"{a.phase}_{dsname_of(ds)}_{pol or 'na'}_ts{ts}.log"
+        log_path = logs / ((f"{a.tag}_" if a.tag else "") + f"{a.phase}_{dsname_of(ds)}_{pol or 'na'}_ts{ts}.log")
         print(f"[drive_v3] run {cell}: {shown}  (log {log_path.relative_to(REPO)})", flush=True)
         start, t0 = datetime.now(timezone.utc).isoformat(), time.time()
         with open(log_path, "w", encoding="utf-8") as lf:

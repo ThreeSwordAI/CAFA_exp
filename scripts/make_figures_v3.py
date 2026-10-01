@@ -32,7 +32,9 @@ def load_cells(metrics_dir: Path, key: str, scheme: str):
         blk = d["lambda_refs"].get(key)
         if blk is None:
             continue
-        sch = blk["schemes"].get(scheme) or blk["schemes"][next(iter(blk["schemes"]))]
+        sch = blk["schemes"].get(scheme)
+        if sch is None:  # v3 fix: no silent fallback to another cost scheme
+            continue
         cells.append((d["meta"], d["alpha"], d["delta"], blk, sch["summary"]))
     return cells
 

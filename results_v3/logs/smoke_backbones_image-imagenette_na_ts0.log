@@ -1,0 +1,5 @@
+# python scripts/train_backbone_v3.py --dataset image:imagenette --train-seed 0 --device cuda --epochs 1 --max-train 512
+# start 2026-10-01T11:25:54.169791+00:00
+[train resnet] epoch   1/1 loss=1.7953 masked_acc=0.4238
+[train_v3] image:imagenette ts0: masked_acc=0.4238 full_obs_acc=0.8125 -> F:\CAFA_results\checkpoints_v3\image-imagenette_ts0.pt (sha256 191f53572e0d)
+# returncode 0
