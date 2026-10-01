@@ -1,0 +1,1 @@
+﻿[hb_boundary] csv-diabetes ts0 random lr[0.9]: tier 3 certifies in 57 draws with the frozen p-values, 61 with exact-count p-values; differing draws: d8 level 37 k4 n=197 err=17 p 0.0270 vs 0.0149; d40 level 37 k4 n=186 err=16 p 0.0321 vs 0.0180; d66 level 37 k4 n=196 err=17 p 0.0291 vs 0.0161; d88 level 37 k4 n=201 err=18 p 0.0373 vs 0.0208

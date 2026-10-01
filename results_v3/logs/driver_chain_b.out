@@ -5,3 +5,14 @@ CHAIN B start 2026-10-02T00:01:57
     [train resnet] epoch   3/12 loss=0.4295 masked_acc=0.8588
     [train resnet] epoch   4/12 loss=0.4050 masked_acc=0.8642
     [train resnet] epoch   5/12 loss=0.3686 masked_acc=0.8788
+    [train resnet] epoch   6/12 loss=0.3271 masked_acc=0.8926
+    [train resnet] epoch   7/12 loss=0.2769 masked_acc=0.9048
+    [train resnet] epoch   8/12 loss=0.2418 masked_acc=0.9192
+    [train resnet] epoch   9/12 loss=0.2078 masked_acc=0.9299
+    [train resnet] epoch  10/12 loss=0.1953 masked_acc=0.9360
+    [train resnet] epoch  11/12 loss=0.1740 masked_acc=0.9420
+    [train resnet] epoch  12/12 loss=0.1822 masked_acc=0.9375
+    [train_v3] image:imagenette ts0: masked_acc=0.9375 full_obs_acc=1.0000 -> F:\CAFA_results\checkpoints_v3\image-imagenette_ts0.pt (sha256 5d6c8ed6c11f)
+[drive_v3] done backbones:image:imagenette:na:ts0: rc=0 in 1067.0s
+[drive_v3] backbones: ran 1, skipped 0 existing, 0 missing prerequisites
+[drive_v3] run rollouts:image:imagenette:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --device cuda --batch-size 16 --policy-amp  (log results_v3\logs\rollouts_image-imagenette_greedy_entropy_ts0.log)

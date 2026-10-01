@@ -1,0 +1,6 @@
+﻿[refusal] csv-diabetes ts0 greedy_entropy lr[0.9]=0.9000 G=2 alpha=0.15 delta_3=0.025 levels=41; first 4 levels of the committed order (index: probe answered fraction): 39: 0.074, 0: 1.000, 1: 0.976, 2: 0.953
+[refusal] draw 0: certified 0 level(s); stopped at level 39 (probe answered 0.074, mu 0.8812, union p 0.7871 > 0.025): k0: answered 6288/6632 sel risk 0.0075 p 2.225e-308; k1: answered 103/1654 sel risk 0.1262 p 0.7871  [binding stratum k1]
+[refusal] draw 1: certified 0 level(s); stopped at level 39 (probe answered 0.074, mu 0.8812, union p 0.2184 > 0.025): k0: answered 6321/6652 sel risk 0.0089 p 2.225e-308; k1: answered 111/1634 sel risk 0.0991 p 0.2184  [binding stratum k1]
+[refusal] draw 2: certified 0 level(s); stopped at level 39 (probe answered 0.074, mu 0.8812, union p 0.921 > 0.025): k0: answered 6305/6632 sel risk 0.0086 p 2.225e-308; k1: answered 110/1654 sel risk 0.1364 p 0.921  [binding stratum k1]
+[refusal] tier 3 certified no level in 97/100 draws; probe stratum sizes {0: 2944, 1: 738}
+[refusal] wrote results_v3/diagnostics/csv-diabetes_ts0_greedy_entropy_lr0.9_refusal.json

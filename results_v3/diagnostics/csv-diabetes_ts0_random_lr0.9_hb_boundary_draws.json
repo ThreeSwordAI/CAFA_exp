@@ -1,0 +1,57 @@
+{
+ "dataset": "csv:diabetes",
+ "policy": "random",
+ "train_seed": 0,
+ "lambda_ref_key": "0.9",
+ "alpha": 0.15,
+ "delta_3": 0.025,
+ "n_draws": 100,
+ "tier3_certified_frozen": 57,
+ "tier3_certified_exact_count": 61,
+ "differing_draws": [
+  {
+   "draw": 8,
+   "certified_frozen": false,
+   "certified_exact_count": true,
+   "level": 37,
+   "stratum": 4,
+   "n_answered": 197,
+   "errors": 17,
+   "p_frozen": 0.027047180812531237,
+   "p_exact_count": 0.014856251140363336
+  },
+  {
+   "draw": 40,
+   "certified_frozen": false,
+   "certified_exact_count": true,
+   "level": 37,
+   "stratum": 4,
+   "n_answered": 186,
+   "errors": 16,
+   "p_frozen": 0.032051531356547674,
+   "p_exact_count": 0.018021051924213282
+  },
+  {
+   "draw": 66,
+   "certified_frozen": false,
+   "certified_exact_count": true,
+   "level": 37,
+   "stratum": 4,
+   "n_answered": 196,
+   "errors": 17,
+   "p_frozen": 0.029067312776556095,
+   "p_exact_count": 0.016050326026861687
+  },
+  {
+   "draw": 88,
+   "certified_frozen": false,
+   "certified_exact_count": true,
+   "level": 37,
+   "stratum": 4,
+   "n_answered": 201,
+   "errors": 18,
+   "p_frozen": 0.03734729032322136,
+   "p_exact_count": 0.020818827258533703
+  }
+ ]
+}

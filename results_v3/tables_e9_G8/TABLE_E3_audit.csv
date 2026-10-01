@@ -1,0 +1,2 @@
+dataset,policy,seed,k,n_k,alpha,rmin_thr,rmin_depth,r_full,p_thr,p_depth,verdict,all_verdicts
+mnist,greedy_entropy,0,3,2741,0.1,0.010944910616563297,0.010215249908792412,0.010944910616563297,1.0,1.0,feasible,0:feasible 1:feasible 2:feasible 3:feasible

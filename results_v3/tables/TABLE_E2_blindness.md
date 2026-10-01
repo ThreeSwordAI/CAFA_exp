@@ -8,6 +8,8 @@
 | csv-physionet | random | 0 | 0.200 | 0.144 | 0.000 | 0.722 | 0.000 |
 | cube | greedy_entropy | 0 | 0.150 | 0.130 | 0.000 | 1.062 | 0.820 |
 | cube | random | 0 | 0.150 | 0.127 | 0.000 | 1.092 | 0.980 |
+| fashionmnist | greedy_entropy | 0 | 0.150 | 0.136 | 0.000 | 1.567 | 1.000 |
+| fashionmnist | random | 0 | 0.150 | 0.142 | 0.000 | 1.509 | 1.000 |
 | mnist | greedy_entropy | 0 | 0.100 | 0.090 | 0.000 | 0.954 | 0.270 |
 | mnist | random | 0 | 0.100 | 0.087 | 0.000 | 0.920 | 0.100 |
 | tabular-adult | greedy_entropy | 0 | 0.250 | 0.195 | 0.000 | 1.179 | 1.000 |

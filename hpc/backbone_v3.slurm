@@ -7,10 +7,12 @@
 # Datasets in the order csv:physionet cube tabular:adult csv:diabetes tabular:MiniBooNE mnist fashionmnist image:imagenette
 #   all:              sbatch --array=0-23 hpc/backbone_v3.slurm
 #   Imagenette only:  sbatch --array=7,15,23 hpc/backbone_v3.slurm
-# Existing checkpoints are skipped. CUBE: the local seed-0 run missed the full-observation target with the
-# config's 40 epochs and was retrained once with --epochs 60 (see handoff.md section 6); pass the same
-# override for CUBE seeds 1-2 by setting CAFA_EXTRA="--epochs 60" when submitting the CUBE tasks
-# (sbatch --array=9,17 --export=ALL,CAFA_EXTRA="--epochs 60" hpc/backbone_v3.slurm).
+# Existing checkpoints are skipped. CUBE and MiniBooNE: the local seed-0 runs missed the full-observation
+# target with the config's 40 epochs and were retrained once with --epochs 60 (see handoff.md section 6.3);
+# pass the same override for their seeds 1-2 by setting CAFA_EXTRA when submitting those tasks
+# (cube = tasks 9, 17; MiniBooNE = tasks 12, 20):
+#   sbatch --array=9,12,17,20 --export=ALL,CAFA_EXTRA="--epochs 60" hpc/backbone_v3.slurm
+#   sbatch --array=8,10,11,13,14,16,18,19,21,22 hpc/backbone_v3.slurm          # other non-Imagenette seeds 1-2
 set -euo pipefail
 source /etc/profile
 module load python/3.12-conda

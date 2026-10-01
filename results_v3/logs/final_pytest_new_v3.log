@@ -1,0 +1,3 @@
+﻿=========================== short test summary info ===========================
+XFAIL tests/test_frozen_hb_boundary.py::test_hb_pvalue_depends_only_on_error_count - frozen risk_control._hb_pvalue_array: ceil(n*r_hat) is off by one when n*r_hat exceeds the integer error count by rounding
+7 passed, 1 xfailed in 20.65s

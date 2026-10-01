@@ -73,9 +73,11 @@ def main(argv=None) -> int:
                 v2 = load_pool_cache(v2p)
                 g = loaded["greedy_entropy"]
                 same = v2["y"].shape == g["y"].shape and bool(np.array_equal(v2["y"], g["y"]))
-                ok_all &= same
+                # the split digests (sha256 of the train / probe / eval index sets) identify the rows
+                same_split = v2["meta"].get("split_digest") == g["meta"].get("split_digest")
+                ok_all &= same and same_split
                 print(f"[check_v3] {ds} ts{ts}: v2 vs v3 heldout rows n_v2={v2['y'].shape[0]} "
-                      f"n_v3={g['y'].shape[0]} same_y_order={same} | v2 full-acq acc="
+                      f"n_v3={g['y'].shape[0]} same_y_order={same} same_split_digest={same_split} | v2 full-acq acc="
                       f"{float(np.mean(v2['correct'][:, -1])):.6f}")
     if a.csv:
         Path(a.csv).parent.mkdir(parents=True, exist_ok=True)

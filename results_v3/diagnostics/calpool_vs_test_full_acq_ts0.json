@@ -1,8 +1,67 @@
 {
- "what": "full-acquisition stratum risk on the calibration pool (audit r_full) vs the test split (full_acq_test_stratum_risk), all seed-0 metrics JSONs present when run",
- "n": 142,
- "n_test_gt_calpool": 87,
- "n_test_lt_calpool": 54,
+ "what": "full-acquisition stratum risk on the calibration pool (audit r_full) vs the test split (full_acq_test_stratum_risk), all metrics JSONs of the seed",
+ "train_seed": 0,
+ "cells": [
+  [
+   "csv-diabetes",
+   "greedy_entropy"
+  ],
+  [
+   "csv-diabetes",
+   "random"
+  ],
+  [
+   "csv-physionet",
+   "greedy_entropy"
+  ],
+  [
+   "csv-physionet",
+   "random"
+  ],
+  [
+   "cube",
+   "greedy_entropy"
+  ],
+  [
+   "cube",
+   "random"
+  ],
+  [
+   "fashionmnist",
+   "greedy_entropy"
+  ],
+  [
+   "fashionmnist",
+   "random"
+  ],
+  [
+   "mnist",
+   "greedy_entropy"
+  ],
+  [
+   "mnist",
+   "random"
+  ],
+  [
+   "tabular-MiniBooNE",
+   "greedy_entropy"
+  ],
+  [
+   "tabular-MiniBooNE",
+   "random"
+  ],
+  [
+   "tabular-adult",
+   "greedy_entropy"
+  ],
+  [
+   "tabular-adult",
+   "random"
+  ]
+ ],
+ "n": 161,
+ "n_test_gt_calpool": 95,
+ "n_test_lt_calpool": 65,
  "rows": [
   {
    "dsname": "csv-diabetes",
@@ -725,6 +784,196 @@
    "test_minus_calpool": 0.018214832474377413
   },
   {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.5",
+   "stratum": 0,
+   "n_k_calpool": 2655,
+   "r_full_calpool": 0.03465160075329567,
+   "r_full_test": 0.02748091603053435,
+   "test_minus_calpool": -0.007170684722761316
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.5",
+   "stratum": 1,
+   "n_k_calpool": 3475,
+   "r_full_calpool": 0.04489208633093525,
+   "r_full_test": 0.045300113250283124,
+   "test_minus_calpool": 0.00040802691934787444
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.5",
+   "stratum": 2,
+   "n_k_calpool": 2576,
+   "r_full_calpool": 0.05434782608695652,
+   "r_full_test": 0.05625,
+   "test_minus_calpool": 0.0019021739130434812
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.5",
+   "stratum": 3,
+   "n_k_calpool": 3894,
+   "r_full_calpool": 0.0847457627118644,
+   "r_full_test": 0.09516460905349794,
+   "test_minus_calpool": 0.010418846341633536
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.7",
+   "stratum": 0,
+   "n_k_calpool": 1152,
+   "r_full_calpool": 0.018229166666666668,
+   "r_full_test": 0.011403508771929825,
+   "test_minus_calpool": -0.0068256578947368425
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.7",
+   "stratum": 1,
+   "n_k_calpool": 2063,
+   "r_full_calpool": 0.027629665535627727,
+   "r_full_test": 0.0275,
+   "test_minus_calpool": -0.00012966553562772723
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.7",
+   "stratum": 2,
+   "n_k_calpool": 3686,
+   "r_full_calpool": 0.03906673901247965,
+   "r_full_test": 0.03993524015110631,
+   "test_minus_calpool": 0.0008685011386266595
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.7",
+   "stratum": 3,
+   "n_k_calpool": 2920,
+   "r_full_calpool": 0.059931506849315065,
+   "r_full_test": 0.051351351351351354,
+   "test_minus_calpool": -0.008580155497963711
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.7",
+   "stratum": 4,
+   "n_k_calpool": 2779,
+   "r_full_calpool": 0.11550917596257647,
+   "r_full_test": 0.13528990694345025,
+   "test_minus_calpool": 0.01978073098087378
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 0,
+   "n_k_calpool": 2347,
+   "r_full_calpool": 0.0097997443544951,
+   "r_full_test": 0.008074798130046749,
+   "test_minus_calpool": -0.001724946224448352
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 1,
+   "n_k_calpool": 2200,
+   "r_full_calpool": 0.015454545454545455,
+   "r_full_test": 0.017833259028087384,
+   "test_minus_calpool": 0.0023787135735419285
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 2,
+   "n_k_calpool": 2988,
+   "r_full_calpool": 0.029451137884872823,
+   "r_full_test": 0.023350253807106598,
+   "test_minus_calpool": -0.006100884077766225
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 3,
+   "n_k_calpool": 2411,
+   "r_full_calpool": 0.04977187888842804,
+   "r_full_test": 0.04530201342281879,
+   "test_minus_calpool": -0.004469865465609249
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 4,
+   "n_k_calpool": 2654,
+   "r_full_calpool": 0.17068575734740016,
+   "r_full_test": 0.19136960600375236,
+   "test_minus_calpool": 0.0206838486563522
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 0,
+   "n_k_calpool": 2391,
+   "r_full_calpool": 0.01631116687578419,
+   "r_full_test": 0.01488095238095238,
+   "test_minus_calpool": -0.00143021449483181
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 1,
+   "n_k_calpool": 1709,
+   "r_full_calpool": 0.028086600351082503,
+   "r_full_test": 0.026884862653419054,
+   "test_minus_calpool": -0.0012017376976634492
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 2,
+   "n_k_calpool": 2798,
+   "r_full_calpool": 0.03967119370979271,
+   "r_full_test": 0.035256410256410256,
+   "test_minus_calpool": -0.004414783453382455
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 3,
+   "n_k_calpool": 2850,
+   "r_full_calpool": 0.05368421052631579,
+   "r_full_test": 0.043162983425414365,
+   "test_minus_calpool": -0.010521227100901427
+  },
+  {
+   "dsname": "fashionmnist",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 4,
+   "n_k_calpool": 2852,
+   "r_full_calpool": 0.12868162692847124,
+   "r_full_test": 0.15566537239675257,
+   "test_minus_calpool": 0.026983745468281334
+  },
+  {
    "dsname": "mnist",
    "policy": "greedy_entropy",
    "lambda_ref_key": "0.5",
@@ -1065,6 +1314,156 @@
    "test_minus_calpool": -0.0005342198329876154
   },
   {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "0.5",
+   "stratum": 0,
+   "n_k_calpool": 8140,
+   "r_full_calpool": 0.14692874692874694,
+   "r_full_test": 0.14656019656019656,
+   "test_minus_calpool": -0.0003685503685503799
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "0.7",
+   "stratum": 0,
+   "n_k_calpool": 8140,
+   "r_full_calpool": 0.14692874692874694,
+   "r_full_test": 0.14656019656019656,
+   "test_minus_calpool": -0.0003685503685503799
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "0.9",
+   "stratum": 0,
+   "n_k_calpool": 1075,
+   "r_full_calpool": 0.05674418604651163,
+   "r_full_test": 0.043523316062176166,
+   "test_minus_calpool": -0.013220869984335464
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "0.9",
+   "stratum": 1,
+   "n_k_calpool": 3804,
+   "r_full_calpool": 0.048370136698212406,
+   "r_full_test": 0.04470284237726098,
+   "test_minus_calpool": -0.0036672943209514267
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "0.9",
+   "stratum": 2,
+   "n_k_calpool": 3261,
+   "r_full_calpool": 0.29162833486660533,
+   "r_full_test": 0.29591527987897126,
+   "test_minus_calpool": 0.004286945012365928
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "dep",
+   "stratum": 0,
+   "n_k_calpool": 6352,
+   "r_full_calpool": 0.13302896725440805,
+   "r_full_test": 0.1334788710431935,
+   "test_minus_calpool": 0.0004499037887854551
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "greedy_entropy",
+   "lambda_ref_key": "dep",
+   "stratum": 1,
+   "n_k_calpool": 1788,
+   "r_full_calpool": 0.19630872483221476,
+   "r_full_test": 0.19513607411696585,
+   "test_minus_calpool": -0.001172650715248913
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "0.5",
+   "stratum": 0,
+   "n_k_calpool": 8140,
+   "r_full_calpool": 0.14692874692874694,
+   "r_full_test": 0.14656019656019656,
+   "test_minus_calpool": -0.0003685503685503799
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "0.7",
+   "stratum": 0,
+   "n_k_calpool": 8140,
+   "r_full_calpool": 0.14692874692874694,
+   "r_full_test": 0.14656019656019656,
+   "test_minus_calpool": -0.0003685503685503799
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 0,
+   "n_k_calpool": 3218,
+   "r_full_calpool": 0.04723430702299565,
+   "r_full_test": 0.04671717171717172,
+   "test_minus_calpool": -0.0005171353058239306
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 1,
+   "n_k_calpool": 1886,
+   "r_full_calpool": 0.0662778366914104,
+   "r_full_test": 0.05903866248693835,
+   "test_minus_calpool": -0.0072391742044720445
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "0.9",
+   "stratum": 2,
+   "n_k_calpool": 3036,
+   "r_full_calpool": 0.30270092226613965,
+   "r_full_test": 0.30477436232831917,
+   "test_minus_calpool": 0.0020734400621795213
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 0,
+   "n_k_calpool": 4617,
+   "r_full_calpool": 0.11457656486896253,
+   "r_full_test": 0.11701208981001728,
+   "test_minus_calpool": 0.0024355249410547425
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 1,
+   "n_k_calpool": 1663,
+   "r_full_calpool": 0.11665664461815996,
+   "r_full_test": 0.11414982164090369,
+   "test_minus_calpool": -0.002506822977256268
+  },
+  {
+   "dsname": "tabular-adult",
+   "policy": "random",
+   "lambda_ref_key": "dep",
+   "stratum": 2,
+   "n_k_calpool": 1860,
+   "r_full_calpool": 0.2543010752688172,
+   "r_full_test": 0.25136911281489593,
+   "test_minus_calpool": -0.002931962453921244
+  },
+  {
    "dsname": "tabular-MiniBooNE",
    "policy": "greedy_entropy",
    "lambda_ref_key": "0.5",
@@ -1273,156 +1672,6 @@
    "r_full_calpool": 0.13203883495145632,
    "r_full_test": 0.14040492957746478,
    "test_minus_calpool": 0.008366094626008458
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "0.5",
-   "stratum": 0,
-   "n_k_calpool": 8140,
-   "r_full_calpool": 0.14692874692874694,
-   "r_full_test": 0.14656019656019656,
-   "test_minus_calpool": -0.0003685503685503799
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "0.7",
-   "stratum": 0,
-   "n_k_calpool": 8140,
-   "r_full_calpool": 0.14692874692874694,
-   "r_full_test": 0.14656019656019656,
-   "test_minus_calpool": -0.0003685503685503799
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "0.9",
-   "stratum": 0,
-   "n_k_calpool": 1075,
-   "r_full_calpool": 0.05674418604651163,
-   "r_full_test": 0.043523316062176166,
-   "test_minus_calpool": -0.013220869984335464
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "0.9",
-   "stratum": 1,
-   "n_k_calpool": 3804,
-   "r_full_calpool": 0.048370136698212406,
-   "r_full_test": 0.04470284237726098,
-   "test_minus_calpool": -0.0036672943209514267
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "0.9",
-   "stratum": 2,
-   "n_k_calpool": 3261,
-   "r_full_calpool": 0.29162833486660533,
-   "r_full_test": 0.29591527987897126,
-   "test_minus_calpool": 0.004286945012365928
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "dep",
-   "stratum": 0,
-   "n_k_calpool": 6352,
-   "r_full_calpool": 0.13302896725440805,
-   "r_full_test": 0.1334788710431935,
-   "test_minus_calpool": 0.0004499037887854551
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "greedy_entropy",
-   "lambda_ref_key": "dep",
-   "stratum": 1,
-   "n_k_calpool": 1788,
-   "r_full_calpool": 0.19630872483221476,
-   "r_full_test": 0.19513607411696585,
-   "test_minus_calpool": -0.001172650715248913
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "0.5",
-   "stratum": 0,
-   "n_k_calpool": 8140,
-   "r_full_calpool": 0.14692874692874694,
-   "r_full_test": 0.14656019656019656,
-   "test_minus_calpool": -0.0003685503685503799
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "0.7",
-   "stratum": 0,
-   "n_k_calpool": 8140,
-   "r_full_calpool": 0.14692874692874694,
-   "r_full_test": 0.14656019656019656,
-   "test_minus_calpool": -0.0003685503685503799
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "0.9",
-   "stratum": 0,
-   "n_k_calpool": 3218,
-   "r_full_calpool": 0.04723430702299565,
-   "r_full_test": 0.04671717171717172,
-   "test_minus_calpool": -0.0005171353058239306
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "0.9",
-   "stratum": 1,
-   "n_k_calpool": 1886,
-   "r_full_calpool": 0.0662778366914104,
-   "r_full_test": 0.05903866248693835,
-   "test_minus_calpool": -0.0072391742044720445
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "0.9",
-   "stratum": 2,
-   "n_k_calpool": 3036,
-   "r_full_calpool": 0.30270092226613965,
-   "r_full_test": 0.30477436232831917,
-   "test_minus_calpool": 0.0020734400621795213
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "dep",
-   "stratum": 0,
-   "n_k_calpool": 4617,
-   "r_full_calpool": 0.11457656486896253,
-   "r_full_test": 0.11701208981001728,
-   "test_minus_calpool": 0.0024355249410547425
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "dep",
-   "stratum": 1,
-   "n_k_calpool": 1663,
-   "r_full_calpool": 0.11665664461815996,
-   "r_full_test": 0.11414982164090369,
-   "test_minus_calpool": -0.002506822977256268
-  },
-  {
-   "dsname": "tabular-adult",
-   "policy": "random",
-   "lambda_ref_key": "dep",
-   "stratum": 2,
-   "n_k_calpool": 1860,
-   "r_full_calpool": 0.2543010752688172,
-   "r_full_test": 0.25136911281489593,
-   "test_minus_calpool": -0.002931962453921244
   }
  ]
 }

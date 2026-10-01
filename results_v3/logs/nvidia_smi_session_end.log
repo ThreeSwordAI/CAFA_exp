@@ -1,0 +1,3 @@
+﻿2026-10-02T01:04:14
+name, clocks.current.sm [MHz], clocks.max.sm [MHz], temperature.gpu, power.draw [W], utilization.gpu [%], memory.used [MiB], clocks_event_reasons.sw_thermal_slowdown
+NVIDIA GeForce RTX 3050 Laptop GPU, 210 MHz, 2100 MHz, 91, 19.54 W, 100 %, 754 MiB, Active

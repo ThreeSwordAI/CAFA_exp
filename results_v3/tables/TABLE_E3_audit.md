@@ -8,6 +8,8 @@
 | csv-physionet | random | 0 | 0 | 2160 | 0.200 | 0.126 | 0.126 | 0.126 | 1.000 | 1.000 | feasible | 0:feasible |
 | cube | greedy_entropy | 0 | 2 | 1230 | 0.150 | 0.080 | 0.080 | 0.080 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible |
 | cube | random | 0 | 3 | 714 | 0.150 | 0.080 | 0.083 | 0.083 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible |
+| fashionmnist | greedy_entropy | 0 | 4 | 2640 | 0.150 | 0.133 | 0.133 | 0.133 | 0.995 | 0.995 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible 4:feasible |
+| fashionmnist | random | 0 | 4 | 2852 | 0.150 | 0.129 | 0.126 | 0.129 | 0.999 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible 4:feasible |
 | mnist | greedy_entropy | 0 | 2 | 4794 | 0.100 | 0.008 | 0.008 | 0.008 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible |
 | mnist | random | 0 | 4 | 2826 | 0.100 | 0.012 | 0.012 | 0.012 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible 4:feasible |
 | tabular-adult | greedy_entropy | 0 | 1 | 1788 | 0.250 | 0.196 | 0.196 | 0.196 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible |
