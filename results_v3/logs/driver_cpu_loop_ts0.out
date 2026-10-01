@@ -6360,3 +6360,46 @@ CPU LOOP 2026-10-01T23:59:59: metrics for seeds 0 = 12 / 16
 [drive_v3] skip (exists) sweep:mnist:random:ts0 -> F:\CAFA_results\metrics_v3\mnist_ts0_random_softmax.json
 [drive_v3] run sweep:fashionmnist:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset fashionmnist --train-seed 0 --policy greedy_entropy  (log results_v3\logs\sweep_fashionmnist_greedy_entropy_ts0.log)
     [cascade] fashionmnist ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+    [cascade] fashionmnist ts0 greedy_entropy lr[0.7]=0.700 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.97, '2': 0.0, '3': 0.03} viol=0.000 | deepest stratum verdict=feasible
+    [cascade] fashionmnist ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 | deepest stratum verdict=thr_failure_depth_unresolved
+    [cascade] fashionmnist ts0 greedy_entropy lr[dep]=0.778 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.35, '2': 0.0, '3': 0.65} viol=0.350 | deepest stratum verdict=feasible
+    [cascade] wrote F:\CAFA_results\metrics_v3\fashionmnist_ts0_greedy_entropy_softmax.json
+[drive_v3] done sweep:fashionmnist:greedy_entropy:ts0: rc=0 in 178.4s
+[drive_v3] run sweep:fashionmnist:random:ts0: python scripts/run_cascade_sweep.py --dataset fashionmnist --train-seed 0 --policy random  (log results_v3\logs\sweep_fashionmnist_random_ts0.log)
+    [cascade] fashionmnist ts0 random lr[0.5]=0.500 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.220 | deepest stratum verdict=feasible
+    [cascade] fashionmnist ts0 random lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.340 | deepest stratum verdict=feasible
+    [cascade] fashionmnist ts0 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 | deepest stratum verdict=type_II
+    [cascade] fashionmnist ts0 random lr[dep]=0.778 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.58, '2': 0.0, '3': 0.42} viol=0.580 | deepest stratum verdict=feasible
+    [cascade] wrote F:\CAFA_results\metrics_v3\fashionmnist_ts0_random_softmax.json
+[drive_v3] done sweep:fashionmnist:random:ts0: rc=0 in 188.4s
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 2, skipped 12 existing, 2 missing prerequisites
+CPU LOOP 2026-10-02T00:08:13: metrics for seeds 0 = 14 / 16
+[drive_v3] skip (exists) commit:csv:physionet:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-physionet_ts0.json
+[drive_v3] skip (exists) commit:cube:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_cube_ts0.json
+[drive_v3] skip (exists) commit:tabular:adult:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-adult_ts0.json
+[drive_v3] skip (exists) commit:csv:diabetes:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_csv-diabetes_ts0.json
+[drive_v3] skip (exists) commit:tabular:MiniBooNE:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_tabular-MiniBooNE_ts0.json
+[drive_v3] skip (exists) commit:mnist:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_mnist_ts0.json
+[drive_v3] skip (exists) commit:fashionmnist:na:ts0 -> F:\FAU\PhD\Side Quest\CAFA_exp\configs\committed_v3_fashionmnist_ts0.json
+[drive_v3] skip (missing prerequisite) commit:image:imagenette:na:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] commit: ran 0, skipped 7 existing, 1 missing prerequisites
+[drive_v3] skip (exists) sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3\csv-physionet_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:cube:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:cube:random:ts0 -> F:\CAFA_results\metrics_v3\cube_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:adult:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:csv:diabetes:random:ts0 -> F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:tabular:MiniBooNE:random:ts0 -> F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:mnist:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\mnist_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:mnist:random:ts0 -> F:\CAFA_results\metrics_v3\mnist_ts0_random_softmax.json
+[drive_v3] skip (exists) sweep:fashionmnist:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3\fashionmnist_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) sweep:fashionmnist:random:ts0 -> F:\CAFA_results\metrics_v3\fashionmnist_ts0_random_softmax.json
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:greedy_entropy:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz']
+[drive_v3] skip (missing prerequisite) sweep:image:imagenette:random:ts0: ['F:\\FAU\\PhD\\Side Quest\\CAFA_exp\\configs\\committed_v3_image-imagenette_ts0.json', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz']
+[drive_v3] sweep: ran 0, skipped 14 existing, 2 missing prerequisites
+CPU LOOP 2026-10-02T00:10:16: metrics for seeds 0 = 14 / 16

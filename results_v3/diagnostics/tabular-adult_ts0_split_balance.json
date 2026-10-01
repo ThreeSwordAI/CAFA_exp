@@ -1,0 +1,32 @@
+{
+ "dataset": "tabular:adult",
+ "policy": "greedy_entropy",
+ "train_seed": 0,
+ "splits": {
+  "calpool": {
+   "n": 8140,
+   "full_acq_error": 0.14692874692874694,
+   "class_counts": {
+    "0": 6081,
+    "1": 2059
+   },
+   "class_full_acq_error": {
+    "0": 0.0751521131392863,
+    "1": 0.3589120932491501
+   }
+  },
+  "test": {
+   "n": 8140,
+   "full_acq_error": 0.14656019656019656,
+   "class_counts": {
+    "0": 6158,
+    "1": 1982
+   },
+   "class_full_acq_error": {
+    "0": 0.07875933744722312,
+    "1": 0.35721493440968716
+   }
+  }
+ },
+ "z_test_minus_calpool": -0.06644673173099168
+}

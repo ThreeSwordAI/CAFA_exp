@@ -1,0 +1,32 @@
+{
+ "dataset": "tabular:MiniBooNE",
+ "policy": "greedy_entropy",
+ "train_seed": 0,
+ "splits": {
+  "calpool": {
+   "n": 23411,
+   "full_acq_error": 0.07539190978599804,
+   "class_counts": {
+    "0": 6592,
+    "1": 16819
+   },
+   "class_full_acq_error": {
+    "0": 0.11331917475728155,
+    "1": 0.06052678518342351
+   }
+  },
+  "test": {
+   "n": 23412,
+   "full_acq_error": 0.08017256107978814,
+   "class_counts": {
+    "0": 6550,
+    "1": 16862
+   },
+   "class_full_acq_error": {
+    "0": 0.12809160305343512,
+    "1": 0.061558533981734075
+   }
+  }
+ },
+ "z_test_minus_calpool": 1.9312104667517522
+}
