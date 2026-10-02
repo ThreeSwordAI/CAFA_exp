@@ -5,7 +5,11 @@ For every n in a grid and every error count k with k/n < alpha, compute r_hat th
 base does -- ``mean(loss)`` (= sum/n, used by ltt_select / iut on loss matrices) and
 ``1 - mean(correct)`` (used by cafa.cascade.selective_pvalues, tier 3) -- and count how often
 ``ceil(n * r_hat) != k`` and how often the frozen p-value then differs from the exact-count p-value
-by more than 1 % (relative).  Nothing in the frozen file is changed; the exact value is recomputed here.
+by more than 1 % (relative).  The exact value is recomputed here.
+
+Round 2: the primitive was fixed (``np.ceil(np.round(n * r_hat, 9))``, CHANGELOG.md); rerun on the fixed
+code, ``p_differs_gt_1pct`` must be 0 everywhere (``ceil_off_by_one`` counts the float arithmetic itself,
+which the fix leaves as it is).  ``ALPHAS`` x ``N_VALUES`` is the grid tests/test_frozen_hb_boundary.py checks.
 
     python scripts/scan_hb_ceil_boundary.py --output results_v3/diagnostics/hb_ceil_boundary_scan.json
 """
@@ -25,6 +29,10 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from cafa.risk_control import hoeffding_bentkus_pvalue  # noqa: E402
 
 
+ALPHAS = (0.10, 0.15, 0.20, 0.25)
+N_VALUES = (50, 100, 197, 250, 500, 1000, 2000, 3000, 5000)
+
+
 def exact(k: int, n: int, alpha: float) -> float:
     r = k / n
     kl = (r * math.log(r / alpha) if r > 0 else 0.0) + (1 - r) * math.log((1 - r) / (1 - alpha))
@@ -33,8 +41,8 @@ def exact(k: int, n: int, alpha: float) -> float:
 
 def main(argv=None) -> int:
     p = argparse.ArgumentParser()
-    p.add_argument("--alphas", default="0.10,0.15,0.20,0.25")
-    p.add_argument("--n-values", default="50,100,197,250,500,1000,2000,3000,5000")
+    p.add_argument("--alphas", default=",".join(f"{x:.2f}" for x in ALPHAS))
+    p.add_argument("--n-values", default=",".join(str(x) for x in N_VALUES))
     p.add_argument("--output", default=None)
     a = p.parse_args(argv)
     out = {"what": "off-by-one of ceil(n*r_hat) in risk_control._hb_pvalue_array", "rows": []}

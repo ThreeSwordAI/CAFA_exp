@@ -97,7 +97,7 @@ def _hb_pvalue_array(r_hat: np.ndarray, n: int, alpha: float) -> np.ndarray:
 
         # Bentkus:
         #   P(R_hat <= r) <= e * P(Binom(n, alpha) <= ceil(n * r))
-        k = np.ceil(n * rb).astype(int)
+        k = np.ceil(np.round(n * rb, 9)).astype(int)
         p_bentkus = _E * binom.cdf(k, n, alpha)
 
         pv = np.minimum(p_hoeffding, p_bentkus)

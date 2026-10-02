@@ -1,0 +1,12 @@
+# python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --device cuda --batch-size 16 --policy-amp
+# start 2026-10-01T22:19:48.076778+00:00
+  [rgb rollout] 16/5358 (35s)
+  [rgb rollout] 176/5358 (806s)
+  [rgb rollout] 336/5358 (1606s)
+  [rgb rollout] 496/5358 (2405s)
+  [rgb rollout] 656/5358 (3205s)
+  [rgb rollout] 816/5358 (3908s)
+  [rgb rollout] 976/5358 (4528s)
+  [rgb rollout] 1136/5358 (5103s)
+  [rgb rollout] 1296/5358 (5723s)
+# round-2 note: process found dead on 2026-10-03 00:55 local; last log write 2026-10-02 01:55:57 local; no cache written; no returncode line

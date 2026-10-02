@@ -16,6 +16,14 @@ non-zero return code stops the loop.
     python scripts/drive_v3.py --phase rollouts  --seeds 0 --datasets image:imagenette --extra-args="--batch-size 16"
     python scripts/drive_v3.py --phase commit    --seeds 0
     python scripts/drive_v3.py --phase sweep     --seeds 0
+
+Round-2 options (reruns and ablations go through the same ledger):
+  --force                 commit phase: re-commit even if the committed JSON exists (passes --force; the
+                          reason goes into handoff.md, instruction rule 4)
+  --metrics-dir-name D    sweep phase: write to ${RESULTS_ROOT}/D instead of metrics_v3 (passes --out-dir)
+  --commit-prefix P       commit / sweep phase: committed JSON configs/P_{dsname}_ts{ts}.json instead of
+                          committed_v3_... (passes --out-path to commit_v3, --committed to the sweep)
+  --tag T                 labels the run: logs/T_{phase}_..., ledger cell "T:..." (smoke runs, round-2 reruns)
 """
 
 from __future__ import annotations
@@ -57,21 +65,22 @@ def cells(cfg: dict, phase: str, seeds, datasets, policies):
                 yield ds, pol, int(ts)
 
 
-def paths_for(phase: str, ds: str, pol, ts: int, rr: Path, policies=("greedy_entropy", "random")):
+def paths_for(phase: str, ds: str, pol, ts: int, rr: Path, policies=("greedy_entropy", "random"),
+              metrics_dir_name: str = "metrics_v3", commit_prefix: str = "committed_v3"):
     """(output path, list of prerequisite paths) for one cell.  A commit waits for the caches of
     ALL policies (commit_v3 commits every cache present; a policy cache that appears later
     would be missing from the one-time commit)."""
     dn = dsname_of(ds)
     ckpt = rr / "checkpoints_v3" / f"{dn}_ts{ts}.pt"
     cache = lambda p: rr / "pool_v3" / f"{dn}_ts{ts}_{p}_softmax.npz"  # noqa: E731
-    committed = REPO / "configs" / f"committed_v3_{dn}_ts{ts}.json"
+    committed = REPO / "configs" / f"{commit_prefix}_{dn}_ts{ts}.json"
     if phase == "backbones":
         return ckpt, []
     if phase == "rollouts":
         return cache(pol), [ckpt]
     if phase == "commit":
         return committed, [cache(p) for p in policies]
-    return rr / "metrics_v3" / f"{dn}_ts{ts}_{pol}_softmax.json", [committed, cache(pol)]
+    return rr / metrics_dir_name / f"{dn}_ts{ts}_{pol}_softmax.json", [committed, cache(pol)]
 
 
 def main(argv=None) -> int:
@@ -83,7 +92,11 @@ def main(argv=None) -> int:
     p.add_argument("--device", default="cuda", help="passed to backbones/rollouts")
     p.add_argument("--extra-args", default="", help='appended to every command, e.g. "--batch-size 16"')
     p.add_argument("--config", default="configs/experiment_v3.yaml")
-    p.add_argument("--tag", default="", help='label for smoke runs, e.g. "smoke": logs/{tag}_{phase}_..., cell "{tag}:..."')
+    p.add_argument("--tag", default="", help='run label, e.g. "smoke" or "r2": logs/{tag}_{phase}_..., cell "{tag}:..."')
+    p.add_argument("--force", action="store_true", help="commit phase: re-commit existing JSONs (passes --force)")
+    p.add_argument("--metrics-dir-name", default="metrics_v3", help="sweep phase: output dir under RESULTS_ROOT")
+    p.add_argument("--commit-prefix", default="committed_v3",
+                   help="commit/sweep phase: configs/{prefix}_{dsname}_ts{ts}.json (ablation commits)")
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args(argv)
 
@@ -101,9 +114,10 @@ def main(argv=None) -> int:
 
     n_run = n_skip = n_prereq = 0
     for ds, pol, ts in cells(cfg, a.phase, seeds, a.datasets, a.policies):
-        out, prereqs = paths_for(a.phase, ds, pol, ts, rr, tuple(a.policies or cfg["policies_v3"]))
+        out, prereqs = paths_for(a.phase, ds, pol, ts, rr, tuple(a.policies or cfg["policies_v3"]),
+                                 a.metrics_dir_name, a.commit_prefix)
         cell = (f"{a.tag}:" if a.tag else "") + f"{a.phase}:{ds}:{pol or 'na'}:ts{ts}"
-        if out.exists():
+        if out.exists() and not (a.force and a.phase == "commit"):
             print(f"[drive_v3] skip (exists) {cell} -> {out}")
             n_skip += 1
             continue
@@ -117,6 +131,16 @@ def main(argv=None) -> int:
             cmd += ["--policy", pol]
         if a.phase in ("backbones", "rollouts"):
             cmd += ["--device", a.device]
+        if a.phase == "commit":
+            if a.force:
+                cmd += ["--force"]
+            if a.commit_prefix != "committed_v3":
+                cmd += ["--out-path", str(out.relative_to(REPO)).replace("\\", "/")]
+        if a.phase == "sweep":
+            if a.metrics_dir_name != "metrics_v3":
+                cmd += ["--out-dir", str(out.parent).replace("\\", "/")]
+            if a.commit_prefix != "committed_v3":
+                cmd += ["--committed", str(prereqs[0].relative_to(REPO)).replace("\\", "/")]
         cmd += shlex.split(a.extra_args)
         shown = " ".join(["python"] + [shlex.quote(c) for c in cmd[1:]])
         if a.dry_run:
