@@ -1,0 +1,8 @@
+{
+ "what": "exact Bayes classifier of cafa.data_v3.generate_cube (class-conditional Gaussian likelihoods, uniform prior) on all generated rows",
+ "n_samples": 20000,
+ "seed": 123,
+ "bayes_accuracy": 0.97025,
+ "bayes_error": 0.029750000000000054,
+ "target_full_obs_acc": 0.98
+}

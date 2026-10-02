@@ -36,7 +36,9 @@ N_VALUES = (50, 100, 197, 250, 500, 1000, 2000, 3000, 5000)
 def exact(k: int, n: int, alpha: float) -> float:
     r = k / n
     kl = (r * math.log(r / alpha) if r > 0 else 0.0) + (1 - r) * math.log((1 - r) / (1 - alpha))
-    return max(min(1.0, math.exp(-n * kl), math.e * float(binom.cdf(k, n, alpha))), 1e-300)
+    # floored like the primitive (smallest positive double); round 1 floored at 1e-300, which flagged
+    # pairs with p < 1e-300 as "p differs > 1 %" although only the floors differed
+    return max(min(1.0, math.exp(-n * kl), math.e * float(binom.cdf(k, n, alpha))), float(np.finfo(float).tiny))
 
 
 def main(argv=None) -> int:

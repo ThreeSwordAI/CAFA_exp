@@ -1,0 +1,245 @@
+{
+ "dataset": "mnist",
+ "train_seed": 0,
+ "label": "predictor_upgrade",
+ "alpha": 0.15,
+ "n_draws": 100,
+ "before_cache": "F:/CAFA_results/pool_v2/mnist_ts0_greedy_entropy_softmax.npz",
+ "after_cache": "F:/CAFA_results/pool_v3/mnist_ts0_greedy_entropy_softmax.npz",
+ "committed": "configs/committed_v3before_mnist_ts0.json",
+ "policy": "greedy_entropy",
+ "lambda_refs": {
+  "0.5": {
+   "lambda_ref": 0.5,
+   "G": 5,
+   "before": {
+    "deepest_stratum": 4,
+    "verdict": "feasible",
+    "rmin_thr": 0.14423717521652232,
+    "rmin_depth": 0.14457028647568287,
+    "r_full": 0.14457028647568287,
+    "p_thr": 0.8182803293513816,
+    "p_depth": 0.8043236775855205,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "feasible"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 1.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 49.0
+    }
+   },
+   "after": {
+    "deepest_stratum": 4,
+    "verdict": "feasible",
+    "rmin_thr": 0.007661558960692871,
+    "rmin_depth": 0.007661558960692871,
+    "r_full": 0.007661558960692871,
+    "p_thr": 1.0,
+    "p_depth": 1.0,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "feasible"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 1.0,
+      "2": 0.0,
+      "3": 0.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 3.355775396825397
+    }
+   }
+  },
+  "0.7": {
+   "lambda_ref": 0.7,
+   "G": 5,
+   "before": {
+    "deepest_stratum": 4,
+    "verdict": "type_II",
+    "rmin_thr": 0.19520958083832335,
+    "rmin_depth": 0.19560878243512975,
+    "r_full": 0.19560878243512975,
+    "p_thr": 5.807951461557115e-10,
+    "p_depth": 4.1900774566817935e-10,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "type_II"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 1.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 49.0
+    }
+   },
+   "after": {
+    "deepest_stratum": 4,
+    "verdict": "feasible",
+    "rmin_thr": 0.010379241516966068,
+    "rmin_depth": 0.00998003992015968,
+    "r_full": 0.010379241516966068,
+    "p_thr": 1.0,
+    "p_depth": 1.0,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "feasible"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 1.0,
+      "2": 0.0,
+      "3": 0.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 3.5929992063492073
+    }
+   }
+  },
+  "0.9": {
+   "lambda_ref": 0.9,
+   "G": 5,
+   "before": {
+    "deepest_stratum": 4,
+    "verdict": "type_II",
+    "rmin_thr": 0.2552594670406732,
+    "rmin_depth": 0.2552594670406732,
+    "r_full": 0.2552594670406732,
+    "p_thr": 6.63465091791057e-60,
+    "p_depth": 6.63465091791057e-60,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "type_II"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 1.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 49.0
+    }
+   },
+   "after": {
+    "deepest_stratum": 4,
+    "verdict": "feasible",
+    "rmin_thr": 0.01093969144460028,
+    "rmin_depth": 0.01093969144460028,
+    "r_full": 0.01093969144460028,
+    "p_thr": 1.0,
+    "p_depth": 1.0,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "feasible"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 1.0,
+      "2": 0.0,
+      "3": 0.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 3.816074603174603
+    }
+   }
+  },
+  "dep": {
+   "lambda_ref": 0.8686868686868687,
+   "G": 5,
+   "before": {
+    "deepest_stratum": 4,
+    "verdict": "type_II",
+    "rmin_thr": 0.29591836734693877,
+    "rmin_depth": 0.29513343799058084,
+    "r_full": 0.29591836734693877,
+    "p_thr": 5.309391269124732e-78,
+    "p_depth": 3.0107493021976587e-77,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "type_II"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.37,
+      "1": 0.0,
+      "2": 0.0,
+      "3": 0.63
+     },
+     "certified_rate": 0.63,
+     "violation_rate": 0.0,
+     "mean_test_cost": 49.0
+    }
+   },
+   "after": {
+    "deepest_stratum": 4,
+    "verdict": "feasible",
+    "rmin_thr": 0.011773940345368918,
+    "rmin_depth": 0.01098901098901099,
+    "r_full": 0.011773940345368918,
+    "p_thr": 1.0,
+    "p_depth": 1.0,
+    "all_verdicts": {
+     "0": "feasible",
+     "1": "feasible",
+     "2": "feasible",
+     "3": "feasible",
+     "4": "feasible"
+    },
+    "cascade": {
+     "tier_share": {
+      "0": 0.0,
+      "1": 1.0,
+      "2": 0.0,
+      "3": 0.0
+     },
+     "certified_rate": 1.0,
+     "violation_rate": 0.0,
+     "mean_test_cost": 3.9196984126984127
+    }
+   }
+  }
+ }
+}

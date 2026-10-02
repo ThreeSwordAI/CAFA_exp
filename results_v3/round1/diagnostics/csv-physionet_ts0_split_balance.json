@@ -1,0 +1,32 @@
+{
+ "dataset": "csv:physionet",
+ "policy": "greedy_entropy",
+ "train_seed": 0,
+ "splits": {
+  "calpool": {
+   "n": 2160,
+   "full_acq_error": 0.12638888888888888,
+   "class_counts": {
+    "0": 1856,
+    "1": 304
+   },
+   "class_full_acq_error": {
+    "0": 0.029633620689655173,
+    "1": 0.7171052631578947
+   }
+  },
+  "test": {
+   "n": 2160,
+   "full_acq_error": 0.12731481481481483,
+   "class_counts": {
+    "0": 1848,
+    "1": 312
+   },
+   "class_full_acq_error": {
+    "0": 0.03192640692640693,
+    "1": 0.6923076923076923
+   }
+  }
+ },
+ "z_test_minus_calpool": 0.09143147959021304
+}

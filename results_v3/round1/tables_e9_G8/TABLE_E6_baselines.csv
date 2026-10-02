@@ -1,0 +1,11 @@
+dataset,policy,seed,baseline,mean_test_risk,mean_test_cost,stratum_violation_rate,aggregate_violation_rate
+mnist,greedy_entropy,0,budget_0.25,0.026190476190476188,12.0,0.0,0.0
+mnist,greedy_entropy,0,budget_0.5,0.015396825396825395,24.0,0.0,0.0
+mnist,greedy_entropy,0,budget_0.75,0.009761904761904762,37.0,0.0,0.0
+mnist,greedy_entropy,0,fixed_conf_0.9,0.04563492063492064,4.583412698412699,0.0,0.0
+mnist,greedy_entropy,0,fixed_conf_0.95,0.025238095238095223,5.9703968253968265,0.0,0.0
+mnist,greedy_entropy,0,fixed_conf_0.99,0.010396825396825399,10.32436507936508,0.0,0.0
+mnist,greedy_entropy,0,full_acquisition,0.0058730158730158745,49.0,0.0,0.0
+mnist,greedy_entropy,0,mondrian_oracle,0.0800126984126984,3.6623261904761897,0.0,0.0
+mnist,greedy_entropy,0,oracle_cheapest_valid,0.09896825396825394,3.3924603174603174,1.0,0.0
+mnist,greedy_entropy,0,plugin,0.0967047619047619,3.41707380952381,0.99,0.04

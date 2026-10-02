@@ -1,0 +1,13 @@
+# python scripts/commit_v3.py --dataset tabular:MiniBooNE --train-seed 0 --force
+# start 2026-10-02T23:09:08.854056+00:00
+[commit_v3] tabular:MiniBooNE ts0: alpha=0.15 (floor 0.0744); n_cal_expected=11706; n_min(tier1)=275; policies=['greedy_entropy', 'random']
+            greedy_entropy lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.62
+            greedy_entropy lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.62
+            greedy_entropy lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.34
+            greedy_entropy lambda_ref[dep]=0.7475  G=3  tier3 starts at answered~0.43
+                    random lambda_ref[0.5]=0.5000  G=1  tier3 starts at answered~0.62
+                    random lambda_ref[0.7]=0.7000  G=1  tier3 starts at answered~0.62
+                    random lambda_ref[0.9]=0.9000  G=5  tier3 starts at answered~0.29
+                    random lambda_ref[dep]=0.7778  G=4  tier3 starts at answered~0.48
+[commit_v3] wrote configs\committed_v3_tabular-MiniBooNE_ts0.json
+# returncode 0

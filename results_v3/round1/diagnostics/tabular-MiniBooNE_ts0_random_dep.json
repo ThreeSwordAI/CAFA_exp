@@ -1,0 +1,1054 @@
+{
+ "dataset": "tabular:MiniBooNE",
+ "policy": "random",
+ "train_seed": 0,
+ "lambda_ref_key": "dep",
+ "alpha": 0.15,
+ "checks": {
+  "split_digests_match": true,
+  "split_sizes_match": true,
+  "probe_calpool_test_disjoint_and_cover": true,
+  "bucket_ids_numpy_vs_reference_buckets": {
+   "calpool": true,
+   "test": true
+  }
+ },
+ "stratum_sizes": {
+  "calpool": {
+   "0": 5388,
+   "1": 8030,
+   "2": 5358,
+   "3": 4635
+  },
+  "test": {
+   "0": 5347,
+   "1": 8094,
+   "2": 5427,
+   "3": 4544
+  }
+ },
+ "deployed_rules": [
+  {
+   "tier": 1,
+   "param": 0.828282828283,
+   "n_draws": 2,
+   "n_flagged": 2,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.10244988864142539,
+     "n_answered_test": 5347,
+     "risk_test": 0.10117823078361698,
+     "risk_pooled": 0.10181648812296228
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.10809464508094645,
+     "n_answered_test": 8094,
+     "risk_test": 0.10588089943167779,
+     "risk_pooled": 0.10698337881419002
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.11608809257185516,
+     "n_answered_test": 5427,
+     "risk_test": 0.12290399852588907,
+     "risk_pooled": 0.1195178488641632
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.14800431499460626,
+     "n_answered_test": 4544,
+     "risk_test": 0.15757042253521128,
+     "risk_pooled": 0.15273994988560846
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.838383838384,
+   "n_draws": 1,
+   "n_flagged": 1,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.09762435040831477,
+     "n_answered_test": 5347,
+     "risk_test": 0.09631569104170563,
+     "risk_pooled": 0.09697251979506288
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.10261519302615194,
+     "n_answered_test": 8094,
+     "risk_test": 0.10106251544353842,
+     "risk_pooled": 0.10183577276110146
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.1099290780141844,
+     "n_answered_test": 5427,
+     "risk_test": 0.11700755481850009,
+     "risk_pooled": 0.11349095966620305
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.14692556634304207,
+     "n_answered_test": 4544,
+     "risk_test": 0.15669014084507044,
+     "risk_pooled": 0.15175945092057957
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.848484848485,
+   "n_draws": 1,
+   "n_flagged": 1,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.09279881217520415,
+     "n_answered_test": 5347,
+     "risk_test": 0.09089208902188142,
+     "risk_pooled": 0.09184909175593851
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.09900373599003735,
+     "n_answered_test": 8094,
+     "risk_test": 0.09661477637756363,
+     "risk_pooled": 0.09780451500868272
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.10619634191862636,
+     "n_answered_test": 5427,
+     "risk_test": 0.11461212456237332,
+     "risk_pooled": 0.11043115438108483
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.14390507011866235,
+     "n_answered_test": 4544,
+     "risk_test": 0.15470950704225353,
+     "risk_pooled": 0.14925373134328357
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.858585858586,
+   "n_draws": 8,
+   "n_flagged": 8,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.08630289532293986,
+     "n_answered_test": 5347,
+     "risk_test": 0.08827379839162147,
+     "risk_pooled": 0.08728458313926409
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.09178082191780822,
+     "n_answered_test": 8094,
+     "risk_test": 0.09278477884852977,
+     "risk_pooled": 0.09228479285537088
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.10302351623740201,
+     "n_answered_test": 5427,
+     "risk_test": 0.11240095817210245,
+     "risk_pooled": 0.10774223458507186
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.14045307443365695,
+     "n_answered_test": 4544,
+     "risk_test": 0.1525088028169014,
+     "risk_pooled": 0.14642117877764463
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.878787878788,
+   "n_draws": 4,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.07999257609502598,
+     "n_answered_test": 5347,
+     "risk_test": 0.08060594726014587,
+     "risk_pooled": 0.08029809035863997
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.08318804483188044,
+     "n_answered_test": 8094,
+     "risk_test": 0.08500123548307388,
+     "risk_pooled": 0.08409823865045894
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.09593131765584173,
+     "n_answered_test": 5427,
+     "risk_test": 0.10466187580615441,
+     "risk_pooled": 0.10032452480296708
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.1389428263214671,
+     "n_answered_test": 4544,
+     "risk_test": 0.14986795774647887,
+     "risk_pooled": 0.14435123651813922
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.888888888889,
+   "n_draws": 16,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.07720861172976985,
+     "n_answered_test": 5347,
+     "risk_test": 0.07854871890779877,
+     "risk_pooled": 0.07787610619469026
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.08194271481942715,
+     "n_answered_test": 8094,
+     "risk_test": 0.08215962441314555,
+     "risk_pooled": 0.08205160009923096
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.0940649496080627,
+     "n_answered_test": 5427,
+     "risk_test": 0.10152939008660401,
+     "risk_pooled": 0.09782104775150673
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13592233009708737,
+     "n_answered_test": 4544,
+     "risk_test": 0.14920774647887325,
+     "risk_pooled": 0.14249918291752914
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.89898989899,
+   "n_draws": 16,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.0736822568671121,
+     "n_answered_test": 5347,
+     "risk_test": 0.07443426220310455,
+     "risk_pooled": 0.07405682347461574
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.07870485678704857,
+     "n_answered_test": 8094,
+     "risk_test": 0.0793180133432172,
+     "risk_pooled": 0.07901265194740759
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.09070548712206047,
+     "n_answered_test": 5427,
+     "risk_test": 0.09968675142804496,
+     "risk_pooled": 0.09522484932777005
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13398058252427184,
+     "n_answered_test": 4544,
+     "risk_test": 0.1483274647887324,
+     "risk_pooled": 0.14108290663470965
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.909090909091,
+   "n_draws": 6,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.07071269487750557,
+     "n_answered_test": 5347,
+     "risk_test": 0.07050682625771461,
+     "risk_pooled": 0.07061015370284117
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.07608966376089664,
+     "n_answered_test": 8094,
+     "risk_test": 0.0769705955028416,
+     "risk_pooled": 0.07653187794591913
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.08641284061216872,
+     "n_answered_test": 5427,
+     "risk_test": 0.09765984890363,
+     "risk_pooled": 0.09207232267037552
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13354908306364616,
+     "n_answered_test": 4544,
+     "risk_test": 0.1463468309859155,
+     "risk_pooled": 0.1398845190107855
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.919191919192,
+   "n_draws": 2,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.06718634001484781,
+     "n_answered_test": 5347,
+     "risk_test": 0.06901066018328035,
+     "risk_pooled": 0.06809501630181648
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.07260273972602739,
+     "n_answered_test": 8094,
+     "risk_test": 0.07412898443291327,
+     "risk_pooled": 0.07336889109402134
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.08249346771183277,
+     "n_answered_test": 5427,
+     "risk_test": 0.09360604385480008,
+     "risk_pooled": 0.0880853036624942
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13247033441208197,
+     "n_answered_test": 4544,
+     "risk_test": 0.14568661971830985,
+     "risk_pooled": 0.13901296437520427
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.939393939394,
+   "n_draws": 3,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.06161841128433556,
+     "n_answered_test": 5347,
+     "risk_test": 0.06527024499719469,
+     "risk_pooled": 0.06343735444806707
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.06625155666251557,
+     "n_answered_test": 8094,
+     "risk_test": 0.0694341487521621,
+     "risk_pooled": 0.0678491689407095
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.08081373646883165,
+     "n_answered_test": 5427,
+     "risk_test": 0.09047355813524968,
+     "risk_pooled": 0.08567454798331016
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13290183387270765,
+     "n_answered_test": 4544,
+     "risk_test": 0.14282570422535212,
+     "risk_pooled": 0.1378145767512801
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.959595959596,
+   "n_draws": 1,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.0580920564216778,
+     "n_answered_test": 5347,
+     "risk_test": 0.059472601458761924,
+     "risk_pooled": 0.05877969259431765
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.06002490660024907,
+     "n_answered_test": 8094,
+     "risk_test": 0.06461576476402273,
+     "risk_pooled": 0.06232944678739767
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.0770810003732736,
+     "n_answered_test": 5427,
+     "risk_test": 0.08734107241569929,
+     "risk_pooled": 0.0822438572090867
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13247033441208197,
+     "n_answered_test": 4544,
+     "risk_test": 0.14084507042253522,
+     "risk_pooled": 0.13661618912735593
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.969696969697,
+   "n_draws": 1,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.05753526354862658,
+     "n_answered_test": 5347,
+     "risk_test": 0.05685431082850197,
+     "risk_pooled": 0.057196087564042854
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.05790784557907846,
+     "n_answered_test": 8094,
+     "risk_test": 0.06226834692364715,
+     "risk_pooled": 0.06009675018605805
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.0767077267637178,
+     "n_answered_test": 5427,
+     "risk_test": 0.08549843375714022,
+     "risk_pooled": 0.08113120074177098
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13290183387270765,
+     "n_answered_test": 4544,
+     "risk_test": 0.14128521126760563,
+     "risk_pooled": 0.13705196644514653
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.979797979798,
+   "n_draws": 4,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.05642167780252413,
+     "n_answered_test": 5347,
+     "risk_test": 0.055545165513371984,
+     "risk_pooled": 0.055985095482068
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.05628891656288917,
+     "n_answered_test": 8094,
+     "risk_test": 0.06189770200148258,
+     "risk_pooled": 0.059104440585462666
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.0761478163493841,
+     "n_answered_test": 5427,
+     "risk_test": 0.0843928505620048,
+     "risk_pooled": 0.0802967083912842
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13247033441208197,
+     "n_answered_test": 4544,
+     "risk_test": 0.14084507042253522,
+     "risk_pooled": 0.13661618912735593
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 0.989898989899,
+   "n_draws": 7,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.05642167780252413,
+     "n_answered_test": 5347,
+     "risk_test": 0.0553581447540677,
+     "risk_pooled": 0.05589194224499301
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.05554171855541719,
+     "n_answered_test": 8094,
+     "risk_test": 0.06140350877192982,
+     "risk_pooled": 0.05848424708509055
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.0754012691302725,
+     "n_answered_test": 5427,
+     "risk_test": 0.08328726736686935,
+     "risk_pooled": 0.0793694946685211
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13203883495145632,
+     "n_answered_test": 4544,
+     "risk_test": 0.14040492957746478,
+     "risk_pooled": 0.1361804118095653
+    }
+   }
+  },
+  {
+   "tier": 1,
+   "param": 1.0,
+   "n_draws": 1,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5388,
+     "risk_calpool": 0.05623608017817372,
+     "n_answered_test": 5347,
+     "risk_test": 0.055545165513371984,
+     "risk_pooled": 0.05589194224499301
+    },
+    "1": {
+     "n_answered_calpool": 8030,
+     "risk_calpool": 0.055417185554171855,
+     "n_answered_test": 8094,
+     "risk_test": 0.06140350877192982,
+     "risk_pooled": 0.05842222773505334
+    },
+    "2": {
+     "n_answered_calpool": 5358,
+     "risk_calpool": 0.0759611795446062,
+     "n_answered_test": 5427,
+     "risk_test": 0.08310300350101345,
+     "risk_pooled": 0.07955493741307372
+    },
+    "3": {
+     "n_answered_calpool": 4635,
+     "risk_calpool": 0.13203883495145632,
+     "n_answered_test": 4544,
+     "risk_test": 0.14040492957746478,
+     "risk_pooled": 0.1361804118095653
+    }
+   }
+  },
+  {
+   "tier": 3,
+   "param": 0.533893775493,
+   "n_draws": 26,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5338,
+     "risk_calpool": 0.05151742225552641,
+     "n_answered_test": 5286,
+     "risk_test": 0.049943246311010214,
+     "risk_pooled": 0.05073418674698795
+    },
+    "1": {
+     "n_answered_calpool": 7953,
+     "risk_calpool": 0.051049918269835286,
+     "n_answered_test": 8002,
+     "risk_test": 0.05636090977255686,
+     "risk_pooled": 0.05371356941397681
+    },
+    "2": {
+     "n_answered_calpool": 5301,
+     "risk_calpool": 0.07187323146576118,
+     "n_answered_test": 5346,
+     "risk_test": 0.07744107744107744,
+     "risk_pooled": 0.07466892082276698
+    },
+    "3": {
+     "n_answered_calpool": 4516,
+     "risk_calpool": 0.12267493356953056,
+     "n_answered_test": 4409,
+     "risk_test": 0.1297346337037877,
+     "risk_pooled": 0.1261624649859944
+    }
+   }
+  },
+  {
+   "tier": 3,
+   "param": 0.561158316135,
+   "n_draws": 1,
+   "n_flagged": 0,
+   "strata": {
+    "0": {
+     "n_answered_calpool": 5294,
+     "risk_calpool": 0.048734416320362677,
+     "n_answered_test": 5252,
+     "risk_test": 0.047600913937547604,
+     "risk_pooled": 0.0481699222454011
+    },
+    "1": {
+     "n_answered_calpool": 7889,
+     "risk_calpool": 0.048802129547471165,
+     "n_answered_test": 7931,
+     "risk_test": 0.05320892699533476,
+     "risk_pooled": 0.051011378002528446
+    },
+    "2": {
+     "n_answered_calpool": 5251,
+     "risk_calpool": 0.06741573033707865,
+     "n_answered_test": 5294,
+     "risk_test": 0.07253494522100491,
+     "risk_pooled": 0.06998577524893314
+    },
+    "3": {
+     "n_answered_calpool": 4404,
+     "risk_calpool": 0.11625794732061762,
+     "n_answered_test": 4317,
+     "risk_test": 0.12392865415798007,
+     "risk_pooled": 0.12005503955968352
+    }
+   }
+  }
+ ],
+ "flagged_draws": [
+  {
+   "draw": 13,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2699,
+     "risk_cal_draw": 0.08669877732493517,
+     "hb_p": 1.934905464297366e-22
+    },
+    "1": {
+     "n": 3978,
+     "risk_cal_draw": 0.0955253896430367,
+     "hb_p": 3.673198817010099e-24
+    },
+    "2": {
+     "n": 2697,
+     "risk_cal_draw": 0.10641453466814979,
+     "hb_p": 5.7774835418308846e-11
+    },
+    "3": {
+     "n": 2332,
+     "risk_cal_draw": 0.13078902229845626,
+     "hb_p": 0.012322976604081248
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 18,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2728,
+     "risk_cal_draw": 0.0872434017595308,
+     "hb_p": 2.8433959106490025e-22
+    },
+    "1": {
+     "n": 4019,
+     "risk_cal_draw": 0.09256033839263499,
+     "hb_p": 3.7020112828942015e-27
+    },
+    "2": {
+     "n": 2670,
+     "risk_cal_draw": 0.09737827715355805,
+     "hb_p": 1.4785759371106573e-15
+    },
+    "3": {
+     "n": 2289,
+     "risk_cal_draw": 0.1328090869375273,
+     "hb_p": 0.02881970139687314
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 19,
+   "tier": 1,
+   "param": 0.8383838383838385,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2679,
+     "risk_cal_draw": 0.09033221351250467,
+     "hb_p": 9.260270895458763e-20
+    },
+    "1": {
+     "n": 4007,
+     "risk_cal_draw": 0.0955827302221113,
+     "hb_p": 2.8201000050130593e-24
+    },
+    "2": {
+     "n": 2662,
+     "risk_cal_draw": 0.10405709992486852,
+     "hb_p": 5.833196502531255e-12
+    },
+    "3": {
+     "n": 2358,
+     "risk_cal_draw": 0.13316369804919423,
+     "hb_p": 0.029923695330619646
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.09631569104170563,
+    "1": 0.10106251544353842,
+    "2": 0.11700755481850009,
+    "3": 0.15669014084507044
+   }
+  },
+  {
+   "draw": 35,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2751,
+     "risk_cal_draw": 0.08251544892766267,
+     "hb_p": 4.457737680680194e-26
+    },
+    "1": {
+     "n": 3963,
+     "risk_cal_draw": 0.09033560434014636,
+     "hb_p": 5.852491057236596e-29
+    },
+    "2": {
+     "n": 2682,
+     "risk_cal_draw": 0.10514541387024609,
+     "hb_p": 1.6430352550980836e-11
+    },
+    "3": {
+     "n": 2310,
+     "risk_cal_draw": 0.1341991341991342,
+     "hb_p": 0.04597794277631133
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 41,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2728,
+     "risk_cal_draw": 0.07771260997067449,
+     "hb_p": 3.396132742116454e-30
+    },
+    "1": {
+     "n": 3945,
+     "risk_cal_draw": 0.0991128010139417,
+     "hb_p": 6.360836698692664e-21
+    },
+    "2": {
+     "n": 2687,
+     "risk_cal_draw": 0.1042054335690361,
+     "hb_p": 5.474141435745144e-12
+    },
+    "3": {
+     "n": 2346,
+     "risk_cal_draw": 0.13384484228473997,
+     "hb_p": 0.038896813324750694
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 57,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2708,
+     "risk_cal_draw": 0.08050221565731167,
+     "hb_p": 1.297727960286201e-27
+    },
+    "1": {
+     "n": 3924,
+     "risk_cal_draw": 0.09327217125382263,
+     "hb_p": 6.941257114481543e-26
+    },
+    "2": {
+     "n": 2734,
+     "risk_cal_draw": 0.10534016093635698,
+     "hb_p": 1.2918112378846192e-11
+    },
+    "3": {
+     "n": 2340,
+     "risk_cal_draw": 0.13247863247863248,
+     "hb_p": 0.02372491857360935
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 72,
+   "tier": 1,
+   "param": 0.8484848484848485,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2651,
+     "risk_cal_draw": 0.0950584685024519,
+     "hb_p": 8.115546825703104e-17
+    },
+    "1": {
+     "n": 3968,
+     "risk_cal_draw": 0.09879032258064516,
+     "hb_p": 2.6533300170241887e-21
+    },
+    "2": {
+     "n": 2762,
+     "risk_cal_draw": 0.1053584359160029,
+     "hb_p": 1.0320402253441138e-11
+    },
+    "3": {
+     "n": 2325,
+     "risk_cal_draw": 0.13419354838709677,
+     "hb_p": 0.04508448973231009
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.09089208902188142,
+    "1": 0.09661477637756363,
+    "2": 0.11461212456237332,
+    "3": 0.15470950704225353
+   }
+  },
+  {
+   "draw": 73,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2704,
+     "risk_cal_draw": 0.08431952662721894,
+     "hb_p": 1.5610627996882166e-24
+    },
+    "1": {
+     "n": 3985,
+     "risk_cal_draw": 0.09335006273525721,
+     "hb_p": 3.4142821922586996e-26
+    },
+    "2": {
+     "n": 2677,
+     "risk_cal_draw": 0.10422114307060142,
+     "hb_p": 6.111001563483395e-12
+    },
+    "3": {
+     "n": 2340,
+     "risk_cal_draw": 0.13376068376068376,
+     "hb_p": 0.038028958382094843
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 77,
+   "tier": 1,
+   "param": 0.8282828282828284,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2632,
+     "risk_cal_draw": 0.10030395136778116,
+     "hb_p": 9.569550379548439e-14
+    },
+    "1": {
+     "n": 4016,
+     "risk_cal_draw": 0.10806772908366534,
+     "hb_p": 1.3458630549774252e-14
+    },
+    "2": {
+     "n": 2728,
+     "risk_cal_draw": 0.10887096774193548,
+     "hb_p": 5.963036202646931e-10
+    },
+    "3": {
+     "n": 2330,
+     "risk_cal_draw": 0.13433476394849786,
+     "hb_p": 0.047062180657181416
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.10117823078361698,
+    "1": 0.10588089943167779,
+    "2": 0.12290399852588907,
+    "3": 0.15757042253521128
+   }
+  },
+  {
+   "draw": 84,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2655,
+     "risk_cal_draw": 0.09190207156308851,
+     "hb_p": 8.216976967895623e-19
+    },
+    "1": {
+     "n": 4047,
+     "risk_cal_draw": 0.0936496170002471,
+     "hb_p": 2.699321079535468e-26
+    },
+    "2": {
+     "n": 2709,
+     "risk_cal_draw": 0.09634551495016612,
+     "hb_p": 2.2400982821757223e-16
+    },
+    "3": {
+     "n": 2295,
+     "risk_cal_draw": 0.13202614379084968,
+     "hb_p": 0.021321954746899238
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 88,
+   "tier": 1,
+   "param": 0.8585858585858587,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2620,
+     "risk_cal_draw": 0.08282442748091604,
+     "hb_p": 6.111967657185717e-25
+    },
+    "1": {
+     "n": 4022,
+     "risk_cal_draw": 0.09597215315763302,
+     "hb_p": 5.173215390797523e-24
+    },
+    "2": {
+     "n": 2697,
+     "risk_cal_draw": 0.10826844642195031,
+     "hb_p": 4.0610194342363695e-10
+    },
+    "3": {
+     "n": 2367,
+     "risk_cal_draw": 0.13392479932403886,
+     "hb_p": 0.03900899337064134
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.08827379839162147,
+    "1": 0.09278477884852977,
+    "2": 0.11240095817210245,
+    "3": 0.1525088028169014
+   }
+  },
+  {
+   "draw": 98,
+   "tier": 1,
+   "param": 0.8282828282828284,
+   "cal_rows_subset_of_calpool_not_test": true,
+   "per_stratum_cal": {
+    "0": {
+     "n": 2638,
+     "risk_cal_draw": 0.1023502653525398,
+     "hb_p": 1.036181994137591e-12
+    },
+    "1": {
+     "n": 4032,
+     "risk_cal_draw": 0.10441468253968254,
+     "hb_p": 3.3200282471891185e-17
+    },
+    "2": {
+     "n": 2683,
+     "risk_cal_draw": 0.11628773760715617,
+     "hb_p": 6.912953897250728e-07
+    },
+    "3": {
+     "n": 2353,
+     "risk_cal_draw": 0.1321716957076073,
+     "hb_p": 0.020697509738006537
+    }
+   },
+   "test_stratum_risk_sweep": {
+    "0": 0.10117823078361698,
+    "1": 0.10588089943167779,
+    "2": 0.12290399852588907,
+    "3": 0.15757042253521128
+   }
+  }
+ ]
+}

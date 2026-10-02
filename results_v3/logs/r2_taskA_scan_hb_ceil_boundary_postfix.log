@@ -1,0 +1,2 @@
+totals: {'mean_loss': {'ceil_off_by_one': 403, 'p_differs_gt_1pct': 0}, 'one_minus_mean_correct': {'ceil_off_by_one': 3715, 'p_differs_gt_1pct': 0}, 'n_pairs': 8472}
+wrote results_v3/diagnostics/hb_ceil_boundary_scan_postfix.json

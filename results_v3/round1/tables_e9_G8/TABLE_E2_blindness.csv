@@ -1,0 +1,2 @@
+dataset,policy,seed,alpha,marginal_test_risk,marginal_aggregate_violation,max_stratum_over_alpha,hidden_stratum_violation_rate
+mnist,greedy_entropy,0,0.1,0.08997063492063491,0.0,0.9797526964479094,0.27

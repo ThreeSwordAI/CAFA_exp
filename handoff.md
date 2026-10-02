@@ -4,8 +4,13 @@
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at session start)
 - Final content commit: `d66522b` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
 - **Session ended at stop condition 5 of instruction §7** (a defect in the frozen p-value primitive `src/cafa/risk_control.py`; question in §9). One GPU job (Imagenette seed-0 greedy rollout) was left running at session end; see §3.
+- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Task A (HB fix) is done; Tasks B–F in progress.
 
 ## 1. Executive summary
+
+**Round 2 status (interim, after Task A).** The Hoeffding–Bentkus boundary defect of §9 is fixed (option (b) of §9, the authors' decision; tag `aaai27-submission`, `CHANGELOG.md`, §12.1). Every Phase-3 number below (§8, §11) was computed in round 1 **with the defect present** and is superseded by round 2; the round-1 files are archived (`$RESULTS_ROOT\metrics_v3_round1\`, `results_v3/round1/`). On the round-1 protocol the fix changes 186 of 5,600 deployed (cell, λ_ref, draw) decisions (§12.1). The Imagenette greedy rollout left running in round 1 had died at 1296/5358 rows without writing a cache; it was relaunched (§12.1).
+
+Round-1 summary (superseded numbers kept for reference):
 
 - **Phase 0 — done.** Nine v3 test files: 33 passed, including 1 regression test added this session. Whole suite: see §5. Synthetic Type-II and feasible end-to-end checks pass.
 - **Phase 1 — seed 0 done for 7 datasets.** All 7 backbones and all 14 caches exist; greedy and random give the same full-acquisition accuracy (difference 0) in every cell. CUBE and MiniBooNE miss their full-observation targets even after the one allowed 60-epoch retrain; CUBE's 0.98 target is above the generator's Bayes accuracy of 0.97025.
@@ -333,6 +338,8 @@ alpha=0.15, delta=0.1, gamma=0.05, T=30, replicates=1000, M=131
 | escalation `unsafe|esc` ≈ 0 | 0.000 everywhere; escalation rate 0.866 (n_k 250) → 1.000 (n_k ≥ 1000) | pass |
 
 ## 8. Phase 3 results (seed 0, 14 cells; Imagenette and seeds 1–2 `TBD-RUN`)
+
+> **Round 1, superseded.** Everything in §8 was computed with the HB boundary defect present and with the single-split protocol; the round-2 results replace it (§12). The files are archived in `$RESULTS_ROOT\metrics_v3_round1\` and `results_v3/round1/`.
 
 All metrics JSONs are at `$RESULTS_ROOT\metrics_v3\{dsname}_ts0_{policy}_softmax.json` (100 draws each). Tables come from `make_tables_v3.py --lambda-ref-key dep --scheme uniform` → `results_v3/tables/`; `--scheme inverse_info` → `results_v3/tables_inverse_info/` (10 tabular cells; image cells have uniform costs only and are skipped).
 
@@ -763,6 +770,8 @@ python scripts/drive_v3.py --phase sweep --seeds 1 2
 
 ## 11. Paper-facing numbers (seed 0, λ_ref `dep`, uniform costs; `TBD-RUN` where not available)
 
+> **Round 1, superseded** (HB defect present, single split). Round-2 values: pending Tasks C–D (§12).
+
 | quantity (plan abstract / §7) | value | source |
 |---|---|---|
 | certified deployment % | 100 % in each of the 14 seed-0 cells (14 × 100 draws) | `results_v3/tables/TABLE_E4_cascade.csv` (`certified_deployment`) |
@@ -777,3 +786,65 @@ python scripts/drive_v3.py --phase sweep --seeds 1 2
 | Imagenette (all quantities) | TBD-RUN | — |
 | seeds 1–2 (all quantities) | TBD-RUN | — |
 | external AFABench policies | TBD-RUN | — |
+
+## 12. Round 2
+
+Round 2 follows `instruction_round2.md` (Tasks A → F; decisions of its §0 are the authors'). Start 2026-10-03 00:55 local (UTC+2).
+
+### 12.1 Task A — HB boundary fix and its one-to-one impact
+
+**Tag.** `aaai27-submission` → `550f8e2` (annotated; "code as used for the AAAI-27 submission (HB boundary rounding defect present)"). `550f8e2` is `git merge-base main aistats-v3`, the commit the branch was created from. The instruction's alternative, the first parent of `b1caf84`, is `8ddb7dc`; it differs from `550f8e2` only by `S11_answer.md` and one `.gitignore` line (no code) and is not tagged.
+
+**Patch** (`git diff aaai27-submission -- src/cafa/risk_control.py`: one line). `_hb_pvalue_array`: `k = np.ceil(n * rb).astype(int)` → `k = np.ceil(np.round(n * rb, 9)).astype(int)`. No other `ceil(n * …)` exists in `risk_control.py` or `risk_control_ext.py` (grep over `src/cafa/`).
+
+**Tests.**
+- `tests/test_frozen_hb_boundary.py`: `xfail(strict=True)` removed; (197, 17, 0.15) gives 0.0149 for both summation orders; every (n, k) pair of the `scripts/scan_hb_ceil_boundary.py` grid (8,472 pairs × 2 summation orders) equals the exact-count value to 1e-12 absolute and 1e-11 relative (the absolute bound alone cannot see an off-by-one at tiny p). Evaluated against the pre-fix primitive these assertions fail in 3,768 of 16,944 evaluations (absolute alone: 1,009); fixed primitive: 0, worst relative error 6.98e-13. Campaign case p = 0.027047 → 0.014856 (`results_v3/logs/r2_taskA_boundary_test_vs_prefix_primitive.log`).
+- `tests/test_risk_control.py`: untouched; passes. None of its assertions encoded the defect.
+- Whole suite: `91 passed in 225.01s (0:03:45)`, 0 xfailed (`results_v3/logs/r2_taskA_pytest_full_suite.log`; round 1: 88 passed, 1 xfailed).
+- `CHANGELOG.md` (repo root): one entry (date, defect, direction, fix, tag, round-1 numbers superseded).
+- Commit `5089d5e`.
+
+**Prevalence scan, rerun.** On the fixed primitive no grid pair differs from the exact-count p-value by more than 1 % (`results_v3/diagnostics/hb_ceil_boundary_scan_postfix.json`). Correction to the round-1 numbers of §9: the scan's exact reference was floored at 1e-300, while the primitive floors at 2.2e-308, so pairs with p < 1e-300 were counted as "differs" although only the floors differed. With the floor corrected (`scripts/scan_hb_ceil_boundary.py`) the pre-fix counts are: off-by-one 403 (mean(loss)) / 3,715 (1 − mean(correct)), unchanged; p differs by > 1 % in 397 → **371** and 3,621 → **3,393** pairs (`results_v3/logs/r2_taskA_scan_hb_ceil_boundary_prefix_corrected_floor.log`).
+
+**One-to-one impact (A.6; round-1 protocol: test seed 778, the same 100 draw ids).**
+- Re-commits: `drive_v3.py --phase commit --seeds 0 --force --tag r2hbfix` (reason: the probe-ordered tier-3 order uses HB p-values). Compared with the round-1 commits (`results_v3/round1/configs/`), only `created` and `escalation.*.order` differ. The order changed in 39 of 56 (policy, λ_ref) entries; its first level changed in 2: PhysioNet greedy λ_ref 0.9 (answered fraction 0.383 → 0.430) and MiniBooNE greedy `dep` (0.573 → 0.430) (`results_v3/diagnostics/r2_hbfix_decision_flips.json`).
+- Sweeps: the 14 seed-0 cells with the fixed primitive, the round-1 sweep code and the round-1 protocol, run as four parallel driver processes from a detached worktree at `5089d5e` (so that the Task-B edits could not leak in) → `$RESULTS_ROOT\metrics_v3_hbfix_single\`. Ledger `r2hbfix:sweep:*` in `results_v3/run_log.jsonl` (14 runs, rc 0, 4,358.4 s summed); logs `results_v3/logs/r2hbfix_sweep_*.log`, `driver_r2hbfix_sweep_g{0..3}.out`.
+- Comparison: `python scripts/compare_decisions_v3.py --old-dir $RESULTS_ROOT/metrics_v3_round1 --new-dir $RESULTS_ROOT/metrics_v3_hbfix_single --old-commits results_v3/round1/configs --new-commits configs --output results_v3/diagnostics/r2_hbfix_decision_flips` (scheme `uniform`). A flip is a draw whose deployed (tier, rule, parameter) differs.
+
+**Decision-flip table** (rows with at least one flip; the other 32 of the 56 (cell, λ_ref) rows have 0 flips; full table `results_v3/diagnostics/r2_hbfix_decision_flips.md`):
+
+| dataset | policy | λ_ref | draws | flips | tier changed | tiers 1/2/3/none old → new | cert old → new | raw viol old → new |
+|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | dep | 100 | 31 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| csv-diabetes | random | 0.9 | 100 | 18 | 4 | 0.00/0.00/0.57/0.43 → 0.00/0.00/0.61/0.39 | 0.57 → 0.61 | 0.000 → 0.000 |
+| csv-diabetes | random | dep | 100 | 1 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.010 → 0.010 |
+| csv-physionet | greedy_entropy | 0.9 | 100 | 16 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| csv-physionet | random | 0.9 | 100 | 17 | 0 | 0.05/0.00/0.95/0.00 → 0.05/0.00/0.95/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| cube | greedy_entropy | 0.9 | 100 | 11 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| cube | random | 0.9 | 100 | 18 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| fashionmnist | greedy_entropy | 0.5 | 100 | 1 | 0 | 1.00/0.00/0.00/0.00 → 1.00/0.00/0.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| fashionmnist | greedy_entropy | 0.7 | 100 | 1 | 0 | 0.97/0.00/0.03/0.00 → 0.97/0.00/0.03/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| fashionmnist | greedy_entropy | 0.9 | 100 | 2 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| fashionmnist | greedy_entropy | dep | 100 | 1 | 0 | 0.35/0.00/0.65/0.00 → 0.35/0.00/0.65/0.00 | 1.00 → 1.00 | 0.350 → 0.350 |
+| fashionmnist | random | 0.7 | 100 | 2 | 0 | 1.00/0.00/0.00/0.00 → 1.00/0.00/0.00/0.00 | 1.00 → 1.00 | 0.340 → 0.340 |
+| fashionmnist | random | 0.9 | 100 | 3 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| fashionmnist | random | dep | 100 | 8 | 0 | 0.58/0.00/0.42/0.00 → 0.58/0.00/0.42/0.00 | 1.00 → 1.00 | 0.580 → 0.580 |
+| mnist | greedy_entropy | 0.7 | 100 | 7 | 0 | 1.00/0.00/0.00/0.00 → 1.00/0.00/0.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| mnist | random | 0.7 | 100 | 1 | 0 | 1.00/0.00/0.00/0.00 → 1.00/0.00/0.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| mnist | random | dep | 100 | 2 | 0 | 1.00/0.00/0.00/0.00 → 1.00/0.00/0.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| tabular-adult | greedy_entropy | 0.9 | 100 | 16 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| tabular-adult | random | 0.9 | 100 | 4 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.010 → 0.010 |
+| tabular-adult | random | dep | 100 | 15 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.000 → 0.000 |
+| tabular-MiniBooNE | greedy_entropy | 0.9 | 100 | 4 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.180 → 0.210 |
+| tabular-MiniBooNE | greedy_entropy | dep | 100 | 3 | 0 | 0.04/0.00/0.96/0.00 → 0.04/0.00/0.96/0.00 | 1.00 → 1.00 | 0.110 → 0.130 |
+| tabular-MiniBooNE | random | 0.9 | 100 | 2 | 0 | 0.00/0.00/1.00/0.00 → 0.00/0.00/1.00/0.00 | 1.00 → 1.00 | 0.070 → 0.070 |
+| tabular-MiniBooNE | random | dep | 100 | 2 | 1 | 0.73/0.00/0.27/0.00 → 0.74/0.00/0.26/0.00 | 1.00 → 1.00 | 0.120 → 0.120 |
+
+Total: **186 of 5,600** (cell, λ_ref, draw) decisions changed, 5 of them changed the tier (Diabetes random 0.9: 4 draws none → tier 3; MiniBooNE random `dep`: 1 draw tier 3 → tier 1). Summary-level changes: certified deployment Diabetes random λ_ref 0.9 0.57 → 0.61 (as predicted in §8.5 from the exact-count replay); raw test violation MiniBooNE greedy 0.9 0.180 → 0.210 and `dep` 0.110 → 0.130; tier-1 share MiniBooNE random `dep` 0.73 → 0.74. Every other tier share, certification and violation rate is unchanged.
+
+**Archive (nothing deleted).**
+- Moved: `$RESULTS_ROOT\metrics_v3\*.json` (14) → `$RESULTS_ROOT\metrics_v3_round1\`; `metrics_v3_G8\` and `metrics_v3_dw\` → `metrics_v3_round1\metrics_v3_G8\`, `metrics_v3_round1\metrics_v3_dw\`. sha256 of all 16 files: `results_v3/round1/metrics_v3_round1.sha256` (checked again at the end of round 2).
+- Copied to `results_v3/round1/`: `tables/`, `tables_inverse_info/`, `tables_e9_lambda_ref_{0.5,0.7,0.9}/`, `tables_e9_delta_weights/`, `tables_e9_G8/`, `figures/`, `repair/`, `diagnostics/`, and `configs/` (the 11 round-1 committed JSONs: 7 main, G8, 3 E7 BEFORE).
+
+**Imagenette seed-0 greedy rollout.** Found dead at the start of round 2: last log line `[rgb rollout] 1296/5358 (5723s)`, last write 2026-10-02 01:55:57, no cache, no return-code line. The partial log is kept as `results_v3/logs/rollouts_image-imagenette_greedy_entropy_ts0_round1_died.log`. Relaunched with the §10 command: the first attempt (00:55) did not start because `Start-Process` split the `--extra-args` value at its spaces (driver usage error, console only); the second attempt runs since 2026-10-03 01:15:09 (driver PID 20280; `results_v3/logs/driver_round2_imagenette_greedy.out`).
+

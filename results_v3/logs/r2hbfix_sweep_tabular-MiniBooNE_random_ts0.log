@@ -1,0 +1,8 @@
+# python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 0 --policy random --out-dir F:/CAFA_results/metrics_v3_hbfix_single
+# start 2026-10-02T23:23:24.269142+00:00
+[cascade] tabular-MiniBooNE ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] tabular-MiniBooNE ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 | deepest stratum verdict=feasible
+[cascade] tabular-MiniBooNE ts0 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.070 | deepest stratum verdict=type_II
+[cascade] tabular-MiniBooNE ts0 random lr[dep]=0.778 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.74, '2': 0.0, '3': 0.26} viol=0.120 | deepest stratum verdict=feasible
+[cascade] wrote F:\CAFA_results\metrics_v3_hbfix_single\tabular-MiniBooNE_ts0_random_softmax.json
+# returncode 0

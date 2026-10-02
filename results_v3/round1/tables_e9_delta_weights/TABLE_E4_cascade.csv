@@ -1,0 +1,2 @@
+dataset,policy,seed,alpha,G,lambda_ref,marginal_cost,tier1,tier2,tier3,none,certified_deployment,deployed_cost,cost_premium,answered_fraction,test_stratum_violation,delta,deepest_verdict
+csv-physionet,greedy_entropy,0,0.2,1,0.0,0.0,1.0,0.0,0.0,0.0,1.0,0.0,,1.0,0.0,0.1,feasible

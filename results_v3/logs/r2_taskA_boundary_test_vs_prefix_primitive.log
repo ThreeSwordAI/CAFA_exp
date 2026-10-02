@@ -1,0 +1,5 @@
+evaluations (8472 pairs x 2 summation orders): 16944
+pre-fix: fail abs 1e-12: 1009; fail rel 1e-11: 3768; fail either: 3768
+fixed: fail abs 1e-12: 0; fail rel 1e-11: 0; fail either: 0
+fixed: worst relative error 6.982918799415802e-13
+campaign case (197, 17, 0.15), r_hat = 1 - mean(correct): pre-fix p = 0.027047180812531237 ; fixed p = 0.014856251140363336

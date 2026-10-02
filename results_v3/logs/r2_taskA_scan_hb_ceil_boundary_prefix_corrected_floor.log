@@ -1,0 +1,1 @@
+pre-fix primitive (aaai27-submission), corrected-floor exact: n_pairs 8472 {'mean_loss': {'ceil_off_by_one': 403, 'p_differs_gt_1pct': 371}, 'one_minus_mean_correct': {'ceil_off_by_one': 3715, 'p_differs_gt_1pct': 3393}}
