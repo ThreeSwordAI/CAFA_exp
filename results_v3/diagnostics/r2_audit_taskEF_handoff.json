@@ -1,0 +1,288 @@
+{
+ "what": "Task E/F code review + handoff number audit (4 reviewers + adversarial verification of each finding)",
+ "workflow_run": "wf_cc4bb358-da4",
+ "agents": 35,
+ "n_findings": 31,
+ "n_confirmed": 28,
+ "findings": [
+  {
+   "group": "taskE",
+   "file": "tests/test_alpha_rule_v3.py",
+   "line": 61,
+   "severity": "medium",
+   "title": "The alpha_rule recording branch never runs in the test",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. I reran the test's own setup twice in a scratchpad (scratchpad/verify_alpha_rule/check.py, using the repo venv). The steps were make_synthetic_pool_cache.main([\"--pool-dir\", ..., \"--n\", \"3000\", \"--scenario\", \"feasible\"]), then commit_v3.commit for synthetic-planted ts0 softmax with configs/experiment_v3.yaml.\n\nResults from both runs:\n- The synthetic cache is deterministic: make_synthetic_pool_cache.py seeds np.random.default_rng(train_seed) and make_planted_population(seed=10*train_seed+i).\n- Base commit: rc 0, floor[\"estimate\"] 0.023333, alpha 0.1.\n- commit_v3.alpha_from_floor(0.023333, 0.02, 0.01) = ceil(4.3333) * 0.01 = 0.05.\n- cfg[\"cascade\"][\"design_margin\"] = 0.05.\n- The second commit with margin 0.02 / grid 0.01 returned rc 7 and wrote no alt file.\n\nSo the condition at tests/test_alpha_rule_v3.py:61 (`a_alt <= design_margin`) is always True. Lines 64-66 never run: the rc==0 check, the alpha_rule == {margin, grid} check and the alpha == a_alt check.\n\nA grep of tests/ shows no other test references alpha_rule. The only alpha_rule check that runs is line 56: a default-rule commit leaves no alpha_rule key. Nothing tests that a non-default commit writes alpha_rule (scripts/commit_v3.py:257).\n\nhandoff.md line 902 (section 12.5) says the test file covers \"`alpha_rule` recording and the rc-7 refusal\". The recording half is not tested, so that statement is wrong. This breaks the rule that handoff claims must be backed by what was actually run.\n\nThe proposed fix "
+  },
+  {
+   "group": "taskE",
+   "file": "results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade_seeds.csv",
+   "line": 1,
+   "severity": "low",
+   "title": "Task E commit contains a table its own make_tables_v3.py cannot produce",
+   "confirmed": true,
+   "verdict_reasoning": "I checked every part of the claim against git and by re-running the table script, and it holds.\n\nWhat git shows:\n- `git show --stat 00c2c4a` (Task E, 03:26:45) adds `results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade_seeds.csv` and `.md`, but the commit does not touch `scripts/make_tables_v3.py`.\n- In the 00c2c4a version of `scripts/make_tables_v3.py`, `grep cascade_seeds|seed_summary` finds nothing (rc=1).\n- `git log -- scripts/make_tables_v3.py` shows the file last changed in ac658f4 (Task B), then in 0d02588 (Task F). The 00c2c4a→0d02588 diff adds 42 lines: `SEED_COLS`, `seed_summary()`, `write(\"TABLE_E4_cascade_seeds\", ...)` and the .md writer. The Task F commit message also lists \"make_tables_v3: TABLE_E4_cascade_seeds (mean +- sd over seeds)\".\n- `git ls-tree` finds no `cascade_seeds` file at 799b214. At 00c2c4a it exists only in `tables_e9_alpha_margin02`.\n- `instruction_round2.md` assigns this aggregation to Task F (\"add that aggregation to `make_tables_v3.py` now, tested on seed 0 alone\"). So the Task E tables were made from Task F code that was not yet committed. That breaks the per-task commit rule (instruction_round2 line 16, instruction.md rule 6): checking out 00c2c4a does not reproduce what it commits.\n\nWhat I re-ran (writing only to the scratchpad):\n- 00c2c4a version of the script on `F:/CAFA_results/metrics_v3_alpha_margin02`: writes E2/E3/E4/E6 and no `TABLE_E4_cascade_seeds`. Its E4 matches the committed file.\n- HEAD (0d02588) version: also writes `TABLE_E"
+  },
+  {
+   "group": "taskE",
+   "file": "handoff.md",
+   "line": 902,
+   "severity": "low",
+   "title": "Floor count of the default-equality test is misreported",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. handoff.md line 902 (Section 12.5, Task E tests bullet) says: \"`alpha_from_floor` with the defaults equals `feasible_alpha_from_floor` exactly on 20,001 + 147 floors\". The test file tests/test_alpha_rule_v3.py has one committed version, from 00c2c4a, and no uncommitted changes. Lines 30-32 of that test build the floors array from:\n- np.linspace(0,1,20001)\n- 21 multiples of 0.05\n- 21 values of (multiples of 0.05) - 0.05\n- 101 multiples of 0.01\n- 5 boundary cases\n- the 7 SEED0_FLOORS\n\nI ran that same np.concatenate with the repo venv python. len(floors) = 20156, so there are 155 extra floors beyond the 20,001-point linspace (21+21+101+5+7). Counting unique values does not give 147 either: there are 120 unique extras, and 38 unique floors outside the linspace grid. No count of the array gives 147. Every number in handoff.md has to be traceable to a file, so this is a real misreported number. Severity is low because the test itself is correct and passes; only the documentation is wrong."
+  },
+  {
+   "group": "taskE",
+   "file": "handoff.md",
+   "line": 758,
+   "severity": "low",
+   "title": "Section 9 still says commit_v3.py raises ValueError when alpha equals the design margin",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds, at low severity. handoff.md:758 (§9, \"Confirmed by review, not fixed\") says `commit_v3.py` raises `ValueError` when the probe full-acquisition error is exactly 0, and that \"This is not reached on any planned dataset.\" Both parts are now out of date:\n(1) Code behaviour changed in Task E. Before Task E (`git show 799b214~1:scripts/commit_v3.py`, lines 177-178), `alpha = feasible_alpha_from_floor(floor)` went straight into `n_min_required`, which raises `ValueError(\"alpha - margin must be positive.\")` (src/cafa/commit_rules.py:109-110). The current scripts/commit_v3.py:206-211 checks `if alpha <= margin:` first, prints an error and returns 7. So the `ValueError` can no longer be reached from `commit_v3.py`, under either α rule.\n(2) It is reached in practice. Under the Task E rule (margin 0.02, grid 0.01), MNIST gets α = 0.03 ≤ 0.05. results_v3/logs/r2am02_commit_mnist_na_ts0.log shows \"ERROR: alpha=0.03 (floor 0.0039 ...) ... nothing committed.\" and \"# returncode 7\". handoff itself says this in §8.7 (line 668), §10 (line 772) and §12.5 (lines 901, 903, \"stops with rc 7 instead of a traceback\"). So §9 contradicts the rest of the same file.\nMitigating points:\n- instruction_round2.md's handoff-update list names only §1, §8, §10, §11 and the new §12, not §9.\n- §9 is largely kept as the round-1 record. Lines 754-756 also still list as \"not fixed\" items that Task F fixed (§12.6), and §10 line 774 points back to them.\n- The MNIST refusal, a departure from Task E's \"com"
+  },
+  {
+   "group": "taskE",
+   "file": "handoff.md",
+   "line": 692,
+   "severity": "low",
+   "title": "Section 8.9 committed-JSON table omits the 12 am02 commits",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds; it is a real but low-severity documentation defect.\n\n1. The script lists every Task E commit. scripts/report_v3.py line 84 loops over `sorted((REPO / \"configs\").glob(\"committed_v3*_ts*.json\"))`. That pattern matches the six configs/committed_v3_am02_*_ts0.json files, which Task E committed in 00c2c4a. I ran `.venv/Scripts/python.exe scripts/report_v3.py --commits` and it printed 40 data rows. 12 of them are am02 rows (6 datasets x greedy_entropy/random), for example `committed_v3_am02_csv-diabetes_ts0.json | 0.12 | 0.09723 | 8286 | 220 | greedy_entropy | 1 / 1 / 2 / 2 | 0.7980 | 0.050`.\n\n2. Section 8.9 of handoff.md does not match that output. Its heading names `python scripts/report_v3.py --commits` as the source, and lines 696-723 hold the other 28 rows, character for character the same as what the script prints. They include the ablation commits (G8, v3before). None of the 12 am02 rows appear. Since the table copies the other ablations in full, the omission is not a deliberate \"defaults only\" scope.\n\n3. This breaks a rule in the instructions. The handoff template in instruction.md (Section 8, line 251) requires \"per committed JSON: alpha, G per lambda_ref key, tier-3 start level\". The am02 files are committed JSONs. The Task E table in §8.7 (lines 670-685) only gives alpha, lambda_ref dep and G at dep. It leaves out G at 0.5/0.7/0.9, the tier-3 start level, the n_min tier1 value and the probe floor. Those numbers exist only in the script output, so they ar"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 165,
+   "severity": "medium",
+   "title": "Round-3 E7 step leaves out the BEFORE commits, so the predictor-upgrade repairs for seeds 1-2 are skipped without any error",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the claim against the files and it holds.\n\n- **The README omits the step.** hpc/README_v3.md line 165, in §7 \"Round 3 on the laptop\", jumps from `drive_v3.py --phase commit/sweep --seeds 1 2 --tag r3` straight to `python scripts/run_repairs_v3.py --seeds 1 2 --tag r3`. There is no step that creates the BEFORE commits.\n- **The driver does not create them either.** `drive_v3.py --phase commit` makes only the main commits: neither `v3before` nor `pool_v2` appears anywhere in scripts/drive_v3.py.\n- **The runner needs those files.** scripts/run_repairs_v3.py lines 42-45 give each predictor_upgrade job `--committed configs/committed_v3before_{dn}_ts{ts}.json`, for mnist, tabular:MiniBooNE and tabular:adult.\n- **A missing file is skipped, not failed.** Lines 69-73 check for missing prerequisites. When one is missing they print `[repairs] skip (missing prerequisite) ...`, count it as a skip and move on. Line 102 returns 0.\n- **Only seed-0 BEFORE commits exist.** `ls configs | grep before` lists only committed_v3before_{mnist,tabular-MiniBooNE,tabular-adult}_ts0.json.\n\nSo anyone who follows README §7 as written loses all 6 predictor-upgrade repairs (3 datasets x seeds 1 and 2). The only sign is a skip line in the console, and the exit code is 0. \"Silently\" overstates it slightly because a skip line is printed, but nothing fails and the run looks successful.\n\nThe missing step is documented only in handoff.md line 769 (§10 item 3): `commit_v3.py ... --pool-dir F:/CAFA_results/"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 103,
+   "severity": "medium",
+   "title": "Wrong recovery advice for afterok: one failed backbone blocks the whole dependent rollout array, not just the affected lines",
+   "confirmed": true,
+   "verdict_reasoning": "I checked this against hpc/README_v3.md and the two Slurm scripts. Lines 95 and 97 make each rollout submission depend on the backbone array job IDs as a whole: `--dependency=afterok:${BB1}:${BB2}` for lines 16-29 and 32-45, and `--dependency=afterok:${BB1}` for lines 30, 31, 46 and 47.\n\nIn Slurm, `afterok` on an array job ID with no task index is met only when every task of that array exits 0. If any one backbone task fails, the dependency can never be met for the whole dependent rollout job. That job then stays pending with reason DependencyNeverSatisfied, or is cancelled if the site sets kill_invalid_depend. The dependency does not split by dataset:\n- A failed CUBE backbone (task 9, in BB2) blocks all 28 non-Imagenette rollout lines.\n- A failed PhysioNet backbone (task 8, in BB1) blocks all 32 rollout lines, including the four Imagenette lines.\n\nLines 103-104 say to \"fix it and resubmit only the affected rollout lines\". Line 103 itself notes that afterok waits for all tasks, but the advice that follows assumes the unaffected lines in the stuck job will still run. They will not. Following the README as written means those rollouts never run.\n\nThe fix the claim proposes is safe. Lines 10-11 and 120-126 of scripts/drive_v3.py confirm that the driver skips any cell whose output already exists, and also any cell whose prerequisite (the checkpoint) is missing. Resubmitting every line of the blocked job therefore only resumes work and repeats nothing.\n\nThis is a mistake in operat"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/dry_run_v3.sh",
+   "line": 18,
+   "severity": "medium",
+   "title": "The README's pre-flight `PYTHON=python` (and the script's own default) turns into $REPO/python, a file that does not exist",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. I reproduced it here without touching the repo; the temp dir was in the scratchpad and I removed it afterwards.\n\n1. hpc/dry_run_v3.sh:17-18 sets PY=\"${PYTHON:-python}\". It then treats any value that does not start with / or a drive letter as a path inside the repo: `case \"$PY\" in /*|[A-Za-z]:*) ;; *) PY=\"$REPO/$PY\" ;; esac`. A bare `python` therefore becomes \"$REPO/python\". That file does not exist (`ls` in the repo root: No such file or directory). Line 21 writes a stub `python` that runs `exec \"$REPO/python\"`, and line 29 puts the stub dir first on PATH.\n\n2. Real run, nothing else changed: `PYTHON=python DATA_ROOT=F:/CAFA_data RESULTS_ROOT=F:/CAFA_results BB_INDICES=0 RO_INDICES=0 bash hpc/dry_run_v3.sh`. The header shows `python /f/FAU/PhD/Side Quest/CAFA_exp/python`. Neither task prints a driver line, and the summary is `# array tasks without driver output: 2`. Over all 24+48 indices that would be 72.\n\n3. Calling the stub directly gives \"line 2: .../CAFA_exp/python: No such file or directory\", exit 127. The same stub works with an absolute path from `command -v python` and with `.venv/Scripts/python.exe`, which is how the committed results_v3/logs/hpc_dry_run.log was made. So only bare names are broken.\n\n4. The README pre-flight at hpc/README_v3.md:78 is `PYTHON=python bash hpc/dry_run_v3.sh | tail -3  # every array task prints a driver line`. That comment is false for this command line wherever the stubs are used. On a workstation that is always the case"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 41,
+   "severity": "low",
+   "title": "The rsync copy and return commands are labelled 'laptop, Git Bash', but rsync is not installed in this laptop's Git Bash",
+   "confirmed": true,
+   "verdict_reasoning": "I tried to refute the claim and could not. hpc/README_v3.md was committed at 0d02588 and has no local changes. Lines 36-37 introduce the copy block as \"Copy commands (laptop, Git Bash; ...)\" and use Git Bash path style (/f/CAFA_data/...). Lines 41-42 (laptop to cluster) and 143-144 and 147 (cluster to laptop) all run `rsync` on the laptop.\n\nWhat I checked on this machine:\n- In Git Bash, `which rsync` prints \"no rsync in (...)\" and exits with code 1. Neither C:\\Program Files\\Git\\usr\\bin\\rsync.exe nor C:\\msys64\\usr\\bin\\rsync.exe exists, and PowerShell `Get-Command rsync` finds nothing.\n- `which scp ssh` gives /usr/bin/scp and /usr/bin/ssh. `ssh -V` reports OpenSSH_9.8p1, and the scp usage text lists `-J destination`.\n- An Ubuntu WSL distro exists but is stopped. It would need /mnt/f paths rather than /f, and the README does not mention it. I did not start it to check whether it has rsync.\n\nSo, as written, the four rsync lines fail with \"command not found\" in the shell the README names. The line 148 scp line would work.\n\nThere is a second problem in the same block. The tip on lines 36-37 says to add `-J <user>@csnhr.nhr.fau.de` when connecting from outside the FAU network. For rsync, `-J` means --omit-link-times, not jump host, so following the tip would turn the jump host into a stray source argument. scp does support `-J`.\n\nTask F of instruction_round2.md asks for \"the `scp`/`rsync` lines\", so scp meets the requirement. The defect is that the lines given do not run on the stat"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 21,
+   "severity": "low",
+   "title": "The checkout check 'git log -1 must be the commit named in handoff.md (header)' can never pass",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the evidence directly and the claim holds. In hpc/README_v3.md, line 21 tells the author to run `git log -1 --oneline` on the cluster and says the output \"must be the commit named in handoff.md (header)\". The handoff header (handoff.md line 4) currently names `d66522b` as the final content commit. It also states the convention: \"one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip\". The git history shows that convention in practice: `git show --stat 6466118` (\"v3: handoff — record final content commit d66522b\") changes only handoff.md, two lines. So the branch tip is always that follow-up commit or something later, never the commit the header names.\n\nRight now the tip is `0d02588` and the header names `d66522b`, so the check fails today. It will still fail after round 2 ends: if the header is updated to name the round-2 final content commit, the hash-recording follow-up commit becomes the tip, and `git log -1` shows that commit instead.\n\nThis is a real, low-severity documentation defect. A correctly checked-out cluster copy will always fail the pre-flight check, which could make the author think the checkout is wrong.\n\nI confirmed that a log that skips handoff.md works. `git log -1 --oneline 6466118 -- . ':(exclude)handoff.md'` returns `d66522b`, the commit named in the header, even though 6466118 is the follow-up commit. On the current tip the same command returns `0d02588`, so it ignores commits that only touch ha"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 147,
+   "severity": "low",
+   "title": "The cluster ledger and logs that come back are not 'kept apart' from the laptop's: both are git-tracked and already hold the laptop's entries",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds; I checked each part.\n\n- `git ls-files results_v3/run_log.jsonl` shows the ledger is tracked.\n- `git ls-files results_v3/logs | wc -l` gives 221 tracked log files.\n- `results_v3/run_log.jsonl` has 128 lines, and all 128 cells are ts0, i.e. laptop history.\n- `scripts/drive_v3.py:112,170-171` always appends to `REPO/results_v3/run_log.jsonl`, and `hpc/rollout_v3.slurm` runs from the git checkout (`cd ${CAFA_REPO:-$SLURM_SUBMIT_DIR}`). So after `git pull` on the cluster, the ts1/ts2 records are appended to a file that already holds every laptop ts0 record.\n- `hpc/README_v3.md:145-148` then copies back the whole file (`scp .../run_log.jsonl results_v3/run_log_tinygpu.jsonl`) and the whole logs directory without a filter (`rsync .../results_v3/logs/ results_v3/logs_tinygpu/`).\n\nThe file name is separate, so the laptop ledger is not overwritten. But what comes back is not \"logs and ledger of the cluster runs\": it is a second copy of all laptop ts0 entries and the 221+ laptop logs, labelled tinygpu. Neither path is git-ignored, so round 3 would likely commit these duplicates.\n\nThe `git pull` side effect is also real. Upstream keeps appending to `run_log.jsonl`: three round-2 commits touched it, and Task D will add the Imagenette ts0 rollouts. So once the cluster tasks have modified the tracked file, a later `git pull` on the cluster aborts with \"local changes would be overwritten\". README §4 expects that kind of fix-and-resubmit. The NFS concurrent-append point is we"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 45,
+   "severity": "low",
+   "title": "The v2 ts1/ts2 caches for E7 are listed as cluster data, but E7 runs on the laptop, where they already exist",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds, though it is minor and only a documentation problem.\n\n1. Lines 45-48 of F:/FAU/PhD/Side Quest/CAFA_exp/hpc/README_v3.md sit in \"## 2. Data on the cluster (`$DATA_ROOT`, on woody)\". They list `$RESULTS_ROOT/pool_v2/{mnist,tabular-MiniBooNE,tabular-adult}_ts{1,2}_greedy_entropy_softmax.npz` as optional data \"for the E7 predictor-upgrade repair of seeds 1–2 (round 3)\" and add \"They are already on the cluster if that batch ran there.\"\n\n2. The same README says the E7 repair runs on the laptop. Line 6 says repairs \"are torch-free and run locally afterwards (round 3)\". §7 \"Round 3 on the laptop\" (line 165) runs `python scripts/run_repairs_v3.py --seeds 1 2 --tag r3` under `set_env.ps1`.\n\n3. scripts/run_repairs_v3.py line 42 builds the BEFORE cache as `rr / \"pool_v2\" / ...`, where `rr = Path(os.environ[\"RESULTS_ROOT\"])`. Locally that is F:/CAFA_results/pool_v2.\n\n4. `ls F:/CAFA_results/pool_v2` shows all six files are already on the laptop: mnist, tabular-MiniBooNE and tabular-adult, `_ts1` and `_ts2` `_greedy_entropy_softmax.npz`, dated Jul 12. The other local use of pool_v2 is `check_caches_v3.py --v2-dir F:/CAFA_results/pool_v2` (README §6). That also runs on the laptop.\n\n5. Nothing that runs on the cluster reads pool_v2. A grep for pool_v2, v2 cache, predictor upgrade and committed_v3before over hpc/*.slurm, hpc/*.sh and scripts/drive_v3.py finds nothing outside README_v3.md.\n\nSo the paragraph puts a laptop-side prerequisite in the cluster data section. The cluste"
+  },
+  {
+   "group": "taskF",
+   "file": "results_v3/logs/hpc_dry_run.log",
+   "line": 1,
+   "severity": "low",
+   "title": "The dry-run log header gives the wrong code commit",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the claim against git and it holds. It is a low-severity provenance error.\n\nWhat the log says: the first line of results_v3/logs/hpc_dry_run.log names `commit 799b214` and the time 2026-10-03T02:58:59+02:00. hpc/dry_run_v3.sh fills that field with `git rev-parse --short HEAD`. 799b214 was committed at 02:52:55 and 00c2c4a not until 03:26:45, so HEAD really was 799b214 when the dry run ran.\n\nWhy that commit cannot have produced the log:\n- `git show 799b214:hpc/dry_run_v3.sh` fails with \"exists on disk, but not in '799b214'\". The script that wrote the log is not in that commit.\n- `git show 799b214:hpc/rollout_v3.slurm` has `extra=(--batch-size 16)` (line 30) and no CAFA_DRIVER_FLAGS hook.\n- The log's Imagenette lines show `--batch-size 32 --policy-amp` and `[drive_v3] would run ...` dry-run output. That needs the hook, the `${CAFA_RGB_BATCH:-32}` change and the drive_v3.py `--dry-run` change. All of these arrive in 0d02588 (03:41:27), in the same commit as the log itself.\n\nSo the log was made from uncommitted working-tree files. The script records HEAD only, not whether the tree had uncommitted changes. Anyone who checks out 799b214 to reproduce the log will get errors or 16-batch commands, not the logged output.\n\nThis is a real provenance defect in a committed artifact. handoff.md (around lines 762 and 913) and hpc/README_v3.md (lines 107-108) both point to this log as evidence for the cluster package. No reported number is affected, so the severity stays low."
+  },
+  {
+   "group": "taskF",
+   "file": "scripts/make_tables_v3.py",
+   "line": 156,
+   "severity": "low",
+   "title": "Where TABLE_E4_cascade_seeds came from: committed one task before the code that produces it; missing from the headline tables dir",
+   "confirmed": false,
+   "verdict_reasoning": "The git facts in the claim are correct, but none of them is a defect at HEAD or a breach of the instructions.\n\nChecked facts:\n- `git show 00c2c4a:scripts/make_tables_v3.py` has no seed_summary or cascade_seeds code.\n- `results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade_seeds.{md,csv}` was first committed in 00c2c4a (Task E).\n- The aggregation code (+42 lines in make_tables_v3.py) was committed in 0d02588 (Task F).\n- `results_v3/tables/` has no TABLE_E4_cascade_seeds. Its last commit was 799b214 (Task C).\n\nWhy this is not a defect:\n1. **HEAD reproduces the file exactly.** I re-ran HEAD's `scripts/make_tables_v3.py --metrics-dir F:/CAFA_results/metrics_v3_alpha_margin02 --lambda-ref-key dep --scheme uniform` into a scratchpad directory. The output TABLE_E4_cascade_seeds.md, TABLE_E4_cascade_seeds.csv and TABLE_E4_cascade.md are byte-identical (ignoring CR) to the committed files in `results_v3/tables_e9_alpha_margin02/`. The only issue is order: 00c2c4a holds one output file whose code arrived one commit later. This is a minor history-hygiene point. It changes no number, and fixing it would mean rewriting history.\n2. **Task F does not ask for the headline file.** instruction_round2.md Task F says only \"add that aggregation to make_tables_v3.py now, tested on seed 0 alone\". It does not ask for TABLE_E4_cascade_seeds in `results_v3/tables/`. On seed 0 alone, that file would just repeat TABLE_E4_cascade with n_seeds=1. The final checklist does not ask for it either.\n3. **handoff"
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 134,
+   "severity": "low",
+   "title": "Wall-time and headroom claims ignore the backbone→rollout dependency and cite no Imagenette figure",
+   "confirmed": true,
+   "verdict_reasoning": "I checked this against the committed README (hpc/README_v3.md, committed in 0d02588, no working-tree changes), the Slurm scripts, the ledger and handoff.md. Both parts of the claim hold. It is a low-severity documentation inaccuracy, not a problem with the experiments.\n\n1. The wall-time sentence is wrong about the dependency. Line 95 submits the non-Imagenette rollouts with `--dependency=afterok:${BB1}:${BB2}`. Line 97 submits the Imagenette rollouts with `afterok:${BB1}`, and BB1 also contains the FashionMNIST backbone tasks 14 and 22. Line 103 of the README itself says \"`afterok` on an array job waits for all of its tasks\". So backbones and rollouts do not run in parallel. The critical path is the longest backbone plus the longest rollout. Line 134 instead says \"The array runs them in parallel, so the wall time is that of the longest task (... ≈ 3 h ...)\".\n   - Ledger figures in results_v3/run_log.jsonl: backbones:fashionmnist:na:ts0 = 1602.9 s, which is 1,131 s or 0.31 h after dividing by 1.418. rollouts:mnist:greedy_entropy:ts0 = 15491.9 s, which is 10,927 s or 3.04 h.\n   - The critical path is therefore about 3.35 h at full clock before queueing, not about 3 h. For Imagenette it is 0.31 h plus Imagenette greedy.\n   - The serial totals on the same line are correct: 22+35+40+138+268+1082+1131+753 = 3,469 s ≈ 1.0 h, and the 14 non-Imagenette rollouts sum to 22,782 s ≈ 6.3 h.\n\n2. The Imagenette headroom claim has no stated basis. Lines 116-117 say the 12 h `--time` keeps \"≥ "
+  },
+  {
+   "group": "taskF",
+   "file": "hpc/README_v3.md",
+   "line": 31,
+   "severity": "low",
+   "title": "AFABench CSV size does not match the measured size",
+   "confirmed": false,
+   "verdict_reasoning": "I measured the directories and the claim does not hold up. All three numeric sizes in the README table follow one rule: they are the output of `du -sh`, which rounds up to the next whole MiB.\n\n- **Same rule for all three rows.** Running `du -sh` on F:\\CAFA_data gives MNIST 64M, FashionMNIST 82M, afabench 57M and openml 28M. With and without `--apparent-size` the output is the same. These match the README's \"64 MB, 82 MB\" and \"57 MB\" exactly.\n- **The claim's own premise is wrong.** It says MNIST is shown in rounded MiB, but 66,544,770 B is 63.46 MiB, which would round to 63, not 64. The 64 only comes out because `du -h` rounds up.\n- **Why AFABench shows 57.** `du -sk` gives 57,604 KiB for afabench. That is 56.25 MiB, which `du -h` rounds up to 57M. So 57 is the same measurement in the same unit as the other two rows.\n- **I confirmed the byte counts.** `du -sb` gives afabench 58,982,374 B (diabetes.csv 54,906,976 + physionet.csv 4,075,398) and openml 28,836,023 B, as the claim says. Those bytes are just not what the column reports.\n\nThe OpenML cell shows '—' while `du -sh` reports 28M for that folder. That is a missing value, not a wrong one. The rule requires every number to come from a file; '—' is not a number, so it breaks nothing. The rsync command on line 41 copies the openml folder anyway, so the README is not misleading.\n\nIf the author wants the column complete, line 33's size cell could read \"28 MB\", from `du -sh /f/CAFA_data/openml`. That is optional; the reported def"
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 895,
+   "severity": "medium",
+   "title": "§12.3 still says F5 comes from the round-1 planted CSV, but F5 has since been redrawn from the round-2 CSV",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. The handoff.md working tree matches HEAD 0d02588 (git status does not list it as modified), and both sentences are still there:\n- Line 895 (§12.3): \"figures `results_v3/figures/` (F5 still from the round-1 planted CSV until the round-2 planted run ends)\"\n- Line 690 (§8.8): \"F5 is redrawn from the round-2 planted run (§12.3) once it finishes (Task B/C commits).\"\n\nEvidence I checked myself:\n- The round-2 planted run has finished. results_v3/planted/planted_validation.csv and PLANTED_VALIDATION.md have mtime 2026-10-03 03:32:49.70, and results_v3/logs/r2_phase2_planted_validation.log has mtime 03:32:49.71. The CSV now has the D_test_noise rows and the round-2 escalation rates (0.881).\n- All five figures were regenerated after that: mtimes run from 03:33:22 to 03:33:24. F5_planted.pdf has CreationDate D:20261003033324 and mtime 03:33:24.68.\n- make_figures_v3.py's fig_planted reads <--planted>/planted_validation.csv, and the documented command uses --planted results_v3/planted, which is the round-2 directory.\n- Commit 8e1858e (03:34:04) includes results_v3/figures/F5_planted.pdf. Its message says \"round-1 planted files archived in results_v3/round1/planted; F5 redrawn.\" Its handoff diff updated §7, §11 and §12.2 but left lines 690 and 895 alone. Commit 0d02588 did not fix them either.\n\nSo handoff.md tells the reader that F5 still uses the superseded round-1 data, and that is false. The instructions require handoff Sections 8 and 12 to be refreshed after every task"
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 902,
+   "severity": "low",
+   "title": "§12.5 gives the wrong number of floors tested in test_alpha_rule_v3 (147 extra; the test has 155)",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the claim and it holds. handoff.md line 902 (§12.5) says alpha_from_floor with the defaults equals feasible_alpha_from_floor \"exactly on 20,001 + 147 floors\". The test test_defaults_reproduce_feasible_alpha_from_floor_exactly in tests/test_alpha_rule_v3.py (lines 30-32, committed in 00c2c4a, no uncommitted changes) builds its floors array from:\n- np.linspace(0,1,20001): 20,001\n- np.arange(0,21)*0.05: 21\n- np.arange(0,21)*0.05-0.05: 21\n- np.arange(0,101)*0.01: 101\n- a 5-element list: 5\n- SEED0_FLOORS: 7\n\nI reran this with the venv python and got part lengths [20001, 21, 21, 101, 5, 7]. That is 20,156 floors in total, 155 beyond the linspace and 20,039 unique. No natural reading of the array gives 147: 43 of the extra floors fall outside the linspace values, and 38 of those are distinct. The count in the handoff is therefore wrong. Its severity is low because the test itself is correct. It still breaks the rule that every number in handoff.md must match its source."
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 851,
+   "severity": "low",
+   "title": "§12.1 points to §8.5 for the exact-count replay prediction, but it is in §9",
+   "confirmed": true,
+   "verdict_reasoning": "Confirmed. In the current handoff.md, §8.5 (lines 575-603) is the round-2 \"Violations per split\" section. It contains only the per-split violation table, the round-1 over-δ comparison and the FashionMNIST multi-split diagnosis. It does not mention the Diabetes random λ_ref 0.9 replay, 57/61, draws 8/40/66/88, or hb_boundary_draws. The replay prediction lived in round-1 §8.5 (`git show 6466118:handoff.md`, \"Refusals\" bullet \"Random: the replay refuses in 39/100 draws against the sweep's 43/100 ... draws 8, 40, 66, 88 ...\"). That text was dropped when §8.5 was rewritten in round 2. In the current file the prediction is only in §9, line 734: \"tier 3 certifies in 57 draws with the frozen p-values and in 61 with exact-count p-values\". Its source, results_v3/diagnostics/csv-diabetes_ts0_random_lr0.9_hb_boundary_draws.json, has tier3_certified_frozen=57 and tier3_certified_exact_count=61. So the cross-reference \"(as predicted in §8.5 from the exact-count replay)\" on line 851 points to a section that no longer has that content. The numbers themselves are correct: the decision-flip row on line 827 shows 0.57 → 0.61. Severity is low because only the pointer is wrong, not any value. Line 734 in §9 also ends with a stale \"§8.5\" back-reference. That is outside this claim, but a fix should touch it too."
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 877,
+   "severity": "low",
+   "title": "§12.2 review rationale 'D1 deploys nothing by design' is contradicted by study D results",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. It is a low-severity inaccuracy in the documentation, not a numeric error.\n\n- handoff.md:877 rejects the review finding \"the D1 checks of the small study-D test are trivially satisfied\" on the grounds that \"D1 deploys nothing by design\".\n- The full study-D run contradicts that. results_v3/planted/planted_validation.csv, row 27 (D_test_noise, D1), shows cert_rate 0.055, tier_share 0.945/0.055/0.000/0.000 and deployed_true_deep_risk 0.146-0.146. results_v3/logs/r2_phase2_planted_validation.log, line 26, says \"[D] D1 ... cert=0.055\". So D1 does deploy, in 11 of 200 replicates, and handoff.md itself says so at lines 885, 351 and 792.\n- Nothing in the design stops D1 from deploying. In scripts/planted_validation.py, study_d uses the same certification path for D1 and D2; D1 only has a small calibration n_k (about 1,250 per draw), so it lacks power. The \"0 deployments\" in the small test (tests/test_multisplit_v3.py:265-277; 2 blocks x 3 replicates, fixed seed0=0) comes from those fixed seeds, not from the design.\n- git log -S shows the sentence was added in ac658f4 (Task B), before the full planted run in 8e1858e, and was never updated afterwards. The handoff is therefore internally inconsistent.\n- The rejected finding is in fact true: the D1 assertions in the small test are near-vacuous. Only the reason given for rejecting it is wrong; whether to reject it is a judgment call (D2 carries the substantive checks).\n- Line 880 (\"D1's rates are expected to be ≈ 0\") is l"
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 854,
+   "severity": "low",
+   "title": "§12.1 says the round-1 sha256 manifest was 'checked again at the end of round 2', but no log of that check exists",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. It is a low-severity wording and sourcing defect, not a data problem.\n\n1. Where the line came from: `git blame` shows handoff.md:854 was written in commit 3825b6c (Task A, 2026-10-03 01:40). That was the second commit of round 2, so the parenthetical \"(checked again at the end of round 2)\" could only have been a plan when it was written. It reads as a past-tense statement that the check was done.\n\n2. Round 2 has not ended. Task D (Imagenette) is still pending. The round-2 final checklist has not been run. That checklist is in instruction_round2.md line 96 and includes \"`metrics_v3_round1/` exists and is untouched\".\n\n3. No source exists for the check. A grep of results_v3/logs for 'metrics_v3_round1.sha256', 'sha256sum -c' and 'untouched' finds nothing. Across the repo's .py/.md/.ps1/.sh files, 'metrics_v3_round1.sha256' appears only in handoff.md:854 itself. No script or log records a re-check.\n\n4. The archive itself is fine. I ran `sha256sum -c results_v3/round1/metrics_v3_round1.sha256` (read-only) in `F:/CAFA_results/metrics_v3_round1`. The manifest has 16 lines and all 16 report OK. The problem is only the unsourced claim, not the data.\n\nThe base rules say anything not run must be marked TBD-RUN and every claim must cite the file it comes from. The parenthetical breaks both: a step that has not been run is stated with no source. The impact is small. The check will happen in the final checklist, and the archive is currently intact."
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 880,
+   "severity": "low",
+   "title": "Several numbers in §7/§12 have no file source (console-only or process IDs)",
+   "confirmed": true,
+   "verdict_reasoning": "Only part (b) of the claim holds. Parts (a) and (c) are not defects under the instructions.\n\n(a) PIDs: not a defect. instruction.md §6 says to \"record the PID and the expected end time in handoff.md §3\", and the §8 template for §3 asks for \"background jobs with PIDs/status\". So the instructions require PIDs in the handoff. A PID is a process identifier, not a result, and its only source is the OS process table. Round 1 recorded PIDs the same way (handoff.md lines 68, 69 and 83: 10264, 18076, 20216, 29264).\n\n(c) Review counts on line 877 (\"4 reviewers\", \"7 findings\", \"2 confirmed\", \"5 rejected\"): these describe the session's own process, not results. Round 1 described its review the same way on line 112 (\"five reviewers\"). Rule 2 is aimed at invented results (\"Never estimate, extrapolate, or 'fill in' a result\"), so at most this is a very minor issue.\n\n(b) Real. Line 880 reads \"In development runs the cascade never certified at these sizes (0 of 40 and 0 of 6 replicates; console and the small test)\". That is a result from runs, and the handoff itself names its source as the console and a test. instruction.md §1 rule 2 says \"Every number in handoff.md comes from a file produced in this session, with its path\". The §10 checklist repeats this: \"every number with a source file\".\n- No log holds the development runs. results_v3/logs contains only the full run log, r2_phase2_planted_validation.log.\n- tests/test_multisplit_v3.py::test_planted_study_d_small (lines 265-277) checks the c"
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/hpc/README_v3.md",
+   "line": 125,
+   "severity": "low",
+   "title": "Wall-time estimate for the MiniBooNE greedy rollout is off by one (614 s; 869.8/1.418 = 613 s)",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds; the only error in it is the line number. The row is at line 126 of hpc/README_v3.md, not 125. It reads '| tabular:MiniBooNE | 60 (`--epochs 60`) | 379.6 → 268 s (0.07 h) | 869.8 → 614 s (0.17 h) | 42.1 → 30 s (0.01 h) | ...'.\n\nSource check: the only ledger row for this rollout is results_v3/run_log.jsonl line 38 (cell rollouts:tabular:MiniBooNE:greedy_entropy:ts0). It gives seconds 869.8, and its start/end timestamps span 869.797 s.\n\nMethod check: §5 of the README says the laptop seconds are divided by the throttling factor 1.418. That factor is MNIST greedy 15,491.9 s against the smoke extrapolation 99.9/256×28000 = 10,926.5625 s, so 1.41782 unrounded.\n\nRecomputation: I re-ran all 23 numeric cells with a Python snippet. 869.8/1.418 = 613.40 and 869.8/1.41782 = 613.48, so both factors round to 613. Using 869.797 gives the same. The other 22 cells reproduce exactly with the unrounded factor and normal rounding. Examples: 1533.4→1082, 15491.9→10927, 1067.0→753. With the factor rounded to 1.418, 1533.4 would give 1081 instead of 1082, which shows the generator used the unrounded factor. Ceiling rounding is also ruled out, because 44.6→31.46 is printed as 31.\n\nNo other source gives 614. The rollout log has no different duration, and handoff.md never cites 614. So the printed 614 s cannot be traced to a file by the stated method, which the every-number-from-a-file rule forbids.\n\nImpact is cosmetic. The hours stay at 0.17 h (613/3600 = 0.170). The serial rollout to"
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 914,
+   "severity": "low",
+   "title": "§12.6 claim that seed aggregation was 'tested on seed 0 alone' has no output artifact",
+   "confirmed": false,
+   "verdict_reasoning": "The claim is refuted: an output artifact for a real seed-0 run does exist, just not in the directory the claim checked.\n\nWhat I found:\n- results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade_seeds.md and .csv both exist. They were written at 03:25:58, the same time as results_v3/logs/r2_taskE_make_tables.log (\"wrote tables for 12 cells to results_v3\\tables_e9_alpha_margin02\"). git ls-files and git log show both were committed in 00c2c4a (Task E, 03:26:45).\n- They come from the real seed-0 metrics in metrics_v3_alpha_margin02: 12 rows covering 6 datasets x 2 policies, each with n_seeds = 1 and seeds = 0. Every cell is a bare value with no \"± sd\", and the header says \"single-seed rows show the value only\". That is exactly the \"seed 0 alone (n_seeds = 1, value only)\" case that §12.6 describes.\n- The header text and columns match the seed_summary/write code that was committed later in 0d02588. So the code was already in the working tree when the Task E tables were built and was committed with Task F. That does not change the fact that the run exists and is committed.\n- The synthetic part of the claim also holds: tests/test_hpc_v3.py::test_seed_summary_mean_sd covers a 3-seed group (mean, sample sd with ddof = 1, a None value flagged as \"(n=2)\") and a single-seed group (sd None, value only).\n\nThe claim's evidence is accurate but too narrow. It is true that results_v3/tables has no TABLE_E4_cascade_seeds.* (those tables were built at 02:36, during Task C). But \"nothing shows that ru"
+  },
+  {
+   "group": "handoff12",
+   "file": "F:/FAU/PhD/Side Quest/CAFA_exp/handoff.md",
+   "line": 297,
+   "severity": "low",
+   "title": "§7 prose gives the study-A row's margin as 0.03; the quoted table says -0.030",
+   "confirmed": true,
+   "verdict_reasoning": "I checked this against the files and the claim holds, though it is only a labelling inconsistency. handoff.md:297 says \"cascade certification at margin 0.03 and n_k 1000: 0.747 → 0.750\". The row that changed has margin -0.03 everywhere it is recorded: in both CSVs, in the PLANTED_VALIDATION.md table quoted directly below (-0.030), and in handoff.md's own line 347 (\"study A, margin -0.03, n_k 4000\"). A diff of results_v3/round1/planted/planted_validation.csv against results_v3/planted/planted_validation.csv shows the only cascade_cert_rate change is A_level,1000,-0.03: 0.747 → 0.75. The value itself is right. The unsigned 0.03 comes from the script's internal positive a_margin, which the log prints as \"[A] margin=0.03\" (scripts/planted_validation.py:290); the stored margin is -a_margin (line 286). Study B/C also has a +0.03 margin row at n_k 1000 (power 0.108, cascade_cert_rate empty). So a reader checking \"margin 0.03, n_k 1000\" against the quoted table lands on the wrong row, and the paragraph contradicts its own table and line 347. The cited log does contain the unsigned 0.03, so this is not a provenance or number error. It is a cosmetic sign mismatch that makes the reference ambiguous, so severity is low."
+  },
+  {
+   "group": "handoff8_11",
+   "file": "handoff.md",
+   "line": 13,
+   "severity": "medium",
+   "title": "§1 says §8 and §11 still hold round-1 numbers, but both now hold round-2 numbers",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the claim and it holds. handoff.md line 13 (the Task-A paragraph in §1) still says: \"Every Phase-3 number below (§8, §11) was computed in round 1 **with the defect present** and is superseded by round 2\". The same file contradicts this in four places:\n- Line 11 says the tables in §8 and the old → new values in §11 are from round 2.\n- The §8 heading (line 354) says \"round 2: seed 0, 14 cells, 5 splits × 20 draws\".\n- Line 356 says the §8 metrics come from $RESULTS_ROOT\\metrics_v3 with test seeds 778–782 and the HB fix in place.\n- The §11 heading (line 777) says \"round 2 = HB fix + 5 splits × 20 draws\", and §11 shows old → new (round 1 → round 2) values.\n\nThe data agrees with the headings, not with line 13:\n- All 14 files in F:/CAFA_results/metrics_v3/*.json have meta.test_seeds = [778, 779, 780, 781, 782], n_draws = 100 and draws_per_split = 20.\n- The 14 rows of §8.1 (lines 364–377) are byte-identical to the data rows of results_v3/tables/TABLE_E4_cascade.md (checked with diff).\n\nLine 13 was correct right after Task A, but it was not updated after Task C. A reader of §1 is told the headline tables are defect-affected round-1 numbers, which is false. This also breaks the rule to refresh §1 after every task. The round-1 numbers still appear in §11's \"old\" column and in the round-1 summary list under line 15, but that list is clearly labelled as superseded, so that part is fine. The defect is only the wrong statement about §8/§11."
+  },
+  {
+   "group": "handoff8_11",
+   "file": "handoff.md",
+   "line": 601,
+   "severity": "low",
+   "title": "§8.5 says the excess is confined to split 778 in all four round-1 over-δ cells; FashionMNIST greedy also has a raw violation on split 780",
+   "confirmed": true,
+   "verdict_reasoning": "I checked this against the source and could not refute it. handoff.md line 601 lists FashionMNIST greedy by split as 0.450 / 0.000 / 0.050 / 0.000 / 0.000. It then says \"In every one of them the excess is confined to split 778\". F:/CAFA_results/metrics_v3/fashionmnist_ts0_greedy_entropy_softmax.json, at lambda_refs/dep/schemes/uniform/summary/by_split, gives cascade_violation_rate 0.45 for split 778, 0.0 for 779, 0.05 for 780, 0.0 for 781 and 0.0 for 782. results_v3/diagnostics/r2_violations_dep.md row 13 shows the same values. So split 780 has a nonzero raw violation.\n\nThe sentence is wrong under either reading of \"excess\":\n- If \"excess\" means raw violations, FashionMNIST greedy has one on split 780 (0.050).\n- If \"excess\" means above δ (δ = 0.10, handoff.md line 23 and line 302 'delta=0.1'), MiniBooNE greedy fails. tabular-MiniBooNE_ts0_greedy_entropy_softmax.json gives 0.1 for split 778 and 0.0 for the others. That equals δ, so this cell has no above-δ excess on any split.\n\nThe other two cells hold under both readings: FashionMNIST random is 0.5 on 778 and 0 elsewhere, and MiniBooNE random is 0.15 on 778 and 0 elsewhere. All the numbers are correct; only the summary sentence is inaccurate. §12.3 (handoff.md line 897) states it correctly: \"the maximum is split 778 and the other four splits are ≤ 0.050\". This is a low-severity wording defect. It still breaks the rule that handoff statements must match the source files."
+  },
+  {
+   "group": "handoff8_11",
+   "file": "handoff.md",
+   "line": 690,
+   "severity": "low",
+   "title": "§8.8 says F5 will be redrawn later, but it was already redrawn in commit 8e1858e; the section reference is also wrong",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the evidence myself, and the claim holds.\n\n(1) The planted run has already finished and F5 has already been redrawn.\n- `results_v3/logs/r2_phase2_planted_validation.log` and `results_v3/planted/PLANTED_VALIDATION.md` were last written at 2026-10-03 03:32:49.\n- `results_v3/figures/F5_planted.pdf` was last written at 03:33:24, after those files.\n- `scripts/make_figures_v3.py` (lines 162-190) builds F5 from `<planted>/planted_validation.csv`, so the new PDF comes from the round-2 CSV.\n- `git log -- results_v3/figures/F5_planted.pdf` shows the latest change is commit 8e1858e (03:34:04), whose message says \"round-1 planted files archived in results_v3/round1/planted; F5 redrawn.\" `git show --stat 8e1858e` lists `F5_planted.pdf` and `planted_validation.csv`.\n\n(2) The stale sentence is in HEAD. The text \"F5 is redrawn from the round-2 planted run (§12.3) once it finishes (Task B/C commits)\" was written in 799b214, before the planted run ended. It survives unchanged through 8e1858e and 0d02588 and is now at handoff.md:690, in §8.8.\n\n(3) The section reference is wrong. In handoff.md, §12.3 (line 889) is \"Task C — Phase 3 rerun\". The planted rerun and study D are in §7 (line 300, \"# Planted validation (E5)\", and line 332, \"## Study D\") and in §12.2 Task B (line 859). Commit 8e1858e corrected other \"§12.3\" pointers about the planted run in §11 and §12.2, but missed this one.\n\n(4) There is also a sibling stale statement at handoff.md:895, in §12.3: \"F5 still from the round-1 pl"
+  },
+  {
+   "group": "handoff8_11",
+   "file": "handoff.md",
+   "line": 354,
+   "severity": "low",
+   "title": "§8 heading and §11 point to a §12.4 that does not exist",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. I checked the working tree and the committed HEAD (0d02588) with `git show HEAD:handoff.md`, and both match: there is no `### 12.4` heading. Section 12 has 12.1 (Task A, line 802), 12.2 (Task B, 859), 12.3 (Task C, 889), 12.5 (Task E, 899) and 12.6 (Task F, 907). Three places point to §12.4:\n- line 354, the §8 heading: \"Imagenette pending (Task D, §12.4)\"\n- line 794, the §11 row: \"TBD-RUN (greedy rollout running, §12.4)\"\n- line 905, in §12.5: \"its am02 commit follows Task D (§12.4)\"\n\nThe numbering follows the task letters, so 12.4 was clearly kept for Task D, which is pending by design. Task D being pending is not the defect. The defect is that the committed handoff points readers to a section that does not exist. The current rollout status (\"Imagenette seed-0 greedy rollout\", relaunched 2026-10-03 01:15:09) is actually in §12.1, line 857. So a reader who follows \"§12.4\" for the \"greedy rollout running\" status finds nothing.\n\n`instruction_round2.md` does not fix how §12 is numbered. It does require handoff.md to be updated after every task, which implies each committed handoff should stand on its own. The issue would go away if Task D is later written up as §12.4, but if the session stops before then, the dangling references stay. This is a real but cosmetic documentation defect. Severity: low."
+  },
+  {
+   "group": "handoff8_11",
+   "file": "handoff.md",
+   "line": 11,
+   "severity": "low",
+   "title": "§1 round-2 status still labelled 'interim, after Task C' although Tasks B (planted), E and F are done",
+   "confirmed": true,
+   "verdict_reasoning": "The claim holds. HEAD is 0d02588 and handoff.md has no uncommitted changes. Line 11 of handoff.md still reads \"**Round 2 status (interim, after Task C).**\", and line 7 says \"Tasks A–C, E and F are done\". In git history, the Task C commit 799b214 is followed by the Task E commit 00c2c4a, the Task B planted commit 8e1858e and the Task F commit 0d02588. `git show` shows that the §1 paragraph is the same at 799b214, 00c2c4a and HEAD, so it was not updated after Task C. §1 has no summary of the later results, although the body of handoff.md records all of them:\n- Study D in §7 and §12.2: D2 raw violation 0.235, certified violation 0.005, true violation 0.000. These match results_v3/planted/PLANTED_VALIDATION.md row D2.\n- The α-rule result in §8.7 and §12.5. results_v3/diagnostics/r2_violations_alpha_margin02_dep.md shows 12 cells, all with certified violation 0.000, raw violation ≤ 0.010 and no failures.\n- The Task F cluster package in §12.6. hpc/README_v3.md exists, and the suite log says 110 passed.\n\nThe user's request requires refreshing Sections 1, 8, 10 and 11 after every task. Leaving §1 at its state after Task C breaks that rule. The word \"interim\" is still correct, because the final §1 needs 16 cells including Imagenette and Task D is still running. The problem is the stale \"after Task C\" and the missing summary of what was finished afterwards. Severity is low: every number in §1 is still correct, and the newer results are in §7, §8.7 and §12."
+  },
+  {
+   "group": "handoff8_11",
+   "file": "handoff.md",
+   "line": 782,
+   "severity": "low",
+   "title": "§11 'old' values cite only round-2 files; the round-1 file and the 62.1 % figure have no stated source",
+   "confirmed": true,
+   "verdict_reasoning": "I checked the claim and it holds. It is low severity, a sourcing gap rather than a wrong number.\n\n1. **The source cells cite only round-2 files.** handoff.md lines 782-789 are the §11 rows for tier-1 %, cost premium, answered fraction, raw violation and max stratum risk / α. Their source cells name only round-2 files: `results_v3/tables/TABLE_E4_cascade.csv` (written as \"same\"), `results_v3/diagnostics/r2_e9_lambda_ref_summary.md` and `results_v3/tables/TABLE_E2_blindness.csv`. Those files hold only the new values. The new tier1 mean is 0.5357, which matches the summary file's `dep` row (0.536).\n\n2. **Every old value is correct, but it lives in the round-1 archive.** The old values match:\n   - `results_v3/round1/tables/TABLE_E4_cascade.csv`, for example tier1 0.73, 0.58, 0.35 and 0.04; cost premium 1.047746, 1.105218, 1.387390, 1.153662 and 1.220212; answered fraction 0.821983, 0.890321 and 0.897394; violation 0.35, 0.58, 0.11 and 0.12.\n   - `results_v3/round1/tables/TABLE_E2_blindness.csv`, for example `max_stratum_over_alpha` 0.722222, 2.203522, 0.954114 and 0.919842.\n\n   No §11 row cites either round-1 file. The §11 heading only says \"old → new = round 1 → round 2\". The `results_v3/round1/` path appears elsewhere (lines 13 and 356) but not in the rows.\n\n3. **\"62.1 %\" has no source file in the session.**\n   - It equals the mean of the round-1 `tier1` column (0.62143, 14 rows).\n   - A grep of `results_v3` (md, csv and json files) finds no file that contains it.\n   - In round"
+  }
+ ]
+}

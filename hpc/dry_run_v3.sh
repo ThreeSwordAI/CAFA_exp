@@ -15,7 +15,11 @@ set -uo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 : "${DATA_ROOT:?set DATA_ROOT}" "${RESULTS_ROOT:?set RESULTS_ROOT}"
 PY="${PYTHON:-python}"
-case "$PY" in /*|[A-Za-z]:*) ;; *) PY="$REPO/$PY" ;; esac
+case "$PY" in
+  /*|[A-Za-z]:*) ;;                                   # absolute path
+  */*) PY="$REPO/$PY" ;;                              # path relative to the repo (e.g. .venv/Scripts/python.exe)
+  *) PY="$(command -v "$PY")" || { echo "python interpreter '${PYTHON:-python}' not found on PATH"; exit 1; } ;;
+esac
 STUB="$(mktemp -d)"
 trap 'rm -rf "$STUB"' EXIT
 printf '#!/bin/bash\nexec "%s" "$@"\n' "$PY" > "$STUB/python"
@@ -27,7 +31,8 @@ for f in backbone_v3 rollout_v3; do
   [ "$(diff "$REPO/hpc/$f.slurm" "$STUB/$f.slurm" | grep -c '^>')" = 1 ] || { echo "unexpected diff in $f.slurm"; exit 1; }
 done
 export PATH="$STUB:$PATH" CAFA_ENV=dry-run CAFA_DRIVER_FLAGS=--dry-run SLURM_SUBMIT_DIR="$REPO" CAFA_REPO="$REPO"
-echo "# hpc dry run: $(date -Iseconds) repo $REPO commit $(git -C "$REPO" rev-parse --short HEAD) python $PY"
+dirty=$(git -C "$REPO" status --porcelain -- hpc scripts src configs | wc -l)
+echo "# hpc dry run: $(date -Iseconds) repo $REPO commit $(git -C "$REPO" rev-parse --short HEAD) (uncommitted changes under hpc/ scripts/ src/ configs/: $dirty files) python $PY"
 fails=0
 for i in ${BB_INDICES:-$(seq 0 23)}; do
   case $i in 9|12|17|20) ex="--epochs 60" ;; *) ex="" ;; esac

@@ -18,7 +18,7 @@ Then on the cluster (`tinyx` login node):
 ```bash
 cd ~/my_repos/CAFA_exp
 git fetch origin && git checkout aistats-v3 && git pull
-git log -1 --oneline                  # must be the commit named in handoff.md (header)
+git log -1 --oneline                  # must equal `git rev-parse --short aistats-v3` on the laptop after the push
 ```
 
 ## 2. Data on the cluster (`$DATA_ROOT`, on woody)
@@ -28,24 +28,23 @@ internet access, so download on `tinyx`, never inside a job):
 
 | item | laptop path | size | re-download on the cluster |
 |---|---|---|---|
-| AFABench CSVs | `F:\CAFA_data\afabench\{physionet,diabetes}.csv` | 57 MB | `python scripts/download_data_v3.py --csv` |
-| MNIST, FashionMNIST | `F:\CAFA_data\{MNIST,FashionMNIST}\` | 64 MB, 82 MB | `python scripts/download_data_v3.py --mnist --fashionmnist` |
-| OpenML cache (MiniBooNE, adult) | `F:\CAFA_data\openml\` | — | `python scripts/download_data_v3.py --openml` |
+| AFABench CSVs | `F:\CAFA_data\afabench\{physionet,diabetes}.csv` | 58,982,374 B | `python scripts/download_data_v3.py --csv` |
+| MNIST, FashionMNIST | `F:\CAFA_data\{MNIST,FashionMNIST}\` | 66,544,770 B, 85,828,693 B | `python scripts/download_data_v3.py --mnist --fashionmnist` |
+| OpenML cache (MiniBooNE, adult) | `F:\CAFA_data\openml\` | 28,836,023 B | `python scripts/download_data_v3.py --openml` |
 | Imagenette (224 px cache) | `F:\CAFA_data\imagenette_cache\imagenette_224.npz` | 2,016,279,694 B | `python scripts/download_data_v3.py --imagenette` (archive + cache build; ≈ 6 min locally) |
 
-CUBE is generated on the fly. Copy commands (laptop, Git Bash; add `-J <user>@csnhr.nhr.fau.de` if you connect
-from outside the FAU network):
+CUBE is generated on the fly. Byte sizes are `du -sb` of the laptop directories. Copy commands (laptop, Git Bash, which has
+`ssh`/`scp` but no `rsync`; add `-J <user>@csnhr.nhr.fau.de` to `ssh`/`scp` if you connect from outside the FAU network):
 
 ```bash
-D=<user>@tinyx.nhr.fau.de:/home/woody/iwi5/<user>/CAFA_data
-rsync -av --progress /f/CAFA_data/afabench /f/CAFA_data/MNIST /f/CAFA_data/FashionMNIST /f/CAFA_data/openml "$D/"
-rsync -av --progress /f/CAFA_data/imagenette_cache "$D/"
+H=<user>@tinyx.nhr.fau.de
+ssh "$H" 'mkdir -p /home/woody/iwi5/<user>/CAFA_data'
+scp -r /f/CAFA_data/afabench /f/CAFA_data/MNIST /f/CAFA_data/FashionMNIST /f/CAFA_data/openml /f/CAFA_data/imagenette_cache \
+    "$H:/home/woody/iwi5/<user>/CAFA_data/"
 ```
 
-Optional, for the E7 predictor-upgrade repair of seeds 1–2 (round 3): the v2 caches
-`$RESULTS_ROOT/pool_v2/{mnist,tabular-MiniBooNE,tabular-adult}_ts{1,2}_greedy_entropy_softmax.npz` from the
-v2 Phase-3 batch (`hpc/CANONICAL_BATCH_COMMANDS.md`, Block B). They are already on the cluster if that batch
-ran there.
+Not needed on the cluster: the v2 seed-1/2 caches that the round-3 E7 predictor-upgrade repair uses are already on
+the laptop (`F:\CAFA_results\pool_v2\{mnist,tabular-MiniBooNE,tabular-adult}_ts{1,2}_greedy_entropy_softmax.npz`).
 
 ## 3. Environment
 
@@ -100,8 +99,10 @@ squeue -u $USER
 
 - `--export=ALL` with `CAFA_EXTRA` set in the submitting shell passes `--epochs 60` to the four CUBE/MiniBooNE
   tasks only. The script forwards it as one quoted `--extra-args=...` argument.
-- `afterok` on an array job waits for all of its tasks. If a backbone task fails, fix it and resubmit only the
-  affected rollout lines. The driver skips every cell whose output exists, so a resubmission resumes.
+- `afterok` on an array job waits for ALL of its tasks: if any backbone task fails, the whole dependent rollout
+  job stays pending (`DependencyNeverSatisfied`). Then `scancel` it, fix and resubmit the failed backbone task(s),
+  and resubmit the rollout line(s) with a dependency on the new backbone job. The driver skips every cell whose
+  output exists, so resubmitting the full rollout arrays is also safe.
 - Imagenette batch size: `CAFA_RGB_BATCH` overrides the default 32 (both policies of a seed must use the same
   value). The local seed-0 Imagenette cells used 16 on the 4 GB laptop GPU.
 - The dry run of every array index against the current driver flags is `results_v3/logs/hpc_dry_run.log`
@@ -110,8 +111,8 @@ squeue -u $USER
 ## 5. Expected wall times
 
 From the laptop ledger (`results_v3/run_log.jsonl`, seed 0) divided by the measured thermal-throttling factor
-**1.418** (MNIST greedy rollout: 15,491.9 s measured vs 10,927 s extrapolated from its unthrottled smoke run,
-handoff.md §6.2). The result estimates the same laptop GPU at full clock. It is **not** a measurement of a
+**15,491.9 / 10,927 = 1.4178** (MNIST greedy rollout: 15,491.9 s measured vs 10,927 s extrapolated from its unthrottled
+smoke run, handoff.md §6.2; estimates rounded to whole seconds). The result estimates the same laptop GPU at full clock. It is **not** a measurement of a
 TinyGPU node, which has a larger and faster GPU, so treat it as a planning bound. The Slurm limits
 (`backbone_v3.slurm` 4 h, `rollout_v3.slurm` 8 h, Imagenette 12 h via `--time`) keep ≥ 2× headroom over these
 figures.
@@ -131,21 +132,29 @@ figures.
 Sources: ledger cells `backbones:*:ts0` (`retrain60:*` for the 60-epoch CUBE/MiniBooNE) and `rollouts:*:ts0`; Imagenette rollouts at `--batch-size 16` locally (32 on the cluster).
 <!-- timing:end -->
 
-Per seed this is ≈ 1.0 h of backbones (all eight) and ≈ 6.3 h of non-Imagenette rollouts if run serially. The array runs them in parallel, so the wall time is that of the longest task (MNIST or FashionMNIST greedy ≈ 3 h, Imagenette greedy pending (Task D) at full clock).
+Critical path of one submission (all eight datasets): the longest backbone (FashionMNIST, ≈ 0.31 h) then, after
+`afterok`, the longest rollout (see the table), before any queueing time. Per seed this is ≈ 1.0 h of backbones (all eight) and ≈ 6.3 h of non-Imagenette rollouts if run serially. The array runs them in parallel, so the wall time is that of the longest task (MNIST or FashionMNIST greedy ≈ 3 h, Imagenette greedy pending (Task D) at full clock).
 
 ## 6. What comes back (cluster → laptop)
 
 Required: the pool caches. Optional: checkpoints (the commit and the sweeps only need the caches, whose meta
-records the checkpoint sha256), and the logs/ledger for the record.
+records the checkpoint sha256), and the cluster's logs/ledger lines for the record. `results_v3/run_log.jsonl` and
+`results_v3/logs/` are git-tracked, so on the cluster they also hold the laptop's history; take only what the cluster
+added (relative to the pulled commit):
 
 ```bash
-S=<user>@tinyx.nhr.fau.de:/home/vault/iwi5/<user>/CAFA_results
-rsync -av "$S/pool_v3/" /f/CAFA_results/pool_v3/ --include='*_ts1_*.npz' --include='*_ts2_*.npz' --exclude='*'
-rsync -av "$S/checkpoints_v3/" /f/CAFA_results/checkpoints_v3/ --include='*_ts1.pt' --include='*_ts2.pt' --exclude='*'   # optional
-# logs and ledger of the cluster runs (kept apart from the laptop ledger):
-C=<user>@tinyx.nhr.fau.de:my_repos/CAFA_exp
-rsync -av "$C/results_v3/logs/" results_v3/logs_tinygpu/
-scp "$C/results_v3/run_log.jsonl" results_v3/run_log_tinygpu.jsonl
+# on the cluster, repo root, after the jobs:
+git diff -U0 results_v3/run_log.jsonl | sed -n 's/^+{/{/p' > ~/run_log_tinygpu.jsonl
+git status --porcelain results_v3/logs | awk '{print $2}' | tar czf ~/logs_tinygpu.tgz -T -
+```
+
+```bash
+# on the laptop (Git Bash):
+H=<user>@tinyx.nhr.fau.de
+scp "$H:/home/vault/iwi5/<user>/CAFA_results/pool_v3/*_ts[12]_*.npz" /f/CAFA_results/pool_v3/
+scp "$H:/home/vault/iwi5/<user>/CAFA_results/checkpoints_v3/*_ts[12].pt" /f/CAFA_results/checkpoints_v3/   # optional
+scp "$H:run_log_tinygpu.jsonl" results_v3/run_log_tinygpu.jsonl
+scp "$H:logs_tinygpu.tgz" . && mkdir -p results_v3/logs_tinygpu && tar xzf logs_tinygpu.tgz -C results_v3/logs_tinygpu && rm logs_tinygpu.tgz
 ```
 
 Check on the laptop: 32 new caches (8 datasets × 2 policies × 2 seeds), and `check_caches_v3.py` passes
@@ -162,7 +171,11 @@ python scripts/check_caches_v3.py --v2-dir F:/CAFA_results/pool_v2 --csv results
 . .\set_env.ps1
 python scripts/drive_v3.py --phase commit --seeds 1 2 --tag r3
 python scripts/drive_v3.py --phase sweep  --seeds 1 2 --tag r3
-python scripts/run_repairs_v3.py --seeds 1 2 --tag r3          # E7 (predictor upgrade needs the v2 ts1/ts2 caches)
+# E7: the BEFORE commits of the predictor-upgrade repair (v2 caches, already on the laptop), then the repairs
+foreach ($ts in 1, 2) { foreach ($ds in "mnist", "tabular:MiniBooNE", "tabular:adult") {
+  $dsn = $ds -replace ":", "-"
+  python scripts/commit_v3.py --dataset $ds --train-seed $ts --pool-dir F:/CAFA_results/pool_v2 --out-path configs/committed_v3before_${dsn}_ts$ts.json } }
+python scripts/run_repairs_v3.py --seeds 1 2 --tag r3
 python scripts/make_tables_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --output-dir results_v3/tables --lambda-ref-key dep --scheme uniform
 #   -> TABLE_E4_cascade.md (one row per dataset, policy, seed) and TABLE_E4_cascade_seeds.md (mean ± sd over seeds)
 python scripts/report_violations_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --output results_v3/diagnostics/r3_violations_dep.md

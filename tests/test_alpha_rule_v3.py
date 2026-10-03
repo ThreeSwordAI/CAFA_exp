@@ -54,15 +54,20 @@ def test_commit_records_nondefault_rule_and_refuses_alpha_below_design_margin(tm
                             out_path=base, cfg=cfg) == 0
     b = json.loads(base.read_text())
     assert "alpha_rule" not in b                                      # the committed rule leaves no trace
-    floor = b["floor"]["estimate"]
-    rc = commit_v3.commit(dataset="synthetic-planted", train_seed=0, score="softmax", pool_dir=pool,
-                          out_path=alt, cfg=cfg, alpha_margin=0.02, alpha_grid=0.01)
-    a_alt = commit_v3.alpha_from_floor(floor, 0.02, 0.01)
-    if a_alt <= cfg["cascade"]["design_margin"]:
-        assert rc == 7 and not alt.exists()                           # n_min undefined: nothing committed
-    else:
-        assert rc == 0
-        c = json.loads(alt.read_text())
-        assert c["alpha_rule"] == {"margin": 0.02, "grid": 0.01} and c["alpha"] == a_alt
+    floor = b["floor"]["estimate"]                                    # 0.023333 on this deterministic cache
+    margin = cfg["cascade"]["design_margin"]
+    # a non-default rule that commits (alpha 0.07 > design margin) ...
+    assert commit_v3.alpha_from_floor(floor, 0.04, 0.01) > margin
+    assert commit_v3.commit(dataset="synthetic-planted", train_seed=0, score="softmax", pool_dir=pool,
+                            out_path=alt, cfg=cfg, alpha_margin=0.04, alpha_grid=0.01) == 0
+    c = json.loads(alt.read_text())
+    assert c["alpha_rule"] == {"margin": 0.04, "grid": 0.01} and c["alpha"] == commit_v3.alpha_from_floor(floor, 0.04, 0.01)
+    assert c["alpha"] != b["alpha"] and c["floor"] == b["floor"] and c["split"] == b["split"]
+    # ... and one that does not (the round-2 E9 rule: alpha 0.05 <= design margin 0.05): rc 7, nothing written
+    ref = tmp_path / "refused.json"
+    assert commit_v3.alpha_from_floor(floor, 0.02, 0.01) <= margin
+    assert commit_v3.commit(dataset="synthetic-planted", train_seed=0, score="softmax", pool_dir=pool,
+                            out_path=ref, cfg=cfg, alpha_margin=0.02, alpha_grid=0.01) == 7
+    assert not ref.exists()
     with pytest.raises(SystemExit):                                   # a non-default rule never overwrites the main commit
         commit_v3.main(["--dataset", "synthetic-planted", "--alpha-margin", "0.02", "--alpha-grid", "0.01"])

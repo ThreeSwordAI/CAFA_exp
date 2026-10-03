@@ -1,0 +1,72 @@
+{
+ "what": "Task B code review (4 reviewers + adversarial verification of each finding)",
+ "workflow_run": "wf_cf0aadcb-e1f",
+ "agents": 11,
+ "n_findings": 7,
+ "n_confirmed": 3,
+ "findings": [
+  {
+   "group": "sweep",
+   "file": "scripts/run_cascade_sweep.py",
+   "line": 236,
+   "severity": "medium",
+   "title": "Stale single-split commits silently fall back to the round-1 protocol (no check against protocol_v3.test_seeds)",
+   "confirmed": true,
+   "verdict_reasoning": "I reproduced the failure in the scratchpad. I built the synthetic typeII n=3000 pool there and used the tests/fixtures/committed_synthetic_typeII_n3000_hbfix.json commit, which has no split.test_seeds. The config is configs/experiment_v3.yaml with protocol_v3.test_seeds=[778..782] and n_draws=100. run_cascade_sweep.run_one completed with no error and no warning. It wrote meta.test_seeds=[778] and n_splits=1, and its log line says \"agree 1/1\", \"by split 0.00-0.00\". So the scenario can actually happen.\n\nWhy it happens in the code:\n- At scripts/run_cascade_sweep.py:236 the split seeds come only from the commit (`sp.get(\"test_seeds\", [sp[\"test_seed\"]])`).\n- n_draws comes from the config (line 231). With a stale commit, draws_per_split(100, 1) gives 100 draws on split 778, which is exactly the round-1 protocol.\n- cfg['protocol_v3']['test_seeds'] is never read or compared anywhere in the sweep.\n- scripts/repair_experiment.py:121 does the same thing.\n\nThe current tree is in exactly that state. None of the 8 configs/committed_v3_*_ts0.json files has test_seeds or by_test_seed. The 3 configs/committed_v3before_*_ts0.json files are also stale, and repair_experiment uses those for the predictor_upgrade repair. Task A only re-committed the 7 dataset commits, so G8 and the before-commits are stale even with respect to the HB fix.\n\nThe risk is made worse by scripts/drive_v3.py:120. It skips a sweep cell whenever its output already exists. A sweep run on a stale commit would therefore leave"
+  },
+  {
+   "group": "sweep",
+   "file": "scripts/run_cascade_sweep.py",
+   "line": 455,
+   "severity": "low",
+   "title": "A diagnostic `--test-seeds` subset run overwrites the canonical metrics file",
+   "confirmed": false,
+   "verdict_reasoning": "The mechanics in the claim are correct, but it is not a defect relative to the spec. It only describes a way an operator could misuse an optional flag.\n\nWhat checks out (scripts/run_cascade_sweep.py): the output path at line 455 is `out_dir / f\"{dsname}_ts{ts}_{policy_token}_{score}.json\"`. It does not include the test-seed subset. `out_dir` falls back to `$RESULTS_ROOT/metrics_v3` (line 453). `--test-seeds` (line 472) does not require `--out-dir`. With a subset, `draws_per_split(n_draws, len(seeds))` puts all 100 draws on the chosen split. So `--test-seeds 778` without `--out-dir` would overwrite the canonical cell file.\n\nWhy it is not a defect:\n1. The spec (Task B) never asks for a `--test-seeds` subset option. It is an extra diagnostic flag added by the implementer. The protocol the spec requires runs when the flag is left out, and that path writes the correct 5x20 file. No spec requirement is broken.\n2. The repo already works this way for every variant flag. `--delta-weights` (E9 sensitivity), `--committed` (ablations) and `--n-draws` also write to the same canonical filename. Variant runs are expected to pass `--out-dir`, and the round-1 record does this: handoff.md line 70 runs the E9 sweep with `--out-dir F:/CAFA_results/metrics_v3_dw`, and drive_v3.py line 141 passes `--out-dir` for other metrics directories. `--test-seeds` follows the same rule. Singling it out is arbitrary: `--n-draws 20` or `--delta-weights` would overwrite the canonical file in the same way.\n3. No"
+  },
+  {
+   "group": "commit_repair_diag",
+   "file": "scripts/repair_experiment.py",
+   "line": 121,
+   "severity": "medium",
+   "title": "Repair and sweep silently fall back to one split when the commit has no test_seeds, and the BEFORE and G8 commits have none",
+   "confirmed": true,
+   "verdict_reasoning": "The claim is confirmed. It is a missing guard, not a statistics error.\n\nCode: scripts/repair_experiment.py:121 sets `seeds = sp.get(\"test_seeds\", [primary])`, and scripts/run_cascade_sweep.py:236 sets `committed_seeds = sp.get(\"test_seeds\", [sp[\"test_seed\"]])`. Neither script compares this list with cfg protocol_v3.test_seeds ([778..782], now in configs/experiment_v3.yaml). n_draws still comes from the config (100). When a commit has no test_seeds, draws_per_split(100, 1) = 100 and every draw runs on split 778.\n\nCurrent files: none of the configs/committed_v3*.json files has `test_seeds` yet, because Task C has not re-committed anything. configs/committed_v3before_{mnist,tabular-MiniBooNE,tabular-adult}_ts0.json and configs/committed_v3_G8_mnist_ts0.json are byte-identical to results_v3/round1/configs/ (checked with cmp). Task A.6 re-committed only the 7 main cells, through drive_v3 --phase commit. So these four files also still hold the pre-HB-fix escalation.order. They are the documented `--committed` inputs for the E7 predictor-upgrade and E9 G=8 commands (handoff.md §10 step 5 and §3 row 3e). drive_v3 does not re-commit them; that is a manual step. instruction_round2 Task C says \"E7 repairs ... ; E9 ... G = 8 reruns\" but does not explicitly say to re-commit these files.\n\nReproduction: I made a synthetic commit (make_synthetic_pool_cache n=3000), removed its test_seeds, and ran repair_experiment.main with the round-2 config. It returned rc=0 with test_seeds=[778] and by_sp"
+  },
+  {
+   "group": "planted",
+   "file": "scripts/planted_validation.py",
+   "line": 95,
+   "severity": "low",
+   "title": "study_d_strata never checks that r_easy is feasible; for T <= 3 the deepest stratum's true risk is not alpha - gap",
+   "confirmed": false,
+   "verdict_reasoning": "The arithmetic in the claim is right, but the case only arises from a CLI value that nothing uses, and it is not a defect against the spec.\n\nWhat I confirmed in a read-only quadrature check (study_d_strata plus quadrature_population with m=20000):\n- r_easy and the deepest stratum's true full-information risk are: T=2 gives -0.2832 and 0.16567; T=3 gives -0.0868 and 0.14966; T=4 gives 0.0022 and 0.146; T=5 gives 0.0503 and 0.146; T=30 gives 0.1457 and 0.146.\n- So for T <= 3, r_easy goes negative, A = 1 - r_easy rises above 1, and the clip at 1 (in both make_planted_population and quadrature_population) pushes the planted risk off alpha - gap. Nothing guards against this.\n\nWhy it is not a defect relative to the spec:\n1. Every real path uses T=30. These are the configs/experiment_v3.yaml planted_validation block (T: 30), the argparse default (--T 30) and the documented command in PHASES_V3.md and handoff.md. The test test_planted_study_d_small (tests/test_multisplit_v3.py:177-181) also runs with T=30 and asserts true_full_info_risk is within 1e-6 of alpha - 0.004. The spec's requirement (true deepest-stratum risk = alpha - 0.004) therefore holds, and is tested, on every path the campaign uses.\n2. T <= 3 is outside what the planted generator was built for, in all studies, not just D. The make_planted_population docstring says acc_rate_mult is chosen \"so that every instance has reached its accuracy cap at depth T and the planted caps are the full-information risks\". At T=3 that pr"
+  },
+  {
+   "group": "tables_tests",
+   "file": "scripts/run_cascade_sweep.py",
+   "line": 236,
+   "severity": "medium",
+   "title": "Sweep and repair quietly fall back to the round-1 single-split protocol and ignore protocol_v3.test_seeds",
+   "confirmed": false,
+   "verdict_reasoning": "The mechanics in the claim are accurate, but the behaviour is intended, it is documented, and it is visible in the output. It is not a defect against the Task B spec.\n\nWhat checks out:\n- run_cascade_sweep.py:236 and repair_experiment.py:121 take the splits from the commit with `sp.get(\"test_seeds\", [sp[\"test_seed\"]])`. Neither compares this with `cfg['protocol_v3']['test_seeds']` or warns.\n- None of the 8 configs/committed_v3_*.json files has `test_seeds`. The 7 main commits were last changed in 3825b6c. The G8 commit was last changed in 730a7e1, so it was not re-committed in Task A.\n\nWhy it is not a defect:\n1. The spec says the commit is the pre-registered record: \"the split block records test_seeds and the calpool/test digests per seed\". The sweep is told to loop over splits, and taking them from the commit (with a per-split digest check) is the right design. Nothing in the spec says the sweep must cross-check the YAML config.\n2. The fallback is intended and documented. The module docstring (lines 29-31) says a commit without `test_seeds` (round 1) is swept on its single split. The fallback is also load-bearing: the spec requires the raw fields to be computed exactly as in round 1, and scripts/check_sweep_equivalence_v3.py checks this by sweeping round-1 single-split commits with the new code. results_v3/logs/r2_taskB_sweep_equivalence_single_split.log reports IDENTICAL for 4 cells. Raising an error here would break that check.\n3. The failure scenario needs the operator to "
+  },
+  {
+   "group": "tables_tests",
+   "file": "tests/test_multisplit_v3.py",
+   "line": 177,
+   "severity": "low",
+   "title": "Study-D test: the D1 checks pass vacuously, and only the tier-1 path is ever exercised",
+   "confirmed": false,
+   "verdict_reasoning": "The claim's facts are accurate, but it describes a weak test, not a defect, and its failure scenario relies on bugs that are not in the code.\n\nWhat I reproduced: I ran the same call (T=30, n_blocks=2, per_block=3, n_split=5000). D1 gives cert_rate 0.0, tier_share {0: 1.0}, and every rate is 0.0. D2 gives cert_rate 0.833, all at tier 1, raw 0.5, certified 0.0. So the D1 rate assertions in tests/test_multisplit_v3.py:177ff are trivially true, and no test deploys a tier-2 or tier-3 rule.\n\nWhy it is not a defect:\n1. The code paths are correct now. In scripts/planted_validation.py, `_rule_stop_and_answered` matches `cascade.apply_rule` and `synthetic_planted.true_selective_risk`: budget stops at depth `param_idx`, and escalation stops at depth T with `answered = sc[:,T] >= param_value`. D1 builds its calibration pool from seed0+30000+b and the test split from seed0+31000+b, so the two are disjoint. Neither 'cal from the test split' nor 'inverted tier-3 mask' exists. Both are hypothetical regressions.\n2. The escalation half of the failure scenario cannot happen in this study. The deepest stratum is homogeneous (h=0), and at T=30 exp(-90*beta) is negligible, so true risk does not depend on score. Selecting rows by score therefore cannot pull the risk below alpha, and the budget tier faces the same 0.004 margin. In a larger sample (D1 3x20, D2 1x20 at n_cal=180000), D1 gave tiers {0: 0.933, 1: 0.067} and D2 gave {0: 0.1, 1: 0.9}. Tiers 2 and 3 never deployed. Those branches are effec"
+  },
+  {
+   "group": "tables_tests",
+   "file": "tests/test_multisplit_v3.py",
+   "line": 169,
+   "severity": "low",
+   "title": "Noise-aware sweep test never reaches the certified-violation branch and only checks that the marginal and baseline fields exist",
+   "confirmed": true,
+   "verdict_reasoning": "The claim is accurate. It is a low-severity gap in test coverage, not a wrong number. I reran the fixture the test uses (synthetic typeII, n=3000, commit, then run_one with n_draws=10) in the scratchpad.\n\nCascade results, per lambda_ref (uniform scheme):\n- 0.5: 9 tier-0 and 1 tier-3 draws.\n- 0.7: 10 tier-0 draws.\n- 0.9: 5 tier-0 and 5 tier-3 draws.\n- dep: 10 tier-3 draws.\n\nNo cascade draw has violation=True or certified_violation=True. So the \"certified implies raw\" assert at lines 169-170 never runs, and the pooled cascade_certified_violation_rate check at lines 152-153 is just 0 == 0.\n\nThe other noise-aware values in the same output have many True values:\n- marginal hidden_certified_violation: 4 True.\n- plugin: 34.\n- mondrian_oracle: 28.\n- oracle_cheapest_valid: 38.\n- fixed_conf and budget baselines: also many.\n\nThe test checks those fields only for key presence (lines 171 and 174). No other test touches stratum_certified_violation, hidden_certified_violation or noise_aware: I grepped tests/, and tests/test_v3_scripts.py has none.\n\nI recomputed the current values from the records:\n- Marginal: hidden_test_pvalue_min and hidden_max_excess_se, rebuilt from test_stratum_risk and strata_test_sizes_by_split over the cascade's k_cal, match with 0 mismatches.\n- Baselines: stratum_certified_violation matches (stratum_test_pvalue_min <= 0.05) in every record, and certified implies stratum_violation holds in every record.\n\nSo nothing is wrong today, as the claim itself says.\n\nArgument"
+  }
+ ]
+}

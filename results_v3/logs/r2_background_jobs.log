@@ -1,0 +1,9 @@
+# Round 2: background launches (copied from the Start-Process / PowerShell console output of this session; local time UTC+2)
+2026-10-03T00:55:50  imagenette greedy rollout relaunch, attempt 1: driver PID 20860 -- did not start (Start-Process split "--extra-args=--batch-size 16 --policy-amp" at its spaces; driver usage error; its .out/.err were deleted when relaunching)
+2026-10-03T01:09:44  r2hbfix sweeps (round-1 protocol, worktree at 5089d5e): 4 drivers, PIDs 31192 (MiniBooNE), 6332 (diabetes), 16392 (mnist, fashionmnist), 30924 (physionet, cube, adult)
+2026-10-03T01:15:09  imagenette greedy rollout relaunch, attempt 2: driver PID 20280 (rollout child PID 18144) -- results_v3/logs/driver_round2_imagenette_greedy.out
+2026-10-03T02:00:23  planted validation rerun (E5 A-D): PID 31672 -- results_v3/logs/r2_phase2_planted_validation.log
+2026-10-03T02:02:01  r2 sweeps (Task C): 4 drivers, PIDs 31540 (MiniBooNE), 3848 (diabetes, physionet), 28884 (mnist, fashionmnist, cube), 2948 (adult)
+2026-10-03T02:02:55  E9 (dw, G8) + E7 repairs chain: PowerShell PID 9196 -- results_v3/logs/driver_r2_e9_e7_chain.out
+2026-10-03T02:55:53  r2am02 sweeps (Task E): 4 drivers, PIDs 16812 (MiniBooNE), 14696 (diabetes, physionet), 15956 (fashionmnist, cube), 14792 (adult)
+2026-10-03T03:42:21  imagenette random rollout chain (waits for the greedy driver, then drive_v3 --policies random "--extra-args=--batch-size 16"): PowerShell PID 3888 -- results_v3/logs/driver_round2_imagenette_random_chain.out
