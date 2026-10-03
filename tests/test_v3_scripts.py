@@ -48,7 +48,7 @@ def synth(tmp_path_factory):
     assert rc == 0
     out = root / "metrics_v3"
     op = run_cascade_sweep.run_one("synthetic-planted", "greedy_entropy", "softmax", 0, cfg=cfg, paths=None,
-                                   n_draws=4, pool_dir=pool, out_dir=out, committed_path=committed)
+                                   n_draws=5, pool_dir=pool, out_dir=out, committed_path=committed)  # 1 per split (round 2)
     return {"root": root, "pool": pool, "committed": committed, "metrics_dir": out,
             "metrics": json.loads(Path(op).read_text()), "cfg": cfg}
 
@@ -126,4 +126,4 @@ def test_sweep_refuses_stale_commit(synth, tmp_path):
     cp.write_text(json.dumps(com))
     with pytest.raises(RuntimeError, match="re-commit"):
         run_cascade_sweep.run_one("synthetic-planted", "greedy_entropy", "softmax", 0, cfg=synth["cfg"],
-                                  paths=None, n_draws=1, pool_dir=pool, out_dir=tmp_path / "m", committed_path=cp)
+                                  paths=None, n_draws=5, pool_dir=pool, out_dir=tmp_path / "m", committed_path=cp)

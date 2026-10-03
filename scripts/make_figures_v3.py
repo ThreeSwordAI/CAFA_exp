@@ -5,6 +5,9 @@
   F3_cascade.pdf     tier shares (stacked) + deployed cost vs. marginal / Mondrian oracle / full
   F4_repair.pdf      before/after deepest-stratum family minimum and tier-1 share (repair JSONs)
   F5_planted.pdf     planted power vs n_k Delta^2, false-failure rate, cascade violation rate
+  F6_violations.pdf  per cell: raw test stratum-violation rate and certified-violation rate side by side
+                     (round 2), with the min-max of the raw rate over the splits, and reference lines
+                     at delta and delta + 0.05
 
     python scripts/make_figures_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --planted results_v3/planted \
         --repair-dir results_v3/repair --output-dir results_v3/figures --lambda-ref-key dep --scheme uniform
@@ -92,6 +95,36 @@ def fig_cascade(cells, out: Path):
     plt.close(fig)
 
 
+def fig_violations(cells, out: Path):
+    cells = [c for c in cells if "cascade_certified_violation_rate" in c[4]]  # round-2 metrics only
+    if not cells:
+        return
+    fig, ax = plt.subplots(figsize=(7.2, 3.4))
+    names = [f"{m['dsname']}\n{m['policy']} s{m['train_seed']}" for m, *_ in cells]
+    x = np.arange(len(cells))
+    raw =np.array([s["cascade_violation_rate"] for *_, s in cells])
+    cert = np.array([s["cascade_certified_violation_rate"] for *_, s in cells])
+    lo = np.array([min(v["cascade_violation_rate"] for v in s.get("by_split", {}).values()) if s.get("by_split") else r
+                   for (*_, s), r in zip(cells, raw)])
+    hi = np.array([max(v["cascade_violation_rate"] for v in s.get("by_split", {}).values()) if s.get("by_split") else r
+                   for (*_, s), r in zip(cells, raw)])
+    ax.bar(x - 0.2, raw, 0.4, label="raw test stratum violation (pooled)")
+    ax.errorbar(x - 0.2, raw, yerr=np.vstack([raw - lo, hi - raw]), fmt="none", ecolor="k", lw=0.8, capsize=2,
+                label="raw, min-max over splits")
+    ax.bar(x + 0.2, cert, 0.4, label="certified violation (exact binomial p <= 0.05)")
+    dl = float(cells[0][2])
+    ax.axhline(dl, color="k", lw=0.8, ls="--", label=f"delta = {dl:g}")
+    ax.axhline(dl + 0.05, color="gray", lw=0.8, ls=":", label=f"delta + 0.05 = {dl + 0.05:g}")
+    ax.set_xticks(x)
+    ax.set_xticklabels(names, fontsize=6, rotation=60, ha="right")
+    ax.set_ylabel("share of calibration draws")
+    ax.set_ylim(0, max(1e-3, float(max(hi.max(), cert.max(), dl + 0.05))) * 1.1)
+    ax.legend(fontsize=6)
+    fig.tight_layout()
+    fig.savefig(out / "F6_violations.pdf")
+    plt.close(fig)
+
+
 def fig_repair(repair_dir: Path, out: Path, key: str):
     files = sorted(Path(repair_dir).glob("*.json")) if repair_dir and Path(repair_dir).exists() else []
     if not files:
@@ -172,6 +205,7 @@ def main(argv=None) -> int:
     cells = load_cells(Path(a.metrics_dir), a.lambda_ref_key, a.scheme)
     fig_blindness(cells, out)
     fig_cascade(cells, out)
+    fig_violations(cells, out)
     fig_repair(Path(a.repair_dir) if a.repair_dir else None, out, a.lambda_ref_key)
     fig_planted(Path(a.planted) if a.planted else None, out)
     print(f"figures -> {out} ({len(cells)} cells)")

@@ -20,7 +20,14 @@ probe, seed 777 -- byte-identical to the AAAI commitments) and fixed config:
                                probe-quantile thresholds mu, and the PROBE-ORDERED
                                fixed-sequence testing order (levels sorted by
                                their probe union p-value);
-  * ``split``                  sizes + sha256 digests of probe / calpool / test.
+  * ``split``                  sizes + sha256 digests of probe / calpool / test (primary split,
+                               ``test_seed``) and, since round 2, the multi-split protocol:
+                               ``test_seeds``, ``n_draws`` (total), ``draws_per_split``,
+                               ``draw_id_stride`` and per-seed calpool / test sizes and digests
+                               (``by_test_seed``).  The split block is the ONLY part of the commit
+                               that depends on the test seeds: alpha, lambda_ref, edges, mu and the
+                               escalation order are functions of the probe only
+                               (tests/test_multisplit_v3.py asserts this).
 
 Usage
 -----
@@ -53,7 +60,7 @@ from cafa.data import feasible_alpha_from_floor  # noqa: E402
 from cafa.metrics import reference_buckets, reference_depth  # noqa: E402
 from cafa.pool import load_pool_cache  # noqa: E402
 from cafa.splits import split_digest  # noqa: E402
-from cafa.splits_v3 import v3_positions  # noqa: E402
+from cafa.splits_v3 import SPLIT_DRAW_STRIDE, draws_per_split, v3_positions, v3_positions_multi  # noqa: E402
 
 FIXED_LAMBDA_REFS = (0.5, 0.7, 0.9)
 
@@ -68,6 +75,23 @@ def dsname_of(dataset: str) -> str:
 def build_grid(method_cfg: dict) -> np.ndarray:
     g = method_cfg.get("grid", {"g_min": 0.0, "g_max": 1.0, "n": 100})
     return np.linspace(float(g["g_min"]), float(g["g_max"]), int(g["n"]))
+
+
+def diff_commits(old: dict, new: dict, path: str = "") -> list:
+    """Paths (``/a/b/c``) of the leaves that differ between two committed JSONs (added or removed keys
+    are reported with the suffix `` (added)`` / `` (removed)``).  Used to check that a re-commit changes
+    nothing it should not (tests/test_multisplit_v3.py, scripts/compare_decisions_v3.py)."""
+    if isinstance(old, dict) and isinstance(new, dict):
+        out = []
+        for k in sorted(set(old) | set(new), key=str):
+            if k not in new:
+                out.append(f"{path}/{k} (removed)")
+            elif k not in old:
+                out.append(f"{path}/{k} (added)")
+            else:
+                out += diff_commits(old[k], new[k], f"{path}/{k}")
+        return out
+    return [] if old == new else [path]
 
 
 def find_policy_caches(pool_dir: Path, dsname: str, ts: int, score: str) -> dict:
@@ -97,6 +121,12 @@ def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg
     probe_seed = int(pv.get("probe_seed", 777))
     test_frac = float(pv.get("test_frac_of_eval", 0.5))
     test_seed = int(pv.get("test_seed", 778))
+    test_seeds = [int(x) for x in pv.get("test_seeds", [test_seed])]
+    if test_seed not in test_seeds:
+        print(f"ERROR: primary test_seed {test_seed} is not in test_seeds {test_seeds}.", file=sys.stderr)
+        return 6
+    n_draws_total = int(pv.get("n_draws", 100))
+    per_split = draws_per_split(n_draws_total, len(test_seeds))
     cal_frac = float(pv.get("cal_frac_of_pool", 0.5))
     method = cfg["method"]
     grid = build_grid(method)
@@ -132,6 +162,16 @@ def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg
     pos = v3_positions(n, probe_frac, probe_seed, test_frac, test_seed)
     probe_pos, calpool_pos, test_pos = pos["probe"], pos["calpool"], pos["test"]
     n_cal_expected = int(round(cal_frac * calpool_pos.size))
+    multi = v3_positions_multi(n, probe_frac, probe_seed, test_frac, test_seeds)
+    by_test_seed = {}
+    for ps in multi:
+        # same probe and the same calpool size on every split -> n_cal_expected (and with it the G-rule
+        # edges) is split-invariant
+        assert np.array_equal(ps["probe"], probe_pos) and ps["calpool"].size == calpool_pos.size
+        by_test_seed[str(ps["test_seed"])] = {
+            "split_index": int(ps["split_index"]),
+            "n_calpool": int(ps["calpool"].size), "n_test": int(ps["test"].size),
+            "digest": {"calpool": split_digest(ps["calpool"]), "test": split_digest(ps["test"])}}
 
     floor = float(np.mean(1.0 - np.asarray(greedy["correct"])[probe_pos, T]))
     alpha = float(feasible_alpha_from_floor(floor))
@@ -194,12 +234,16 @@ def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg
             "n_test": int(test_pos.size), "n_cal_expected": n_cal_expected,
             "digest": {"probe": split_digest(probe_pos), "calpool": split_digest(calpool_pos),
                        "test": split_digest(test_pos)},
+            "test_seeds": test_seeds, "n_draws": n_draws_total, "draws_per_split": per_split,
+            "draw_id_stride": SPLIT_DRAW_STRIDE,
+            "by_test_seed": by_test_seed,
         },
     }
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(committed, indent=2))
     print(f"[commit_v3] {dataset} ts{ts}: alpha={alpha} (floor {floor:.4f}); "
-          f"n_cal_expected={n_cal_expected}; n_min(tier1)={n_min_1}; policies={sorted(caches)}")
+          f"n_cal_expected={n_cal_expected}; n_min(tier1)={n_min_1}; policies={sorted(caches)}; "
+          f"test_seeds={test_seeds} x {per_split} draws")
     for tok in caches:
         for key in lambda_refs[tok]:
             o0 = escalation[tok][key]["order"][0]

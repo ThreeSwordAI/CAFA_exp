@@ -1,0 +1,4 @@
+cube_ts0_greedy_entropy_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+csv-physionet_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+tabular-adult_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+mnist_ts0_greedy_entropy_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL

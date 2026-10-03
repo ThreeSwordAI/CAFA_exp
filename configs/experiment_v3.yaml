@@ -21,9 +21,10 @@ protocol_v3:
   probe_frac: 0.10                 # of heldout; probe_seed 777 (v2-identical probe)
   probe_seed: 777
   test_frac_of_eval: 0.5           # eval remainder -> 50% calibration pool, 50% independent test
-  test_seed: 778
+  test_seed: 778                   # primary split (single-split diagnostics; the audit of record)
+  test_seeds: [778, 779, 780, 781, 782]   # round 2: 5 calpool/test splits of the eval remainder
   cal_frac_of_pool: 0.5            # each calibration draw = 50% of the pool
-  n_draws: 100
+  n_draws: 100                     # TOTAL over all test_seeds (20 per split; must divide evenly)
   train_seeds: [0, 1, 2]
 strata_v3:
   n_buckets_nominal: 5             # probe-quantile bins before the G-rule merges
