@@ -3,7 +3,7 @@
 - Round 1: 2026-10-01 13:09 → 2026-10-02 ≈ 01:15 local (UTC+2), ≈ 12 h; ended at stop condition 5 (§9, resolved in round 2).
 - Round 2 (`instruction_round2.md`, Tasks A–F): 2026-10-03 00:55 → ≈ 09:30 local, ≈ 8.5 h (most of it waiting for the thermally throttled GPU, §12.4).
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at the round-1 session start; tagged `aaai27-submission`)
-- Final content commit: FINAL_COMMIT (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
+- Final content commit: `25c04ad` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
 - No job is running at the end of round 2.
 
 ## 1. Executive summary
