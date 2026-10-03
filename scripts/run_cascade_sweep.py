@@ -9,7 +9,9 @@ over ``n_draws`` seeded calibration draws, for every committed lambda_ref key an
                                                         stratum risks, answered fraction, cost
   * baselines: plug-in, fixed confidence x3, budgets {T/4, T/2, 3T/4},
                full acquisition, Mondrian oracle (per-stratum LTT, joint),
-               cheapest-valid test oracle
+               cheapest-valid test oracle, and (round 3) the ex-post
+               stratum-safe oracles ``oracle_stratum_safe`` /
+               ``oracle_stratum_safe_mondrian`` (see below)
 
 and, ONCE per (lambda_ref key, split), the localized family-wide audit of every
 stratum on the split's full calibration pool (diagnostic; not a selection step).
@@ -46,10 +48,48 @@ Recorded for the cascade (also ``test_errors_by_stratum`` / ``test_n_by_stratum`
 for marginal CAFA (``hidden_*``) and for every baseline (``stratum_*``); summarised
 pooled over all draws and per split (``by_split``).
 
+Ex-post stratum-safe oracles (round 3, Task K1; non-deployable, they use the test labels)
+----------------------------------------------------------------------------------------
+Is the cascade's cost intrinsic, or the price of certifying on a finite calibration draw?
+With ``R_test,k(j)`` the test-split risk of stratum ``k`` at threshold ``grid[j]``:
+
+  * ``oracle_stratum_safe``: the cheapest ``grid[j]`` (mean test cost; ties -> smallest ``j``) with
+    ``R_test,k(j) <= alpha`` for every ``k`` in the draw's ``K_cal`` that has test rows
+    (:func:`stratum_safe_oracle`).  Extra keys: ``lambda``, ``lambda_idx``, ``feasible`` and
+    ``calpool_stratum_risk`` / ``calpool_stratum_n`` (risk at ``grid[j*]`` and size of every stratum
+    on the split's WHOLE calibration pool: the ``r_cal(lambda*)`` behind ``n_needed``).  When no
+    threshold qualifies: ``feasible`` False, full acquisition, ``lambda`` / ``lambda_idx`` /
+    ``calpool_*`` None.
+  * ``oracle_stratum_safe_mondrian``: per test stratum the cheapest ``grid[j_k]`` with
+    ``R_test,k(j_k) <= alpha``, full acquisition where none (:func:`stratum_safe_mondrian`; the
+    ex-post version of the Mondrian oracle).  Extra keys: ``feasible`` (every test stratum had a
+    ``j_k``), ``lambda_by_stratum``, ``abstained_fraction``.
+
+Summaries add ``baselines[name].feasible_rate`` (for records carrying ``feasible``),
+``cascade_cost_over_oracle`` (= ``cascade_mean_test_cost`` / the ``oracle_stratum_safe`` mean test
+cost; an infeasible draw enters the denominator at full acquisition), ``cascade_cost_over_oracle_feasible``
+(the same ratio restricted to the draws whose ``oracle_stratum_safe`` record is feasible: mean cascade
+test cost / mean oracle test cost over those draws; None if there is no such draw or the oracle cost
+is 0) and ``cascade_cost_over_safe_mondrian_oracle``, pooled and per split.  Every round-2 field
+keeps its value (``scripts/check_sweep_equivalence_v3.py`` round-2 file vs. new file -> IDENTICAL).
+
+Calibration size (round 3, Task K2)
+-----------------------------------
+``--cal-frac`` sets the calibration-draw fraction of the pool (default: the commit's
+``split.cal_frac_of_pool`` = 0.5; recorded as ``meta.cal_frac``).  Draw ids are unchanged, so a
+0.25 draw is the first half of the 0.5 draw (same permutation, nested).  At 1.0 every draw
+of a split is the whole calibration pool, so the sweep runs ONE draw per split (``n_draws`` =
+number of splits; another explicit ``--n-draws`` is an error; ``meta.cal_frac_note`` says so).
+A non-default value requires ``--out-dir`` (the canonical metrics file is never overwritten).  A value
+so small that ``round(cal_frac * n_calpool)`` is 0 on some swept split (an empty calibration draw) is
+an error.
+
 Usage
 -----
     python scripts/run_cascade_sweep.py --dataset mnist --policy greedy_entropy --train-seed 0
     python scripts/run_cascade_sweep.py --dataset csv:physionet --policy greedy_entropy --train-seed 0 --n-draws 100
+    python scripts/run_cascade_sweep.py --dataset cube --cal-frac 0.25 --out-dir "$RESULTS_ROOT/metrics_v3_calfrac025"
+    python scripts/run_cascade_sweep.py --dataset cube --cal-frac 1.0 --out-dir "$RESULTS_ROOT/metrics_v3_calfrac100"
 
 Output: ``${RESULTS_ROOT}/metrics_v3/{dsname}_ts{ts}_{policy}_{score}.json``
 """
@@ -151,6 +191,57 @@ def any_violation(per_stratum: dict, k_cal, alpha: float) -> bool:
     return False
 
 
+# ---- round 3 (Task K1): ex-post stratum-safe oracles (pure; the sweep precomputes their inputs) ----
+
+def stratum_means(mat, bucket_id):
+    """``(strata, M)``: the sorted labels of ``bucket_id`` and ``M[i] = mat[bucket_id == strata[i]].mean(axis=0)``."""
+    b = np.asarray(bucket_id)
+    mat = np.asarray(mat, dtype=float)
+    ks = np.unique(b)
+    return [int(k) for k in ks], np.stack([mat[b == k].mean(axis=0) for k in ks])
+
+
+def stratum_safe_oracle(stratum_risk, col_cost, strata, k_cal, alpha):
+    """Cheapest column ``j`` (min ``col_cost[j]``, ties -> smallest ``j``) whose risk is ``<= alpha`` in every
+    row of ``stratum_risk`` (``[len(strata), G]``) whose stratum is in ``k_cal``; ``None`` if no column is safe."""
+    R = np.asarray(stratum_risk, dtype=float)
+    kc = {int(k) for k in k_cal}
+    rows = [i for i, k in enumerate(strata) if int(k) in kc]
+    valid = np.flatnonzero(np.all(R[rows] <= float(alpha), axis=0))   # no K_cal stratum on test: every column
+    if valid.size == 0:
+        return None
+    return int(valid[np.argmin(np.asarray(col_cost, dtype=float)[valid])])
+
+
+def stratum_safe_mondrian(stratum_risk, stratum_cost, strata, alpha) -> dict:
+    """``{k: j_k or None}``: per stratum the cheapest column (min ``stratum_cost[i, j]``, ties -> smallest ``j``)
+    with ``stratum_risk[i, j] <= alpha``; ``None`` where no column is safe (the stratum abstains)."""
+    R, C = np.asarray(stratum_risk, dtype=float), np.asarray(stratum_cost, dtype=float)
+    out = {}
+    for i, k in enumerate(strata):
+        valid = np.flatnonzero(R[i] <= float(alpha))
+        out[int(k)] = int(valid[np.argmin(C[i, valid])]) if valid.size else None
+    return out
+
+
+def per_stratum_rule_risks(j_by_stratum, losses, costs, correct, cum_cost, t_full, bucket_id):
+    """(per-stratum risk, aggregate risk, mean cost, per-stratum (errors, n), abstained rows) of the rule that
+    stops stratum ``k`` at column ``j_by_stratum[k]`` and acquires everything (depth ``t_full``) where it is
+    ``None`` -- the bookkeeping of the Mondrian oracle block in :func:`run_one`."""
+    b = np.asarray(bucket_id)
+    cost, risk, abst, ps_, cn = [], [], 0, {}, {}
+    for k in np.unique(b):
+        mt = b == k
+        jj = j_by_stratum.get(int(k))
+        if jj is None:
+            abst += int(mt.sum()); cost.append(cum_cost[mt, t_full]); risk.append(1.0 - correct[mt, t_full])
+        else:
+            cost.append(costs[mt, jj]); risk.append(losses[mt, jj])
+        ps_[int(k)] = float(risk[-1].mean())
+        cn[int(k)] = (int(round(float(risk[-1].sum()))), int(mt.sum()))
+    return ps_, float(np.concatenate(risk).mean()), float(np.concatenate(cost).mean()), cn, abst
+
+
 def _nanmean(vals):
     """``r6(np.nanmean(vals))`` without the all-NaN RuntimeWarning (e.g. a split whose marginal never certifies)."""
     v = np.asarray(vals, dtype=float)
@@ -165,7 +256,8 @@ def _mean_q90(vals):
 def summarize(draws: list, alpha: float) -> dict:
     """Summary of a list of draw records (pooled over all draws, or one split's draws).
 
-    The raw fields are computed exactly as in round 1; the noise-aware fields are added."""
+    The raw fields are computed exactly as in round 1; the noise-aware fields are added; round 3 adds
+    ``feasible_rate`` and the cascade / ex-post oracle cost ratios (module doc)."""
     tiers = np.array([r["cascade"]["tier"] for r in draws])
     summ = {
         "n_draws": len(draws),
@@ -209,11 +301,26 @@ def summarize(draws: list, alpha: float) -> dict:
             "stratum_certified_violation_rate": r6(np.mean(cv)) if cv else None,
             "stratum_max_excess_se_mean": m, "stratum_max_excess_se_q90": q,
         }
+        # round 3 (Task K1): feasibility of the ex-post oracles (only records that carry ``feasible``)
+        fz = [r["baselines"][name]["feasible"] for r in draws if "feasible" in r["baselines"][name]]
+        if fz:
+            summ["baselines"][name]["feasible_rate"] = r6(np.mean(fz))
+    # round 3 (Task K1): the cascade's cost relative to the ex-post stratum-safe oracles (None if absent / 0)
+    for key, name in (("cascade_cost_over_oracle", "oracle_stratum_safe"),
+                      ("cascade_cost_over_safe_mondrian_oracle", "oracle_stratum_safe_mondrian")):
+        c = summ["baselines"].get(name, {}).get("mean_test_cost")
+        summ[key] = float(summ["cascade_mean_test_cost"] / c) if c else None
+    # ... and over only the draws whose oracle_stratum_safe record is feasible (an infeasible draw puts that
+    # oracle at full acquisition, which is not stratum-safe either); None if no such draw / oracle cost 0
+    fe = [r for r in draws if r["baselines"].get("oracle_stratum_safe", {}).get("feasible") is True]
+    c = float(np.mean([r["baselines"]["oracle_stratum_safe"]["test_cost"] for r in fe])) if fe else 0.0
+    summ["cascade_cost_over_oracle_feasible"] = float(np.mean([r["cascade"]["test_cost"] for r in fe]) / c) if c else None
     return summ
 
 
 def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=None,
-            pool_dir=None, out_dir=None, committed_path=None, delta_weights=None, test_seeds=None):
+            pool_dir=None, out_dir=None, committed_path=None, delta_weights=None, test_seeds=None,
+            cal_frac=None):
     ts = int(train_seed)
     dsname = dsname_of(dataset)
     committed_path = Path(committed_path) if committed_path else \
@@ -228,6 +335,7 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
     grid = build_grid(cfg["method"])
     T = int(committed["T"])
     sp = committed["split"]
+    n_draws_arg = n_draws
     n_draws = int(n_draws or cfg.get("protocol_v3", {}).get("n_draws", 100))
     fixed_t = list(cfg.get("fixed_confidence_t", [0.90, 0.95, 0.99]))
     budget_fracs = list(cfg.get("budget_fracs", [0.25, 0.5, 0.75]))
@@ -242,6 +350,14 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                            "(and --out-dir) for a deliberate single-split diagnostic.")
     if test_seeds is not None and out_dir is None:
         raise RuntimeError("--test-seeds restricts the protocol; give --out-dir so the canonical metrics file is not overwritten.")
+    # calibration-draw size (round 3, K2): the commit's cal_frac_of_pool unless overridden
+    cal_frac_commit = float(sp["cal_frac_of_pool"])
+    cal_frac = cal_frac_commit if cal_frac is None else float(cal_frac)
+    if not 0.0 < cal_frac <= 1.0:
+        raise ValueError(f"cal_frac must lie in (0, 1]; got {cal_frac}.")
+    if cal_frac != cal_frac_commit and out_dir is None:
+        raise RuntimeError(f"--cal-frac {cal_frac:g} differs from the committed cal_frac_of_pool {cal_frac_commit:g}; "
+                           "give --out-dir so the canonical metrics file is not overwritten.")
     seeds = committed_seeds if test_seeds is None else [int(x) for x in test_seeds]
     unknown = sorted(set(seeds) - set(committed_seeds))
     if unknown:
@@ -249,6 +365,14 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
     primary = int(sp["test_seed"])
     if primary not in seeds:
         raise RuntimeError(f"the primary split {primary} must be swept (audit of record).")
+    if cal_frac == 1.0:
+        # every draw of a split would be the whole calibration pool (identical draws): one draw per split
+        if n_draws_arg and int(n_draws_arg) != len(seeds):
+            raise ValueError(f"cal_frac 1.0 makes every draw of a split the whole calibration pool: n_draws must equal "
+                             f"the number of splits ({len(seeds)}, one draw per split), got {n_draws_arg}.")
+        n_draws = len(seeds)
+        print(f"[cascade] cal_frac 1.0: 1 draw per split ({n_draws} draws; every draw of a split is the whole "
+              "calibration pool)", flush=True)
     per_split = draws_per_split(n_draws, len(seeds))
 
     pool_dir = Path(pool_dir) if pool_dir else Path(paths.results_root) / "pool_v3"
@@ -279,6 +403,12 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
             if split_digest(ps[part]) != ref[part]:
                 raise RuntimeError(f"{part} digest of split {ps['test_seed']} differs from {committed_path}.")
         splits.append(ps)
+    # K2: every calibration draw must hold at least one row (calibration_draw keeps round(cal_frac * n_calpool))
+    for ps in splits:
+        if int(round(cal_frac * ps["calpool"].size)) < 1:
+            raise ValueError(f"cal_frac {cal_frac:g} gives an empty calibration draw: round(cal_frac x {ps['calpool'].size}) "
+                             f"= 0 for the calibration pool of split {ps['test_seed']} ({ps['calpool'].size} rows); "
+                             "use a larger --cal-frac.")
 
     costs_by_scheme = {s: np.asarray(v, dtype=float)
                        for s, v in committed["feature_costs_by_scheme"].items()}
@@ -299,13 +429,16 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                  "n_draws": n_draws, "test_seeds": [int(ps["test_seed"]) for ps in splits],
                  "primary_test_seed": primary, "draws_per_split": per_split,
                  "schemes": schemes, "cache_meta": cache["meta"], "pipeline": "v3",
-                 "cert_level": CERT_LEVEL},
+                 "cert_level": CERT_LEVEL, "cal_frac": cal_frac},
         "alpha": alpha, "delta": delta, "gamma": gamma, "delta_weights": list(d_weights),
         "full_acquisition_test_risk": float(full_test_loss_primary.mean()),
         "full_acquisition_test_risk_by_split": {
             str(ps["test_seed"]): float((1.0 - C_all[ps["test"], T]).mean()) for ps in splits},
         "lambda_refs": {},
     }
+    if cal_frac == 1.0:
+        out["meta"]["cal_frac_note"] = "1 draw per split: at cal_frac 1.0 every draw of a split is the whole calibration pool"
+    pool_loss = {}   # split seed -> calpool stop-loss matrix [n_calpool, G] (cost-free: shared by every lambda_ref key)
 
     for lr_key, lr in lr_map.items():
         e = np.asarray(committed["edges"][policy_token][lr_key]["edges"], dtype=float)
@@ -329,6 +462,11 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                         "audit": {str(k): a.as_record() for k, a in aud.items()},
                         "strata_test": {int(k): int((bid_test == k).sum()) for k in np.unique(bid_test)},
                         "full_acq": {str(int(k)): float(full_test_loss[bid_test == k].mean()) for k in np.unique(bid_test)}}
+            # K1: per-stratum calpool risk of every grid threshold (the oracle's r_cal(lambda*), n_needed)
+            if seed not in pool_loss:
+                pool_loss[seed] = stops_from_grid_np(S_pool, C_pool, cc_pool_u, grid)[0]
+            pk, prisk = stratum_means(pool_loss[seed], bid_pool)
+            sd[seed]["calpool_risk"] = (pk, prisk, {str(k): int((bid_pool == k).sum()) for k in pk})
 
         audit = sd[primary]["audit"]
         deepest = str(max(int(k) for k in audit))
@@ -356,9 +494,19 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                 bid_pool, bid_test = x["bid_pool"], x["bid_test"]
                 cc_pool, cc_test = cc_all[scheme][calpool], cc_all[scheme][test]
                 losses_t, costs_t, _ = stops_from_grid_np(S_test, C_test, cc_test, grid)
+                # K1 ex-post stratum-safe oracles: all inputs are fixed per (split, scheme), so they are
+                # computed here once; the draw loop only selects (common oracle: by the draw's K_cal)
+                tk, t_risk = stratum_means(losses_t, bid_test)            # [test strata x G] risks
+                _, t_cost = stratum_means(costs_t, bid_test)              # [test strata x G] mean costs
+                col_cost = costs_t.mean(axis=0)
+                full_rec = stratum_risks_of_depth(C_test, cc_test, T, bid_test)
+                pk, prisk, pn = x["calpool_risk"]
+                safe_memo = {}                                            # tuple(K_cal) -> (j*, test risks of grid[j*])
+                jk = stratum_safe_mondrian(t_risk, t_cost, tk, alpha)
+                *smon, smon_abst = per_stratum_rule_risks(jk, losses_t, costs_t, C_test, cc_test, T, bid_test)
                 for dd in range(per_split):
                     d = split_draw_id(ps["split_index"], dd)
-                    cal_pos = calibration_draw(calpool, d, sp["cal_frac_of_pool"])
+                    cal_pos = calibration_draw(calpool, d, cal_frac)
                     # calibration-draw positions -> row indices into the calpool arrays
                     idx = np.nonzero(np.isin(calpool, cal_pos))[0]
                     S_cal, C_cal, cc_cal = S_pool[idx], C_pool[idx], cc_pool[idx]
@@ -442,6 +590,25 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
                                                           **{"lambda": float(grid[jo])})
                     else:
                         bl["oracle_cheapest_valid"] = {"lambda": None}
+                    # round 3 (K1): ex-post stratum-safe oracles (non-deployable; test labels; see module doc)
+                    kc = tuple(int(k) for k in res.k_cal)
+                    if kc not in safe_memo:
+                        js = stratum_safe_oracle(t_risk, col_cost, tk, kc, alpha)
+                        safe_memo[kc] = (js, None if js is None else
+                                         stratum_risks_of_threshold(S_test, C_test, cc_test, grid, js, bid_test))
+                    js, s_rec = safe_memo[kc]
+                    if js is None:   # no safe threshold: full acquisition
+                        extra = {"lambda": None, "lambda_idx": None, "feasible": False,
+                                 "calpool_stratum_risk": None, "calpool_stratum_n": None}
+                    else:
+                        extra = {"lambda": float(grid[js]), "lambda_idx": js, "feasible": True,
+                                 "calpool_stratum_risk": {str(k): float(prisk[i, js]) for i, k in enumerate(pk)},
+                                 "calpool_stratum_n": dict(pn)}
+                    bl["oracle_stratum_safe"] = _bl(*(full_rec if js is None else s_rec), **extra)
+                    bl["oracle_stratum_safe_mondrian"] = _bl(
+                        *smon, feasible=all(v is not None for v in jk.values()),
+                        lambda_by_stratum={str(k): (None if v is None else float(grid[v])) for k, v in jk.items()},
+                        abstained_fraction=smon_abst / max(test.size, 1))
                     rec["baselines"] = bl
                     draws.append(rec)
 
@@ -456,7 +623,8 @@ def run_one(dataset, policy_token, score, train_seed, *, cfg, paths, n_draws=Non
         print(f"[cascade] {dsname} ts{ts} {policy_token} lr[{lr_key}]={lr:.3f} G={block['G']} | "
               f"cert={s0['certified_deployment_rate']:.2f} tiers={s0['tier_share']} viol={s0['cascade_violation_rate']:.3f} "
               f"(by split {min(vs):.2f}-{max(vs):.2f}) certviol={s0['cascade_certified_violation_rate']:.3f} | "
-              f"deepest stratum verdict={v0} (agree {block['deepest_verdict_agreement']}/{block['n_splits']})", flush=True)
+              f"deepest stratum verdict={v0} (agree {block['deepest_verdict_agreement']}/{block['n_splits']})"
+              + (f" | cal_frac={cal_frac}" if cal_frac != cal_frac_commit else ""), flush=True)
 
     out_dir = Path(out_dir) if out_dir else Path(paths.results_root) / "metrics_v3"
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -478,6 +646,9 @@ def main(argv=None) -> int:
     p.add_argument("--committed", default=None, help="override the committed_v3 JSON (ablations)")
     p.add_argument("--delta-weights", default=None, help="e.g. 0.5,0.25,0.25 (sensitivity, E9)")
     p.add_argument("--test-seeds", default=None, help="subset of the committed test seeds, e.g. 778 (diagnostics)")
+    p.add_argument("--cal-frac", type=float, default=None,
+                   help="calibration-draw fraction of the pool (default: the commit's cal_frac_of_pool, 0.5); "
+                        "a non-default value needs --out-dir; 1.0 = whole pool, one draw per split (E11)")
     p.add_argument("--config", default="configs/experiment_v3.yaml")
     a = p.parse_args(argv)
     cfg = config.load_experiment(a.config)
@@ -486,7 +657,8 @@ def main(argv=None) -> int:
     dw = tuple(float(x) for x in a.delta_weights.split(",")) if a.delta_weights else None
     tsd = [int(x) for x in a.test_seeds.split(",")] if a.test_seeds else None
     run_one(a.dataset, a.policy, score, a.train_seed, cfg=cfg, paths=paths, n_draws=a.n_draws,
-            pool_dir=a.pool_dir, out_dir=a.out_dir, committed_path=a.committed, delta_weights=dw, test_seeds=tsd)
+            pool_dir=a.pool_dir, out_dir=a.out_dir, committed_path=a.committed, delta_weights=dw, test_seeds=tsd,
+            cal_frac=a.cal_frac)
     return 0
 
 
