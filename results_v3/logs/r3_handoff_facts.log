@@ -1,0 +1,25 @@
+E10 points with |obs_tier1 - pred_tier1| > 0.2 (results_v3/tables/TABLE_E10_margin.csv):
+   fashionmnist greedy_entropy key 0.7 split 779 pred 0.629 obs 0.85 z 2.37 n_k 1487
+   image-imagenette greedy_entropy key 0.7 split 779 pred 0.256 obs 0.05 z 1.52 n_k 256
+tier2_would_certify, max over every TABLE_E4_cascade.csv (all table dirs):
+   results_v3\tables\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_e11_calfrac025\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_e11_calfrac100\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_e9_G8\TABLE_E4_cascade.csv: cells 1, max 0.000
+   results_v3\tables_e9_alpha_margin02\TABLE_E4_cascade.csv: cells 12, max 0.000
+   results_v3\tables_e9_alpha_margin10\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_e9_delta_weights\TABLE_E4_cascade.csv: cells 1, max 0.000
+   results_v3\tables_e9_lambda_ref_0.5\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_e9_lambda_ref_0.7\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_e9_lambda_ref_0.9\TABLE_E4_cascade.csv: cells 16, max 0.000
+   results_v3\tables_inverse_info\TABLE_E4_cascade.csv: cells 10, max 0.000
+alpha of the am10 commits (configs/committed_v3_am10_*_ts0.json):
+   csv-diabetes: alpha 0.2 floor 0.09723 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.7980, random 0.7980
+   csv-physionet: alpha 0.25 floor 0.125 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.0000, random 0.0000
+   cube: alpha 0.2 floor 0.05375 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.6263, random 0.6162
+   fashionmnist: alpha 0.2 floor 0.064286 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.6263, random 0.6667
+   image-imagenette: alpha 0.15 floor 0.029851 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.7475, random 0.7273
+   mnist: alpha 0.15 floor 0.003929 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.6768, random 0.6869
+   tabular-MiniBooNE: alpha 0.2 floor 0.07438 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.7475, random 0.7475
+   tabular-adult: alpha 0.3 floor 0.154229 rule {'margin': 0.1, 'grid': 0.05} lambda_ref dep greedy_entropy 0.0000, random 0.0000
+round-3 ledger lines (results_v3/run_log.jsonl): 72, non-zero rc 0, first start 2026-10-03T11:27:51.063391+00:00, last end 2026-10-03T12:07:22.492169+00:00 (UTC)

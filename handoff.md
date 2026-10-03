@@ -2,11 +2,26 @@
 
 - Round 1: 2026-10-01 13:09 → 2026-10-02 ≈ 01:15 local (UTC+2), ≈ 12 h; ended at stop condition 5 (§9, resolved in round 2).
 - Round 2 (`instruction_round2.md`, Tasks A–F): 2026-10-03 00:55 → ≈ 09:30 local, ≈ 8.5 h (most of it waiting for the thermally throttled GPU, §12.4).
+- Round 3 (`instruction_round3.md`, Part 3a: Tasks G, H, I, K, L): 2026-10-03 ≈ 12:20 → ≈ 14:50 local, ≈ 2.5 h. The start is the session start, which is not logged. The first logged round-3 timestamp is 12:24 (pre-move hashes, `results_v3/round2/metrics_v3_round2.premove.sha256`, §13.4). Part 3b (Task J) did not start, because the seed-1/2 cluster caches are not in `$RESULTS_ROOT\pool_v3\` (§13).
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at the round-1 session start; tagged `aaai27-submission`)
-- Final content commit: `25c04ad` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
-- No job is running at the end of round 2.
+- Round-2 final content commit: `25c04ad`.
+- Round-3 final content commit: written by the follow-up hash commit; that commit changes only this line. `git log -1 aistats-v3` gives the branch tip.
+- No job is running at the end of round 3. The tag `aistats-v3-results` belongs to Part 3b and is not set.
 
 ## 1. Executive summary
+
+**Round 3, Part 3a (§13).** This round adds explanatory analyses only. No primary quantity changed: λ_ref `dep`, α rule, δ, γ, grids and committed JSONs are as in round 2. The 16 main sweeps were rerun with the new oracle code and every round-2 field is IDENTICAL (`results_v3/logs/r3_taskK_sweep_equivalence.log`), so the round-2 headline below stands.
+
+- **E10, certifiability margin (Task G).** The tier-1 share of a (cell, λ_ref key, split) is predicted by the deepest stratum's full-information margin at the calibration-draw size. Over 320 points, Spearman ρ(observed, predicted) = 0.905 and 318/320 points lie within ±0.2 of the prediction. At key `dep` it is ρ 0.935 with 80/80 within ±0.2 (`results_v3/tables/TABLE_E10_margin_summary.json`, F7).
+- **E9, α margin 0.10 (Task H).** All 8 datasets are committed. Every cell except Diabetes goes to tier 1 = 1.00. Certified violation is 0.000 in all 16 cells. Adult becomes degenerate at α 0.30, as PhysioNet already is (`results_v3/tables/TABLE_E9_alpha_margin.md`).
+- **Cost / T and tier 2 (Task I).** The deployed cost / T ranges from 0.000 (PhysioNet) to 1.000 (Diabetes, Adult random). `tier2_would_certify` is 0.000 in every cell of every table directory. At draw level, budget certifies without threshold in 0 of 61,720 draw records (`results_v3/logs/r3_tier2_draw_count.log`), so tier 2 never mattered.
+- **Is the cost intrinsic? (Task K).** This compares the cascade's cost with an ex-post stratum-safe oracle (`results_v3/tables/TABLE_E4_cost_gap.md`):
+  - **intrinsic:** Diabetes;
+  - **sample-limited:** FashionMNIST, Imagenette and MiniBooNE random (cascade / oracle 2.0–5.0);
+  - **near-oracle:** PhysioNet, CUBE, MNIST and Adult greedy (1.04–1.26);
+  - **mixed:** Adult random and MiniBooNE greedy (oracle infeasible on most splits).
+- **Calibration size (Task K).** Doubling the calibration draw raises tier 1 from 0.12 to 0.40 (FashionMNIST greedy) and from 0.20 to 0.40 (Imagenette greedy) (`results_v3/tables/TABLE_E11_calfrac.md`).
+- **FashionMNIST predictor upgrade (Task L): `TBD-RUN`.** The laptop smoke ran the greedy rollout at 361 s per 256 rows, which projects linearly to ≈ 11 h on the thermally throttled GPU. Cluster lines are in `hpc/README_v3.md` §8.
 
 **Round 2 (final).** Round 2 fixed the Hoeffding–Bentkus boundary defect (tag `aaai27-submission`, `CHANGELOG.md`). It replaced the single calibration/test split with 5 splits × 20 draws and added noise-aware violation metrics next to the raw rate: certified violation (exact one-sided binomial test-split p ≤ 0.05) and `max_excess_se`. It also re-ran all of Phase 3 and finished Imagenette seed 0, which gives **16 seed-0 cells**. At λ_ref `dep`, pooled over the 5 splits (`results_v3/tables/TABLE_E4_cascade.md`, §8):
 - certified deployment is 1.00 in all 16 cells;
@@ -112,6 +127,8 @@ Background orchestration: chain A (seed-0 retrains + rollouts; `driver_chain_ts0
 | `rollouts:` (Imagenette seed 0 greedy / random) | 2 | 26,368.4 / 1,481.7 | 0 |
 
 Run outside the ledger: the E7 BEFORE re-commits (`results_v3/logs/r2_commit_before_*`), the planted rerun (`results_v3/logs/r2_phase2_planted_validation.log`), table/figure/report scripts (`results_v3/logs/r2_*make_tables*.log`, `r2_final_make_figures.log`) and the checks in §12.
+
+**Round 3 ledger** (`results_v3/run_log.jsonl`; prefixes `r3am10:commit:`, `r3:sweep:`, `r3am10:sweep:`, `r3cf025:sweep:`, `r3cf100:sweep:`): 72 runs, all with return code 0, between 13:27 and 14:07 local. The per-prefix table, the parallel lanes (`results_v3/logs/r3_background_jobs.log`), the two paused lanes and the runs outside the ledger are in §13.6. Nothing was launched on the GPU except the Task-L smoke (§13.5), whose outputs were deleted.
 
 ## 4. Code changes
 
@@ -230,6 +247,20 @@ total: 266 files changed, 73391 insertions(+), 1 deletion(-)
 | `scripts/run_repairs_v3.py`, `scripts/report_violations_v3.py` | ledgered E7 runner; violation report | C, `799b214` |
 | `scripts/commit_v3.py`, `tests/test_alpha_rule_v3.py` | `--alpha-margin` / `--alpha-grid`, `alpha_from_floor`, rc 7 | E, `00c2c4a`, `32fec67` |
 | `hpc/README_v3.md`, `hpc/dry_run_v3.sh`, `hpc/{backbone,rollout}_v3.slurm`, `.gitattributes`, `.gitignore`, `scripts/run_pool_rollout_v3.py`, `scripts/export_heldout_v3.py`, `scripts/make_tables_v3.py` (seed table), `tests/test_hpc_v3.py` | cluster package, latent fixes | F, `0d02588`, `32fec67` |
+
+**Round 3** (§13). There are no edits to `src/cafa/` or to frozen files: `git diff 16da5a0 -- src/` is empty.
+
+`git diff --shortstat 16da5a0 95f9480 -- . ':!results_v3' ':!configs/committed_v3*'` (code, tests, hpc; before the handoff commit, which only adds README wording): 18 files, +3,317 / −65.
+
+| file | change | task / commit |
+|---|---|---|
+| `scripts/run_cascade_sweep.py` | Two ex-post baselines, `oracle_stratum_safe` and `oracle_stratum_safe_mondrian`, computed once per (split, scheme) and selected per draw. Summary fields `feasible_rate`, `cascade_cost_over_oracle(_feasible)` and `cascade_cost_over_safe_mondrian_oracle`. `--cal-frac` (default = the commit's 0.5; non-default needs `--out-dir`; 1.0 = one draw per split; an empty draw is refused). Every round-2 field is unchanged (§13.4). | K, `2ffeb04` |
+| `tests/test_oracles_v3.py` (new, 14 tests) | Cheapest safe λ on hand-made splits; infeasible → full acquisition (depth T, not the top grid column); Mondrian-safe ≤ common ≤ full; λ recomputed from the cache; `--cal-frac` guards and the one-draw-per-split rule | K, `2ffeb04` |
+| `scripts/margin_analysis_v3.py` (new), `tests/test_margin_analysis_v3.py` (new, 26 tests) | E10 table, summary and F7; E11 table; sensitivity predictors (`_thr`, `_nk_calpool`, `_hyper`) | G / K2, `b85ac6a` |
+| `scripts/make_tables_v3.py` | E4 cost / T, `tier2_would_certify`, `escalated_fraction` and safe-oracle columns; E6 `feasible_rate`; `TABLE_E4_cost_gap` (label, `label_note`, `n_needed`, feasible-draws ratio) | I / K, `b85ac6a`, `ecf553f` |
+| `scripts/make_figures_v3.py` | F3 cost panel in cost / T with the E2 number under each bar; seed means with several seeds | I, `b85ac6a` |
+| `scripts/alpha_margin_summary_v3.py` (new), `tests/test_reporting_v3.py` (new, 6 tests) | `TABLE_E9_alpha_margin`; tests of the E4/E6/cost-gap/F3/E9 reporting | H / I, `b85ac6a`, `ecf553f` |
+| `scripts/train_backbone_v3.py`, `scripts/run_pool_rollout_v3.py`, `scripts/drive_v3.py`, `scripts/commit_v3.py` (`find_policy_caches` only), `scripts/check_caches_v3.py`, `scripts/run_repairs_v3.py`, `hpc/dry_run_v3.sh`, `hpc/README_v3.md` (§7, §8), `tests/test_checkpoint_tag_v3.py` (new, 12 tests), `tests/test_hpc_v3.py` | `--checkpoint-tag` (folder `checkpoints_v3_TAG`, cache token `{policy}-TAG`); `--width-mult` / `--p-full` overrides, which need a tag; tagged caches are ignored by commits and grouped by the cache check; `run_repairs_v3.py --repair-tag`; Task-L cluster lines | L, `5481269`, `95f9480` |
 
 ## 5. Phase 0 results
 
@@ -426,6 +457,27 @@ Acceptance (instruction_round2 Task C, applied to all 16 cells):
 - **Tier pattern at `dep`:** tier 1 ≥ 0.99 on MNIST (1.00 / 1.00), CUBE (1.00 / 0.99), Adult greedy (1.00) and PhysioNet (1.00 / 1.00); tier 3 is the majority on Diabetes (1.00 / 1.00), Adult random (1.00), MiniBooNE greedy (0.99), Imagenette (0.80 greedy / 0.91 random; tier 1 0.20 / 0.09), FashionMNIST (0.88 / 0.88) and MiniBooNE random (0.74). The instruction-§4.4 expectation "tier 1 dominant on MNIST / FashionMNIST / Imagenette / MiniBooNE / CUBE" is met for MNIST and CUBE only. Cost premium in the tier-1 cells: MNIST 1.046 / 1.085, CUBE 1.383 / 1.162, Adult greedy 1.253; Imagenette 5.385 / 6.072.
 - **PhysioNet:** α = 0.20 makes the `dep` target degenerate (λ_ref = 0, G = 1, tier 1 at zero acquisition cost); kept as is and moved to the appendix (author decision, round 2 §0; α-rule sensitivity in §8.7).
 - **Changes against round 1** (HB fix + 5 splits; the 14 cells common to both rounds; `old → new` in §11 and `results_v3/diagnostics/r2_old_vs_new_dep.md`): tier-1 share FashionMNIST 0.35 → 0.12 (greedy) and 0.58 → 0.12 (random), MiniBooNE 0.04 → 0.01 (greedy) and 0.73 → 0.26 (random); raw violation FashionMNIST 0.350 → 0.100 and 0.580 → 0.100, MiniBooNE 0.110 → 0.020 and 0.120 → 0.030; all other cells change by ≤ 0.02 in tier shares and raw violation. Imagenette is new in round 2 (Task D).
+
+**Round-3 columns of TABLE_E4_cascade** (Tasks I and K, §13.3–13.4; same file, appended columns; the round-2 columns above are unchanged, `results_v3/logs/r3_table_invariance.log`):
+
+| dataset | policy | tier1 | tier2 | tier3 | deployed_cost_over_T | marginal_cost_over_T | mondrian_cost_over_T | tier2_would_certify | escalated_fraction | oracle_safe_cost_over_T | oracle_safe_feasible_rate | cascade_over_safe_oracle |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0.000 | 0.000 | 1.000 | 1.000 | 0.154 | 0.259 | 0.000 | 0.183 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0.000 | 0.000 | 1.000 | 1.000 | 0.249 | 0.235 | 0.000 | 0.108 | 1.000 | 0.000 | 1.000 |
+| csv-physionet | greedy_entropy | 1.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 1.000 |  |
+| csv-physionet | random | 1.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 1.000 | 0.000 | 0.000 | 0.289 | 0.209 | 0.248 | 0.000 | 0.000 | 0.229 | 1.000 | 1.264 |
+| cube | random | 0.990 | 0.000 | 0.010 | 0.576 | 0.496 | 0.548 | 0.000 | 0.000 | 0.518 | 1.000 | 1.112 |
+| fashionmnist | greedy_entropy | 0.120 | 0.000 | 0.880 | 0.929 | 0.110 | 0.262 | 0.000 | 0.018 | 0.423 | 0.800 | 2.197 |
+| fashionmnist | random | 0.120 | 0.000 | 0.880 | 0.926 | 0.162 | 0.294 | 0.000 | 0.015 | 0.464 | 0.800 | 1.995 |
+| image-imagenette | greedy_entropy | 0.200 | 0.000 | 0.800 | 0.884 | 0.164 | 0.295 | 0.000 | 0.017 | 0.232 | 1.000 | 3.806 |
+| image-imagenette | random | 0.090 | 0.000 | 0.910 | 0.940 | 0.155 | 0.285 | 0.000 | 0.037 | 0.189 | 1.000 | 4.974 |
+| mnist | greedy_entropy | 1.000 | 0.000 | 0.000 | 0.075 | 0.071 | 0.074 | 0.000 | 0.000 | 0.072 | 1.000 | 1.041 |
+| mnist | random | 1.000 | 0.000 | 0.000 | 0.184 | 0.169 | 0.178 | 0.000 | 0.000 | 0.168 | 1.000 | 1.092 |
+| tabular-adult | greedy_entropy | 1.000 | 0.000 | 0.000 | 0.213 | 0.170 | 0.151 | 0.000 | 0.000 | 0.198 | 1.000 | 1.079 |
+| tabular-adult | random | 0.000 | 0.000 | 1.000 | 1.000 | 0.247 | 0.255 | 0.000 | 0.098 | 0.856 | 0.200 | 1.169 |
+| tabular-MiniBooNE | greedy_entropy | 0.010 | 0.000 | 0.990 | 0.993 | 0.061 | 0.303 | 0.000 | 0.035 | 0.745 | 0.400 | 1.333 |
+| tabular-MiniBooNE | random | 0.260 | 0.000 | 0.740 | 0.862 | 0.155 | 0.255 | 0.000 | 0.015 | 0.230 | 1.000 | 3.743 |
 
 ### 8.2 TABLE_E3_audit (deepest stratum; audit of record = split 778's calibration pool)
 
@@ -638,6 +690,44 @@ Convention for `mondrian_oracle.stratum_violation`: strata where the per-stratum
 | tabular-MiniBooNE | random | 0 | oracle_cheapest_valid | 0.147 | 7.113 | 1.000 | 0.000 | 1.000 |
 | tabular-MiniBooNE | random | 0 | plugin | 0.146 | 7.188 | 1.000 | 0.080 | 1.000 |
 
+**Round 3 (Task K).** E6 also has a `feasible_rate` column, and two new rows per cell, inserted alphabetically between `oracle_cheapest_valid` and `plugin` in `results_v3/tables/TABLE_E6_baselines.csv`. Both are ex-post baselines that use test labels and cannot be deployed (definitions in §13.4).
+- **Stratum-violation rate of the oracles.** It is not 0 everywhere. In infeasible draws the oracle falls back to full acquisition, which itself violates where the deepest stratum's full-information test risk exceeds α: Diabetes, and some splits of FashionMNIST, Adult random and MiniBooNE greedy. The safe-Mondrian oracle keeps full acquisition in its abstaining strata.
+
+| dataset | policy | baseline | mean_test_risk | mean_test_cost | stratum_violation_rate | aggregate_violation_rate | stratum_certified_violation_rate | feasible_rate |
+|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | oracle_stratum_safe | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 | 0.000 |
+| csv-diabetes | greedy_entropy | oracle_stratum_safe_mondrian | 0.114 | 11.650 | 1.000 | 0.000 | 1.000 | 0.000 |
+| csv-diabetes | random | oracle_stratum_safe | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 | 0.000 |
+| csv-diabetes | random | oracle_stratum_safe_mondrian | 0.150 | 10.467 | 1.000 | 0.400 | 1.000 | 0.000 |
+| csv-physionet | greedy_entropy | oracle_stratum_safe | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 | 1.000 |
+| csv-physionet | greedy_entropy | oracle_stratum_safe_mondrian | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 | 1.000 |
+| csv-physionet | random | oracle_stratum_safe | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 | 1.000 |
+| csv-physionet | random | oracle_stratum_safe_mondrian | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 | 1.000 |
+| cube | greedy_entropy | oracle_stratum_safe | 0.121 | 4.578 | 0.000 | 0.000 | 0.000 | 1.000 |
+| cube | greedy_entropy | oracle_stratum_safe_mondrian | 0.143 | 4.109 | 0.000 | 0.000 | 0.000 | 1.000 |
+| cube | random | oracle_stratum_safe | 0.123 | 10.366 | 0.000 | 0.000 | 0.000 | 1.000 |
+| cube | random | oracle_stratum_safe_mondrian | 0.145 | 9.765 | 0.000 | 0.000 | 0.000 | 1.000 |
+| fashionmnist | greedy_entropy | oracle_stratum_safe | 0.069 | 20.726 | 0.200 | 0.000 | 0.000 | 0.800 |
+| fashionmnist | greedy_entropy | oracle_stratum_safe_mondrian | 0.143 | 8.979 | 0.200 | 0.000 | 0.000 | 0.800 |
+| fashionmnist | random | oracle_stratum_safe | 0.068 | 22.741 | 0.200 | 0.000 | 0.000 | 0.800 |
+| fashionmnist | random | oracle_stratum_safe_mondrian | 0.149 | 10.992 | 0.200 | 0.000 | 0.000 | 0.800 |
+| image-imagenette | greedy_entropy | oracle_stratum_safe | 0.051 | 11.382 | 0.000 | 0.000 | 0.000 | 1.000 |
+| image-imagenette | greedy_entropy | oracle_stratum_safe_mondrian | 0.097 | 8.331 | 0.000 | 0.000 | 0.000 | 1.000 |
+| image-imagenette | random | oracle_stratum_safe | 0.062 | 9.263 | 0.000 | 0.000 | 0.000 | 1.000 |
+| image-imagenette | random | oracle_stratum_safe_mondrian | 0.098 | 7.505 | 0.000 | 0.000 | 0.000 | 1.000 |
+| mnist | greedy_entropy | oracle_stratum_safe | 0.089 | 3.514 | 0.000 | 0.000 | 0.000 | 1.000 |
+| mnist | greedy_entropy | oracle_stratum_safe_mondrian | 0.096 | 3.417 | 0.000 | 0.000 | 0.000 | 1.000 |
+| mnist | random | oracle_stratum_safe | 0.091 | 8.236 | 0.000 | 0.000 | 0.000 | 1.000 |
+| mnist | random | oracle_stratum_safe_mondrian | 0.097 | 8.035 | 0.000 | 0.000 | 0.000 | 1.000 |
+| tabular-adult | greedy_entropy | oracle_stratum_safe | 0.184 | 2.766 | 0.000 | 0.000 | 0.000 | 1.000 |
+| tabular-adult | greedy_entropy | oracle_stratum_safe_mondrian | 0.184 | 1.936 | 0.000 | 0.000 | 0.000 | 1.000 |
+| tabular-adult | random | oracle_stratum_safe | 0.154 | 11.979 | 0.800 | 0.000 | 0.000 | 0.200 |
+| tabular-adult | random | oracle_stratum_safe_mondrian | 0.200 | 3.022 | 0.800 | 0.000 | 0.000 | 0.200 |
+| tabular-MiniBooNE | greedy_entropy | oracle_stratum_safe | 0.079 | 37.244 | 0.600 | 0.000 | 0.200 | 0.400 |
+| tabular-MiniBooNE | greedy_entropy | oracle_stratum_safe_mondrian | 0.103 | 13.400 | 0.600 | 0.000 | 0.200 | 0.400 |
+| tabular-MiniBooNE | random | oracle_stratum_safe | 0.112 | 11.515 | 0.000 | 0.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | random | oracle_stratum_safe_mondrian | 0.145 | 8.053 | 0.000 | 0.000 | 0.000 | 1.000 |
+
 ### 8.5 Violations per split (cells over δ in round 1, and every other cell)
 
 `python scripts/report_violations_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --focus ...` → `results_v3/diagnostics/r2_violations_dep.md` (and `r2_violations_lr{0.5,0.7,0.9}.md`). By-split columns are in test-seed order 778, 779, 780, 781, 782.
@@ -758,10 +848,26 @@ Other ablations:
 | image-imagenette | greedy_entropy | 0.1 → 0.05 (not committed, rc 7) | | | | | | | | | | |
 | image-imagenette | random | 0.1 → 0.05 (not committed, rc 7) | | | | | | | | | | |
 - **Cost schemes:** `results_v3/tables_inverse_info/`.
+- **α rule, margin 0.10 (round 3, Task H; §13.2).**
+  - Commits `configs/committed_v3_am10_{dsname}_ts0.json` exist for all 8 datasets; none is refused.
+  - Sweeps are in `$RESULTS_ROOT\metrics_v3_alpha_margin10\` and tables in `results_v3/tables_e9_alpha_margin10/`.
+  - The comparison of margins 0.02 / 0.05 / 0.10 is `results_v3/tables/TABLE_E9_alpha_margin.md`, pasted in §13.2.
+- **Calibration size (round 3, Task K2; §13.4).** `TABLE_E11_calfrac` covers cal_frac 0.25 / 0.5 / 1.0, with sweeps in `$RESULTS_ROOT\metrics_v3_calfrac{025,100}\`.
 
 ### 8.8 Figures
 
-`python scripts/make_figures_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures` → `results_v3/figures/F2_blindness.pdf`, `F3_cascade.pdf`, `F4_repair.pdf`, `F5_planted.pdf`, `F6_violations.pdf` (new: raw pooled rate with the min–max over splits, certified rate, lines at δ and δ + 0.05). 16 cells; F5 is drawn from the round-2 planted run (`results_v3/planted/planted_validation.csv`; §7, §12.2).
+`python scripts/make_figures_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures` writes these files to `results_v3/figures/`:
+- `F2_blindness.pdf`;
+- `F3_cascade.pdf`;
+- `F4_repair.pdf`;
+- `F5_planted.pdf`;
+- `F6_violations.pdf` (new: the raw pooled rate with the min–max over splits, the certified rate, and lines at δ and δ + 0.05).
+
+All 16 cells are included. F5 is drawn from the round-2 planted run (`results_v3/planted/planted_validation.csv`; §7, §12.2).
+
+Round-3 figure changes (rerun with `results_v3/logs/r3_postrun.sh`):
+- **F3, Task I:** the cost panel is now in cost / T, and the E2 worst-stratum risk / α of marginal CAFA is printed under each bar.
+- **F7, Task G (new):** `results_v3/figures/F7_margin.pdf`, written by `scripts/margin_analysis_v3.py`. It shows the observed tier-1 share against the deepest-stratum margin z, and against the prediction; the cal_frac 0.25 / 1.0 points are drawn as open markers.
 
 ### 8.9 Committed JSONs (`python scripts/report_v3.py --commits`; round-2 re-commits)
 
@@ -847,12 +953,25 @@ Other deviations / open issues:
 
 ## 10. What remains (exact commands; PowerShell, repo root, after `. .\set_env.ps1`)
 
-1. **Seeds 1–2 for all eight datasets, Imagenette seeds 1–2 included (`TBD-RUN`): TinyGPU.** Everything is in **`hpc/README_v3.md`**: what to push, the data to copy or re-download, the environment and `hpc/env.local.sh`, the exact `sbatch` lines, the expected wall times, the files to bring back and the local round-3 commands (commit, sweep, repairs, `TABLE_E4_cascade_seeds.md`). The dry run of every array index is `results_v3/logs/hpc_dry_run.log`.
+1. **Seeds 1–2 for all eight datasets, Imagenette seeds 1–2 included (`TBD-RUN`): TinyGPU.** Everything is in **`hpc/README_v3.md`**:
+   - what to push;
+   - the data to copy or re-download;
+   - the environment and `hpc/env.local.sh`;
+   - the exact `sbatch` lines and the expected wall times;
+   - the files to bring back;
+   - the local round-3 commands (README §7: commit, sweep, repairs, `TABLE_E4_cascade_seeds.md`, and, added in round 3, the α-margin 0.02 / 0.10 commits and sweeps for seeds 1–2 and E10 over all seeds).
+
+   The dry run of every array index is `results_v3/logs/hpc_dry_run.log`. Once the caches are back, Part 3b of `instruction_round3.md` (Task J) applies: run `check_caches_v3.py`, then the README §7 commands, then the final checks and the tag `aistats-v3-results`.
+1b. **FashionMNIST predictor-upgrade repair (Task L, `TBD-RUN`): TinyGPU.**
+   - Run the two `sbatch` lines of `hpc/README_v3.md` §8 (dry run: `tests/test_hpc_v3.py::test_hpc_dry_run_task_l_lines`).
+   - Then, locally: `python scripts/check_caches_v3.py`, followed by `python scripts/run_repairs_v3.py --seeds 0 --datasets fashionmnist --repair-tag repair --tag r3L`.
+   - This writes `results_v3/repair/fashionmnist_ts0_predictor_upgrade{,_random}.json`; report them as E7 MNIST is reported (§8.6).
 2. **Tables and figures** (rerun whenever cells are added; seed 0 as in round 2):
    - `python scripts/make_tables_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --output-dir results_v3/tables --lambda-ref-key dep --scheme uniform` (also writes `TABLE_E4_cascade_seeds.md`)
    - the same with `--output-dir results_v3/tables_inverse_info --scheme inverse_info`, and with `--lambda-ref-key 0.5|0.7|0.9 --output-dir results_v3/tables_e9_lambda_ref_<key>`
    - `python scripts/make_figures_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures`
    - `python scripts/report_violations_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --output results_v3/diagnostics/r2_violations_dep.md`
+   - round 3: `bash results_v3/logs/r3_postrun.sh` regenerates every table directory and the figures, writes E10 / E11 / F7 (`scripts/margin_analysis_v3.py`) and `TABLE_E9_alpha_margin` (`scripts/alpha_margin_summary_v3.py`), and checks that the K1 rerun matches round 2. It needs the round-2 archive `metrics_v3_round2`.
 3. **E7 / E9 for further seeds** (`<ts>` = 1 or 2; round-2 code):
    - E7: `python scripts/commit_v3.py --dataset <ds> --train-seed <ts> --pool-dir F:/CAFA_results/pool_v2 --out-path configs/committed_v3before_<dsn>_ts<ts>.json` for mnist, tabular:MiniBooNE, tabular:adult (needs the v2 ts1/ts2 caches), then `python scripts/run_repairs_v3.py --seeds <ts> --tag r3`
    - E9 δ split: `python scripts/drive_v3.py --phase sweep --seeds <ts> --datasets csv:physionet --policies greedy_entropy --metrics-dir-name metrics_v3_dw --tag r3dw "--extra-args=--delta-weights 0.34,0.33,0.33"`
@@ -880,6 +999,13 @@ Other deviations / open issues:
 | E5 study D (test noise, new) | true deepest-stratum risk α − 0.004, test n_k ≈ 2,492, 10 blocks × 20: D2 (powered calibration) certification 0.880, true violation 0.000, raw 0.235 (blocks 0.00–0.55), certified 0.005; D1 (as specified) certification 0.055, raw 0.020, certified 0.000 | `results_v3/planted/PLANTED_VALIDATION.md` |
 | E7 before → after (MNIST, predictor upgrade) | unchanged: `type_II` → `feasible`; family minimum 0.295 → 0.011; tier-1 share 0.00 → 1.00; violation 0.00 → 0.00 (certified 0.00 → 0.00) | `results_v3/repair/mnist_ts0_predictor_upgrade.json` |
 | Imagenette seed 0 | heldout full-acquisition accuracy 0.971818 (both policies); α 0.10; tiers 1/3 = 0.20/0.80 (greedy), 0.09/0.91 (random); certified deployment 1.00; raw violation 0.050 / 0.000; certified 0.000 / 0.000 | `results_v3/tables/TABLE_E4_cascade.csv`, `results_v3/logs/r2_taskD_verify_greedy_cache.log` |
+| deployed cost / T (round 3) | 0.000 (PhysioNet, both) … 1.000 (Diabetes both, Adult random). Tier-1 cells: MNIST 0.075 / 0.184, CUBE 0.289 / 0.576, Adult greedy 0.213. Imagenette 0.884 / 0.940, FashionMNIST 0.929 / 0.926, MiniBooNE 0.993 / 0.862. Marginal CAFA 0.000 … 0.496; Mondrian oracle 0.000 … 0.548 | `results_v3/tables/TABLE_E4_cascade.csv` (`*_cost_over_T`) |
+| tier-2 would-certify share (round 3) | 0.000 in every cell of every table directory, and 0 of 61,720 draw records. Equal to the tier-2 share by construction; tier 2 never mattered | same (`tier2_would_certify`); `results_v3/logs/r3_handoff_facts.log`, `r3_tier2_draw_count.log` |
+| cascade cost / ex-post stratum-safe oracle (round 3) | intrinsic: Diabetes (oracle infeasible, 1.000 / 1.000). Sample-limited: FashionMNIST 2.197 / 1.995, Imagenette 3.806 / 4.974, MiniBooNE random 3.743. Near-oracle: MNIST 1.041 / 1.092, CUBE 1.264 / 1.112, Adult greedy 1.079, PhysioNet 0/0. Mixed: Adult random 1.169 (3.595 on feasible draws), MiniBooNE greedy 1.333 (2.761) | `results_v3/tables/TABLE_E4_cost_gap.{md,csv}` (§13.4) |
+| E10: tier 1 predicted by the deepest-stratum margin (round 3) | 320 points: Spearman ρ 0.905, 318/320 within ±0.2. Key `dep`: ρ 0.935, 80/80 | `results_v3/tables/TABLE_E10_margin_summary.json`, `results_v3/figures/F7_margin.pdf` |
+| E9 α margin 0.10 (round 3) | Tier 1 = 1.00 in every cell except Diabetes (greedy tier 3 1.00; random tier 1 0.26). Certified violation 0.000 in all 16 cells. Adult degenerate at α 0.30 | `results_v3/tables/TABLE_E9_alpha_margin.md`, `results_v3/tables_e9_alpha_margin10/` |
+| E11 calibration size (round 3) | Tier-1 share at cal_frac 0.25 / 0.5 / 1.0. FashionMNIST greedy 0.12 / 0.12 / 0.40; Imagenette greedy 0.09 / 0.20 / 0.40, random 0.03 / 0.09 / 0.20; MiniBooNE random 0.10 / 0.26 / 0.20; CUBE random 0.69 / 0.99 / 1.00. 1.0 = one draw per split | `results_v3/tables/TABLE_E11_calfrac.md` |
+| E7 FashionMNIST predictor upgrade (round 3) | TBD-RUN on the cluster. The laptop smoke ran the greedy rollout for 256 rows in 361 s; projected linearly that is ≈ 11 h for the 28,000 heldout rows, and the GPU was thermally throttled. | `hpc/README_v3.md` §8, `results_v3/logs/r3_taskL_smoke_*.log` |
 | seeds 1–2 (all quantities) | TBD-RUN (cluster package `hpc/README_v3.md`, Task F) | — |
 | external AFABench policies | TBD-RUN | — |
 
@@ -1021,3 +1147,394 @@ Both are reported, with the noise-free expected raw and certified rates computed
 - [x] `$RESULTS_ROOT\metrics_v3_round1\` exists and is untouched: 16 of 16 sha256 OK against `results_v3/round1/metrics_v3_round1.sha256` (`results_v3/logs/r2_round1_archive_check.log` during round 2 and `r2_final_checklist.log` at the end).
 - [x] HPC dry run on the committed tree (`results_v3/logs/hpc_dry_run.log`, header: commit `7da8c3c`, 0 uncommitted files): 72 array tasks, 48 would run (seeds 1–2), 24 skip because their seed-0 output exists.
 
+## 13. Round 3 (`instruction_round3.md`, Part 3a)
+
+Round 3 follows `instruction_round3.md` (Tasks G, H, I, K, L); `instruction.md` and `instruction_round2.md` stay in force. Start and end times are in the header.
+
+**Scope**
+- **Part 3a only.** `$RESULTS_ROOT\pool_v3\` holds the 16 seed-0 caches and no `*_ts1_*` / `*_ts2_*` cache, so Task J (3b) was not started. The instruction covers this case: "If 3b's caches are not present when you start, do 3a, update the handoff, commit, and stop." Seeds 1–2 stay `TBD-RUN` (§10).
+- **Author decisions of round 3 §0, applied:**
+  - Nothing primary changes. λ_ref `dep`, the α rule, δ, γ, the δ split, the grids and every existing committed JSON are untouched; the only new commits are the eight E9 `committed_v3_am10_*` files.
+  - Tier 2 stays in the cascade.
+  - Phase 1d stays `TBD-RUN`.
+
+**Commits**
+
+| task | code | results |
+|---|---|---|
+| K | `2ffeb04` | `ecf553f` |
+| L | `5481269` | `95f9480` (README: measured smoke) |
+| G / H / I | `b85ac6a` | `dfdc149` |
+
+Then the handoff commit (header).
+
+**Method**
+- The code was written in four parallel slices, each on its own files: G (E10 / E11 / F7); I plus the H summary; K (the sweep); L (checkpoint tag). One adversarial reviewer per slice then checked it and reproduced every finding it reported.
+  - Reviews: `results_v3/diagnostics/r3_review_task{G,I,K,L}.json`.
+  - Fix reports, with the mutation checks: `results_v3/diagnostics/r3_review_fixes_task{G,I,K,L}.md`.
+- The reviewers reported 13 findings (2 medium, 11 low). All were fixed before any run. Each fix is covered by a test that fails on the unfixed code; the fix reports list the mutation checks.
+- The handoff itself was then checked number by number against the files by three read-only verifiers: `results_v3/diagnostics/r3_handoff_verification_{A,B,C}.md`. Their corrections are applied in this text.
+- The two medium findings:
+  - The cost-gap "intrinsic" rule used cost / T, which is wrong under non-uniform costs. It now uses oracle cost / full-acquisition cost.
+  - F3 was illegible with 48 cells. It now draws one bar per (dataset, policy) with seed means.
+- The low ones:
+  - Tests could not tell full acquisition apart from the top grid column.
+  - A tiny `--cal-frac` gave an unclear numpy error.
+  - The edges shape check used broadcasting.
+  - E11 printed `TBD-RUN` for a missing cost scheme; it now prints `n/a`.
+  - An empty `--checkpoint-tag` fell back to the protocol paths.
+  - Test gaps: the core prediction, cost / T vs cost / full acquisition, and the α = design-margin refusal boundary.
+  - Two reporting additions: `label_note` / `n_splits_finite`, and `cascade_cost_over_oracle_feasible`.
+  - The hypergeometric sensitivity column `pred_tier1_hyper`.
+
+### 13.1 Task G — certifiability margin (E10)
+
+**Code and command**
+- Script and test: `scripts/margin_analysis_v3.py` (torch-free), `tests/test_margin_analysis_v3.py` (26 tests).
+- Command: `python scripts/margin_analysis_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --calfrac-dir 0.25 $RESULTS_ROOT/metrics_v3_calfrac025 --calfrac-dir 1.0 $RESULTS_ROOT/metrics_v3_calfrac100 --output-dir results_v3/tables --figure results_v3/figures/F7_margin.pdf`
+- Log: `results_v3/logs/r3_margin_analysis.log`.
+
+**Points.** One point per (dataset, policy, seed, λ_ref key ∈ {0.5, 0.7, 0.9, dep}, split): 16 cells × 4 × 5 = **320**.
+
+**Definitions (as specified)**
+- k* is the deepest stratum of `audit_by_split[s]`. `r_full`, `rmin_thr` and `rmin_depth` are its calibration-pool values.
+- n_k is the commit's `expected_cal_counts[k*]`.
+- margin = α − r_full and z = margin · √(n_k / (α(1−α))).
+- k_max is the largest error count with `hoeffding_bentkus_pvalue(k/n_k, n_k, α) ≤ δ₁ = 0.05`.
+- `pred_tier1` = P(Bin(n_k, r_full) ≤ k_max). `pred_tier1_thr` is the same with `rmin_thr`.
+- `obs_tier1` is the tier-1 share over the split's 20 draws.
+
+**Sensitivity columns** (in the CSV and the summary JSON / md; not in `TABLE_E10_margin.md`)
+- `pred_tier1_nk_calpool` uses n_k = round(0.5 · the split's calibration-pool count of k*).
+- `pred_tier1_hyper` is the prediction conditional on the split's calibration pool (draws without replacement, hypergeometric). At cal_frac 1.0 it reduces to an indicator.
+
+**Outputs**
+- `results_v3/tables/TABLE_E10_margin.{md,csv}` (320 rows).
+- `TABLE_E10_margin_calfrac.csv` (the 640 cal-frac points).
+- `TABLE_E10_margin_summary.{json,md}`.
+- `results_v3/figures/F7_margin.pdf`:
+  - panel (a): obs vs z, colour = dataset, marker = λ_ref key, with the curve at the median n_k 1,314 and median α 0.15;
+  - panel (b): obs vs pred, with the diagonal and a ±0.2 band;
+  - the cal-frac points are open markers.
+
+**Result** (`TABLE_E10_margin_summary.json`)
+
+| subset | predictor | n | Spearman ρ (p) | within ±0.2 | mean abs. error |
+|---|---|---|---|---|---|
+| all keys | `pred_tier1` | 320 | **0.905** (3.28e-120) | **0.994** (318/320) | 0.020 |
+| all keys | `pred_tier1_thr` | 320 | 0.905 (2.56e-120) | 0.988 (316/320) | 0.021 |
+| all keys | `pred_tier1_hyper` (sensitivity) | 320 | 0.894 (3.55e-113) | 0.997 (319/320) | 0.010 |
+| key `dep` | `pred_tier1` | 80 | 0.935 (7.17e-37) | 1.000 (80/80) | 0.027 |
+| cal_frac 0.25 points | `pred_tier1` | 320 | 0.944 (9.01e-155) | 0.975 (312/320) | 0.025 |
+| cal_frac 1.0 points (1 draw per split) | `pred_tier1` / `pred_tier1_hyper` | 320 | 0.838 (1.12e-85) / 1.000 | 0.906 (290/320) / 1.000 (320/320) | — |
+| main + cal_frac (960 points) | `pred_tier1` | 960 | 0.897 | 0.958 (920/960) | 0.030 |
+
+**Notes on the result**
+- **The 2 points outside ±0.2 for `pred_tier1`** (`results_v3/logs/r3_handoff_facts.log`):
+  - FashionMNIST greedy, key 0.7, split 779: pred 0.629, obs 0.85, z 2.37, n_k 1,487.
+  - Imagenette greedy, key 0.7, split 779: pred 0.256, obs 0.05, z 1.52, n_k 256.
+- **By key:** ρ is 0.449 / 0.777 / 0.706 at keys 0.5 / 0.7 / 0.9, with 80/80, 78/80 and 80/80 points within ±0.2. At key 0.5 most points sit at obs = pred = 1, so ρ is low while the agreement is full.
+- **By dataset:** ρ is 0.762 (PhysioNet) to 0.975 (MiniBooNE). MNIST has no ρ because every share is 1; it has 40/40 within ±0.2.
+- **At cal_frac 1.0:** a split's outcome is fixed given its calibration pool. So the unconditional binomial scores lower there, while the conditional prediction is exact.
+
+### 13.2 Task H — α margin 0.10 (E9)
+
+**Commits**
+- Command: `drive_v3.py --phase commit --seeds 0 --commit-prefix committed_v3_am10 --tag r3am10 "--extra-args=--alpha-margin 0.10 --alpha-grid 0.05"`.
+- 8 datasets, rc 0, 14.9 s in total (`results_v3/logs/driver_r3am10_commit.out`, `r3am10_commit_*.log`).
+- None refused: every α is ≥ 0.15, above the design margin.
+
+| dataset | α | λ_ref `dep` (greedy / random) |
+|---|---|---|
+| Diabetes | 0.20 | 0.7980 / 0.7980 |
+| PhysioNet | 0.25 | 0.0000 / 0.0000 |
+| CUBE | 0.20 | 0.6263 / 0.6162 |
+| FashionMNIST | 0.20 | 0.6263 / 0.6667 |
+| Imagenette | 0.15 | 0.7475 / 0.7273 |
+| MNIST | 0.15 | 0.6768 / 0.6869 |
+| MiniBooNE | 0.20 | 0.7475 / 0.7475 |
+| Adult | 0.30 | 0.0000 / 0.0000 |
+
+Source: `r3_handoff_facts.log`.
+
+**Sweeps and tables**
+- 16 cells into `$RESULTS_ROOT\metrics_v3_alpha_margin10\`; ledger `r3am10:sweep:*` (16 runs, rc 0, 2,892.9 s).
+- Tables: `results_v3/tables_e9_alpha_margin10/`.
+- Summary: `python scripts/alpha_margin_summary_v3.py --output-dir results_v3/tables` → `results_v3/tables/TABLE_E9_alpha_margin.{md,csv}`. Pasted below; the CSV also has λ_ref and G per margin.
+
+| dataset | policy | margin 0.02 (grid 0.01) | margin 0.05 (grid 0.05, primary) | margin 0.10 (grid 0.05) |
+|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | alpha 0.12: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.15: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.20: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 |
+| csv-diabetes | random | alpha 0.12: tier1 0.00, tier3 0.02, cert 0.02, cost/T 1.00 | alpha 0.15: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.20: tier1 0.26, tier3 0.74, cert 1.00, cost/T 0.89 |
+| csv-physionet | greedy_entropy | alpha 0.15: tier1 0.58, tier3 0.42, cert 1.00, cost/T 0.56 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.00 | alpha 0.25: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.00 |
+| csv-physionet | random | alpha 0.15: tier1 0.58, tier3 0.42, cert 1.00, cost/T 0.62 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.00 | alpha 0.25: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.00 |
+| cube | greedy_entropy | alpha 0.08: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.15: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.29 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.25 |
+| cube | random | alpha 0.08: tier1 0.00, tier3 0.99, cert 0.99, cost/T 1.00 | alpha 0.15: tier1 0.99, tier3 0.01, cert 1.00, cost/T 0.58 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.49 |
+| fashionmnist | greedy_entropy | alpha 0.09: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.15: tier1 0.12, tier3 0.88, cert 1.00, cost/T 0.93 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.13 |
+| fashionmnist | random | alpha 0.09: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.15: tier1 0.12, tier3 0.88, cert 1.00, cost/T 0.93 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.17 |
+| image-imagenette | greedy_entropy | refused: alpha = 0.05 <= design margin 0.05 (commit_v3 rc 7) | alpha 0.10: tier1 0.20, tier3 0.80, cert 1.00, cost/T 0.88 | alpha 0.15: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.19 |
+| image-imagenette | random | refused: alpha = 0.05 <= design margin 0.05 (commit_v3 rc 7) | alpha 0.10: tier1 0.09, tier3 0.91, cert 1.00, cost/T 0.94 | alpha 0.15: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.15 |
+| mnist | greedy_entropy | refused: alpha = 0.03 <= design margin 0.05 (commit_v3 rc 7) | alpha 0.10: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.07 | alpha 0.15: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.07 |
+| mnist | random | refused: alpha = 0.03 <= design margin 0.05 (commit_v3 rc 7) | alpha 0.10: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.18 | alpha 0.15: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.16 |
+| tabular-adult | greedy_entropy | alpha 0.18: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.25: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.21 | alpha 0.30: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.00 |
+| tabular-adult | random | alpha 0.18: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.25: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.30: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.00 |
+| tabular-MiniBooNE | greedy_entropy | alpha 0.10: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.15: tier1 0.01, tier3 0.99, cert 1.00, cost/T 0.99 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.15 |
+| tabular-MiniBooNE | random | alpha 0.10: tier1 0.00, tier3 1.00, cert 1.00, cost/T 1.00 | alpha 0.15: tier1 0.26, tier3 0.74, cert 1.00, cost/T 0.86 | alpha 0.20: tier1 1.00, tier3 0.00, cert 1.00, cost/T 0.12 |
+
+**At margin 0.10** (`results_v3/tables_e9_alpha_margin10/TABLE_E4_cascade.csv`)
+- **Certification and violations, all 16 cells:**
+  - certified deployment is 1.00;
+  - certified violation is 0.000;
+  - mean `max_excess_se` is < 0 (−11.478 … −2.694);
+  - the raw pooled violation rate is ≤ 0.080 (FashionMNIST random: 0.000–0.400 by split; MiniBooNE greedy 0.030, 0.000–0.100).
+- **Tiers:** every cell is tier 1 = 1.00 except Diabetes:
+  - greedy: tier 3 = 1.00, deepest stratum `type_II`;
+  - random: tier 1 / tier 3 = 0.26 / 0.74.
+- **Degenerate targets:** at α 0.30, Adult becomes degenerate like PhysioNet (λ_ref `dep` = 0, G = 1, cost / T 0.000). PhysioNet stays so at α 0.25.
+- **Reading:**
+  - The tier-1 share never falls as the margin grows.
+  - At margin 0.10 the tier-1 share is 1.00 in every cell except Diabetes: greedy is 0.00 at all three margins (deepest stratum `type_II`); random goes 0.00 → 0.00 → 0.26.
+  - So the tier-3 cost of FashionMNIST, Imagenette and MiniBooNE at margin 0.05 disappears once α is raised by 0.05.
+  - At the primary α, Task K classes FashionMNIST, Imagenette and MiniBooNE random as sample-limited (§13.4). The cost therefore depends on both the target α and the calibration size.
+  - The α rule itself is the author's (round 3 §0); this table is explanatory.
+
+### 13.3 Task I — reporting additions
+
+**E4 columns** (`scripts/make_tables_v3.py`; appended after the round-2 columns, which keep their order and values):
+- `deployed_cost_over_T`, `marginal_cost_over_T`, `mondrian_cost_over_T`. T comes from the metrics meta.
+- `tier2_would_certify`: the share of draws with `tiers_certified.budget` True and `tiers_certified.threshold` False.
+  - The cascade deploys tier 2 exactly then, so the column equals the tier-2 share by construction.
+  - It is **0.000 in every cell of every table directory** (seed 0; `r3_handoff_facts.log`).
+  - At draw level, 0 of 61,720 draw records have budget certified without threshold, and 0 deploy tier 2. This covers every metrics JSON of `metrics_v3`, `_round2`, `_alpha_margin02`, `_alpha_margin10`, `_calfrac025`, `_calfrac100`, `_dw`, `_G8` and `_hbfix_single`, at all λ_ref keys and both cost schemes (`results_v3/logs/r3_tier2_draw_count.log`).
+  - So in no draw of rounds 2–3 would tier 2 have mattered.
+- `escalated_fraction` = 1 − answered fraction.
+- `oracle_safe_cost_over_T`, `oracle_safe_feasible_rate`, `cascade_over_safe_oracle` (from Task K).
+- The new numeric columns are also averaged in `TABLE_E4_cascade_seeds`.
+
+**E6** gains `feasible_rate`.
+
+**F3** (`scripts/make_figures_v3.py`):
+- The cost panel is in cost / T, keeping the marginal and Mondrian marks.
+- The E2 worst-stratum risk / α of marginal CAFA is printed under each cell's bar, in red when > 1.
+- With several seeds, F3 shows one bar per (dataset, policy): the seed mean with a min–max bar.
+
+**Regeneration and check**
+- Every table directory was regenerated with `results_v3/logs/r3_postrun.sh` (logs `r3_make_tables_*.log`, `r3_make_figures.log`): `tables`, `tables_inverse_info`, `tables_e9_lambda_ref_{0.5,0.7,0.9}`, `tables_e9_alpha_margin02`, `tables_e9_delta_weights`, `tables_e9_G8`.
+- Keyed-row invariance against the committed round-2 CSVs: 0 value differences, 0 missing rows. The only changes are new columns and the two oracle rows per cell in E6 (`results_v3/logs/r3_table_invariance.log`).
+- New values: §8.1, §8.4. Paper-facing numbers: §11.
+
+### 13.4 Task K — is the cost intrinsic? (stratum-safe oracle, calibration size)
+
+**K1, code.** `scripts/run_cascade_sweep.py` adds two ex-post, non-deployable baselines per split and draw, computed on the full test split:
+- `oracle_stratum_safe`: the cheapest grid λ with R̂_test,k(λ) ≤ α for every k ∈ K_cal. If none qualifies: full acquisition and `feasible` False.
+- `oracle_stratum_safe_mondrian`: per stratum the cheapest safe λ_k; full acquisition where none exists.
+- `oracle_stratum_safe` also records `calpool_stratum_risk` / `calpool_stratum_n`, taken on the split's whole calibration pool at λ* (None when infeasible). The Mondrian version records `lambda_by_stratum` and `abstained_fraction`.
+- Summary fields: `feasible_rate`, `cascade_cost_over_oracle`, `cascade_cost_over_oracle_feasible` (oracle-feasible draws only), `cascade_cost_over_safe_mondrian_oracle`.
+- Test: `tests/test_oracles_v3.py` (14 tests).
+
+**K1, rerun of the 16 main cells**
+- The 16 round-2 files were moved to `$RESULTS_ROOT\metrics_v3_round2\`.
+  - Hashes taken in `metrics_v3\` before the move (12:24): `results_v3/round2/metrics_v3_round2.premove.sha256`.
+  - Hashes taken after the move: `results_v3/round2/metrics_v3_round2.sha256`. Identical to the pre-move ones.
+  - 16/16 OK on re-check at the end (`results_v3/logs/r3_final_checklist.log`).
+- The 16 cells were then swept again with the round-3 code into `metrics_v3\`; ledger `r3:sweep:*`, 16 runs, rc 0, 2,800.2 s.
+- `check_sweep_equivalence_v3.py` says **IDENTICAL for all 16 cells**: every field of the round-2 file is reproduced (10,400 draw records, plus summaries, audits and meta; `results_v3/logs/r3_taskK_sweep_equivalence.log`).
+- So every round-2 number in §8 stands. The rerun only adds the oracle fields and `meta.cal_frac`.
+
+**Cost gap** (`results_v3/tables/TABLE_E4_cost_gap.{md,csv}`; definitions in its header)
+- **Label:**
+  - "intrinsic" if oracle cost / full-acquisition cost ≥ 0.9;
+  - otherwise "sample-limited" if cascade / oracle ≥ 1.6, i.e. above the cost-premium band 1.0–1.6 of instruction.md §4.4;
+  - otherwise "near-oracle".
+- **`n_needed`** = ln(1/δ₁) / kl(r_cal(λ*) ‖ α), where r_cal(λ*) is the deepest stratum's calibration-pool risk at the oracle's λ* (computed with `cafa.commit_rules.kl_bernoulli`).
+  - It is inf if r_cal ≥ α or the split has no feasible oracle.
+  - The per-cell value is the median over the 5 splits.
+- **Table columns:** `n_k` and `r_cal(λ*)` are those of the primary split 778 (`—`: oracle infeasible there). "same, feasible draws" is `cascade_over_safe_oracle_feasible`.
+
+| dataset | policy | cascade cost / T | safe-oracle cost / T | oracle feasible | cascade / safe oracle | same, feasible draws | label | n_k (cal. draw, k*) | r_cal(λ*) | n_needed (median; range; finite splits) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 1.000 | 1.000 | 0.000 | 1.000 | — | intrinsic | 2,144 | — | inf; inf–inf; 0/5 |
+| csv-diabetes | random | 1.000 | 1.000 | 0.000 | 1.000 | — | intrinsic | 1,652 | — | inf; inf–inf; 0/5 |
+| csv-physionet | greedy_entropy | 0.000 | 0.000 | 1.000 | — (0/0) | — | near-oracle | 1,080 | 0.141 | 255; 205–325; 5/5 |
+| csv-physionet | random | 0.000 | 0.000 | 1.000 | — (0/0) | — | near-oracle | 1,080 | 0.141 | 255; 205–325; 5/5 |
+| cube | greedy_entropy | 0.289 | 0.229 | 1.000 | 1.264 | 1.264 | near-oracle | 615 | 0.142 | 1,907; 561–12,622; 5/5 |
+| cube | random | 0.576 | 0.518 | 1.000 | 1.112 | 1.112 | near-oracle | 357 | 0.106 | 309; 206–427; 5/5 |
+| fashionmnist | greedy_entropy | 0.929 | 0.423 | 0.800 | 2.197 | 3.500 | sample-limited | 1,320 | — | inf; 4,482–inf; 2/5 |
+| fashionmnist | random | 0.926 | 0.464 | 0.800 | 1.995 | 2.985 | sample-limited | 1,426 | — | inf; 16,344–inf; 2/5 |
+| image-imagenette | greedy_entropy | 0.884 | 0.232 | 1.000 | 3.806 | 3.806 | sample-limited | 249 | 0.120 | 7,539; 437–inf; 3/5 |
+| image-imagenette | random | 0.940 | 0.189 | 1.000 | 4.974 | 4.974 | sample-limited | 248 | 0.099 | 367,175; 1,553–inf; 3/5 |
+| mnist | greedy_entropy | 0.075 | 0.072 | 1.000 | 1.041 | 1.041 | near-oracle | 2,397 | 0.088 | 3,942; 3,785–7,213; 5/5 |
+| mnist | random | 0.184 | 0.168 | 1.000 | 1.092 | 1.092 | near-oracle | 1,413 | 0.097 | 50,242; 9,898–inf; 4/5 |
+| tabular-adult | greedy_entropy | 0.213 | 0.198 | 1.000 | 1.079 | 1.079 | near-oracle | 894 | 0.251 | inf; 382–inf; 2/5 |
+| tabular-adult | random | 1.000 | 0.856 | 0.200 | 1.169 | 3.595 | near-oracle (oracle infeasible on 4/5 splits) | 930 | — | inf; inf–inf; 0/5 |
+| tabular-MiniBooNE | greedy_entropy | 0.993 | 0.745 | 0.400 | 1.333 | 2.761 | near-oracle (oracle infeasible on 3/5 splits) | 3,442 | — | inf; inf–inf; 0/5 |
+| tabular-MiniBooNE | random | 0.862 | 0.230 | 1.000 | 3.743 | 3.743 | sample-limited | 2,318 | 0.139 | inf; 6,119–inf; 1/5 |
+
+**Reading the cost gap**
+- **Intrinsic: Diabetes (both policies).** Even ex post, no grid threshold is stratum-safe on any split; the deepest stratum is `type_II`. Full acquisition is the price of the stratum guarantee itself.
+- **Sample-limited: FashionMNIST (both), Imagenette (both), MiniBooNE random.**
+  - The ex-post oracle needs 0.19–0.46 of T; the cascade pays 2.0–5.0 times that.
+  - Where `n_needed` is finite, it exceeds the deepest stratum's calibration-draw count:
+    - Imagenette 7,539 vs 249 (greedy) and 367,175 vs 248 (random);
+    - FashionMNIST: finite on 2 of 5 splits; the smaller value is 4,482 (greedy) / 16,344 (random), vs 1,320 / 1,426;
+    - MiniBooNE random: 6,119 on its one finite split, vs 2,318.
+  - On the other splits, the oracle's λ* has calibration-pool risk ≥ α although its test risk is ≤ α, so no calibration size certifies that exact λ*.
+  - The exception is FashionMNIST split 778 (both policies). There no grid λ is stratum-safe even ex post (`label_note`: oracle infeasible in 1/5 splits).
+- **Near-oracle: PhysioNet, CUBE, MNIST, Adult greedy.** The cascade is within 1.04–1.26 of the oracle (CUBE, MNIST, Adult greedy). For PhysioNet both cost 0.
+- **Mixed: Adult random and MiniBooNE greedy.**
+  - The pooled-cost rule labels them near-oracle, but the oracle is infeasible on 4/5 and 3/5 splits, where it pays full acquisition too.
+  - On the oracle-feasible draws the cascade costs 3.595 and 2.761 times the oracle.
+  - These are the two cells whose deepest stratum sits at α (`unresolved` / split-dependent verdicts, §8.2).
+- **Caveat on `n_needed`:** it refers to certifying the oracle's exact λ*, whose calibration risk often sits within thousandths of α.
+  - Example: MNIST random has r_cal(λ*) 0.097 vs α 0.10 on the primary split, and n_needed median 50,242 (range 9,898–inf over splits).
+  - Yet the cascade deploys tier 1 in every draw at cost ratio 1.092.
+  - The K2 curve below is the direct evidence on sample size.
+
+**K2, calibration size**
+- `--cal-frac` was added to `run_cascade_sweep.py`. It defaults to the commit's 0.5; a non-default value needs `--out-dir`.
+- At 1.0 the 20 draws of a split all coincide (the whole calibration pool), so **one draw per split, 5 per cell, was run** (`meta.cal_frac_note`).
+- Runs, issued per dataset (`--datasets <ds>`) through the parallel lanes of `results_v3/logs/r3_lane.sh`; seconds are summed over runs:
+  - `drive_v3.py --phase sweep --seeds 0 --metrics-dir-name metrics_v3_calfrac025 --tag r3cf025 "--extra-args=--cal-frac 0.25"`: 16 runs, rc 0, 1,760.3 s;
+  - the same with `metrics_v3_calfrac100`, `--tag r3cf100`, `--cal-frac 1.0`: 16 runs, rc 0, 488.4 s.
+- The 0.25 draws are nested in the 0.5 draws (same permutation, first half).
+- Tables: `results_v3/tables_e11_calfrac{025,100}/`.
+- Summary: `results_v3/tables/TABLE_E11_calfrac.{md,csv}`, at λ_ref `dep` with uniform costs.
+  - `n_k` = the mean over splits of the expected calibration-draw count of k*.
+  - `pred_tier1` / `pred_tier1_hyper` = the E10 predictions recomputed at that n_k.
+
+| dataset | policy | n_k (0.25 / 0.5 / 1.0) | tier-1 share | pred_tier1 | pred_tier1_hyper | cost / T | certified violation |
+|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 1,079 / 2,158 / 4,316 | 0.00 / 0.00 / 0.00 | 0.00 / 0.00 / 0.00 | 0.00 / 0.00 / 0.00 | 1.00 / 1.00 / 1.00 | 0.000 / 0.000 / 0.000 |
+| csv-diabetes | random | 851 / 1,701 / 3,403 | 0.00 / 0.00 / 0.00 | 0.00 / 0.00 / 0.00 | 0.00 / 0.00 / 0.00 | 1.00 / 1.00 / 1.00 | 0.000 / 0.000 / 0.000 |
+| csv-physionet | greedy_entropy | 540 / 1,080 / 2,160 | 0.99 / 1.00 / 1.00 | 0.99 / 1.00 / 1.00 | 1.00 / 1.00 / 1.00 | 0.02 / 0.00 / 0.00 | 0.000 / 0.000 / 0.000 |
+| csv-physionet | random | 540 / 1,080 / 2,160 | 0.99 / 1.00 / 1.00 | 0.99 / 1.00 / 1.00 | 1.00 / 1.00 / 1.00 | 0.03 / 0.00 / 0.00 | 0.000 / 0.000 / 0.000 |
+| cube | greedy_entropy | 296 / 592 / 1,184 | 0.98 / 1.00 / 1.00 | 0.97 / 1.00 / 1.00 | 0.98 / 1.00 / 1.00 | 0.34 / 0.29 / 0.27 | 0.000 / 0.000 / 0.000 |
+| cube | random | 186 / 371 / 742 | 0.69 / 0.99 / 1.00 | 0.78 / 0.98 / 1.00 | 0.77 / 0.99 / 1.00 | 0.74 / 0.58 / 0.55 | 0.000 / 0.000 / 0.000 |
+| fashionmnist | greedy_entropy | 645 / 1,289 / 2,578 | 0.12 / 0.12 / 0.40 | 0.08 / 0.16 / 0.29 | 0.07 / 0.11 / 0.40 | 0.92 / 0.93 / 0.77 | 0.010 / 0.000 / 0.000 |
+| fashionmnist | random | 730 / 1,460 / 2,920 | 0.06 / 0.12 / 0.20 | 0.09 / 0.16 / 0.25 | 0.07 / 0.13 / 0.20 | 0.96 / 0.93 / 0.87 | 0.010 / 0.010 / 0.000 |
+| image-imagenette | greedy_entropy | 136 / 272 / 544 | 0.09 / 0.20 / 0.40 | 0.14 / 0.26 / 0.53 | 0.09 / 0.19 / 0.40 | 0.97 / 0.88 / 0.71 | 0.000 / 0.000 / 0.000 |
+| image-imagenette | random | 122 / 243 / 486 | 0.03 / 0.09 / 0.20 | 0.09 / 0.17 / 0.33 | 0.05 / 0.10 / 0.20 | 0.98 / 0.94 / 0.85 | 0.000 / 0.000 / 0.000 |
+| mnist | greedy_entropy | 1,097 / 2,194 / 4,388 | 1.00 / 1.00 / 1.00 | 1.00 / 1.00 / 1.00 | 1.00 / 1.00 / 1.00 | 0.08 / 0.07 / 0.07 | 0.000 / 0.000 / 0.000 |
+| mnist | random | 721 / 1,442 / 2,884 | 1.00 / 1.00 / 1.00 | 1.00 / 1.00 / 1.00 | 1.00 / 1.00 / 1.00 | 0.19 / 0.18 / 0.18 | 0.000 / 0.000 / 0.000 |
+| tabular-MiniBooNE | greedy_entropy | 1,660 / 3,321 / 6,642 | 0.02 / 0.01 / 0.00 | 0.02 / 0.02 / 0.03 | 0.01 / 0.01 / 0.00 | 0.99 / 0.99 / 1.00 | 0.010 / 0.010 / 0.000 |
+| tabular-MiniBooNE | random | 1,186 / 2,371 / 4,743 | 0.10 / 0.26 / 0.20 | 0.18 / 0.32 / 0.53 | 0.14 / 0.25 / 0.20 | 0.94 / 0.86 / 0.86 | 0.000 / 0.000 / 0.000 |
+| tabular-adult | greedy_entropy | 436 / 873 / 1,746 | 0.81 / 1.00 / 1.00 | 0.75 / 0.97 / 1.00 | 0.79 / 0.99 / 1.00 | 0.39 / 0.21 / 0.21 | 0.010 / 0.000 / 0.000 |
+| tabular-adult | random | 454 / 909 / 1,818 | 0.02 / 0.00 / 0.00 | 0.02 / 0.02 / 0.03 | 0.01 / 0.00 / 0.00 | 0.99 / 1.00 / 1.00 | 0.000 / 0.000 / 0.000 |
+
+**Reading the calibration-size table**
+- **Doubling the calibration draw (0.5 → 1.0)** raises the tier-1 share and lowers the cost in four of the five sample-limited cells (MiniBooNE random is the exception, below):
+  - FashionMNIST greedy: tier 1 0.12 → 0.40, cost / T 0.93 → 0.77.
+  - Imagenette greedy: tier 1 0.20 → 0.40, cost / T 0.88 → 0.71.
+  - Imagenette random: tier 1 0.09 → 0.20.
+  - FashionMNIST random: tier 1 0.12 → 0.20.
+- **Halving it (0.5 → 0.25)** lowers the tier-1 share in CUBE random (0.99 → 0.69) and Adult greedy (1.00 → 0.81).
+- **MiniBooNE random does not improve** (0.26 → 0.20). Its deepest stratum is at the certifiability edge on most splits, and `pred_tier1_hyper` there is also 0.20.
+- **The two intrinsic Diabetes cells** are at full cost at every size. They are tier 3 at 0.5 and 1.0. At 0.25 Diabetes greedy certifies in only 0.93 of the draws (tier 3; none 0.07). That is the only cell with certified deployment < 1 at any calibration size (`results_v3/tables_e11_calfrac{025,100}/TABLE_E4_cascade.csv`).
+- **Certified violation** is ≤ 0.010 at every size.
+- **Raw pooled violation** is ≤ 0.07 at 0.25 and ≤ 0.20 at 1.0. At 1.0 it moves in steps of 0.2 (5 draws).
+- **Mean `max_excess_se`** is < 0 in every cell at both sizes.
+- **Resolution at 1.0:** with one draw per split, a tier-1 share there moves in steps of 0.2.
+- F7 shows the 640 cal-frac points (open markers) on the same curve.
+
+### 13.5 Task L — FashionMNIST predictor-upgrade repair: `TBD-RUN` (cluster)
+
+**Code (`5481269`)**
+- `--checkpoint-tag TAG` on `train_backbone_v3.py`, `run_pool_rollout_v3.py` and `drive_v3.py` (backbones and rollouts phases). It changes only the checkpoint folder (`checkpoints_v3_TAG`) and the cache token suffix (`{policy}-TAG`).
+- `--width-mult` / `--p-full` overrides, which require a tag.
+- `commit_v3.find_policy_caches` ignores tagged caches, so a future re-commit never picks them up.
+- `check_caches_v3.py` checks a tagged greedy/random pair as its own group.
+- `run_repairs_v3.py --repair-tag TAG` runs two repairs:
+  - greedy: BEFORE = `pool_v3/fashionmnist_ts0_greedy_entropy_softmax.npz` on `configs/committed_v3_fashionmnist_ts0.json`, AFTER = `…greedy_entropy-repair…`, label `predictor_upgrade`;
+  - random: the same with `--policy random`, label `predictor_upgrade_random`.
+- Tests: `tests/test_checkpoint_tag_v3.py` (12 tests) and `tests/test_hpc_v3.py::test_hpc_dry_run_task_l_lines`.
+
+**Smoke on the laptop.** Documented smoke flags, under a separate tag `smokerepair`. All its outputs were deleted afterwards; `pool_v3` holds 16 caches again.
+
+| smoke step | time |
+|---|---|
+| width-4 backbone, `--epochs 1 --max-train 2000` | 85 s (8 optimizer steps; the GPU was busy in 1 of the 16 `nvidia-smi` samples of this window, so this does not time an epoch) |
+| greedy rollout, `--max-rows 256` | **361 s**; projected linearly to ≈ 39,500 s ≈ 11 h for the 28,000 heldout rows |
+| random rollout, `--max-rows 256` | 23 s |
+
+- `nvidia-smi` reported `sw_thermal_slowdown = Active` in 70 of 72 busy samples (utilization > 50 %).
+  - The two exceptions are the backbone smoke's only busy sample (13:08:34, 1,462 MHz) and the greedy rollout's first busy sample (13:08:55, 1,492 MHz).
+  - Over the busy samples the mean SM clock was 521 MHz of 2,100 and the mean temperature 87.9 °C.
+- Logs: `results_v3/logs/r3_taskL_smoke_{backbone,rollout_greedy,rollout_random,nvidia_smi}.log`.
+
+**Decision:** not run locally, for two reasons:
+- The GPU is throttled. Task L says: "If the GPU is throttled, prepare the two cluster lines instead (the README's pattern) and mark `TBD-RUN`."
+- The greedy cell's smoke-based estimate (≈ 11 h) exceeds 8 h (instruction.md §6).
+
+**Cluster package.** `hpc/README_v3.md` §8 has the two `sbatch` lines, the wall-time estimates, the copy-back and the local follow-up:
+- backbone: task 6 with `CAFA_EXTRA="--epochs 60 --width-mult 4 --p-full 0.3"`;
+- rollouts: lines 12–13;
+- both with `CAFA_DRIVER_FLAGS="--checkpoint-tag repair"`.
+
+**E7 FashionMNIST before → after:** `TBD-RUN`. When the caches are back, run `python scripts/run_repairs_v3.py --seeds 0 --datasets fashionmnist --repair-tag repair --tag r3L`.
+
+### 13.6 Ledger, background jobs, tests
+
+**Ledger.** `results_v3/run_log.jsonl` has 72 round-3 runs, 0 with a non-zero rc. They ran 11:27:51 → 12:07:22 UTC (13:27–14:07 local).
+
+| ledger cell prefix | runs | total seconds | non-zero rc |
+|---|---|---|---|
+| `r3am10:commit:` | 8 | 14.9 | 0 |
+| `r3:sweep:` (K1 rerun, `metrics_v3`) | 16 | 2,800.2 | 0 |
+| `r3am10:sweep:` | 16 | 2,892.9 | 0 |
+| `r3cf025:sweep:` | 16 | 1,760.3 | 0 |
+| `r3cf100:sweep:` | 16 | 488.4 | 0 |
+
+**Background jobs**
+- The sweeps were split into six lanes of sequential `drive_v3.py` calls (`results_v3/logs/r3_lane.sh`; plan and times in `r3_background_jobs.log`; outputs `driver_r3_lane*.out`).
+  - Lanes 1–4 ran from 13:29.
+  - Lanes 5 and 6 were paused at 13:29:56, about 1 min after launch, because free RAM was low. The reading was 1.0 GB, from the console only and not in a file. Their process trees were killed before their first cell finished, so there is no ledger line and no metrics file from them.
+  - Lanes 5 and 6 were relaunched at 13:50 (`driver_r3_lane{5,6}_resume.out`).
+  - A lane 7 started at 13:52 and took their short tail jobs; lanes 5 and 6 then skipped those as already existing.
+
+**Run outside the ledger**
+- the Task L smoke (§13.5);
+- the post-run tables, figures, E10 and E9 summary (`results_v3/logs/r3_postrun.sh`, logs `r3_*.log`);
+- the checks `r3_taskK_sweep_equivalence.log` and `r3_table_invariance.log`;
+- the handoff facts in `r3_handoff_facts.log`.
+
+**Tests**
+- Whole suite on the round-3a code just before it was committed (13:22–13:27; commits `2ffeb04` / `5481269` / `b85ac6a` at 13:27) and before the runs: `169 passed in 273.07s (0:04:33)` (`results_v3/logs/r3_code_pytest_full_suite.log`; round 2: 110).
+- Final state: §13.7.
+
+
+### 13.7 Final checklist
+
+Sources: instruction.md §10, instruction_round2.md, instruction_round3.md.
+
+The log is `results_v3/logs/r3_final_checklist.log`, run at HEAD `dfdc149`. At that point these were uncommitted, and all of them go into the handoff content commit:
+- `handoff.md`;
+- `hpc/README_v3.md` (wording);
+- the regenerated `results_v3/logs/hpc_dry_run.log`;
+- the new `r3_final_*.log`, `r3_handoff_facts.log` and `r3_tier2_draw_count.log`;
+- `results_v3/round2/metrics_v3_round2.premove.sha256`;
+- the `results_v3/diagnostics/r3_*` review records.
+
+- [x] **Git.** `git status` is clean on `aistats-v3` after the hash commit; this was checked after committing.
+  - Round-3 commits: K `2ffeb04`, `ecf553f`; L `5481269`, `95f9480`; G/H/I `b85ac6a`, `dfdc149`.
+  - Then the handoff content commit, whose hash the header records, and one follow-up commit that only writes that hash.
+- [x] **Nine v3 test files:** `33 passed in 62.66s (0:01:02)` (`results_v3/logs/r3_final_pytest_nine_v3.log`).
+- [x] **Whole suite:** `169 passed in 285.70s (0:04:45)`, with **0 xfailed and 0 skipped** (`results_v3/logs/r3_final_pytest_full_suite.log`, run with `-rxXs`).
+- [x] **Result directories present:** `results_v3/run_log.jsonl`, `logs/`, `tables/`, `figures/`, `planted/`, `repair/`, `diagnostics/`, `round1/` and `round2/`. Also the new `tables_e9_alpha_margin10/` and `tables_e11_calfrac{025,100}/`.
+- [x] **No smoke artifacts:**
+  - `pool_v3`: 16 caches, none with `max_rows`, no tagged policy token. The Task-L smoke caches and `checkpoints_v3_smokerepair/` were deleted.
+  - `checkpoints_v3`: the 8 seed-0 checkpoints.
+  - `metrics_v3`: 16 files.
+  - `configs/committed_v3*`: 26 files (18 from round 2 plus 8 `am10`), none synthetic.
+- [x] **Frozen files.** Against `aaai27-submission`, `src/cafa/risk_control.py` differs by the one authorised line (§12.1). `tests/test_risk_control.py`, `tests/test_mondrian.py`, `tests/test_baselines.py` and `tests/test_pipeline.py` are unchanged. Round 3 changed nothing under `src/`.
+- [x] **Tags.** `git tag` shows `aaai27-submission` (→ `550f8e2`) and the older `canonical-v2*` tags. `aistats-v3-results` is **not set**: it belongs to Part 3b (Task J), which did not run.
+- [x] **Archives intact:**
+  - `$RESULTS_ROOT\metrics_v3_round1\`: 16 of 16 sha256 OK.
+  - `$RESULTS_ROOT\metrics_v3_round2\`, the archive of the round-2 primary metrics: 16 of 16 sha256 OK against `results_v3/round2/metrics_v3_round2.sha256`.
+- [x] **HPC dry run on the committed tree** (`results_v3/logs/hpc_dry_run.log`; header: commit `dfdc149`, 0 uncommitted files under hpc/, scripts/, src/, configs/):
+  - 72 array tasks: 48 would run (seeds 1–2) and 24 skip because their seed-0 output exists.
+  - The Task-L lines are covered by `tests/test_hpc_v3.py::test_hpc_dry_run_task_l_lines`.
+- [x] **`TBD-RUN` items and their commands:**
+  - seeds 1–2 and Task J: §10 step 1, `hpc/README_v3.md` §1–7;
+  - the FashionMNIST repair (Task L): §10 step 1b, `hpc/README_v3.md` §8;
+  - Phase 1d: §10 step 4.
+- [x] **Stop conditions:** none reached. The round-3 conditions concern seed-1/2 caches and cluster checkpoints, which Part 3b would check. The instruction.md §7 conditions did not occur.

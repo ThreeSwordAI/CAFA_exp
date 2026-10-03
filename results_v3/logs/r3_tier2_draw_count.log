@@ -1,0 +1,10 @@
+metrics_v3: files 16, draw records 10400, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_round2: files 16, draw records 10400, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_alpha_margin02: files 12, draw records 8800, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_alpha_margin10: files 16, draw records 10400, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_calfrac025: files 16, draw records 10400, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_calfrac100: files 16, draw records 520, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_dw: files 1, draw records 800, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_G8: files 1, draw records 400, budget-without-threshold 0, tier-2 deployed 0
+metrics_v3_hbfix_single: files 14, draw records 9600, budget-without-threshold 0, tier-2 deployed 0
+TOTAL draw records 61720, budget-without-threshold 0, tier-2 deployed 0

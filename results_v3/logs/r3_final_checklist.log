@@ -1,0 +1,53 @@
+# round-3 (3a) final checklist checks, 2026-10-03T14:27:16+02:00, HEAD dfdc149
+## git tag
+aaai27-submission code as used for the AAAI-27 submission (HB boundary rounding defect present)
+canonical-v2    canonical lock: phases 2-4 + alpha-sweep (cluster, ts0-2)
+canonical-v2.1  phase 5: alpha-sweep correction, validity diagnostic, IUT non-vacuity (re-freeze)
+canonical-v2.2  phase 5.2: pool-risk gate + anti-correlation; six marginal FAILs resolved
+canonical-v2.3  CAFA canonical v2.3: final AAAI claim-validity freeze
+aaai27-submission -> 550f8e2
+aistats-v3-results: 0 (Part 3b only; not set)
+## frozen files vs aaai27-submission
+ src/cafa/risk_control.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+-        k = np.ceil(n * rb).astype(int)
++        k = np.ceil(np.round(n * rb, 9)).astype(int)
+## src/ changes in round 3 (16da5a0..HEAD): 0 diff lines
+## metrics_v3_round1 untouched
+files listed: 16, check rc 0
+## metrics_v3_round2 archive
+files listed: 16, check rc 0
+## smoke artifacts
+pool_v3 caches: 16 | with max_rows (smoke): 0 | tagged policy tokens: see next line
+pool_v3 policy tokens with a checkpoint tag (contain "-"): 0 | tokens: ['greedy_entropy', 'random']
+checkpoints_v3: ['csv-diabetes_ts0.pt', 'csv-physionet_ts0.pt', 'cube_ts0.pt', 'fashionmnist_ts0.pt', 'image-imagenette_ts0.pt', 'mnist_ts0.pt', 'tabular-MiniBooNE_ts0.pt', 'tabular-adult_ts0.pt']
+checkpoint folders: ['checkpoints', 'checkpoints_v2', 'checkpoints_v3', 'checkpoints_v3_superseded']
+metrics_v3 16
+metrics_v3_round2 16
+metrics_v3_alpha_margin02 12
+metrics_v3_alpha_margin10 16
+metrics_v3_calfrac025 16
+metrics_v3_calfrac100 16
+metrics_v3_dw 1
+metrics_v3_G8 1
+configs/committed_v3*: 26 | am10: 8 | synthetic: []
+## results_v3 directories
+present results_v3/run_log.jsonl
+present results_v3/logs
+present results_v3/tables
+present results_v3/figures
+present results_v3/planted
+present results_v3/repair
+present results_v3/diagnostics
+present results_v3/round1
+present results_v3/round2
+present results_v3/tables_e9_alpha_margin10
+present results_v3/tables_e11_calfrac025
+present results_v3/tables_e11_calfrac100
+## tests
+33 passed in 62.66s (0:01:02)
+169 passed in 285.70s (0:04:45)
+(no xfail/skip lines above = 0 xfailed, 0 skipped)
+## hpc dry run
+# hpc dry run: 2026-10-03T14:24:57+02:00 repo /f/FAU/PhD/Side Quest/CAFA_exp commit dfdc149 (uncommitted changes under hpc/ scripts/ src/ configs/: 0 files) python /f/FAU/PhD/Side Quest/CAFA_exp/.venv/Scripts/python.exe
+array tasks: 72, would run: 48, skip (exists): 24

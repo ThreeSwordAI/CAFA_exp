@@ -181,11 +181,14 @@ python scripts/make_tables_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --ou
 #   -> TABLE_E4_cascade.md (one row per dataset, policy, seed) and TABLE_E4_cascade_seeds.md (mean ± sd over seeds)
 python scripts/report_violations_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --output results_v3/diagnostics/r3_violations_dep.md
 python scripts/make_figures_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures
-# round 3 (instruction_round3.md Task J): E9 alpha-margin commits and sweeps for seeds 1-2 (MNIST / Imagenette
-# refuse at margin 0.02 with rc 7, as at seed 0 -- run them last or leave them out of --datasets)
+# round 3 (instruction_round3.md Task J): E9 alpha-margin commits and sweeps for seeds 1-2. At margin 0.02 MNIST and
+# Imagenette may refuse with rc 7 (they did at seed 0, alpha <= design margin); the driver stops at the first non-zero
+# rc, so they get a separate last line
 python scripts/drive_v3.py --phase commit --seeds 1 2 --commit-prefix committed_v3_am10 --tag r3am10 "--extra-args=--alpha-margin 0.10 --alpha-grid 0.05"
 python scripts/drive_v3.py --phase sweep  --seeds 1 2 --commit-prefix committed_v3_am10 --metrics-dir-name metrics_v3_alpha_margin10 --tag r3am10
-python scripts/drive_v3.py --phase commit --seeds 1 2 --commit-prefix committed_v3_am02 --tag r3am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01"
+python scripts/drive_v3.py --phase commit --seeds 1 2 --datasets csv:physionet cube tabular:adult csv:diabetes tabular:MiniBooNE fashionmnist --commit-prefix committed_v3_am02 --tag r3am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01"
+foreach ($ts in 1, 2) { foreach ($ds in "mnist", "image:imagenette") {   # one call each: rc 7 expected, the loop continues
+  python scripts/drive_v3.py --phase commit --seeds $ts --datasets $ds --commit-prefix committed_v3_am02 --tag r3am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01" } }
 python scripts/drive_v3.py --phase sweep  --seeds 1 2 --commit-prefix committed_v3_am02 --metrics-dir-name metrics_v3_alpha_margin02 --tag r3am02
 foreach ($ts in 1, 2) { python scripts/alpha_margin_summary_v3.py --train-seed $ts --output-dir results_v3/tables_e9_alpha_margin_ts$ts }
 # E10 over all seeds (3 x 320 points; reads every seed present in metrics_v3) and F7
@@ -198,7 +201,7 @@ cost scheme and the remaining E9 ablations, use the seed-0 commands of handoff.m
 
 ## 8. Round 3, Task L — FashionMNIST predictor upgrade (seed 0, checkpoint tag `repair`)
 
-This is the second E7 predictor-upgrade dataset (`instruction_round3.md`, Task L). A stronger FashionMNIST backbone
+This is the second repair dataset of `instruction_round3.md` Task L. It is the fourth E7 predictor-upgrade repair overall, after MNIST, MiniBooNE and Adult, and the first whose AFTER system is a v3 backbone. A stronger FashionMNIST backbone
 (`width_mult` 4, 60 epochs, `p_full` 0.3, same loader and split) is trained as a NEW checkpoint
 `$RESULTS_ROOT/checkpoints_v3_repair/fashionmnist_ts0.pt`. The greedy and random rollouts use it and write
 `pool_v3/fashionmnist_ts0_{greedy_entropy,random}-repair_softmax.npz`. `--checkpoint-tag repair` changes only the
@@ -250,12 +253,12 @@ channels) and 60 epochs cost 2×. Dividing by the throttling factor 1.4178 of §
 
 Measured smoke on the laptop (round 3, 2026-10-03; documented smoke flags, separate tag `smokerepair`, outputs
 deleted afterwards; logs `results_v3/logs/r3_taskL_smoke_{backbone,rollout_greedy,rollout_random,nvidia_smi}.log`):
-width-4 backbone `--epochs 1 --max-train 2000` 85 s (8 optimizer steps; dominated by data loading, so it does not
-time an epoch); greedy rollout `--max-rows 256` 361 s, i.e. 361 × 28,000 / 256 ≈ 39,500 s ≈ 11 h for the full
-heldout split; random rollout `--max-rows 256` 23 s. During the smoke the GPU reported
-`clocks_event_reasons.sw_thermal_slowdown = Active` in every busy sample (mean SM clock 521 MHz of 2,100, mean
-87.9 °C). That is why these jobs are not run on the laptop (instruction.md §6: > 8 h per cell; instruction_round3.md
-Task L: throttled GPU → cluster).
+- **Width-4 backbone** `--epochs 1 --max-train 2000`: 85 s for 8 optimizer steps. The GPU was busy in only 1 of the 16 `nvidia-smi` samples of this window, so this does not time an epoch.
+- **Greedy rollout** `--max-rows 256`: 361 s. A linear projection, 361 × 28,000 / 256, gives ≈ 39,500 s ≈ 11 h for the full heldout split.
+- **Random rollout** `--max-rows 256`: 23 s.
+- **Thermal state.** During the smoke the GPU reported `clocks_event_reasons.sw_thermal_slowdown = Active` in 70 of 72 busy samples (utilization > 50 %). The two exceptions are the backbone's only busy sample (13:08:34, 1,462 MHz) and the greedy rollout's first (13:08:55, 1,492 MHz). Over the busy samples the mean SM clock was 521 MHz of 2,100 and the mean temperature 87.9 °C.
+- **Why the cluster.** The GPU is throttled and the smoke-based greedy estimate exceeds 8 h per cell (instruction.md §6; instruction_round3.md Task L: throttled GPU → cluster), so these jobs are not run on the laptop.
+- **Two estimates disagree.** The measured smoke projection (≈ 39,500 s) is about 1.5× below the width-scaled ledger estimate in the table above (58,260 s). The ×4 FLOP scaling is a rough assumption. Both figures are estimates; use the larger one as the planning bound.
 
 The TinyGPU GPUs are larger and faster than the laptop's, so treat these figures as planning bounds. The greedy
 rollout is the critical path. `--time=24:00:00` assumes a 24 h walltime limit on the TinyGPU partition you submit to

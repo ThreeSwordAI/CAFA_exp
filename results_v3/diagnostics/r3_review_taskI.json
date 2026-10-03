@@ -1,0 +1,50 @@
+{
+ "summary": "I reviewed the Task I diff for scripts/make_tables_v3.py and scripts/make_figures_v3.py, and read scripts/alpha_margin_summary_v3.py and tests/test_reporting_v3.py in full. I checked them against instruction_round3.md (Tasks H, I, K), cafa.cascade.certify_or_route, commit_v3 (alpha_from_floor and the rc-7 rule) and the Task K working-tree run_cascade_sweep.py.\n\n**Tests I ran**\n- `tests/test_reporting_v3.py`: 5 passed in 4.16s.\n- `tests/test_reporting_v3.py tests/test_v3_scripts.py tests/test_hpc_v3.py`: 17 passed in 66.99s (the implementer reported 16; the extra test is probably one Task L added to test_hpc_v3.py).\n\n**Checks that came out clean**\n- **Existing outputs:** I regenerated the tables from F:/CAFA_results/metrics_v3 into scratch/review_I/tables. TABLE_E4_cascade (16 rows), E6 (160), E2, E3 and E4_cascade_seeds show 0 differences from results_v3/tables on the shared columns. The new columns are appended last and are empty on round-2 metrics, and no cost-gap file is written for them.\n- **Column names and definitions:** the names and order of the 8 new E4 columns, E6 `feasible_rate`, the 17 cost-gap columns, and the definitions of k*, n_k_cal, r_cal, delta_1, the median and range, and the primary split all match the spec.\n- **n_needed:** I recomputed it independently on the Task K trial metrics (copied to scratch/review_I/mk) and the values match: PhysioNet 254.94 (205\u2013325), CUBE at cal_frac 1.0 1907.17 (561\u201312622), FashionMNIST inf (4482\u2013inf).\n- **Edge cases handled:** the cal_frac 1.0 single-draw file gives n_k_cal = n_k. PhysioNet (G = 1, k* = 0, zero costs, ratio None) gets the label \"near-oracle\". Image cells without the requested scheme are skipped or show `n/a`. Infeasible-only splits give inf.\n- **`tier2_would_certify`:** it equals `tier2` by construction, as the implementer said; this is the spec's definition, not a code defect.\n- **E9 alpha rule:** recomputing alpha from the committed floors reproduces every am02 commit alpha (0.12, 0.15, 0.08, 0.09, 0.10, 0.18). It also reproduces the documented refusals (MNIST 0.03, Imagenette 0.05), and am10 is \"TBD-RUN (not committed)\" for all 16 cells.\n- **Imports:** none of the scripts pull in torch.\n- **Performance:** a single pass over 5 splits \u00d7 100 draws per file; not an issue.\n\n**Findings**\n1. The cost-gap label is wrong under non-uniform cost schemes.\n2. F3 becomes unreadable with the 48 cells of Task J.\n3. The tests cannot tell cost/T apart from cost/full-acquisition.\n4. The E9 refusal boundary (alpha exactly equal to the design margin, the real Imagenette case) is not tested.\n5. Some labels contradict their own n_needed values.",
+ "findings": [
+  {
+   "title": "Cost-gap label uses cost/T, so it mislabels cells under non-uniform cost schemes (e.g. tables_inverse_info)",
+   "file": "scripts/make_tables_v3.py",
+   "line": 121,
+   "severity": "medium",
+   "evidence": "The label rule is `oracle_over_T >= INTRINSIC_OVER_T` (L117-125). `o_T = over_T(o_cost, T)` (L162) divides by meta.T. TABLE_E4_cost_gap is written for any `--scheme` whenever the oracle fields exist (L253-254). Under inverse_info, full acquisition / T is about 6.6-9.0 (e.g. diabetes 406.13/45, adult 95.28/14), and the standard regeneration step (handoff.md line 86, Section 10 step 4) runs make_tables_v3 with `--scheme inverse_info`.\n\nRepro:\n`make_tables_v3.py --metrics-dir scratch/review_I/mk --output-dir scratch/review_I/tk_inv --scheme inverse_info`\n\nOutput:\n- `tabular-adult random deployed/T 6.8055 oracle/T 5.8222 ratio 1.1688 label intrinsic`\n- `cube greedy_entropy deployed/T 0.9426 oracle/T 0.6817 ratio 1.3826 label near-oracle`\n- Oracle / full-acquisition cost from the same files: adult 0.856, cube 0.103.\n\nThe same adult cell is labelled `near-oracle` under uniform costs (oracle 0.856 of full acquisition in both schemes). The label flips only because of the normalisation. Any cell whose oracle needs more than about 10-14% of full acquisition becomes `intrinsic` under inverse_info.",
+   "suggested_fix": "Base the intrinsic test on the oracle cost divided by `baselines.full_acquisition.mean_test_cost`; under uniform costs this is identical to cost/T, so the uniform outputs do not change. Alternatively, write TABLE_E4_cost_gap only for `--scheme uniform` and say so in the md header.",
+   "confidence": "confirmed"
+  },
+  {
+   "title": "F3 is illegible with the 48 cells of Task J (E2 numbers and tick labels overlap)",
+   "file": "scripts/make_figures_v3.py",
+   "line": 103,
+   "severity": "medium",
+   "evidence": "fig_cascade draws one bar, one E2 number (5 pt, vertical) and one tick label per (dataset, policy, seed) at a fixed figsize of 7.2x4.0. Part 3b of the user request regenerates all figures with seeds 1-2, which gives 48 cells.\n\nRepro: load_cells(metrics_v3), then each cell replicated for train_seed 0, 1, 2, then fig_cascade, with a window-extent overlap check (script in scratch/review_I).\n\nOutput: `cells 48 adjacent E2-number overlaps 47 adjacent tick-label overlaps 47`.\n\nThe rendered scratch/review_I/figs48/F3_cascade.png shows the E2 numbers and labels as one unreadable block. The `_` marks (ms=10) also span several bars. With the 16 seed-0 cells there are 0 overlaps. The implementer listed this as an open question but did not handle it.",
+   "suggested_fix": "Draw one bar per (dataset, policy) when several seeds are present: the mean cost/T with an sd or min-max error bar, the mean E2 under the bar, and an 'n seeds' note. Alternatively, restrict F3 to one seed (option, default 0), or scale the figure width and font with the number of cells.",
+   "confidence": "confirmed"
+  },
+  {
+   "title": "Tests cannot tell cost/T from cost/full-acquisition (fixture has full-acquisition cost = T)",
+   "file": "tests/test_reporting_v3.py",
+   "line": 40,
+   "severity": "low",
+   "evidence": "`_summary(..., full_cost=20.0)` and `_metrics(..., T=20)` set full-acquisition cost equal to T in every fixture. That is exactly the case in which the old F3 normalisation (cost / full acquisition) and the new one (cost / T) agree.\n\nMutation run in scratch/review_I/mut:\n- F3 dividing by `baselines.full_acquisition.mean_test_cost` instead of meta.T;\n- the E4 cost/T columns dividing by the full-acquisition cost;\n- E9 `deployed_cost_over_T` dividing by the full-acquisition cost.\n\n`pytest -q tests/test_reporting_v3.py` still gives `5 passed in 2.03s`. The main change of Task I (cost / T instead of cost / full acquisition) is therefore not tested in any of the three scripts.",
+   "suggested_fix": "Give at least one fixture a full-acquisition cost different from T (e.g. full_cost=30 with T=20, as under inverse_info). Assert that E4 `deployed_cost_over_T`, the F3 bar heights and the E9 cost/T use T, and that F3 draws the gray full-acquisition marks in that case.",
+   "confidence": "confirmed"
+  },
+  {
+   "title": "E9 refusal boundary (alpha == design margin, the real Imagenette am02 case) is untested",
+   "file": "tests/test_reporting_v3.py",
+   "line": 271,
+   "severity": "low",
+   "evidence": "The only refused case in the test is dsB with floor 0.004, which gives alpha 0.03 < 0.05. On the real data, Imagenette am02 sits exactly at the boundary: alpha_from_floor(0.029851, 0.02, 0.01) = 0.05 = design_margin.\n\nMutation: change `if alpha <= dm:` to `if alpha < dm:` in alpha_margin_summary_v3.py L84.\n- Tests: `5 passed in 2.16s`.\n- Real-data run: `| image-imagenette | greedy_entropy | TBD-RUN (not committed): alpha = 0.05 by the rule |`. The correct output is `refused: alpha = 0.05 <= design margin 0.05 (commit_v3 rc 7)`, which commit_v3 produces at L213 (`if alpha <= margin: return 7`).\n\nThe current code is correct; the test just does not protect it.",
+   "suggested_fix": "Add a fixture whose floor maps exactly onto the design margin, e.g. floor 0.0299 with margin 0.02 and grid 0.01 (alpha 0.05), and assert status `refused`.",
+   "confidence": "confirmed"
+  },
+  {
+   "title": "Cost-gap labels contradict n_needed (sample-limited with n_needed inf; near-oracle with an oracle feasible in 1 of 5 splits)",
+   "file": "scripts/make_tables_v3.py",
+   "line": 169,
+   "severity": "low",
+   "evidence": "The label (L169) is computed only from pooled costs and does not look at n_needed or feasible_rate.\n\nOn the Task K trial metrics (scratch/review_I/tk/TABLE_E4_cost_gap.md):\n- `fashionmnist | greedy_entropy | ... | 0.800 | ... | 2.197 | sample-limited | 4 | 1320.000 | | inf | 4482\u2013inf | inf`. In 3 of 5 splits the oracle is either infeasible or its lambda* has calibration-pool risk >= alpha (0.167 and 0.151 against alpha 0.15), so no calibration size would certify it, yet the cell is called sample-limited.\n- `tabular-adult | random | ... | 0.856 | 0.200 | ... | 1.169 | near-oracle | ... | inf | inf\u2013inf | inf`. The oracle is infeasible on splits 778-781 (0/20 feasible each) and feasible only on 782, where the calibration-pool risk of k* is 0.2664 >= alpha 0.25. The cascade runs at full acquisition, but the cell reads as near-oracle.\n\nThis follows the spec's rule literally, but output item (4) of the user request pairs the label with n_needed, and the two contradict each other here.",
+   "suggested_fix": "Keep the rule, but add a qualifier column or suffix when n_needed is inf or oracle_safe_feasible_rate < 1. For example: `sample-limited (n_needed inf in 3/5 splits: r_cal(lambda*) >= alpha or oracle infeasible)`, or a `n_splits_finite` column. Also state in the md note that the label ignores feasibility.",
+   "confidence": "likely"
+  }
+ ]
+}
