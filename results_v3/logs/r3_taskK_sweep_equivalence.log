@@ -1,0 +1,19 @@
+# .venv/Scripts/python.exe scripts/check_sweep_equivalence_v3.py F:/CAFA_results/metrics_v3_round2/csv-diabetes_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/csv-diabetes_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/csv-diabetes_ts0_random_softmax.json F:/CAFA_results/metrics_v3/csv-diabetes_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/csv-physionet_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/csv-physionet_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/csv-physionet_ts0_random_softmax.json F:/CAFA_results/metrics_v3/csv-physionet_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/cube_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/cube_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/cube_ts0_random_softmax.json F:/CAFA_results/metrics_v3/cube_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/fashionmnist_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/fashionmnist_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/fashionmnist_ts0_random_softmax.json F:/CAFA_results/metrics_v3/fashionmnist_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/image-imagenette_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/image-imagenette_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/image-imagenette_ts0_random_softmax.json F:/CAFA_results/metrics_v3/image-imagenette_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/mnist_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/mnist_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/mnist_ts0_random_softmax.json F:/CAFA_results/metrics_v3/mnist_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/tabular-MiniBooNE_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/tabular-MiniBooNE_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/tabular-MiniBooNE_ts0_random_softmax.json F:/CAFA_results/metrics_v3/tabular-MiniBooNE_ts0_random_softmax.json F:/CAFA_results/metrics_v3_round2/tabular-adult_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3/tabular-adult_ts0_greedy_entropy_softmax.json F:/CAFA_results/metrics_v3_round2/tabular-adult_ts0_random_softmax.json F:/CAFA_results/metrics_v3/tabular-adult_ts0_random_softmax.json
+# start 2026-10-03 14:07:39
+csv-diabetes_ts0_greedy_entropy_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+csv-diabetes_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+csv-physionet_ts0_greedy_entropy_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+csv-physionet_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+cube_ts0_greedy_entropy_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+cube_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+fashionmnist_ts0_greedy_entropy_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL
+fashionmnist_ts0_random_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL
+image-imagenette_ts0_greedy_entropy_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL
+image-imagenette_ts0_random_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL
+mnist_ts0_greedy_entropy_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL
+mnist_ts0_random_softmax.json: 400 draw records x all round-1 fields -> IDENTICAL
+tabular-MiniBooNE_ts0_greedy_entropy_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+tabular-MiniBooNE_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+tabular-adult_ts0_greedy_entropy_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+tabular-adult_ts0_random_softmax.json: 800 draw records x all round-1 fields -> IDENTICAL
+# returncode 0

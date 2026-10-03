@@ -1,0 +1,9 @@
+# python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac100 --cal-frac 1.0
+# start 2026-10-03T11:52:01.167589+00:00
+[cascade] cal_frac 1.0: 1 draw per split (5 draws; every draw of a split is the whole calibration pool)
+[cascade] image-imagenette ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+[cascade] image-imagenette ts0 greedy_entropy lr[0.7]=0.700 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.6, '2': 0.0, '3': 0.4} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+[cascade] image-imagenette ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+[cascade] image-imagenette ts0 greedy_entropy lr[dep]=0.859 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.4, '2': 0.0, '3': 0.6} viol=0.200 (by split 0.00-1.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+[cascade] wrote F:\CAFA_results\metrics_v3_calfrac100\image-imagenette_ts0_greedy_entropy_softmax.json
+# returncode 0

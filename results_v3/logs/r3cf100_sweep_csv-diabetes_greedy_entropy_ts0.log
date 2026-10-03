@@ -1,0 +1,9 @@
+# python scripts/run_cascade_sweep.py --dataset csv:diabetes --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac100 --cal-frac 1.0
+# start 2026-10-03T11:45:42.517463+00:00
+[cascade] cal_frac 1.0: 1 draw per split (5 draws; every draw of a split is the whole calibration pool)
+[cascade] csv-diabetes ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+[cascade] csv-diabetes ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+[cascade] csv-diabetes ts0 greedy_entropy lr[0.9]=0.900 G=2 | cert=0.00 tiers={'0': 1.0, '1': 0.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=1.0
+[cascade] csv-diabetes ts0 greedy_entropy lr[dep]=0.798 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=1.0
+[cascade] wrote F:\CAFA_results\metrics_v3_calfrac100\csv-diabetes_ts0_greedy_entropy_softmax.json
+# returncode 0

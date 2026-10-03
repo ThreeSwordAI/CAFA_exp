@@ -70,7 +70,9 @@ COST_GAP_NOTE = "\n".join([
     "- Ex-post stratum-safe oracle (non-deployable, uses test labels): `oracle_safe_cost_over_T` = its mean test cost "
     "/ T, `oracle_safe_over_full` = its mean test cost / the full-acquisition mean test cost (baseline "
     "`full_acquisition`; = oracle_safe_cost_over_T under uniform costs), `safe_mondrian_cost_over_T` the per-stratum "
-    "version's cost / T; `cascade_over_safe_oracle` = cascade cost / oracle cost.",
+    "version's cost / T; `cascade_over_safe_oracle` = cascade cost / oracle cost; "
+    "`cascade_over_safe_oracle_feasible` = the same ratio over the draws whose oracle is feasible only (summary "
+    "`cascade_cost_over_oracle_feasible`; empty if no draw has a feasible oracle).",
     f"- `label`: \"intrinsic\" if oracle_safe_over_full >= {INTRINSIC_OVER_FULL} (even the oracle needs near-full "
     f"acquisition; the full-acquisition cost, not T, so the rule also holds under non-uniform cost schemes); else "
     f"\"sample-limited\" if cascade_over_safe_oracle >= {PREMIUM_BAND_TOP} (above the cost-premium "
@@ -203,6 +205,7 @@ def cost_gap_row(d: dict, blk: dict, s: dict, draws: list) -> dict:
             "oracle_safe_feasible_rate": bl["oracle_stratum_safe"].get("feasible_rate"),
             "safe_mondrian_cost_over_T": over_T((bl.get("oracle_stratum_safe_mondrian") or {}).get("mean_test_cost"), T),
             "cascade_over_safe_oracle": ratio,
+            "cascade_over_safe_oracle_feasible": s.get("cascade_cost_over_oracle_feasible"),
             "label": cost_gap_label(o_full, ratio_lab),
             "label_note": label_note(n_infeasible, len(nn) - n_fin, len(nn)),
             "k_star": prim["k"], "n_k_cal": prim["n_k_cal"], "r_cal_at_oracle": prim["r_cal"],

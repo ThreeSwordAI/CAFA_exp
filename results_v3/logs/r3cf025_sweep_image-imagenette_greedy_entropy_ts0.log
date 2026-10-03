@@ -1,0 +1,8 @@
+# python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac025 --cal-frac 0.25
+# start 2026-10-03T11:50:56.299474+00:00
+[cascade] image-imagenette ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.84, '2': 0.0, '3': 0.16} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+[cascade] image-imagenette ts0 greedy_entropy lr[0.7]=0.700 G=3 | cert=0.98 tiers={'0': 0.02, '1': 0.12, '2': 0.0, '3': 0.86} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+[cascade] image-imagenette ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=0.95 tiers={'0': 0.05, '1': 0.02, '2': 0.0, '3': 0.93} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+[cascade] image-imagenette ts0 greedy_entropy lr[dep]=0.859 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.09, '2': 0.0, '3': 0.91} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+[cascade] wrote F:\CAFA_results\metrics_v3_calfrac025\image-imagenette_ts0_greedy_entropy_softmax.json
+# returncode 0

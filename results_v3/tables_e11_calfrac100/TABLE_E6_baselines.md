@@ -21,11 +21,11 @@
 | csv-diabetes | random | 0 | fixed_conf_0.95 | 0.103 | 19.841 | 1.000 | 0.000 | 1.000 |  |
 | csv-diabetes | random | 0 | fixed_conf_0.99 | 0.098 | 24.320 | 1.000 | 0.000 | 1.000 |  |
 | csv-diabetes | random | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |  |
-| csv-diabetes | random | 0 | mondrian_oracle | 0.150 | 10.563 | 1.000 | 0.380 | 1.000 |  |
+| csv-diabetes | random | 0 | mondrian_oracle | 0.150 | 10.467 | 1.000 | 0.400 | 1.000 |  |
 | csv-diabetes | random | 0 | oracle_cheapest_valid | 0.148 | 10.300 | 1.000 | 0.000 | 1.000 |  |
 | csv-diabetes | random | 0 | oracle_stratum_safe | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 | 0.000 |
 | csv-diabetes | random | 0 | oracle_stratum_safe_mondrian | 0.150 | 10.467 | 1.000 | 0.400 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | plugin | 0.150 | 9.908 | 1.000 | 0.400 | 1.000 |  |
+| csv-diabetes | random | 0 | plugin | 0.149 | 10.107 | 1.000 | 0.200 | 1.000 |  |
 | csv-physionet | greedy_entropy | 0 | budget_0.25 | 0.141 | 10.000 | 0.000 | 0.000 | 0.000 |  |
 | csv-physionet | greedy_entropy | 0 | budget_0.5 | 0.136 | 20.000 | 0.000 | 0.000 | 0.000 |  |
 | csv-physionet | greedy_entropy | 0 | budget_0.75 | 0.128 | 31.000 | 0.000 | 0.000 | 0.000 |  |
@@ -57,23 +57,23 @@
 | cube | greedy_entropy | 0 | fixed_conf_0.95 | 0.063 | 8.354 | 0.000 | 0.000 | 0.000 |  |
 | cube | greedy_entropy | 0 | fixed_conf_0.99 | 0.048 | 11.685 | 0.000 | 0.000 | 0.000 |  |
 | cube | greedy_entropy | 0 | full_acquisition | 0.046 | 20.000 | 0.000 | 0.000 | 0.000 |  |
-| cube | greedy_entropy | 0 | mondrian_oracle | 0.115 | 4.960 | 0.050 | 0.000 | 0.000 |  |
+| cube | greedy_entropy | 0 | mondrian_oracle | 0.122 | 4.726 | 0.000 | 0.000 | 0.000 |  |
 | cube | greedy_entropy | 0 | oracle_cheapest_valid | 0.149 | 3.733 | 1.000 | 0.000 | 1.000 |  |
-| cube | greedy_entropy | 0 | oracle_stratum_safe | 0.121 | 4.578 | 0.000 | 0.000 | 0.000 | 1.000 |
+| cube | greedy_entropy | 0 | oracle_stratum_safe | 0.121 | 4.577 | 0.000 | 0.000 | 0.000 | 1.000 |
 | cube | greedy_entropy | 0 | oracle_stratum_safe_mondrian | 0.143 | 4.109 | 0.000 | 0.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | plugin | 0.148 | 3.749 | 1.000 | 0.310 | 0.990 |  |
+| cube | greedy_entropy | 0 | plugin | 0.148 | 3.733 | 1.000 | 0.400 | 1.000 |  |
 | cube | random | 0 | budget_0.25 | 0.531 | 5.000 | 1.000 | 1.000 | 1.000 |  |
-| cube | random | 0 | budget_0.5 | 0.274 | 10.000 | 1.000 | 1.000 | 1.000 |  |
+| cube | random | 0 | budget_0.5 | 0.275 | 10.000 | 1.000 | 1.000 | 1.000 |  |
 | cube | random | 0 | budget_0.75 | 0.119 | 15.000 | 1.000 | 0.000 | 1.000 |  |
 | cube | random | 0 | fixed_conf_0.9 | 0.076 | 12.820 | 0.000 | 0.000 | 0.000 |  |
 | cube | random | 0 | fixed_conf_0.95 | 0.058 | 14.195 | 0.000 | 0.000 | 0.000 |  |
 | cube | random | 0 | fixed_conf_0.99 | 0.047 | 16.120 | 0.000 | 0.000 | 0.000 |  |
 | cube | random | 0 | full_acquisition | 0.046 | 20.000 | 0.000 | 0.000 | 0.000 |  |
-| cube | random | 0 | mondrian_oracle | 0.112 | 10.954 | 0.030 | 0.000 | 0.000 |  |
-| cube | random | 0 | oracle_cheapest_valid | 0.147 | 9.602 | 1.000 | 0.000 | 1.000 |  |
+| cube | random | 0 | mondrian_oracle | 0.123 | 10.506 | 0.000 | 0.000 | 0.000 |  |
+| cube | random | 0 | oracle_cheapest_valid | 0.147 | 9.603 | 1.000 | 0.000 | 1.000 |  |
 | cube | random | 0 | oracle_stratum_safe | 0.123 | 10.366 | 0.000 | 0.000 | 0.000 | 1.000 |
 | cube | random | 0 | oracle_stratum_safe_mondrian | 0.145 | 9.765 | 0.000 | 0.000 | 0.000 | 1.000 |
-| cube | random | 0 | plugin | 0.151 | 9.470 | 1.000 | 0.570 | 1.000 |  |
+| cube | random | 0 | plugin | 0.151 | 9.479 | 1.000 | 0.800 | 1.000 |  |
 | fashionmnist | greedy_entropy | 0 | budget_0.25 | 0.117 | 12.000 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | greedy_entropy | 0 | budget_0.5 | 0.079 | 24.000 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | greedy_entropy | 0 | budget_0.75 | 0.065 | 37.000 | 1.000 | 0.000 | 0.200 |  |
@@ -81,11 +81,11 @@
 | fashionmnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.073 | 12.621 | 0.600 | 0.000 | 0.000 |  |
 | fashionmnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.060 | 20.979 | 0.200 | 0.000 | 0.000 |  |
 | fashionmnist | greedy_entropy | 0 | full_acquisition | 0.058 | 49.000 | 0.200 | 0.000 | 0.000 |  |
-| fashionmnist | greedy_entropy | 0 | mondrian_oracle | 0.123 | 12.859 | 0.210 | 0.000 | 0.000 |  |
+| fashionmnist | greedy_entropy | 0 | mondrian_oracle | 0.128 | 12.360 | 0.200 | 0.000 | 0.000 |  |
 | fashionmnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.148 | 4.793 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | greedy_entropy | 0 | oracle_stratum_safe | 0.069 | 20.726 | 0.200 | 0.000 | 0.000 | 0.800 |
 | fashionmnist | greedy_entropy | 0 | oracle_stratum_safe_mondrian | 0.143 | 8.979 | 0.200 | 0.000 | 0.000 | 0.800 |
-| fashionmnist | greedy_entropy | 0 | plugin | 0.144 | 5.003 | 1.000 | 0.040 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | plugin | 0.144 | 4.998 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | random | 0 | budget_0.25 | 0.141 | 12.000 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | random | 0 | budget_0.5 | 0.090 | 24.000 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | random | 0 | budget_0.75 | 0.069 | 37.000 | 1.000 | 0.000 | 1.000 |  |
@@ -93,11 +93,11 @@
 | fashionmnist | random | 0 | fixed_conf_0.95 | 0.071 | 15.923 | 0.600 | 0.000 | 0.200 |  |
 | fashionmnist | random | 0 | fixed_conf_0.99 | 0.059 | 23.110 | 0.200 | 0.000 | 0.000 |  |
 | fashionmnist | random | 0 | full_acquisition | 0.058 | 49.000 | 0.200 | 0.000 | 0.000 |  |
-| fashionmnist | random | 0 | mondrian_oracle | 0.127 | 14.402 | 0.210 | 0.000 | 0.010 |  |
+| fashionmnist | random | 0 | mondrian_oracle | 0.132 | 13.810 | 0.200 | 0.000 | 0.000 |  |
 | fashionmnist | random | 0 | oracle_cheapest_valid | 0.147 | 7.452 | 1.000 | 0.000 | 1.000 |  |
 | fashionmnist | random | 0 | oracle_stratum_safe | 0.068 | 22.741 | 0.200 | 0.000 | 0.000 | 0.800 |
 | fashionmnist | random | 0 | oracle_stratum_safe_mondrian | 0.149 | 10.992 | 0.200 | 0.000 | 0.000 | 0.800 |
-| fashionmnist | random | 0 | plugin | 0.147 | 7.469 | 1.000 | 0.250 | 1.000 |  |
+| fashionmnist | random | 0 | plugin | 0.146 | 7.507 | 1.000 | 0.200 | 1.000 |  |
 | image-imagenette | greedy_entropy | 0 | budget_0.25 | 0.104 | 12.000 | 1.000 | 0.800 | 1.000 |  |
 | image-imagenette | greedy_entropy | 0 | budget_0.5 | 0.062 | 24.000 | 1.000 | 0.000 | 1.000 |  |
 | image-imagenette | greedy_entropy | 0 | budget_0.75 | 0.041 | 37.000 | 0.800 | 0.000 | 0.200 |  |
@@ -105,11 +105,11 @@
 | image-imagenette | greedy_entropy | 0 | fixed_conf_0.95 | 0.060 | 10.097 | 0.600 | 0.000 | 0.000 |  |
 | image-imagenette | greedy_entropy | 0 | fixed_conf_0.99 | 0.036 | 15.312 | 0.000 | 0.000 | 0.000 |  |
 | image-imagenette | greedy_entropy | 0 | full_acquisition | 0.030 | 49.000 | 0.000 | 0.000 | 0.000 |  |
-| image-imagenette | greedy_entropy | 0 | mondrian_oracle | 0.065 | 14.464 | 0.080 | 0.000 | 0.000 |  |
+| image-imagenette | greedy_entropy | 0 | mondrian_oracle | 0.071 | 13.263 | 0.000 | 0.000 | 0.000 |  |
 | image-imagenette | greedy_entropy | 0 | oracle_cheapest_valid | 0.098 | 7.057 | 1.000 | 0.000 | 0.800 |  |
 | image-imagenette | greedy_entropy | 0 | oracle_stratum_safe | 0.051 | 11.382 | 0.000 | 0.000 | 0.000 | 1.000 |
 | image-imagenette | greedy_entropy | 0 | oracle_stratum_safe_mondrian | 0.097 | 8.331 | 0.000 | 0.000 | 0.000 | 1.000 |
-| image-imagenette | greedy_entropy | 0 | plugin | 0.099 | 6.994 | 1.000 | 0.490 | 0.990 |  |
+| image-imagenette | greedy_entropy | 0 | plugin | 0.098 | 7.050 | 1.000 | 0.400 | 1.000 |  |
 | image-imagenette | random | 0 | budget_0.25 | 0.110 | 12.000 | 1.000 | 0.800 | 1.000 |  |
 | image-imagenette | random | 0 | budget_0.5 | 0.055 | 24.000 | 1.000 | 0.000 | 1.000 |  |
 | image-imagenette | random | 0 | budget_0.75 | 0.034 | 37.000 | 0.000 | 0.000 | 0.000 |  |
@@ -117,11 +117,11 @@
 | image-imagenette | random | 0 | fixed_conf_0.95 | 0.053 | 10.445 | 0.200 | 0.000 | 0.000 |  |
 | image-imagenette | random | 0 | fixed_conf_0.99 | 0.035 | 15.633 | 0.000 | 0.000 | 0.000 |  |
 | image-imagenette | random | 0 | full_acquisition | 0.030 | 49.000 | 0.000 | 0.000 | 0.000 |  |
-| image-imagenette | random | 0 | mondrian_oracle | 0.066 | 13.961 | 0.110 | 0.000 | 0.010 |  |
+| image-imagenette | random | 0 | mondrian_oracle | 0.074 | 12.915 | 0.200 | 0.000 | 0.000 |  |
 | image-imagenette | random | 0 | oracle_cheapest_valid | 0.099 | 6.529 | 1.000 | 0.000 | 1.000 |  |
 | image-imagenette | random | 0 | oracle_stratum_safe | 0.062 | 9.263 | 0.000 | 0.000 | 0.000 | 1.000 |
 | image-imagenette | random | 0 | oracle_stratum_safe_mondrian | 0.098 | 7.505 | 0.000 | 0.000 | 0.000 | 1.000 |
-| image-imagenette | random | 0 | plugin | 0.098 | 6.612 | 1.000 | 0.330 | 0.990 |  |
+| image-imagenette | random | 0 | plugin | 0.099 | 6.562 | 1.000 | 0.400 | 1.000 |  |
 | mnist | greedy_entropy | 0 | budget_0.25 | 0.027 | 12.000 | 0.000 | 0.000 | 0.000 |  |
 | mnist | greedy_entropy | 0 | budget_0.5 | 0.016 | 24.000 | 0.000 | 0.000 | 0.000 |  |
 | mnist | greedy_entropy | 0 | budget_0.75 | 0.010 | 37.000 | 0.000 | 0.000 | 0.000 |  |
@@ -129,11 +129,11 @@
 | mnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.026 | 5.957 | 0.000 | 0.000 | 0.000 |  |
 | mnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.011 | 10.331 | 0.000 | 0.000 | 0.000 |  |
 | mnist | greedy_entropy | 0 | full_acquisition | 0.006 | 49.000 | 0.000 | 0.000 | 0.000 |  |
-| mnist | greedy_entropy | 0 | mondrian_oracle | 0.084 | 3.604 | 0.000 | 0.000 | 0.000 |  |
+| mnist | greedy_entropy | 0 | mondrian_oracle | 0.088 | 3.522 | 0.000 | 0.000 | 0.000 |  |
 | mnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.098 | 3.406 | 1.000 | 0.000 | 0.800 |  |
 | mnist | greedy_entropy | 0 | oracle_stratum_safe | 0.089 | 3.514 | 0.000 | 0.000 | 0.000 | 1.000 |
 | mnist | greedy_entropy | 0 | oracle_stratum_safe_mondrian | 0.096 | 3.417 | 0.000 | 0.000 | 0.000 | 1.000 |
-| mnist | greedy_entropy | 0 | plugin | 0.098 | 3.415 | 0.970 | 0.190 | 0.620 |  |
+| mnist | greedy_entropy | 0 | plugin | 0.099 | 3.394 | 1.000 | 0.200 | 1.000 |  |
 | mnist | random | 0 | budget_0.25 | 0.115 | 12.000 | 1.000 | 1.000 | 1.000 |  |
 | mnist | random | 0 | budget_0.5 | 0.025 | 24.000 | 0.000 | 0.000 | 0.000 |  |
 | mnist | random | 0 | budget_0.75 | 0.009 | 37.000 | 0.000 | 0.000 | 0.000 |  |
@@ -141,11 +141,11 @@
 | mnist | random | 0 | fixed_conf_0.95 | 0.031 | 11.456 | 0.000 | 0.000 | 0.000 |  |
 | mnist | random | 0 | fixed_conf_0.99 | 0.010 | 15.352 | 0.000 | 0.000 | 0.000 |  |
 | mnist | random | 0 | full_acquisition | 0.006 | 49.000 | 0.000 | 0.000 | 0.000 |  |
-| mnist | random | 0 | mondrian_oracle | 0.076 | 8.727 | 0.000 | 0.000 | 0.000 |  |
+| mnist | random | 0 | mondrian_oracle | 0.081 | 8.554 | 0.000 | 0.000 | 0.000 |  |
 | mnist | random | 0 | oracle_cheapest_valid | 0.097 | 8.036 | 1.000 | 0.000 | 0.000 |  |
 | mnist | random | 0 | oracle_stratum_safe | 0.091 | 8.236 | 0.000 | 0.000 | 0.000 | 1.000 |
 | mnist | random | 0 | oracle_stratum_safe_mondrian | 0.097 | 8.035 | 0.000 | 0.000 | 0.000 | 1.000 |
-| mnist | random | 0 | plugin | 0.096 | 8.072 | 0.760 | 0.280 | 0.090 |  |
+| mnist | random | 0 | plugin | 0.095 | 8.104 | 0.800 | 0.000 | 0.000 |  |
 | tabular-adult | greedy_entropy | 0 | budget_0.25 | 0.216 | 4.000 | 1.000 | 0.000 | 1.000 |  |
 | tabular-adult | greedy_entropy | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.000 | 1.000 |  |
 | tabular-adult | greedy_entropy | 0 | budget_0.75 | 0.158 | 10.000 | 0.000 | 0.000 | 0.000 |  |
@@ -153,11 +153,11 @@
 | tabular-adult | greedy_entropy | 0 | fixed_conf_0.95 | 0.149 | 8.469 | 0.000 | 0.000 | 0.000 |  |
 | tabular-adult | greedy_entropy | 0 | fixed_conf_0.99 | 0.147 | 11.556 | 0.000 | 0.000 | 0.000 |  |
 | tabular-adult | greedy_entropy | 0 | full_acquisition | 0.147 | 14.000 | 0.000 | 0.000 | 0.000 |  |
-| tabular-adult | greedy_entropy | 0 | mondrian_oracle | 0.179 | 2.113 | 0.010 | 0.000 | 0.000 |  |
+| tabular-adult | greedy_entropy | 0 | mondrian_oracle | 0.179 | 2.110 | 0.000 | 0.000 | 0.000 |  |
 | tabular-adult | greedy_entropy | 0 | oracle_cheapest_valid | 0.237 | 0.476 | 1.000 | 0.000 | 1.000 |  |
 | tabular-adult | greedy_entropy | 0 | oracle_stratum_safe | 0.184 | 2.766 | 0.000 | 0.000 | 0.000 | 1.000 |
 | tabular-adult | greedy_entropy | 0 | oracle_stratum_safe_mondrian | 0.184 | 1.936 | 0.000 | 0.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | plugin | 0.220 | 1.273 | 1.000 | 0.150 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | plugin | 0.227 | 0.956 | 1.000 | 0.200 | 1.000 |  |
 | tabular-adult | random | 0 | budget_0.25 | 0.206 | 4.000 | 1.000 | 0.000 | 1.000 |  |
 | tabular-adult | random | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.000 | 1.000 |  |
 | tabular-adult | random | 0 | budget_0.75 | 0.160 | 10.000 | 1.000 | 0.000 | 1.000 |  |
@@ -165,11 +165,11 @@
 | tabular-adult | random | 0 | fixed_conf_0.95 | 0.149 | 9.583 | 0.800 | 0.000 | 0.000 |  |
 | tabular-adult | random | 0 | fixed_conf_0.99 | 0.147 | 11.953 | 0.800 | 0.000 | 0.000 |  |
 | tabular-adult | random | 0 | full_acquisition | 0.147 | 14.000 | 0.800 | 0.000 | 0.000 |  |
-| tabular-adult | random | 0 | mondrian_oracle | 0.190 | 3.564 | 0.800 | 0.000 | 0.000 |  |
+| tabular-adult | random | 0 | mondrian_oracle | 0.198 | 3.276 | 0.800 | 0.000 | 0.000 |  |
 | tabular-adult | random | 0 | oracle_cheapest_valid | 0.234 | 0.688 | 1.000 | 0.000 | 0.800 |  |
 | tabular-adult | random | 0 | oracle_stratum_safe | 0.154 | 11.979 | 0.800 | 0.000 | 0.000 | 0.200 |
 | tabular-adult | random | 0 | oracle_stratum_safe_mondrian | 0.200 | 3.022 | 0.800 | 0.000 | 0.000 | 0.200 |
-| tabular-adult | random | 0 | plugin | 0.214 | 1.856 | 1.000 | 0.150 | 0.560 |  |
+| tabular-adult | random | 0 | plugin | 0.223 | 1.403 | 1.000 | 0.200 | 0.600 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | budget_0.25 | 0.110 | 12.000 | 1.000 | 0.000 | 1.000 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | budget_0.5 | 0.092 | 25.000 | 1.000 | 0.000 | 1.000 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | budget_0.75 | 0.085 | 38.000 | 1.000 | 0.000 | 1.000 |  |
@@ -177,7 +177,7 @@
 | tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.95 | 0.081 | 16.828 | 0.800 | 0.000 | 0.200 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.99 | 0.078 | 28.661 | 0.600 | 0.000 | 0.200 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | full_acquisition | 0.077 | 50.000 | 0.600 | 0.000 | 0.200 |  |
-| tabular-MiniBooNE | greedy_entropy | 0 | mondrian_oracle | 0.103 | 15.161 | 0.600 | 0.000 | 0.200 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | mondrian_oracle | 0.103 | 15.210 | 0.600 | 0.000 | 0.200 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | oracle_cheapest_valid | 0.130 | 3.070 | 1.000 | 0.000 | 1.000 |  |
 | tabular-MiniBooNE | greedy_entropy | 0 | oracle_stratum_safe | 0.079 | 37.244 | 0.600 | 0.000 | 0.200 | 0.400 |
 | tabular-MiniBooNE | greedy_entropy | 0 | oracle_stratum_safe_mondrian | 0.103 | 13.400 | 0.600 | 0.000 | 0.200 | 0.400 |
@@ -189,8 +189,8 @@
 | tabular-MiniBooNE | random | 0 | fixed_conf_0.95 | 0.082 | 23.538 | 0.000 | 0.000 | 0.000 |  |
 | tabular-MiniBooNE | random | 0 | fixed_conf_0.99 | 0.077 | 35.213 | 0.000 | 0.000 | 0.000 |  |
 | tabular-MiniBooNE | random | 0 | full_acquisition | 0.077 | 50.000 | 0.000 | 0.000 | 0.000 |  |
-| tabular-MiniBooNE | random | 0 | mondrian_oracle | 0.132 | 12.771 | 0.030 | 0.000 | 0.000 |  |
+| tabular-MiniBooNE | random | 0 | mondrian_oracle | 0.135 | 12.169 | 0.000 | 0.000 | 0.000 |  |
 | tabular-MiniBooNE | random | 0 | oracle_cheapest_valid | 0.147 | 7.113 | 1.000 | 0.000 | 1.000 |  |
 | tabular-MiniBooNE | random | 0 | oracle_stratum_safe | 0.112 | 11.515 | 0.000 | 0.000 | 0.000 | 1.000 |
 | tabular-MiniBooNE | random | 0 | oracle_stratum_safe_mondrian | 0.145 | 8.053 | 0.000 | 0.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | plugin | 0.146 | 7.188 | 1.000 | 0.080 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | plugin | 0.146 | 7.225 | 1.000 | 0.000 | 1.000 |  |

@@ -1,0 +1,25 @@
+results_v3/tables/TABLE_E4_cascade.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables/TABLE_E4_cascade_seeds.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables/TABLE_E6_baselines.csv: rows 160 -> 192 (old rows missing 0, added 32 ['oracle_stratum_safe', 'oracle_stratum_safe_mondrian']), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_e9_G8/TABLE_E4_cascade.csv: rows 1 -> 1 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_e9_G8/TABLE_E4_cascade_seeds.csv: rows 1 -> 1 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_e9_G8/TABLE_E6_baselines.csv: rows 10 -> 10 (old rows missing 0, added 0), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade.csv: rows 12 -> 12 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade_seeds.csv: rows 12 -> 12 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_e9_alpha_margin02/TABLE_E6_baselines.csv: rows 120 -> 120 (old rows missing 0, added 0), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_e9_delta_weights/TABLE_E4_cascade.csv: rows 1 -> 1 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_e9_delta_weights/TABLE_E4_cascade_seeds.csv: rows 1 -> 1 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_e9_delta_weights/TABLE_E6_baselines.csv: rows 10 -> 10 (old rows missing 0, added 0), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E4_cascade.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E4_cascade_seeds.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E6_baselines.csv: rows 160 -> 192 (old rows missing 0, added 32 ['oracle_stratum_safe', 'oracle_stratum_safe_mondrian']), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E4_cascade.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E4_cascade_seeds.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E6_baselines.csv: rows 160 -> 192 (old rows missing 0, added 32 ['oracle_stratum_safe', 'oracle_stratum_safe_mondrian']), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E4_cascade.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E4_cascade_seeds.csv: rows 16 -> 16 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E6_baselines.csv: rows 160 -> 192 (old rows missing 0, added 32 ['oracle_stratum_safe', 'oracle_stratum_safe_mondrian']), shared columns 9/9, value differences 0, added columns 1
+results_v3/tables_inverse_info/TABLE_E4_cascade.csv: rows 10 -> 10 (old rows missing 0, added 0), shared columns 22/22, value differences 0, added columns 8
+results_v3/tables_inverse_info/TABLE_E4_cascade_seeds.csv: rows 10 -> 10 (old rows missing 0, added 0), shared columns 26/26, value differences 0, added columns 16
+results_v3/tables_inverse_info/TABLE_E6_baselines.csv: rows 100 -> 120 (old rows missing 0, added 20 ['oracle_stratum_safe', 'oracle_stratum_safe_mondrian']), shared columns 9/9, value differences 0, added columns 1
+TOTAL value differences on shared columns / missing old rows: 0

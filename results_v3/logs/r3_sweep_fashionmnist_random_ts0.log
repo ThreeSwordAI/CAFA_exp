@@ -1,0 +1,8 @@
+# python scripts/run_cascade_sweep.py --dataset fashionmnist --train-seed 0 --policy random
+# start 2026-10-03T11:31:34.388347+00:00
+[cascade] fashionmnist ts0 random lr[0.5]=0.500 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.030 (by split 0.00-0.15) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] fashionmnist ts0 random lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.7, '2': 0.0, '3': 0.3} viol=0.130 (by split 0.00-0.45) certviol=0.010 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] fashionmnist ts0 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+[cascade] fashionmnist ts0 random lr[dep]=0.778 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.12, '2': 0.0, '3': 0.88} viol=0.100 (by split 0.00-0.50) certviol=0.010 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] wrote F:\CAFA_results\metrics_v3\fashionmnist_ts0_random_softmax.json
+# returncode 0

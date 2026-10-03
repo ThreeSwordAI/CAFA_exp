@@ -142,7 +142,8 @@ def mdir(tmp_path):
     _write(d, _metrics("dsA", seed=1, summary=_summary(17.0, answered=0.8, full_cost=30.0), draws=_round2_draws()))
     # Task-K cells: sample-limited exactly at 1.6, near-oracle just below, intrinsic exactly at 0.9 of the full
     # acquisition (cal_frac 1.0), and a zero-cost oracle with a zero-cost cascade (ratio None) -- full acquisition = T
-    _write(d, _metrics("dsK", "sl", summary=_summary(16.0, extra_bl=_oracle_bl(10.0), cascade_cost_over_oracle=1.6),
+    _write(d, _metrics("dsK", "sl", summary=_summary(16.0, extra_bl=_oracle_bl(10.0), cascade_cost_over_oracle=1.6,
+                                                     cascade_cost_over_oracle_feasible=1.25),
                        draws=_gap_draws(), audit_by_split=gap_abs))
     _write(d, _metrics("dsK", "near", summary=_summary(16.0, extra_bl=_oracle_bl(17.99),
                                                        cascade_cost_over_oracle=1.5999), draws=_gap_draws()))
@@ -212,7 +213,11 @@ def test_cost_gap_table(mdir, tmp_path):
     assert cols[cols.index("oracle_safe_cost_over_T") + 1] == "oracle_safe_over_full"
     assert cols[cols.index("label") + 1] == "label_note"
     assert cols[cols.index("n_needed_range") + 1] == "n_splits_finite"
+    assert cols[cols.index("cascade_over_safe_oracle") + 1] == "cascade_over_safe_oracle_feasible"
     gap = {(r["dataset"], r["policy"]): r for r in rows}
+    # the feasible-draws-only ratio is the summary's cascade_cost_over_oracle_feasible (empty where absent)
+    assert float(gap["dsK", "sl"]["cascade_over_safe_oracle_feasible"]) == pytest.approx(1.25)
+    assert gap["dsK", "near"]["cascade_over_safe_oracle_feasible"] == ""
     assert set(gap) == {("dsK", "sl"), ("dsK", "near"), ("dsK", "intr"), ("dsK", "inv"),
                         ("dsZ", "greedy_entropy")}  # no dsA
     assert gap["dsK", "sl"]["label"] == "sample-limited"            # ratio exactly 1.6
