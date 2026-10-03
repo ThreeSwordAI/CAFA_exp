@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 1 --policy greedy_entropy --device cuda
+# start 2026-10-03T11:49:05.668439+00:00
+[rollout_v3] tabular:MiniBooNE ts1 greedy_entropy: n=52026 T=50 full-acq acc=0.9221 -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v3/tabular-MiniBooNE_ts1_greedy_entropy_softmax.npz
+# returncode 0

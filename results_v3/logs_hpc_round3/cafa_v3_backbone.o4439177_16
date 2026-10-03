@@ -1,0 +1,47 @@
+### Starting TaskPrologue of job 4439187 on a0325 at Sat Oct  3 01:29:47 PM CEST 2026
+Running on cores 96-111 with governor schedutil
+Sat Oct  3 13:29:47 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:C1:00.0 Off |                  Off |
+|  0%   31C    P8             21W /  300W |       0MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+/etc/profile.d/debuginfod.sh: line 8: DEBUGINFOD_URLS: unbound variable
+=== JOB_STATISTICS ===
+=== current date     : Sat Oct  3 13:29:50 CEST 2026
+= Job-ID             : 4439187 on alex as 4439177_16
+= Job-Name           : cafa_v3_backbone
+= Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/backbone_v3.slurm
+= Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
+= Queue/Partition    : a40
+= Slurm account      : iwi5 with QOS=normal
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:00:04
+= Total RAM usage    : 0.0 GiB of assigned  GiB (%)
+= Node list          : a0325
+= Subm/Elig/Start/End: 2026-10-03T13:29:44 / 2026-10-03T13:29:44 / 2026-10-03T13:29:45 / 2026-10-03T13:29:49
+======================
+=== Quota infos ======
+    Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody           297.2G  1000.0G  1500.0G        N/A     397K   5,000K   7,500K        N/A    
+    /home/hpc              47.7G   104.9G   209.7G        N/A     143K     500K   1,000K        N/A    
+    /home/vault          1021.4G  1048.6G  2097.2G        N/A     147K     200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]

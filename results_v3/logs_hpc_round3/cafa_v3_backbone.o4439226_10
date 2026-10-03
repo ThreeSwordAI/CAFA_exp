@@ -1,0 +1,56 @@
+### Starting TaskPrologue of job 4439231 on a0325 at Sat Oct  3 01:46:09 PM CEST 2026
+Running on cores 112-127 with governor schedutil
+Sat Oct  3 13:46:09 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:E1:00.0 Off |                  Off |
+|  0%   32C    P8             22W /  300W |       0MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[drive_v3] run backbones:tabular:adult:na:ts1: python scripts/train_backbone_v3.py --dataset tabular:adult --train-seed 1 --device cuda  (log results_v3/logs/backbones_tabular-adult_na_ts1.log)
+    [train-tab] epoch   1/40  loss=0.4639  masked_train_acc=0.7795
+    [train-tab] epoch  11/40  loss=0.4005  masked_train_acc=0.8129
+    [train-tab] epoch  21/40  loss=0.3933  masked_train_acc=0.8152
+    [train-tab] epoch  31/40  loss=0.3938  masked_train_acc=0.8194
+    [train-tab] epoch  40/40  loss=0.3918  masked_train_acc=0.8188
+    [train_v3] tabular:adult ts1: masked_acc=0.8188 full_obs_acc=0.8644 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/tabular-adult_ts1.pt (sha256 dade48fdc961)
+[drive_v3] done backbones:tabular:adult:na:ts1: rc=0 in 39.7s
+[drive_v3] backbones: ran 1, skipped 0 existing, 0 missing prerequisites
+=== JOB_STATISTICS ===
+=== current date     : Sat Oct  3 13:46:53 CEST 2026
+= Job-ID             : 4439231 on alex as 4439226_10
+= Job-Name           : cafa_v3_backbone
+= Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/backbone_v3.slurm
+= Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
+= Queue/Partition    : a40
+= Slurm account      : iwi5 with QOS=normal
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:00:46
+= Total RAM usage    : 1.7 GiB of assigned  GiB (%)
+= Node list          : a0325
+= Subm/Elig/Start/End: 2026-10-03T13:46:06 / 2026-10-03T13:46:06 / 2026-10-03T13:46:07 / 2026-10-03T13:46:53
+======================
+=== Quota infos ======
+    Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody           297.2G  1000.0G  1500.0G        N/A     397K   5,000K   7,500K        N/A    
+    /home/hpc              47.8G   104.9G   209.7G        N/A     144K     500K   1,000K        N/A    
+    /home/vault          1021.4G  1048.6G  2097.2G        N/A     147K     200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A40, 00000000:E1:00.0, 375038, 8 %, 0 %, 372 MiB, 17782 ms

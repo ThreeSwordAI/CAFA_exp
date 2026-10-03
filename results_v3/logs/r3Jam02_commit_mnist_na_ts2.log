@@ -1,0 +1,4 @@
+# python scripts/commit_v3.py --dataset mnist --train-seed 2 --out-path configs/committed_v3_am02_mnist_ts2.json --alpha-margin 0.02 --alpha-grid 0.01
+# start 2026-10-03T12:48:59.179755+00:00
+ERROR: alpha=0.03 (floor 0.0054, alpha rule margin 0.02 / grid 0.01) is not above the design margin 0.05: the detectability rule n_min(alpha, level, margin) is undefined; nothing committed.
+# returncode 7

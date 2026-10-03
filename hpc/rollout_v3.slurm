@@ -16,12 +16,16 @@
 # Exact submission lines: hpc/README_v3.md.  CAFA_DRIVER_FLAGS (e.g. --dry-run) is appended to the driver
 # call (hpc/dry_run_v3.sh).
 # Preamble as in hpc/pool_rollout.slurm (FAU NHR conventions; env from hpc/env.local.sh).
-set -euo pipefail
+# -u only after the environment is loaded: the cluster login profile (and module / conda activate) are not
+# `set -u` clean -- round 3 on Alex: array job 4439177 failed with
+# "/etc/profile.d/debuginfod.sh: line 8: DEBUGINFOD_URLS: unbound variable" (handoff.md section 13.8)
+set -eo pipefail
 source /etc/profile
 module load python/3.12-conda
 cd "${CAFA_REPO:-$SLURM_SUBMIT_DIR}"
 if [ -f hpc/env.local.sh ]; then source hpc/env.local.sh; fi
 source activate "${CAFA_ENV:?CAFA_ENV not set - create hpc/env.local.sh from hpc/env.local.template.sh}"
+set -u
 : "${DATA_ROOT:?DATA_ROOT not set - add it to hpc/env.local.sh}"
 : "${RESULTS_ROOT:?RESULTS_ROOT not set - add it to hpc/env.local.sh}"
 export PYTHONUNBUFFERED=1 PYTHONIOENCODING=utf-8

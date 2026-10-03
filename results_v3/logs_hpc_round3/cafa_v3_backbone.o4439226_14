@@ -1,0 +1,58 @@
+### Starting TaskPrologue of job 4439234 on a0221 at Sat Oct  3 01:46:08 PM CEST 2026
+Running on cores 32-47 with governor ondemand
+Sat Oct  3 13:46:08 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:41:00.0 Off |                  Off |
+|  0%   35C    P8             22W /  300W |       0MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[drive_v3] run backbones:fashionmnist:na:ts1: python scripts/train_backbone_v3.py --dataset fashionmnist --train-seed 1 --device cuda  (log results_v3/logs/backbones_fashionmnist_na_ts1.log)
+    [train v2] epoch   1/30 loss=1.7939 masked_acc=0.4268
+    [train v2] epoch   6/30 loss=0.5625 masked_acc=0.7893
+    [train v2] epoch  11/30 loss=0.4552 masked_acc=0.8288
+    [train v2] epoch  16/30 loss=0.3914 masked_acc=0.8527
+    [train v2] epoch  21/30 loss=0.3516 masked_acc=0.8669
+    [train v2] epoch  26/30 loss=0.3014 masked_acc=0.8860
+    [train v2] epoch  30/30 loss=0.2887 masked_acc=0.8915
+    [train_v3] fashionmnist ts1: masked_acc=0.8915 full_obs_acc=0.9725 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/fashionmnist_ts1.pt (sha256 730e388f3dcf)
+[drive_v3] done backbones:fashionmnist:na:ts1: rc=0 in 99.0s
+[drive_v3] backbones: ran 1, skipped 0 existing, 0 missing prerequisites
+=== JOB_STATISTICS ===
+=== current date     : Sat Oct  3 13:48:01 CEST 2026
+= Job-ID             : 4439234 on alex as 4439226_14
+= Job-Name           : cafa_v3_backbone
+= Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/backbone_v3.slurm
+= Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
+= Queue/Partition    : a40
+= Slurm account      : iwi5 with QOS=normal
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:01:53
+= Total RAM usage    : 2.1 GiB of assigned  GiB (%)
+= Node list          : a0221
+= Subm/Elig/Start/End: 2026-10-03T13:46:06 / 2026-10-03T13:46:06 / 2026-10-03T13:46:07 / 2026-10-03T13:48:00
+======================
+=== Quota infos ======
+    Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody           297.2G  1000.0G  1500.0G        N/A     397K   5,000K   7,500K        N/A    
+    /home/hpc              47.8G   104.9G   209.7G        N/A     144K     500K   1,000K        N/A    
+    /home/vault          1021.6G  1048.6G  2097.2G        N/A     147K     200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A40, 00000000:41:00.0, 2580058, 85 %, 65 %, 2252 MiB, 66699 ms

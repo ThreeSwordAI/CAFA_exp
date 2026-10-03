@@ -1,0 +1,1142 @@
+### Starting TaskPrologue of job 4439223 on a0325 at Sat Oct  3 01:43:25 PM CEST 2026
+Running on cores 48-63 with governor schedutil
+Sat Oct  3 13:43:25 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:61:00.0 Off |                  Off |
+|  0%   34C    P8             28W /  300W |       0MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
++ set +eu
++ source /etc/profile
+++ '[' -x /usr/bin/id ']'
+++ '[' -z 213917 ']'
++++ /usr/bin/id -un
+++ USER=iwi5359h
+++ LOGNAME=iwi5359h
+++ MAIL=/var/spool/mail/iwi5359h
+++ '[' 213917 = 0 ']'
+++ pathmunge /usr/local/sbin after
+++ case ":${PATH}:" in
+++ pathmunge /usr/sbin after
+++ case ":${PATH}:" in
++++ /usr/bin/hostnamectl --transient
+++ HOSTNAME=a0325
+++ HISTSIZE=1000
+++ '[' ignoredups = ignorespace ']'
+++ export HISTCONTROL=ignoredups
+++ HISTCONTROL=ignoredups
+++ export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/01-fix-locale.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/01-fix-locale.sh
++++ '[' -x /usr/bin/locale-check ']'
+++++ /usr/bin/locale-check C.UTF-8
++++ eval
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/bash_completion.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/bash_completion.sh
++++ '[' 'x5.1.8(1)-release' '!=' x -a x '!=' x -a x = x ']'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/ccache.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/ccache.sh
++++ case ":${PATH:-}:" in
++++ '[' -n '' ']'
++++ '[' 213917 '!=' 0 ']'
++++ '[' -w /var/cache/ccache ']'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/colorgrep.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/colorgrep.sh
++++ /usr/libexec/grepconf.sh -c
++++ alias 'grep=grep --color=auto'
++++ alias 'egrep=egrep --color=auto'
++++ alias 'fgrep=fgrep --color=auto'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/colorls.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/colorls.sh
++++ '[' '!' -t 0 ']'
++++ return
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/colorxzgrep.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/colorxzgrep.sh
++++ /usr/libexec/grepconf.sh -c
++++ alias 'xzgrep=xzgrep --color=auto'
++++ alias 'xzegrep=xzegrep --color=auto'
++++ alias 'xzfgrep=xzfgrep --color=auto'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/colorzgrep.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/colorzgrep.sh
++++ '[' -f /usr/libexec/grepconf.sh ']'
++++ /usr/libexec/grepconf.sh -c
++++ alias 'zgrep=zgrep --color=auto'
++++ alias 'zfgrep=zfgrep --color=auto'
++++ alias 'zegrep=zegrep --color=auto'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/debuginfod.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/debuginfod.sh
++++ prefix=/usr
++++ '[' -z '' ']'
+++++ find /etc/debuginfod -name '*.urls' -print0
+++++ xargs -0 cat
+++++ tr '\n' ' '
++++ DEBUGINFOD_URLS=
++++ '[' -n '' ']'
++++ unset DEBUGINFOD_URLS
++++ '[' -z /etc/keys/ima: ']'
++++ unset prefix
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/gawk.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/gawk.sh
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/lang.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/lang.sh
++++ unset LANG_backup
+++++ /usr/bin/locale
++++ '[' -n '' ']'
++++ LANG_backup=en_US.UTF-8
++++ for config in /etc/locale.conf "${HOME}/.i18n"
++++ '[' -f /etc/locale.conf ']'
++++ '[' -x /usr/bin/sed ']'
+++++ /usr/bin/sed -r -e 's/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d' /etc/locale.conf
++++ eval export 'LANG="en_US.UTF-8"'
+++++ export LANG=en_US.UTF-8
+++++ LANG=en_US.UTF-8
++++ for config in /etc/locale.conf "${HOME}/.i18n"
++++ '[' -f /home/hpc/iwi5/iwi5359h/.i18n ']'
++++ '[' -n en_US.UTF-8 ']'
++++ LANG=en_US.UTF-8
++++ unset LANG_backup config
++++ '[' -n '' ']'
++++ '[' -n en_US.UTF-8 ']'
++++ '[' xterm-256color = linux ']'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/less.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/less.sh
++++ '[' -z '||/usr/bin/lesspipe.sh %s' ']'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/mc.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/mc.sh
++++ '[' -n '5.1.8(1)-release' ']'
++++ alias 'mc=. /usr/libexec/mc/mc-wrapper.sh'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/which2.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/which2.sh
++++ '[' -r /proc/373797/exe ']'
++++++ readlink /proc/373797/exe
+++++ basename /usr/bin/bash
++++ SHELLNAME=bash
++++ case "$SHELLNAME" in
++++ which_declare='declare -f'
++++ which_opt=-f
++++ export which_declare
++++ export -f which
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/zz-rrze-local.sh ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/zz-rrze-local.sh
+++++ id -u
++++ '[' 213917 -eq 0 ']'
++++ '[' -z iwi5359h ']'
++++ '[' -z iwi5 ']'
++++ '[' -z /home/hpc/iwi5/iwi5359h ']'
++++ export HPCVAULT=/home/vault/iwi5/iwi5359h
++++ HPCVAULT=/home/vault/iwi5/iwi5359h
++++ export WOODYHOME=/home/woody/iwi5/iwi5359h
++++ WOODYHOME=/home/woody/iwi5/iwi5359h
++++ export WORK=/home/woody/iwi5/iwi5359h
++++ WORK=/home/woody/iwi5/iwi5359h
++++ '[' -d /home/atuin/iwi5 -a -d /home/atuin/iwi5/iwi5359h ']'
++++ '[' -d /home/janus/iwi5 -a -d /home/janus/iwi5/iwi5359h ']'
++++ '[' -d /home/titan/iwi5 -a -d /home/titan/iwi5/iwi5359h ']'
++++ '[' -d /home/saturn/iwi5 -a -d /home/saturn/iwi5/iwi5359h ']'
++++ case $GROUP in
++++ case `hostname -s` in
+++++ hostname -s
++++ export SCRATCH=/scratch
++++ SCRATCH=/scratch
++++ export CLUSTER=alex
++++ CLUSTER=alex
+++++ id -u
++++ '[' 213917 -eq 0 ']'
++++ . /etc/os-release
+++++ NAME=AlmaLinux
+++++ VERSION='9.8 (Olive Jaguar)'
+++++ ID=almalinux
+++++ ID_LIKE='rhel centos fedora'
+++++ VERSION_ID=9.8
+++++ PLATFORM_ID=platform:el9
+++++ PRETTY_NAME='AlmaLinux 9.8 (Olive Jaguar)'
+++++ ANSI_COLOR='0;34'
+++++ LOGO=fedora-logo-icon
+++++ CPE_NAME=cpe:/o:almalinux:almalinux:9::baseos
+++++ HOME_URL=https://almalinux.org/
+++++ DOCUMENTATION_URL=https://wiki.almalinux.org/
+++++ BUG_REPORT_URL=https://bugs.almalinux.org/
+++++ ALMALINUX_MANTISBT_PROJECT=AlmaLinux-9
+++++ ALMALINUX_MANTISBT_PROJECT_VERSION=9.8
+++++ REDHAT_SUPPORT_PRODUCT=AlmaLinux
+++++ REDHAT_SUPPORT_PRODUCT_VERSION=9.8
+++++ SUPPORT_END=2032-06-01
++++ '[' platform:el9 == platform:el9 -a '(' /apps/modules/5.6.1 == /apps/modules/5.0.1 -o /apps/modules/5.6.1 == /apps/modules/5.1.0 ')' ']'
+++++ tclsh /apps/modules/modulecmd.tcl bash autoinit
++++ eval '_module_raw()' '{' eval '"$(/home/vault/iwi5/iwi5359h/envs/cafa/bin/tclsh' ''\''/apps/modules/modulecmd.tcl'\''' bash '"$@")";' '_mlstatus=$?;' return '$_mlstatus;' '};' 'module()' '{' local '_mlredir=0;' if '[' -n '"${MODULES_REDIRECT_OUTPUT+x}"' '];' then if '[' '"$MODULES_REDIRECT_OUTPUT"' = ''\''0'\''' '];' then '_mlredir=0;' elif '[' '"$MODULES_REDIRECT_OUTPUT"' = ''\''1'\''' '];' then '_mlredir=1;' 'fi;' 'fi;' case '"' '$@' '"' in '*'\''' --no-redirect ''\''*)' _mlredir=0 ';;' '*'\''' --redirect ''\''*)' _mlredir=1 ';;' 'esac;' if '[' '$_mlredir' -eq 0 '];' then _module_raw '"$@";' else _module_raw '"$@"' '2>&1;' 'fi;' '};' export -f '_module_raw;' export -f 'module;' 'ml()' '{' module ml '"$@";' '};' export -f 'ml;' 'MODULES_CMD='\''/apps/modules/modulecmd.tcl'\'';' export 'MODULES_CMD;' unset '__MODULES_AUTOINIT_INPROGRESS;' 'MODULESHOME='\''/apps/modules/5.6.1'\'';' export 'MODULESHOME;' test '0;'
+++++ export -f _module_raw
+++++ export -f module
+++++ export -f ml
+++++ MODULES_CMD=/apps/modules/modulecmd.tcl
+++++ export MODULES_CMD
+++++ unset __MODULES_AUTOINIT_INPROGRESS
+++++ MODULESHOME=/apps/modules/5.6.1
+++++ export MODULESHOME
+++++ test 0
++++ export 'PS1=\u@\h:\w\$ '
++++ PS1='\u@\h:\w\$ '
++++ export MODULES_COLOR=auto
++++ MODULES_COLOR=auto
++++ export MODULES_AVAIL_OUTPUT=modulepath:alias:dirwsym:sym:tag
++++ MODULES_AVAIL_OUTPUT=modulepath:alias:dirwsym:sym:tag
++++ export 'MODULES_COLORS=hi=1:db=2:tr=2:se=2:er=91:wa=93:me=95:in=94:mp=1;94:di=94:al=96:sy=4:de=95:cm=92'
++++ MODULES_COLORS='hi=1:db=2:tr=2:se=2:er=91:wa=93:me=95:in=94:mp=1;94:di=94:al=96:sy=4:de=95:cm=92'
++++ '[' xterm-256color = dumb ']'
++++ export MODULECONTACT=support-hpc@fau.de
++++ MODULECONTACT=support-hpc@fau.de
++++ case `hostname -s` in
+++++ hostname -s
+++++ id -u
+++++ id -g
++++ '[' 213917 -ne 0 -a 10500 -ne 101189 ']'
++++ readonly TMOUT=3660
++++ alias 'll=ls -lF'
++++ export EDITOR=/usr/bin/vim
++++ EDITOR=/usr/bin/vim
++++ '[' -z /apps/python/3.12-miniforge/share/man:::/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man ']'
++++ export PATH=/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin
++++ PATH=/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin
++++ export MANPATH=/apps/python/3.12-miniforge/share/man:::/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man
++++ MANPATH=/apps/python/3.12-miniforge/share/man:::/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man
++++ export 'SQUEUE_FORMAT=%.8i %.9P %20j %8u %.2t %.10M %.11l %.6D %.4C %R'
++++ SQUEUE_FORMAT='%.8i %.9P %20j %8u %.2t %.10M %.11l %.6D %.4C %R'
+++ for i in /etc/profile.d/*.sh /etc/profile.d/sh.local
+++ '[' -r /etc/profile.d/sh.local ']'
+++ '[' hxB '!=' hxB ']'
+++ . /etc/profile.d/sh.local
+++ unset i
+++ unset -f pathmunge
+++ '[' -n '5.1.8(1)-release' ']'
+++ '[' -f /etc/bashrc ']'
+++ . /etc/bashrc
++++ '[' -z '' ']'
++++ BASHRCSOURCED=Y
++++ '[' '\u@\h:\w\$ ' ']'
++++ '[' -z '' ']'
++++ case $TERM in
++++ '[' -e /etc/sysconfig/bash-prompt-xterm ']'
++++ PROMPT_COMMAND='printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
++++ shopt -s histappend
++++ history -a
++++ shopt -s checkwinsize
++++ '[' '\u@\h:\w\$ ' = '\s-\v\$ ' ']'
++++ shopt -q login_shell
+++++ umask
++++ '[' 0022 -eq 0 ']'
++++ SHELL=/bin/bash
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/01-fix-locale.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/01-fix-locale.sh
+++++ '[' -x /usr/bin/locale-check ']'
++++++ /usr/bin/locale-check C.UTF-8
+++++ eval
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/bash_completion.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/bash_completion.sh
+++++ '[' 'x5.1.8(1)-release' '!=' x -a 'x\u@\h:\w\$ ' '!=' x -a x = x ']'
+++++ '[' 5 -gt 4 ']'
+++++ '[' -r /home/hpc/iwi5/iwi5359h/.config/bash_completion ']'
+++++ shopt -q progcomp
+++++ '[' -r /usr/share/bash-completion/bash_completion ']'
+++++ . /usr/share/bash-completion/bash_completion
++++++ BASH_COMPLETION_VERSINFO=(2 11)
++++++ [[ hxB == *v* ]]
++++++ BASH_COMPLETION_ORIGINAL_V_VALUE=+v
++++++ [[ -n '' ]]
++++++ set +v
++++++ _blacklist_glob='@()'
++++++ shopt -s extglob progcomp
++++++ complete -u groups slay w sux
++++++ complete -A stopped -P '"%' -S '"' bg
++++++ complete -j -P '"%' -S '"' fg jobs disown
++++++ complete -v readonly unset
++++++ complete -A setopt set
++++++ complete -A shopt shopt
++++++ complete -A helptopic help
++++++ complete -a unalias
++++++ complete -c command type which
++++++ complete -b builtin
++++++ [[ linux-gnu == *@(solaris|aix)* ]]
++++++ _backup_glob='@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))'
++++++ complete -F _service service
++++++ _sysvdirs
++++++ sysvdirs=()
++++++ [[ -d /etc/rc.d/init.d ]]
++++++ sysvdirs+=(/etc/rc.d/init.d)
++++++ [[ -d /etc/init.d ]]
++++++ sysvdirs+=(/etc/init.d)
++++++ [[ -f /etc/slackware-version ]]
++++++ return 0
++++++ for svcdir in "${sysvdirs[@]}"
++++++ for svc in $svcdir/!($_backup_glob)
++++++ [[ -x /etc/rc.d/init.d/functions ]]
++++++ for svc in $svcdir/!($_backup_glob)
++++++ [[ -x /etc/rc.d/init.d/README ]]
++++++ for svcdir in "${sysvdirs[@]}"
++++++ for svc in $svcdir/!($_backup_glob)
++++++ [[ -x /etc/init.d/functions ]]
++++++ for svc in $svcdir/!($_backup_glob)
++++++ [[ -x /etc/init.d/README ]]
++++++ unset svc svcdir sysvdirs
++++++ [[ linux-gnu == *freebsd* ]]
++++++ shopt -u hostcomplete
++++++ complete -F _user_at_host talk ytalk finger
++++++ complete -F _known_hosts traceroute traceroute6 fping fping6 telnet rsh rlogin ftp dig mtr ssh-installkeys showmount
++++++ shopt -q cdable_vars
++++++ complete -F _cd -o nospace cd pushd
++++++ complete -F _command aoss command do else eval exec ltrace nice nohup padsp then time tsocks vsound xargs
++++++ complete -F _root_command fakeroot gksu gksudo kdesudo really
++++++ complete -F _longopt a2ps awk base64 bash bc bison cat chroot colordiff cp csplit cut date df diff dir du enscript env expand fmt fold gperf grep grub head irb ld ldd less ln ls m4 md5sum mkdir mkfifo mknod mv netstat nl nm objcopy objdump od paste pr ptx readelf rm rmdir sed seq shasum sha1sum sha224sum sha256sum sha384sum sha512sum shar sort split strip sum tac tail tee texindex touch tr uname unexpand uniq units vdir wc who
++++++ declare -Ag _xspecs
++++++ _install_xspec '!*.?(t)bz?(2)' bunzip2 bzcat pbunzip2 pbzcat lbunzip2 lbzcat
++++++ local 'xspec=!*.?(t)bz?(2)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.?(t)bz?(2)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.?(t)bz?(2)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.?(t)bz?(2)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.?(t)bz?(2)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.?(t)bz?(2)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.?(t)bz?(2)'
++++++ _install_xspec '!*.@(zip|[aegjswx]ar|exe|pk3|wsz|zargo|xpi|s[tx][cdiw]|sx[gm]|o[dt][tspgfc]|od[bm]|oxt|epub|apk|aab|ipa|do[ct][xm]|p[op]t[mx]|xl[st][xm]|pyz|whl)' unzip zipinfo
++++++ local 'xspec=!*.@(zip|[aegjswx]ar|exe|pk3|wsz|zargo|xpi|s[tx][cdiw]|sx[gm]|o[dt][tspgfc]|od[bm]|oxt|epub|apk|aab|ipa|do[ct][xm]|p[op]t[mx]|xl[st][xm]|pyz|whl)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(zip|[aegjswx]ar|exe|pk3|wsz|zargo|xpi|s[tx][cdiw]|sx[gm]|o[dt][tspgfc]|od[bm]|oxt|epub|apk|aab|ipa|do[ct][xm]|p[op]t[mx]|xl[st][xm]|pyz|whl)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(zip|[aegjswx]ar|exe|pk3|wsz|zargo|xpi|s[tx][cdiw]|sx[gm]|o[dt][tspgfc]|od[bm]|oxt|epub|apk|aab|ipa|do[ct][xm]|p[op]t[mx]|xl[st][xm]|pyz|whl)'
++++++ _install_xspec '*.Z' compress znew
++++++ local 'xspec=*.Z' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.Z'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.Z'
++++++ _install_xspec '!*.@(Z|[gGd]z|t[ag]z)' gunzip zcat
++++++ local 'xspec=!*.@(Z|[gGd]z|t[ag]z)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(Z|[gGd]z|t[ag]z)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(Z|[gGd]z|t[ag]z)'
++++++ _install_xspec '!*.@(Z|[gGdz]z|t[ag]z)' unpigz
++++++ local 'xspec=!*.@(Z|[gGdz]z|t[ag]z)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(Z|[gGdz]z|t[ag]z)'
++++++ _install_xspec '!*.Z' uncompress
++++++ local 'xspec=!*.Z' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.Z'
++++++ _install_xspec '!*.@(tlz|lzma)' lzcat lzegrep lzfgrep lzgrep lzless lzmore unlzma
++++++ local 'xspec=!*.@(tlz|lzma)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(tlz|lzma)'
++++++ _install_xspec '!*.@(?(t)xz|tlz|lzma)' unxz xzcat
++++++ local 'xspec=!*.@(?(t)xz|tlz|lzma)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(t)xz|tlz|lzma)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(t)xz|tlz|lzma)'
++++++ _install_xspec '!*.lrz' lrunzip
++++++ local 'xspec=!*.lrz' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.lrz'
++++++ _install_xspec '!*.@(gif|jp?(e)g|miff|tif?(f)|pn[gm]|p[bgp]m|bmp|xpm|ico|xwd|tga|pcx)' ee
++++++ local 'xspec=!*.@(gif|jp?(e)g|miff|tif?(f)|pn[gm]|p[bgp]m|bmp|xpm|ico|xwd|tga|pcx)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(gif|jp?(e)g|miff|tif?(f)|pn[gm]|p[bgp]m|bmp|xpm|ico|xwd|tga|pcx)'
++++++ _install_xspec '!*.@(gif|jp?(e)g|tif?(f)|png|p[bgp]m|bmp|x[bp]m|rle|rgb|pcx|fits|pm|svg)' qiv
++++++ local 'xspec=!*.@(gif|jp?(e)g|tif?(f)|png|p[bgp]m|bmp|x[bp]m|rle|rgb|pcx|fits|pm|svg)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(gif|jp?(e)g|tif?(f)|png|p[bgp]m|bmp|x[bp]m|rle|rgb|pcx|fits|pm|svg)'
++++++ _install_xspec '!*.@(gif|jp?(e)g?(2)|j2[ck]|jp[2f]|tif?(f)|png|p[bgp]m|bmp|x[bp]m|rle|rgb|pcx|fits|pm|?(e)ps)' xv
++++++ local 'xspec=!*.@(gif|jp?(e)g?(2)|j2[ck]|jp[2f]|tif?(f)|png|p[bgp]m|bmp|x[bp]m|rle|rgb|pcx|fits|pm|?(e)ps)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(gif|jp?(e)g?(2)|j2[ck]|jp[2f]|tif?(f)|png|p[bgp]m|bmp|x[bp]m|rle|rgb|pcx|fits|pm|?(e)ps)'
++++++ _install_xspec '!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))' gv ggv kghostview
++++++ local 'xspec=!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))'
++++++ _install_xspec '!*.@(dvi|DVI)?(.@(gz|Z|bz2))' xdvi kdvi
++++++ local 'xspec=!*.@(dvi|DVI)?(.@(gz|Z|bz2))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(dvi|DVI)?(.@(gz|Z|bz2))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(dvi|DVI)?(.@(gz|Z|bz2))'
++++++ _install_xspec '!*.dvi' dvips dviselect dvitype dvipdf advi dvipdfm dvipdfmx
++++++ local 'xspec=!*.dvi' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.dvi'
++++++ _install_xspec '!*.[pf]df' acroread gpdf xpdf
++++++ local 'xspec=!*.[pf]df' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.[pf]df'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.[pf]df'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.[pf]df'
++++++ _install_xspec '!*.@(?(e)ps|pdf)' kpdf
++++++ local 'xspec=!*.@(?(e)ps|pdf)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(e)ps|pdf)'
++++++ _install_xspec '!*.@(okular|@(?(e|x)ps|?(E|X)PS|[pf]df|[PF]DF|dvi|DVI|cb[rz]|CB[RZ]|djv?(u)|DJV?(U)|dvi|DVI|gif|jp?(e)g|miff|tif?(f)|pn[gm]|p[bgp]m|bmp|xpm|ico|xwd|tga|pcx|GIF|JP?(E)G|MIFF|TIF?(F)|PN[GM]|P[BGP]M|BMP|XPM|ICO|XWD|TGA|PCX|epub|EPUB|odt|ODT|fb?(2)|FB?(2)|mobi|MOBI|g3|G3|chm|CHM)?(.?(gz|GZ|bz2|BZ2|xz|XZ)))' okular
++++++ local 'xspec=!*.@(okular|@(?(e|x)ps|?(E|X)PS|[pf]df|[PF]DF|dvi|DVI|cb[rz]|CB[RZ]|djv?(u)|DJV?(U)|dvi|DVI|gif|jp?(e)g|miff|tif?(f)|pn[gm]|p[bgp]m|bmp|xpm|ico|xwd|tga|pcx|GIF|JP?(E)G|MIFF|TIF?(F)|PN[GM]|P[BGP]M|BMP|XPM|ICO|XWD|TGA|PCX|epub|EPUB|odt|ODT|fb?(2)|FB?(2)|mobi|MOBI|g3|G3|chm|CHM)?(.?(gz|GZ|bz2|BZ2|xz|XZ)))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(okular|@(?(e|x)ps|?(E|X)PS|[pf]df|[PF]DF|dvi|DVI|cb[rz]|CB[RZ]|djv?(u)|DJV?(U)|dvi|DVI|gif|jp?(e)g|miff|tif?(f)|pn[gm]|p[bgp]m|bmp|xpm|ico|xwd|tga|pcx|GIF|JP?(E)G|MIFF|TIF?(F)|PN[GM]|P[BGP]M|BMP|XPM|ICO|XWD|TGA|PCX|epub|EPUB|odt|ODT|fb?(2)|FB?(2)|mobi|MOBI|g3|G3|chm|CHM)?(.?(gz|GZ|bz2|BZ2|xz|XZ)))'
++++++ _install_xspec '!*.pdf' epdfview pdfunite
++++++ local 'xspec=!*.pdf' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.pdf'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.pdf'
++++++ _install_xspec '!*.@(cb[rz7t]|djv?(u)|?(e)ps|pdf)' zathura
++++++ local 'xspec=!*.@(cb[rz7t]|djv?(u)|?(e)ps|pdf)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(cb[rz7t]|djv?(u)|?(e)ps|pdf)'
++++++ _install_xspec '!*.@(?(e)ps|pdf)' ps2pdf ps2pdf12 ps2pdf13 ps2pdf14 ps2pdfwr
++++++ local 'xspec=!*.@(?(e)ps|pdf)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(e)ps|pdf)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(e)ps|pdf)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(e)ps|pdf)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(e)ps|pdf)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(e)ps|pdf)'
++++++ _install_xspec '!*.texi*' makeinfo texi2html
++++++ local 'xspec=!*.texi*' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.texi*'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.texi*'
++++++ _install_xspec '!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)' tex latex slitex jadetex pdfjadetex pdftex pdflatex texi2dvi xetex xelatex luatex lualatex
++++++ local 'xspec=!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?(la)tex|texi|dtx|ins|ltx|dbj)'
++++++ _install_xspec '!*.mp3' mpg123 mpg321 madplay
++++++ local 'xspec=!*.mp3' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.mp3'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.mp3'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.mp3'
++++++ _install_xspec '!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))' xine aaxine fbxine
++++++ local 'xspec=!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))'
++++++ _install_xspec '!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM|iso|ISO)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))' kaffeine dragon totem
++++++ local 'xspec=!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM|iso|ISO)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM|iso|ISO)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM|iso|ISO)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*@(.@(mp?(e)g|MP?(E)G|wm[av]|WM[AV]|avi|AVI|asf|vob|VOB|bin|dat|divx|DIVX|vcd|ps|pes|fli|flv|FLV|fxm|FXM|viv|rm|ram|yuv|mov|MOV|qt|QT|web[am]|WEB[AM]|mp[234]|MP[234]|m?(p)4[av]|M?(P)4[AV]|mkv|MKV|og[agmv]|OG[AGMV]|t[ps]|T[PS]|m2t?(s)|M2T?(S)|mts|MTS|wav|WAV|flac|FLAC|asx|ASX|mng|MNG|srt|m[eo]d|M[EO]D|s[3t]m|S[3T]M|it|IT|xm|XM|iso|ISO)|+([0-9]).@(vdr|VDR))?(.@(crdownload|part))'
++++++ _install_xspec '!*.@(avi|asf|wmv)' aviplay
++++++ local 'xspec=!*.@(avi|asf|wmv)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(avi|asf|wmv)'
++++++ _install_xspec '!*.@(rm?(j)|ra?(m)|smi?(l))' realplay
++++++ local 'xspec=!*.@(rm?(j)|ra?(m)|smi?(l))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(rm?(j)|ra?(m)|smi?(l))'
++++++ _install_xspec '!*.@(mpg|mpeg|avi|mov|qt)' xanim
++++++ local 'xspec=!*.@(mpg|mpeg|avi|mov|qt)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mpg|mpeg|avi|mov|qt)'
++++++ _install_xspec '!*.@(og[ag]|m3u|flac|spx)' ogg123
++++++ local 'xspec=!*.@(og[ag]|m3u|flac|spx)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(og[ag]|m3u|flac|spx)'
++++++ _install_xspec '!*.@(mp3|ogg|pls|m3u)' gqmpeg freeamp
++++++ local 'xspec=!*.@(mp3|ogg|pls|m3u)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mp3|ogg|pls|m3u)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mp3|ogg|pls|m3u)'
++++++ _install_xspec '!*.fig' xfig
++++++ local 'xspec=!*.fig' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.fig'
++++++ _install_xspec '!*.@(mid?(i)|cmf)' playmidi
++++++ local 'xspec=!*.@(mid?(i)|cmf)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mid?(i)|cmf)'
++++++ _install_xspec '!*.@(mid?(i)|rmi|rcp|[gr]36|g18|mod|xm|it|x3m|s[3t]m|kar)' timidity
++++++ local 'xspec=!*.@(mid?(i)|rmi|rcp|[gr]36|g18|mod|xm|it|x3m|s[3t]m|kar)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mid?(i)|rmi|rcp|[gr]36|g18|mod|xm|it|x3m|s[3t]m|kar)'
++++++ _install_xspec '!*.@(669|abc|am[fs]|d[bs]m|dmf|far|it|mdl|m[eo]d|mid?(i)|mt[2m]|oct|okt?(a)|p[st]m|s[3t]m|ult|umx|wav|xm)' modplugplay modplug123
++++++ local 'xspec=!*.@(669|abc|am[fs]|d[bs]m|dmf|far|it|mdl|m[eo]d|mid?(i)|mt[2m]|oct|okt?(a)|p[st]m|s[3t]m|ult|umx|wav|xm)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(669|abc|am[fs]|d[bs]m|dmf|far|it|mdl|m[eo]d|mid?(i)|mt[2m]|oct|okt?(a)|p[st]m|s[3t]m|ult|umx|wav|xm)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(669|abc|am[fs]|d[bs]m|dmf|far|it|mdl|m[eo]d|mid?(i)|mt[2m]|oct|okt?(a)|p[st]m|s[3t]m|ult|umx|wav|xm)'
++++++ _install_xspec '*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)' vi vim gvim rvim view rview rgvim rgview gview emacs xemacs sxemacs kate kwrite
++++++ local 'xspec=*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='*.@([ao]|so|so.!(conf|*/*)|[rs]pm|gif|jp?(e)g|mp3|mp?(e)g|avi|asf|ogg|class)'
++++++ _install_xspec '!*.@(zip|z|gz|tgz)' bzme
++++++ local 'xspec=!*.@(zip|z|gz|tgz)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(zip|z|gz|tgz)'
++++++ _install_xspec '!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))' netscape mozilla lynx galeon dillo elinks amaya epiphany
++++++ local 'xspec=!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(?([xX]|[sS])[hH][tT][mM]?([lL]))'
++++++ _install_xspec '!*.@(sxw|stw|sxg|sgl|doc?([mx])|dot?([mx])|rtf|txt|htm|html|?(f)odt|ott|odm|pdf)' oowriter lowriter
++++++ local 'xspec=!*.@(sxw|stw|sxg|sgl|doc?([mx])|dot?([mx])|rtf|txt|htm|html|?(f)odt|ott|odm|pdf)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxw|stw|sxg|sgl|doc?([mx])|dot?([mx])|rtf|txt|htm|html|?(f)odt|ott|odm|pdf)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxw|stw|sxg|sgl|doc?([mx])|dot?([mx])|rtf|txt|htm|html|?(f)odt|ott|odm|pdf)'
++++++ _install_xspec '!*.@(sxi|sti|pps?(x)|ppt?([mx])|pot?([mx])|?(f)odp|otp)' ooimpress loimpress
++++++ local 'xspec=!*.@(sxi|sti|pps?(x)|ppt?([mx])|pot?([mx])|?(f)odp|otp)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxi|sti|pps?(x)|ppt?([mx])|pot?([mx])|?(f)odp|otp)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxi|sti|pps?(x)|ppt?([mx])|pot?([mx])|?(f)odp|otp)'
++++++ _install_xspec '!*.@(sxc|stc|xls?([bmx])|xlw|xlt?([mx])|[ct]sv|?(f)ods|ots)' oocalc localc
++++++ local 'xspec=!*.@(sxc|stc|xls?([bmx])|xlw|xlt?([mx])|[ct]sv|?(f)ods|ots)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxc|stc|xls?([bmx])|xlw|xlt?([mx])|[ct]sv|?(f)ods|ots)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxc|stc|xls?([bmx])|xlw|xlt?([mx])|[ct]sv|?(f)ods|ots)'
++++++ _install_xspec '!*.@(sxd|std|sda|sdd|?(f)odg|otg)' oodraw lodraw
++++++ local 'xspec=!*.@(sxd|std|sda|sdd|?(f)odg|otg)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxd|std|sda|sdd|?(f)odg|otg)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxd|std|sda|sdd|?(f)odg|otg)'
++++++ _install_xspec '!*.@(sxm|smf|mml|odf)' oomath lomath
++++++ local 'xspec=!*.@(sxm|smf|mml|odf)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxm|smf|mml|odf)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(sxm|smf|mml|odf)'
++++++ _install_xspec '!*.odb' oobase lobase
++++++ local 'xspec=!*.odb' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.odb'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.odb'
++++++ _install_xspec '!*.[rs]pm' rpm2cpio
++++++ local 'xspec=!*.[rs]pm' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.[rs]pm'
++++++ _install_xspec '!*.aux' bibtex
++++++ local 'xspec=!*.aux' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.aux'
++++++ _install_xspec '!*.po' poedit gtranslator kbabel lokalize
++++++ local 'xspec=!*.po' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.po'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.po'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.po'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.po'
++++++ _install_xspec '!*.@([Pp][Rr][Gg]|[Cc][Ll][Pp])' harbour gharbour hbpp
++++++ local 'xspec=!*.@([Pp][Rr][Gg]|[Cc][Ll][Pp])' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@([Pp][Rr][Gg]|[Cc][Ll][Pp])'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@([Pp][Rr][Gg]|[Cc][Ll][Pp])'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@([Pp][Rr][Gg]|[Cc][Ll][Pp])'
++++++ _install_xspec '!*.[Hh][Rr][Bb]' hbrun
++++++ local 'xspec=!*.[Hh][Rr][Bb]' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.[Hh][Rr][Bb]'
++++++ _install_xspec '!*.ly' lilypond ly2dvi
++++++ local 'xspec=!*.ly' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.ly'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.ly'
++++++ _install_xspec '!*.@(dif?(f)|?(d)patch)?(.@([gx]z|bz2|lzma))' cdiff
++++++ local 'xspec=!*.@(dif?(f)|?(d)patch)?(.@([gx]z|bz2|lzma))' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(dif?(f)|?(d)patch)?(.@([gx]z|bz2|lzma))'
++++++ _install_xspec '!@(*.@(ks|jks|jceks|p12|pfx|bks|ubr|gkr|cer|crt|cert|p7b|pkipath|pem|p10|csr|crl)|cacerts)' portecle
++++++ local 'xspec=!@(*.@(ks|jks|jceks|p12|pfx|bks|ubr|gkr|cer|crt|cert|p7b|pkipath|pem|p10|csr|crl)|cacerts)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!@(*.@(ks|jks|jceks|p12|pfx|bks|ubr|gkr|cer|crt|cert|p7b|pkipath|pem|p10|csr|crl)|cacerts)'
++++++ _install_xspec '!*.@(mp[234c]|og[ag]|@(fl|a)ac|m4[abp]|spx|tta|w?(a)v|wma|aif?(f)|asf|ape)' kid3 kid3-qt
++++++ local 'xspec=!*.@(mp[234c]|og[ag]|@(fl|a)ac|m4[abp]|spx|tta|w?(a)v|wma|aif?(f)|asf|ape)' cmd
++++++ shift
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mp[234c]|og[ag]|@(fl|a)ac|m4[abp]|spx|tta|w?(a)v|wma|aif?(f)|asf|ape)'
++++++ for cmd in "$@"
++++++ _xspecs[$cmd]='!*.@(mp[234c]|og[ag]|@(fl|a)ac|m4[abp]|spx|tta|w?(a)v|wma|aif?(f)|asf|ape)'
++++++ unset -f _install_xspec
++++++ complete -F _minimal ''
++++++ complete -D -F _completion_loader
++++++ compat_dir=/etc/bash_completion.d
++++++ [[ -d /etc/bash_completion.d ]]
++++++ [[ -r /etc/bash_completion.d ]]
++++++ [[ -x /etc/bash_completion.d ]]
++++++ for i in "$compat_dir"/*
++++++ [[ authselect-completion.sh != @(@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))|Makefile*|@()) ]]
++++++ [[ -f /etc/bash_completion.d/authselect-completion.sh ]]
++++++ [[ -r /etc/bash_completion.d/authselect-completion.sh ]]
++++++ . /etc/bash_completion.d/authselect-completion.sh
+++++++ complete -F _authselect_completions authselect
++++++ for i in "$compat_dir"/*
++++++ [[ perf != @(@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))|Makefile*|@()) ]]
++++++ [[ -f /etc/bash_completion.d/perf ]]
++++++ [[ -r /etc/bash_completion.d/perf ]]
++++++ . /etc/bash_completion.d/perf
+++++++ preload_get_comp_words_by_ref=true
+++++++ '[' true = true ']'
+++++++ type _get_comp_words_by_ref
+++++++ '[' true = true ']'
+++++++ preload__ltrim_colon_completions=true
+++++++ '[' true = true ']'
+++++++ type __ltrim_colon_completions
+++++++ '[' true = true ']'
+++++++ [[ -n '' ]]
+++++++ type perf
+++++++ complete -o bashdefault -o default -o nospace -F _perf perf
++++++ for i in "$compat_dir"/*
++++++ [[ redefine_filedir != @(@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))|Makefile*|@()) ]]
++++++ [[ -f /etc/bash_completion.d/redefine_filedir ]]
++++++ [[ -r /etc/bash_completion.d/redefine_filedir ]]
++++++ . /etc/bash_completion.d/redefine_filedir
++++++ for i in "$compat_dir"/*
++++++ [[ scl != @(@(#*#|*@(~|.@(bak|orig|rej|swp|dpkg*|rpm@(orig|new|save))))|Makefile*|@()) ]]
++++++ [[ -f /etc/bash_completion.d/scl ]]
++++++ [[ -r /etc/bash_completion.d/scl ]]
++++++ . /etc/bash_completion.d/scl
+++++++ complete -F _scl scl
++++++ unset compat_dir i _blacklist_glob
++++++ user_completion=/home/hpc/iwi5/iwi5359h/.bash_completion
++++++ [[ /usr/share/bash-completion/bash_completion != \/\h\o\m\e\/\h\p\c\/\i\w\i\5\/\i\w\i\5\3\5\9\h\/\.\b\a\s\h\_\c\o\m\p\l\e\t\i\o\n ]]
++++++ [[ -r /home/hpc/iwi5/iwi5359h/.bash_completion ]]
++++++ unset user_completion
++++++ unset -f have
++++++ unset have
++++++ set +v
++++++ unset BASH_COMPLETION_ORIGINAL_V_VALUE
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/ccache.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/ccache.sh
+++++ case ":${PATH:-}:" in
+++++ '[' -n '' ']'
+++++ '[' 213917 '!=' 0 ']'
+++++ '[' -w /var/cache/ccache ']'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorgrep.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/colorgrep.sh
+++++ /usr/libexec/grepconf.sh -c
+++++ alias 'grep=grep --color=auto'
+++++ alias 'egrep=egrep --color=auto'
+++++ alias 'fgrep=fgrep --color=auto'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorls.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/colorls.sh
+++++ '[' '!' -t 0 ']'
+++++ return
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorxzgrep.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/colorxzgrep.sh
+++++ /usr/libexec/grepconf.sh -c
+++++ alias 'xzgrep=xzgrep --color=auto'
+++++ alias 'xzegrep=xzegrep --color=auto'
+++++ alias 'xzfgrep=xzfgrep --color=auto'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/colorzgrep.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/colorzgrep.sh
+++++ '[' -f /usr/libexec/grepconf.sh ']'
+++++ /usr/libexec/grepconf.sh -c
+++++ alias 'zgrep=zgrep --color=auto'
+++++ alias 'zfgrep=zfgrep --color=auto'
+++++ alias 'zegrep=zegrep --color=auto'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/debuginfod.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/debuginfod.sh
+++++ prefix=/usr
+++++ '[' -z '' ']'
++++++ find /etc/debuginfod -name '*.urls' -print0
++++++ xargs -0 cat
++++++ tr '\n' ' '
+++++ DEBUGINFOD_URLS=
+++++ '[' -n '' ']'
+++++ unset DEBUGINFOD_URLS
+++++ '[' -z /etc/keys/ima: ']'
+++++ unset prefix
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/gawk.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/gawk.sh
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/lang.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/lang.sh
+++++ unset LANG_backup
++++++ /usr/bin/locale
+++++ '[' -n '' ']'
+++++ LANG_backup=en_US.UTF-8
+++++ for config in /etc/locale.conf "${HOME}/.i18n"
+++++ '[' -f /etc/locale.conf ']'
+++++ '[' -x /usr/bin/sed ']'
++++++ /usr/bin/sed -r -e 's/^[[:blank:]]*([[:upper:]_]+)=([[:print:][:digit:]\._-]+|"[[:print:][:digit:]\._-]+")/export \1=\2/;t;d' /etc/locale.conf
+++++ eval export 'LANG="en_US.UTF-8"'
++++++ export LANG=en_US.UTF-8
++++++ LANG=en_US.UTF-8
+++++ for config in /etc/locale.conf "${HOME}/.i18n"
+++++ '[' -f /home/hpc/iwi5/iwi5359h/.i18n ']'
+++++ '[' -n en_US.UTF-8 ']'
+++++ LANG=en_US.UTF-8
+++++ unset LANG_backup config
+++++ '[' -n '' ']'
+++++ '[' -n en_US.UTF-8 ']'
+++++ '[' xterm-256color = linux ']'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/less.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/less.sh
+++++ '[' -z '||/usr/bin/lesspipe.sh %s' ']'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/mc.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/mc.sh
+++++ '[' -n '5.1.8(1)-release' ']'
+++++ alias 'mc=. /usr/libexec/mc/mc-wrapper.sh'
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/which2.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/which2.sh
+++++ '[' -r /proc/373797/exe ']'
+++++++ readlink /proc/373797/exe
++++++ basename /usr/bin/bash
+++++ SHELLNAME=bash
+++++ case "$SHELLNAME" in
+++++ which_declare='declare -f'
+++++ which_opt=-f
+++++ export which_declare
+++++ export -f which
++++ for i in /etc/profile.d/*.sh
++++ '[' -r /etc/profile.d/zz-rrze-local.sh ']'
++++ '[' '\u@\h:\w\$ ' ']'
++++ . /etc/profile.d/zz-rrze-local.sh
++++++ id -u
+++++ '[' 213917 -eq 0 ']'
+++++ '[' -z iwi5359h ']'
+++++ '[' -z iwi5 ']'
+++++ '[' -z /home/hpc/iwi5/iwi5359h ']'
+++++ export HPCVAULT=/home/vault/iwi5/iwi5359h
+++++ HPCVAULT=/home/vault/iwi5/iwi5359h
+++++ export WOODYHOME=/home/woody/iwi5/iwi5359h
+++++ WOODYHOME=/home/woody/iwi5/iwi5359h
+++++ export WORK=/home/woody/iwi5/iwi5359h
+++++ WORK=/home/woody/iwi5/iwi5359h
+++++ '[' -d /home/atuin/iwi5 -a -d /home/atuin/iwi5/iwi5359h ']'
+++++ '[' -d /home/janus/iwi5 -a -d /home/janus/iwi5/iwi5359h ']'
+++++ '[' -d /home/titan/iwi5 -a -d /home/titan/iwi5/iwi5359h ']'
+++++ '[' -d /home/saturn/iwi5 -a -d /home/saturn/iwi5/iwi5359h ']'
+++++ case $GROUP in
+++++ case `hostname -s` in
++++++ hostname -s
+++++ export SCRATCH=/scratch
+++++ SCRATCH=/scratch
+++++ export CLUSTER=alex
+++++ CLUSTER=alex
++++++ id -u
+++++ '[' 213917 -eq 0 ']'
+++++ . /etc/os-release
++++++ NAME=AlmaLinux
++++++ VERSION='9.8 (Olive Jaguar)'
++++++ ID=almalinux
++++++ ID_LIKE='rhel centos fedora'
++++++ VERSION_ID=9.8
++++++ PLATFORM_ID=platform:el9
++++++ PRETTY_NAME='AlmaLinux 9.8 (Olive Jaguar)'
++++++ ANSI_COLOR='0;34'
++++++ LOGO=fedora-logo-icon
++++++ CPE_NAME=cpe:/o:almalinux:almalinux:9::baseos
++++++ HOME_URL=https://almalinux.org/
++++++ DOCUMENTATION_URL=https://wiki.almalinux.org/
++++++ BUG_REPORT_URL=https://bugs.almalinux.org/
++++++ ALMALINUX_MANTISBT_PROJECT=AlmaLinux-9
++++++ ALMALINUX_MANTISBT_PROJECT_VERSION=9.8
++++++ REDHAT_SUPPORT_PRODUCT=AlmaLinux
++++++ REDHAT_SUPPORT_PRODUCT_VERSION=9.8
++++++ SUPPORT_END=2032-06-01
+++++ '[' platform:el9 == platform:el9 -a '(' /apps/modules/5.6.1 == /apps/modules/5.0.1 -o /apps/modules/5.6.1 == /apps/modules/5.1.0 ')' ']'
++++++ tclsh /apps/modules/modulecmd.tcl bash autoinit
+++++ eval '_module_raw()' '{' eval '"$(/home/vault/iwi5/iwi5359h/envs/cafa/bin/tclsh' ''\''/apps/modules/modulecmd.tcl'\''' bash '"$@")";' '_mlstatus=$?;' return '$_mlstatus;' '};' 'module()' '{' local '_mlredir=0;' if '[' -n '"${MODULES_REDIRECT_OUTPUT+x}"' '];' then if '[' '"$MODULES_REDIRECT_OUTPUT"' = ''\''0'\''' '];' then '_mlredir=0;' elif '[' '"$MODULES_REDIRECT_OUTPUT"' = ''\''1'\''' '];' then '_mlredir=1;' 'fi;' 'fi;' case '"' '$@' '"' in '*'\''' --no-redirect ''\''*)' _mlredir=0 ';;' '*'\''' --redirect ''\''*)' _mlredir=1 ';;' 'esac;' if '[' '$_mlredir' -eq 0 '];' then _module_raw '"$@";' else _module_raw '"$@"' '2>&1;' 'fi;' '};' export -f '_module_raw;' export -f 'module;' 'ml()' '{' module ml '"$@";' '};' export -f 'ml;' 'MODULES_CMD='\''/apps/modules/modulecmd.tcl'\'';' export 'MODULES_CMD;' unset '__MODULES_AUTOINIT_INPROGRESS;' 'MODULESHOME='\''/apps/modules/5.6.1'\'';' export 'MODULESHOME;' test '0;'
++++++ export -f _module_raw
++++++ export -f module
++++++ export -f ml
++++++ MODULES_CMD=/apps/modules/modulecmd.tcl
++++++ export MODULES_CMD
++++++ unset __MODULES_AUTOINIT_INPROGRESS
++++++ MODULESHOME=/apps/modules/5.6.1
++++++ export MODULESHOME
++++++ test 0
+++++ export 'PS1=\u@\h:\w\$ '
+++++ PS1='\u@\h:\w\$ '
+++++ export MODULES_COLOR=auto
+++++ MODULES_COLOR=auto
+++++ export MODULES_AVAIL_OUTPUT=modulepath:alias:dirwsym:sym:tag
+++++ MODULES_AVAIL_OUTPUT=modulepath:alias:dirwsym:sym:tag
+++++ export 'MODULES_COLORS=hi=1:db=2:tr=2:se=2:er=91:wa=93:me=95:in=94:mp=1;94:di=94:al=96:sy=4:de=95:cm=92'
+++++ MODULES_COLORS='hi=1:db=2:tr=2:se=2:er=91:wa=93:me=95:in=94:mp=1;94:di=94:al=96:sy=4:de=95:cm=92'
+++++ '[' xterm-256color = dumb ']'
+++++ export MODULECONTACT=support-hpc@fau.de
+++++ MODULECONTACT=support-hpc@fau.de
+++++ case `hostname -s` in
++++++ hostname -s
++++++ id -u
++++++ id -g
+++++ '[' 213917 -ne 0 -a 10500 -ne 101189 ']'
+++++ readonly TMOUT=3660
+++++ alias 'll=ls -lF'
+++++ export EDITOR=/usr/bin/vim
+++++ EDITOR=/usr/bin/vim
+++++ '[' -z /apps/python/3.12-miniforge/share/man:::/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man ']'
+++++ export PATH=/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin
+++++ PATH=/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin
+++++ export MANPATH=/apps/python/3.12-miniforge/share/man:::/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man
+++++ MANPATH=/apps/python/3.12-miniforge/share/man:::/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man:/apps/hpc-workspace/current/share/man
+++++ export 'SQUEUE_FORMAT=%.8i %.9P %20j %8u %.2t %.10M %.11l %.6D %.4C %R'
+++++ SQUEUE_FORMAT='%.8i %.9P %20j %8u %.2t %.10M %.11l %.6D %.4C %R'
++++ unset i
++++ unset -f pathmunge
++ module load python
++ local _mlredir=0
++ '[' -n '' ']'
++ case " $@ " in
++ '[' 0 -eq 0 ']'
++ _module_raw load python
+++ /home/vault/iwi5/iwi5359h/envs/cafa/bin/tclsh /apps/modules/modulecmd.tcl bash load python
++ eval ''
++ _mlstatus=0
++ return 0
++ cd /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
++ '[' -f hpc/env.local.sh ']'
++ source hpc/env.local.sh
+++ export CAFA_ENV=/home/vault/iwi5/iwi5359h/envs/cafa
+++ CAFA_ENV=/home/vault/iwi5/iwi5359h/envs/cafa
+++ export DATA_ROOT=/home/woody/iwi5/iwi5359h/CAFA_data
+++ DATA_ROOT=/home/woody/iwi5/iwi5359h/CAFA_data
+++ export RESULTS_ROOT=/home/vault/iwi5/iwi5359h/CAFA_results
+++ RESULTS_ROOT=/home/vault/iwi5/iwi5359h/CAFA_results
++ source activate /home/vault/iwi5/iwi5359h/envs/cafa
+++ _CONDA_ROOT=/apps/python/3.12-miniforge
+++ . /apps/python/3.12-miniforge/etc/profile.d/conda.sh
++++ export CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ export _CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ _CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ export CONDA_PYTHON_EXE=/apps/python/3.12-miniforge/bin/python
++++ CONDA_PYTHON_EXE=/apps/python/3.12-miniforge/bin/python
++++ export _CONDA_ROOT=/apps/python/3.12-miniforge
++++ _CONDA_ROOT=/apps/python/3.12-miniforge
++++ '[' -z x ']'
+++ conda activate /home/vault/iwi5/iwi5359h/envs/cafa
+++ local cmd=activate
+++ case "$cmd" in
+++ __conda_activate activate /home/vault/iwi5/iwi5359h/envs/cafa
+++ '[' -n '' ']'
+++ local ask_conda
++++ PS1='\u@\h:\w\$ '
++++ __conda_exe shell.posix activate /home/vault/iwi5/iwi5359h/envs/cafa
++++ '[' -n '' ']'
++++ /apps/python/3.12-miniforge/bin/conda shell.posix activate /home/vault/iwi5/iwi5359h/envs/cafa
+++ ask_conda='export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+PS1='\''(cafa) \u@\h:\w\$ '\''
+export PATH='\''/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_PROMPT_MODIFIER='\''(cafa) '\''
+export CONDA_EXE='\''/apps/python/3.12-miniforge/bin/conda'\''
+export _CONDA_EXE='\''/apps/python/3.12-miniforge/bin/conda'\''
+export CONDA_PYTHON_EXE='\''/apps/python/3.12-miniforge/bin/python'\''
+export _CONDA_ROOT='\''/apps/python/3.12-miniforge'\'''
+++ eval 'export _CE_M='\'''\''
+export _CE_CONDA='\'''\''
+PS1='\''(cafa) \u@\h:\w\$ '\''
+export PATH='\''/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin'\''
+export CONDA_SHLVL='\''1'\''
+export CONDA_PROMPT_MODIFIER='\''(cafa) '\''
+export CONDA_EXE='\''/apps/python/3.12-miniforge/bin/conda'\''
+export _CONDA_EXE='\''/apps/python/3.12-miniforge/bin/conda'\''
+export CONDA_PYTHON_EXE='\''/apps/python/3.12-miniforge/bin/python'\''
+export _CONDA_ROOT='\''/apps/python/3.12-miniforge'\'''
++++ export _CE_M=
++++ _CE_M=
++++ export _CE_CONDA=
++++ _CE_CONDA=
++++ PS1='(cafa) \u@\h:\w\$ '
++++ export PATH=/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin
++++ PATH=/home/vault/iwi5/iwi5359h/envs/cafa/bin:/apps/python/3.12-miniforge/bin:/apps/python/3.12-miniforge/condabin:/home/hpc/iwi5/iwi5359h/.vscode-server/cli/servers/Stable-1b6a188127eeaf9194f945eb6eb89a657e93c54c/server/bin/remote-cli:/apps/modules/5.6.1/bin:/usr/lib64/ccache:/home/hpc/iwi5/iwi5359h/.local/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/apps/hpc-workspace/current/bin:/home/hpc/iwi5/iwi5359h/.vscode-server/extensions/ms-python.debugpy-2026.6.0-linux-x64/bundled/scripts/noConfigScripts:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin:/apps/hpc-workspace/current/bin
++++ export CONDA_SHLVL=1
++++ CONDA_SHLVL=1
++++ export 'CONDA_PROMPT_MODIFIER=(cafa) '
++++ CONDA_PROMPT_MODIFIER='(cafa) '
++++ export CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ export _CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ _CONDA_EXE=/apps/python/3.12-miniforge/bin/conda
++++ export CONDA_PYTHON_EXE=/apps/python/3.12-miniforge/bin/python
++++ CONDA_PYTHON_EXE=/apps/python/3.12-miniforge/bin/python
++++ export _CONDA_ROOT=/apps/python/3.12-miniforge
++++ _CONDA_ROOT=/apps/python/3.12-miniforge
+++ __conda_hashr
+++ '[' -n '' ']'
+++ '[' -n '' ']'
+++ hash -r
++ set -eu
++ : /home/woody/iwi5/iwi5359h/CAFA_data
++ : /home/vault/iwi5/iwi5359h/CAFA_results
++ export PYTHONUNBUFFERED=1 PYTHONIOENCODING=utf-8
++ PYTHONUNBUFFERED=1
++ PYTHONIOENCODING=utf-8
++ export PYTHONPATH=/home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/src:
++ PYTHONPATH=/home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/src:
++ DS=(csv:physionet cube tabular:adult csv:diabetes tabular:MiniBooNE mnist fashionmnist image:imagenette)
++ ds=csv:physionet
++ ts=1
++ python scripts/drive_v3.py --phase backbones --datasets csv:physionet --seeds 1 --device cuda --extra-args=
+[drive_v3] run backbones:csv:physionet:na:ts1: python scripts/train_backbone_v3.py --dataset csv:physionet --train-seed 1 --device cuda  (log results_v3/logs/backbones_csv-physionet_na_ts1.log)
+    [train-tab] epoch   1/40  loss=0.4553  masked_train_acc=0.8564
+    [train-tab] epoch  11/40  loss=0.3481  masked_train_acc=0.8646
+    [train-tab] epoch  21/40  loss=0.3372  masked_train_acc=0.8658
+    [train-tab] epoch  31/40  loss=0.3273  masked_train_acc=0.8715
+    [train-tab] epoch  40/40  loss=0.3243  masked_train_acc=0.8736
+    [train_v3] csv:physionet ts1: masked_acc=0.8736 full_obs_acc=0.8982 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/csv-physionet_ts1.pt (sha256 bb7044e835d6)
+[drive_v3] done backbones:csv:physionet:na:ts1: rc=0 in 56.3s
+[drive_v3] backbones: ran 1, skipped 0 existing, 0 missing prerequisites
+=== JOB_STATISTICS ===
+=== current date     : Sat Oct  3 13:44:39 CEST 2026
+= Job-ID             : 4439223 on alex as 4439223_8
+= Job-Name           : cafa_v3_backbone
+= Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/backbone_v3.slurm
+= Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
+= Queue/Partition    : a40
+= Slurm account      : iwi5 with QOS=normal
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:01:15
+= Total RAM usage    : 1.8 GiB of assigned  GiB (%)
+= Node list          : a0325
+= Subm/Elig/Start/End: 2026-10-03T13:43:22 / 2026-10-03T13:43:23 / 2026-10-03T13:43:23 / 2026-10-03T13:44:38
+======================
+=== Quota infos ======
+    Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody           297.2G  1000.0G  1500.0G        N/A     397K   5,000K   7,500K        N/A    
+    /home/hpc              47.7G   104.9G   209.7G        N/A     143K     500K   1,000K        N/A    
+    /home/vault          1021.4G  1048.6G  2097.2G        N/A     147K     200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A40, 00000000:61:00.0, 373976, 2 %, 0 %, 372 MiB, 25974 ms

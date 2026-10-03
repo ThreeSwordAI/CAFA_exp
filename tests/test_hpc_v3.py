@@ -143,3 +143,15 @@ def test_hpc_dry_run_task_l_lines(tmp_path):
         assert f"--dataset fashionmnist --train-seed 0 --policy {pol} --device cuda --checkpoint-tag repair" in line
         assert "[prerequisite missing now: checkpoints_v3_repair/fashionmnist_ts0.pt]" in line
         assert f"fashionmnist_ts0_{pol}-repair_softmax.npz" in line and "--epochs" not in line
+
+
+def test_slurm_profile_sourced_before_nounset():
+    """Round 3 (Alex): `source /etc/profile` under `set -u` killed array job 4439177 (an unbound DEBUGINFOD_URLS in the
+    cluster profile).  Both batch scripts must load the environment (profile, module, conda activate) before `set -u`."""
+    for name in ("backbone_v3.slurm", "rollout_v3.slurm"):
+        lines = [ln.strip() for ln in (REPO / "hpc" / name).read_text().splitlines()]
+        i_profile = lines.index("source /etc/profile")
+        i_activate = next(i for i, ln in enumerate(lines) if ln.startswith("source activate"))
+        i_nounset = lines.index("set -u")
+        assert i_profile < i_activate < i_nounset, name
+        assert not any(ln.startswith("set -") and "u" in ln.split()[1] for ln in lines[:i_profile]), name

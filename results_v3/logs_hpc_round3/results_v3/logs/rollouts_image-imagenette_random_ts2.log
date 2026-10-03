@@ -1,0 +1,21 @@
+# python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 2 --policy random --device cuda --batch-size 32
+# start 2026-10-03T11:48:07.519493+00:00
+  [rgb rollout] 32/5358 (1s)
+  [rgb rollout] 352/5358 (5s)
+  [rgb rollout] 672/5358 (9s)
+  [rgb rollout] 992/5358 (13s)
+  [rgb rollout] 1312/5358 (16s)
+  [rgb rollout] 1632/5358 (20s)
+  [rgb rollout] 1952/5358 (24s)
+  [rgb rollout] 2272/5358 (28s)
+  [rgb rollout] 2592/5358 (32s)
+  [rgb rollout] 2912/5358 (36s)
+  [rgb rollout] 3232/5358 (40s)
+  [rgb rollout] 3552/5358 (43s)
+  [rgb rollout] 3872/5358 (47s)
+  [rgb rollout] 4192/5358 (51s)
+  [rgb rollout] 4512/5358 (55s)
+  [rgb rollout] 4832/5358 (59s)
+  [rgb rollout] 5152/5358 (63s)
+[rollout_v3] image:imagenette ts2 random: n=5358 T=49 full-acq acc=0.9752 -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v3/image-imagenette_ts2_random_softmax.npz
+# returncode 0

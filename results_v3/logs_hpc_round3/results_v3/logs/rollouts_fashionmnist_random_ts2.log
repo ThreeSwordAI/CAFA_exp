@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset fashionmnist --train-seed 2 --policy random --device cuda
+# start 2026-10-03T11:49:45.083162+00:00
+[rollout_v3] fashionmnist ts2 random: n=28000 T=49 full-acq acc=0.9399 -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v3/fashionmnist_ts2_random_softmax.npz
+# returncode 0

@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 1 --policy random --device cuda
+# start 2026-10-03T11:49:05.669692+00:00
+[rollout_v3] csv:diabetes ts1 random: n=36825 T=45 full-acq acc=0.9028 -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v3/csv-diabetes_ts1_random_softmax.npz
+# returncode 0

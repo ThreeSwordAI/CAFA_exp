@@ -1,0 +1,58 @@
+### Starting TaskPrologue of job 4439242 on a0424 at Sat Oct  3 01:46:07 PM CEST 2026
+Running on cores 0-15 with governor schedutil
+Sat Oct  3 13:46:07 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:01:00.0 Off |                  Off |
+|  0%   32C    P8             22W /  300W |       0MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[drive_v3] run backbones:tabular:MiniBooNE:na:ts1: python scripts/train_backbone_v3.py --dataset tabular:MiniBooNE --train-seed 1 --device cuda --epochs 60  (log results_v3/logs/backbones_tabular-MiniBooNE_na_ts1.log)
+    [train-tab] epoch   1/60  loss=0.4452  masked_train_acc=0.7985
+    [train-tab] epoch  11/60  loss=0.3386  masked_train_acc=0.8480
+    [train-tab] epoch  21/60  loss=0.3271  masked_train_acc=0.8543
+    [train-tab] epoch  31/60  loss=0.3148  masked_train_acc=0.8601
+    [train-tab] epoch  41/60  loss=0.3100  masked_train_acc=0.8626
+    [train-tab] epoch  51/60  loss=0.3064  masked_train_acc=0.8633
+    [train-tab] epoch  60/60  loss=0.3005  masked_train_acc=0.8670
+    [train_v3] tabular:MiniBooNE ts1: masked_acc=0.8670 full_obs_acc=0.9196 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/tabular-MiniBooNE_ts1.pt (sha256 9074b85ee2d3)
+[drive_v3] done backbones:tabular:MiniBooNE:na:ts1: rc=0 in 156.7s
+[drive_v3] backbones: ran 1, skipped 0 existing, 0 missing prerequisites
+=== JOB_STATISTICS ===
+=== current date     : Sat Oct  3 13:48:58 CEST 2026
+= Job-ID             : 4439242 on alex as 4439227_12
+= Job-Name           : cafa_v3_backbone
+= Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/backbone_v3.slurm
+= Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
+= Queue/Partition    : a40
+= Slurm account      : iwi5 with QOS=normal
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:02:51
+= Total RAM usage    : 1.2 GiB of assigned  GiB (%)
+= Node list          : a0424
+= Subm/Elig/Start/End: 2026-10-03T13:46:06 / 2026-10-03T13:46:06 / 2026-10-03T13:46:07 / 2026-10-03T13:48:58
+======================
+=== Quota infos ======
+    Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/woody           297.2G  1000.0G  1500.0G        N/A     397K   5,000K   7,500K        N/A    
+    /home/hpc              47.8G   104.9G   209.7G        N/A     144K     500K   1,000K        N/A    
+    /home/vault          1021.6G  1048.6G  2097.2G        N/A     147K     200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A40, 00000000:01:00.0, 4050460, 9 %, 0 %, 374 MiB, 106946 ms

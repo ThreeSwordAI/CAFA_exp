@@ -1,0 +1,63 @@
+### Starting TaskPrologue of job 4439235 on a0222 at Sat Oct  3 01:46:11 PM CEST 2026
+Running on cores 96-111 with governor schedutil
+Sat Oct  3 13:46:11 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 610.57.04              KMD Version: 610.57.04     CUDA UMD Version: 13.3     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA A40                     On  |   00000000:C1:00.0 Off |                  Off |
+|  0%   33C    P8             21W /  300W |       0MiB /  49140MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+### Finished TaskPrologue
+
+[drive_v3] run backbones:image:imagenette:na:ts1: python scripts/train_backbone_v3.py --dataset image:imagenette --train-seed 1 --device cuda  (log results_v3/logs/backbones_image-imagenette_na_ts1.log)
+    [train resnet] epoch   1/12 loss=1.2754 masked_acc=0.6141
+    [train resnet] epoch   2/12 loss=0.4596 masked_acc=0.8529
+    [train resnet] epoch   3/12 loss=0.4276 masked_acc=0.8622
+    [train resnet] epoch   4/12 loss=0.4020 masked_acc=0.8672
+    [train resnet] epoch   5/12 loss=0.3621 masked_acc=0.8798
+    [train resnet] epoch   6/12 loss=0.3246 masked_acc=0.8904
+    [train resnet] epoch   7/12 loss=0.2839 masked_acc=0.9044
+    [train resnet] epoch   8/12 loss=0.2389 masked_acc=0.9231
+    [train resnet] epoch   9/12 loss=0.2085 masked_acc=0.9316
+    [train resnet] epoch  10/12 loss=0.1918 masked_acc=0.9343
+    [train resnet] epoch  11/12 loss=0.1839 masked_acc=0.9400
+    [train resnet] epoch  12/12 loss=0.1734 masked_acc=0.9420
+    [train_v3] image:imagenette ts1: masked_acc=0.9420 full_obs_acc=1.0000 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/image-imagenette_ts1.pt (sha256 7359f6e82058)
+[drive_v3] done backbones:image:imagenette:na:ts1: rc=0 in 60.4s
+[drive_v3] backbones: ran 1, skipped 0 existing, 0 missing prerequisites
+=== JOB_STATISTICS ===
+=== current date     : Sat Oct  3 13:47:16 CEST 2026
+= Job-ID             : 4439235 on alex as 4439226_15
+= Job-Name           : cafa_v3_backbone
+= Job-Command        : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp/hpc/backbone_v3.slurm
+= Initial workdir    : /home/hpc/iwi5/iwi5359h/my_repos/CAFA_exp
+= Queue/Partition    : a40
+= Slurm account      : iwi5 with QOS=normal
+= Requested resources:  for 04:00:00
+= Elapsed runtime    : 00:01:09
+= Total RAM usage    : 6.3 GiB of assigned  GiB (%)
+= Node list          : a0222
+= Subm/Elig/Start/End: 2026-10-03T13:46:06 / 2026-10-03T13:46:06 / 2026-10-03T13:46:07 / 2026-10-03T13:47:16
+======================
+=== Quota infos ======
+    Path                 Used     SoftQ    HardQ    Gracetime  Filec    FileQ    FiHaQ    FileGrace    
+    /home/hpc              47.8G   104.9G   209.7G        N/A     144K     500K   1,000K        N/A    
+    /home/woody           297.2G  1000.0G  1500.0G        N/A     397K   5,000K   7,500K        N/A    
+    /home/vault          1021.6G  1048.6G  2097.2G        N/A     147K     200K     400K        N/A    
+======================
+=== GPU utilization ==
+gpu_name, gpu_bus_id, pid, gpu_utilization [%], mem_utilization [%], max_memory_usage [MiB], time [ms]
+NVIDIA A40, 00000000:C1:00.0, 1886902, 85 %, 67 %, 2032 MiB, 47405 ms

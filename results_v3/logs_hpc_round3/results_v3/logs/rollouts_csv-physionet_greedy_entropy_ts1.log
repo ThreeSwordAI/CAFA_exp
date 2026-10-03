@@ -1,0 +1,4 @@
+# python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 1 --policy greedy_entropy --device cuda
+# start 2026-10-03T11:49:05.167812+00:00
+[rollout_v3] csv:physionet ts1 greedy_entropy: n=4800 T=41 full-acq acc=0.8677 -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v3/csv-physionet_ts1_greedy_entropy_softmax.npz
+# returncode 0

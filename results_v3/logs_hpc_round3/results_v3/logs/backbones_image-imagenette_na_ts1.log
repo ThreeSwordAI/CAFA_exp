@@ -1,0 +1,21 @@
+# python scripts/train_backbone_v3.py --dataset image:imagenette --train-seed 1 --device cuda
+# start 2026-10-03T11:46:16.166149+00:00
+Downloading: "https://download.pytorch.org/models/resnet18-f37072fd.pth" to /home/hpc/iwi5/iwi5359h/.cache/torch/hub/checkpoints/resnet18-f37072fd.pth
+
+  0%|          | 0.00/44.7M [00:00<?, ?B/s]
+ 57%|█████▋    | 25.2M/44.7M [00:00<00:00, 264MB/s]
+100%|██████████| 44.7M/44.7M [00:00<00:00, 278MB/s]
+[train resnet] epoch   1/12 loss=1.2754 masked_acc=0.6141
+[train resnet] epoch   2/12 loss=0.4596 masked_acc=0.8529
+[train resnet] epoch   3/12 loss=0.4276 masked_acc=0.8622
+[train resnet] epoch   4/12 loss=0.4020 masked_acc=0.8672
+[train resnet] epoch   5/12 loss=0.3621 masked_acc=0.8798
+[train resnet] epoch   6/12 loss=0.3246 masked_acc=0.8904
+[train resnet] epoch   7/12 loss=0.2839 masked_acc=0.9044
+[train resnet] epoch   8/12 loss=0.2389 masked_acc=0.9231
+[train resnet] epoch   9/12 loss=0.2085 masked_acc=0.9316
+[train resnet] epoch  10/12 loss=0.1918 masked_acc=0.9343
+[train resnet] epoch  11/12 loss=0.1839 masked_acc=0.9400
+[train resnet] epoch  12/12 loss=0.1734 masked_acc=0.9420
+[train_v3] image:imagenette ts1: masked_acc=0.9420 full_obs_acc=1.0000 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/image-imagenette_ts1.pt (sha256 7359f6e82058)
+# returncode 0

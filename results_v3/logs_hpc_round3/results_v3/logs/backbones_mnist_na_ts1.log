@@ -1,0 +1,11 @@
+# python scripts/train_backbone_v3.py --dataset mnist --train-seed 1 --device cuda
+# start 2026-10-03T11:46:19.381965+00:00
+[train v2] epoch   1/30 loss=1.9131 masked_acc=0.3984
+[train v2] epoch   6/30 loss=0.4112 masked_acc=0.8571
+[train v2] epoch  11/30 loss=0.3410 masked_acc=0.8790
+[train v2] epoch  16/30 loss=0.3013 masked_acc=0.8936
+[train v2] epoch  21/30 loss=0.2839 masked_acc=0.8985
+[train v2] epoch  26/30 loss=0.2588 masked_acc=0.9071
+[train v2] epoch  30/30 loss=0.2506 masked_acc=0.9090
+[train_v3] mnist ts1: masked_acc=0.9090 full_obs_acc=1.0000 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/mnist_ts1.pt (sha256 1a6c054c98a9)
+# returncode 0

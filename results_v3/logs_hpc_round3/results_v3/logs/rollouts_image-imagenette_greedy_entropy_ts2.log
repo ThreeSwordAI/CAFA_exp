@@ -1,0 +1,21 @@
+# python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 2 --policy greedy_entropy --device cuda --batch-size 32 --policy-amp
+# start 2026-10-03T11:48:07.519576+00:00
+  [rgb rollout] 32/5358 (7s)
+  [rgb rollout] 352/5358 (62s)
+  [rgb rollout] 672/5358 (117s)
+  [rgb rollout] 992/5358 (172s)
+  [rgb rollout] 1312/5358 (228s)
+  [rgb rollout] 1632/5358 (283s)
+  [rgb rollout] 1952/5358 (339s)
+  [rgb rollout] 2272/5358 (394s)
+  [rgb rollout] 2592/5358 (450s)
+  [rgb rollout] 2912/5358 (505s)
+  [rgb rollout] 3232/5358 (560s)
+  [rgb rollout] 3552/5358 (616s)
+  [rgb rollout] 3872/5358 (671s)
+  [rgb rollout] 4192/5358 (726s)
+  [rgb rollout] 4512/5358 (782s)
+  [rgb rollout] 4832/5358 (837s)
+  [rgb rollout] 5152/5358 (892s)
+[rollout_v3] image:imagenette ts2 greedy_entropy: n=5358 T=49 full-acq acc=0.9752 -> /home/vault/iwi5/iwi5359h/CAFA_results/pool_v3/image-imagenette_ts2_greedy_entropy_softmax.npz
+# returncode 0

@@ -1,0 +1,9 @@
+# python scripts/train_backbone_v3.py --dataset tabular:adult --train-seed 2 --device cuda
+# start 2026-10-03T11:46:14.178922+00:00
+[train-tab] epoch   1/40  loss=0.4592  masked_train_acc=0.7865
+[train-tab] epoch  11/40  loss=0.4036  masked_train_acc=0.8101
+[train-tab] epoch  21/40  loss=0.4018  masked_train_acc=0.8137
+[train-tab] epoch  31/40  loss=0.3959  masked_train_acc=0.8120
+[train-tab] epoch  40/40  loss=0.3988  masked_train_acc=0.8136
+[train_v3] tabular:adult ts2: masked_acc=0.8136 full_obs_acc=0.8540 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/tabular-adult_ts2.pt (sha256 470936b980cb)
+# returncode 0

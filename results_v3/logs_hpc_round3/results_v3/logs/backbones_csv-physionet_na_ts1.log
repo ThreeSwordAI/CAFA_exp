@@ -1,0 +1,9 @@
+# python scripts/train_backbone_v3.py --dataset csv:physionet --train-seed 1 --device cuda
+# start 2026-10-03T11:43:42.322685+00:00
+[train-tab] epoch   1/40  loss=0.4553  masked_train_acc=0.8564
+[train-tab] epoch  11/40  loss=0.3481  masked_train_acc=0.8646
+[train-tab] epoch  21/40  loss=0.3372  masked_train_acc=0.8658
+[train-tab] epoch  31/40  loss=0.3273  masked_train_acc=0.8715
+[train-tab] epoch  40/40  loss=0.3243  masked_train_acc=0.8736
+[train_v3] csv:physionet ts1: masked_acc=0.8736 full_obs_acc=0.8982 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/csv-physionet_ts1.pt (sha256 bb7044e835d6)
+# returncode 0

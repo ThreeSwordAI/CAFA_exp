@@ -1,0 +1,4 @@
+# python scripts/commit_v3.py --dataset image:imagenette --train-seed 1 --out-path configs/committed_v3_am02_image-imagenette_ts1.json --alpha-margin 0.02 --alpha-grid 0.01
+# start 2026-10-03T12:48:56.371599+00:00
+ERROR: alpha=0.05 (floor 0.0261, alpha rule margin 0.02 / grid 0.01) is not above the design margin 0.05: the detectability rule n_min(alpha, level, margin) is undefined; nothing committed.
+# returncode 7

@@ -1,0 +1,84 @@
+# .venv/Scripts/python.exe scripts/check_caches_v3.py --v2-dir F:/CAFA_results/pool_v2 --csv results_v3/phase1_caches.csv  (2026-10-03 14:43:27; round 3b, Task J.1: 16 seed-0 + 32 cluster caches)
+[check_v3] csv-diabetes ts0  greedy_entropy: n=36825 T=45 full-acq acc=0.903870 depth0 acc=0.7991 ckpt=f413bec68098
+[check_v3] csv-diabetes ts0          random: n=36825 T=45 full-acq acc=0.903870 depth0 acc=0.7991 ckpt=f413bec68098
+[check_v3] csv-diabetes ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] csv-diabetes ts1  greedy_entropy: n=36825 T=45 full-acq acc=0.902756 depth0 acc=0.7973 ckpt=edd9aa910034
+[check_v3] csv-diabetes ts1          random: n=36825 T=45 full-acq acc=0.902756 depth0 acc=0.7973 ckpt=edd9aa910034
+[check_v3] csv-diabetes ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] csv-diabetes ts2  greedy_entropy: n=36825 T=45 full-acq acc=0.904874 depth0 acc=0.7983 ckpt=aeb45b835ce6
+[check_v3] csv-diabetes ts2          random: n=36825 T=45 full-acq acc=0.904874 depth0 acc=0.7983 ckpt=aeb45b835ce6
+[check_v3] csv-diabetes ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] csv-physionet ts0  greedy_entropy: n=4800 T=41 full-acq acc=0.873333 depth0 acc=0.8590 ckpt=d63ae9bd2870
+[check_v3] csv-physionet ts0          random: n=4800 T=41 full-acq acc=0.873333 depth0 acc=0.8590 ckpt=d63ae9bd2870
+[check_v3] csv-physionet ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] csv-physionet ts1  greedy_entropy: n=4800 T=41 full-acq acc=0.867708 depth0 acc=0.8579 ckpt=bb7044e835d6
+[check_v3] csv-physionet ts1          random: n=4800 T=41 full-acq acc=0.867708 depth0 acc=0.8579 ckpt=bb7044e835d6
+[check_v3] csv-physionet ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] csv-physionet ts2  greedy_entropy: n=4800 T=41 full-acq acc=0.875833 depth0 acc=0.8627 ckpt=80994308484e
+[check_v3] csv-physionet ts2          random: n=4800 T=41 full-acq acc=0.875833 depth0 acc=0.8627 ckpt=80994308484e
+[check_v3] csv-physionet ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] cube ts0  greedy_entropy: n=8000 T=20 full-acq acc=0.953125 depth0 acc=0.1164 ckpt=2abc6ed1d248
+[check_v3] cube ts0          random: n=8000 T=20 full-acq acc=0.953125 depth0 acc=0.1164 ckpt=2abc6ed1d248
+[check_v3] cube ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] cube ts1  greedy_entropy: n=8000 T=20 full-acq acc=0.952875 depth0 acc=0.1263 ckpt=605143887ce1
+[check_v3] cube ts1          random: n=8000 T=20 full-acq acc=0.952875 depth0 acc=0.1263 ckpt=605143887ce1
+[check_v3] cube ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] cube ts2  greedy_entropy: n=8000 T=20 full-acq acc=0.952000 depth0 acc=0.1358 ckpt=273cdde79cee
+[check_v3] cube ts2          random: n=8000 T=20 full-acq acc=0.952000 depth0 acc=0.1358 ckpt=273cdde79cee
+[check_v3] cube ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] fashionmnist ts0  greedy_entropy: n=28000 T=49 full-acq acc=0.941286 depth0 acc=0.1009 ckpt=0cfb3cca5dc5
+[check_v3] fashionmnist ts0          random: n=28000 T=49 full-acq acc=0.941286 depth0 acc=0.1009 ckpt=0cfb3cca5dc5
+[check_v3] fashionmnist ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] fashionmnist ts1  greedy_entropy: n=28000 T=49 full-acq acc=0.940214 depth0 acc=0.1008 ckpt=730e388f3dcf
+[check_v3] fashionmnist ts1          random: n=28000 T=49 full-acq acc=0.940214 depth0 acc=0.1008 ckpt=730e388f3dcf
+[check_v3] fashionmnist ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] fashionmnist ts2  greedy_entropy: n=28000 T=49 full-acq acc=0.939857 depth0 acc=0.1002 ckpt=ec2e2235aa86
+[check_v3] fashionmnist ts2          random: n=28000 T=49 full-acq acc=0.939857 depth0 acc=0.1002 ckpt=ec2e2235aa86
+[check_v3] fashionmnist ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] image-imagenette ts0  greedy_entropy: n=5358 T=49 full-acq acc=0.971818 depth0 acc=0.1008 ckpt=5d6c8ed6c11f
+[check_v3] image-imagenette ts0          random: n=5358 T=49 full-acq acc=0.971818 depth0 acc=0.1008 ckpt=5d6c8ed6c11f
+[check_v3] image-imagenette ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] image-imagenette ts1  greedy_entropy: n=5358 T=49 full-acq acc=0.969578 depth0 acc=0.1015 ckpt=7359f6e82058
+[check_v3] image-imagenette ts1          random: n=5358 T=49 full-acq acc=0.969578 depth0 acc=0.1015 ckpt=7359f6e82058
+[check_v3] image-imagenette ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] image-imagenette ts2  greedy_entropy: n=5358 T=49 full-acq acc=0.975177 depth0 acc=0.0987 ckpt=17499b3ab88b
+[check_v3] image-imagenette ts2          random: n=5358 T=49 full-acq acc=0.975177 depth0 acc=0.0987 ckpt=17499b3ab88b
+[check_v3] image-imagenette ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] mnist ts0  greedy_entropy: n=28000 T=49 full-acq acc=0.994893 depth0 acc=0.1124 ckpt=83bb6ca14a7a
+[check_v3] mnist ts0          random: n=28000 T=49 full-acq acc=0.994893 depth0 acc=0.1124 ckpt=83bb6ca14a7a
+[check_v3] mnist ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] mnist ts0: v2 vs v3 heldout rows n_v2=28000 n_v3=28000 same_y_order=True same_split_digest=True | v2 full-acq acc=0.899214
+[check_v3] mnist ts1  greedy_entropy: n=28000 T=49 full-acq acc=0.994964 depth0 acc=0.1096 ckpt=1a6c054c98a9
+[check_v3] mnist ts1          random: n=28000 T=49 full-acq acc=0.994964 depth0 acc=0.1096 ckpt=1a6c054c98a9
+[check_v3] mnist ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] mnist ts1: v2 vs v3 heldout rows n_v2=28000 n_v3=28000 same_y_order=True same_split_digest=True | v2 full-acq acc=0.906286
+[check_v3] mnist ts2  greedy_entropy: n=28000 T=49 full-acq acc=0.994964 depth0 acc=0.1138 ckpt=b2b28c72abdb
+[check_v3] mnist ts2          random: n=28000 T=49 full-acq acc=0.994964 depth0 acc=0.1138 ckpt=b2b28c72abdb
+[check_v3] mnist ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] mnist ts2: v2 vs v3 heldout rows n_v2=28000 n_v3=28000 same_y_order=True same_split_digest=True | v2 full-acq acc=0.901929
+[check_v3] tabular-MiniBooNE ts0  greedy_entropy: n=52026 T=50 full-acq acc=0.922558 depth0 acc=0.7188 ckpt=d23691461442
+[check_v3] tabular-MiniBooNE ts0          random: n=52026 T=50 full-acq acc=0.922558 depth0 acc=0.7188 ckpt=d23691461442
+[check_v3] tabular-MiniBooNE ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] tabular-MiniBooNE ts0: v2 vs v3 heldout rows n_v2=52026 n_v3=52026 same_y_order=True same_split_digest=True | v2 full-acq acc=0.915831
+[check_v3] tabular-MiniBooNE ts1  greedy_entropy: n=52026 T=50 full-acq acc=0.922135 depth0 acc=0.7206 ckpt=9074b85ee2d3
+[check_v3] tabular-MiniBooNE ts1          random: n=52026 T=50 full-acq acc=0.922135 depth0 acc=0.7206 ckpt=9074b85ee2d3
+[check_v3] tabular-MiniBooNE ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] tabular-MiniBooNE ts1: v2 vs v3 heldout rows n_v2=52026 n_v3=52026 same_y_order=True same_split_digest=True | v2 full-acq acc=0.914043
+[check_v3] tabular-MiniBooNE ts2  greedy_entropy: n=52026 T=50 full-acq acc=0.921232 depth0 acc=0.7195 ckpt=15b3e15c9e68
+[check_v3] tabular-MiniBooNE ts2          random: n=52026 T=50 full-acq acc=0.921232 depth0 acc=0.7195 ckpt=15b3e15c9e68
+[check_v3] tabular-MiniBooNE ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] tabular-MiniBooNE ts2: v2 vs v3 heldout rows n_v2=52026 n_v3=52026 same_y_order=True same_split_digest=True | v2 full-acq acc=0.909411
+[check_v3] tabular-adult ts0  greedy_entropy: n=18089 T=14 full-acq acc=0.852507 depth0 acc=0.7509 ckpt=da76a0a2142a
+[check_v3] tabular-adult ts0          random: n=18089 T=14 full-acq acc=0.852507 depth0 acc=0.7509 ckpt=da76a0a2142a
+[check_v3] tabular-adult ts0: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] tabular-adult ts0: v2 vs v3 heldout rows n_v2=18089 n_v3=18089 same_y_order=True same_split_digest=True | v2 full-acq acc=0.852286
+[check_v3] tabular-adult ts1  greedy_entropy: n=18089 T=14 full-acq acc=0.846758 depth0 acc=0.7456 ckpt=dade48fdc961
+[check_v3] tabular-adult ts1          random: n=18089 T=14 full-acq acc=0.846758 depth0 acc=0.7456 ckpt=dade48fdc961
+[check_v3] tabular-adult ts1: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] tabular-adult ts1: v2 vs v3 heldout rows n_v2=18089 n_v3=18089 same_y_order=True same_split_digest=True | v2 full-acq acc=0.846647
+[check_v3] tabular-adult ts2  greedy_entropy: n=18089 T=14 full-acq acc=0.854221 depth0 acc=0.7528 ckpt=470936b980cb
+[check_v3] tabular-adult ts2          random: n=18089 T=14 full-acq acc=0.854221 depth0 acc=0.7528 ckpt=470936b980cb
+[check_v3] tabular-adult ts2: greedy vs random |d full-acq acc|=0.000e+00 same_y=True same_correct_T=True -> PASS
+[check_v3] tabular-adult ts2: v2 vs v3 heldout rows n_v2=18089 n_v3=18089 same_y_order=True same_split_digest=True | v2 full-acq acc=0.854000
+[check_v3] wrote results_v3/phase1_caches.csv
+# returncode 0

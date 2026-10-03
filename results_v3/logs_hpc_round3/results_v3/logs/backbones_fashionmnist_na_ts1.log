@@ -1,0 +1,11 @@
+# python scripts/train_backbone_v3.py --dataset fashionmnist --train-seed 1 --device cuda
+# start 2026-10-03T11:46:21.685426+00:00
+[train v2] epoch   1/30 loss=1.7939 masked_acc=0.4268
+[train v2] epoch   6/30 loss=0.5625 masked_acc=0.7893
+[train v2] epoch  11/30 loss=0.4552 masked_acc=0.8288
+[train v2] epoch  16/30 loss=0.3914 masked_acc=0.8527
+[train v2] epoch  21/30 loss=0.3516 masked_acc=0.8669
+[train v2] epoch  26/30 loss=0.3014 masked_acc=0.8860
+[train v2] epoch  30/30 loss=0.2887 masked_acc=0.8915
+[train_v3] fashionmnist ts1: masked_acc=0.8915 full_obs_acc=0.9725 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/fashionmnist_ts1.pt (sha256 730e388f3dcf)
+# returncode 0

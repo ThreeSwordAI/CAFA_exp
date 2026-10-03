@@ -1,0 +1,9 @@
+# python scripts/train_backbone_v3.py --dataset csv:diabetes --train-seed 1 --device cuda
+# start 2026-10-03T11:46:15.711941+00:00
+[train-tab] epoch   1/40  loss=0.5309  masked_train_acc=0.8091
+[train-tab] epoch  11/40  loss=0.3494  masked_train_acc=0.8621
+[train-tab] epoch  21/40  loss=0.3384  masked_train_acc=0.8649
+[train-tab] epoch  31/40  loss=0.3365  masked_train_acc=0.8653
+[train-tab] epoch  40/40  loss=0.3295  masked_train_acc=0.8679
+[train_v3] csv:diabetes ts1: masked_acc=0.8679 full_obs_acc=0.9104 -> /home/vault/iwi5/iwi5359h/CAFA_results/checkpoints_v3/csv-diabetes_ts1.pt (sha256 edd9aa910034)
+# returncode 0

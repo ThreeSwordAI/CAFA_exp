@@ -1,0 +1,53 @@
+csv-diabetes_ts1_greedy_entropy_softmax.npz: n=36825 (ts0 36825) T=45 max_rows=None batch=256 policy_amp=False ckpt_sha=edd9aa910034 log_sha=edd9aa910034 full_acq_acc=0.902756 -> OK
+csv-diabetes_ts1_random_softmax.npz: n=36825 (ts0 36825) T=45 max_rows=None batch=256 policy_amp=False ckpt_sha=edd9aa910034 log_sha=edd9aa910034 full_acq_acc=0.902756 -> OK
+csv-diabetes_ts2_greedy_entropy_softmax.npz: n=36825 (ts0 36825) T=45 max_rows=None batch=256 policy_amp=False ckpt_sha=aeb45b835ce6 log_sha=aeb45b835ce6 full_acq_acc=0.904874 -> OK
+csv-diabetes_ts2_random_softmax.npz: n=36825 (ts0 36825) T=45 max_rows=None batch=256 policy_amp=False ckpt_sha=aeb45b835ce6 log_sha=aeb45b835ce6 full_acq_acc=0.904874 -> OK
+csv-physionet_ts1_greedy_entropy_softmax.npz: n=4800 (ts0 4800) T=41 max_rows=None batch=256 policy_amp=False ckpt_sha=bb7044e835d6 log_sha=bb7044e835d6 full_acq_acc=0.867708 -> OK
+csv-physionet_ts1_random_softmax.npz: n=4800 (ts0 4800) T=41 max_rows=None batch=256 policy_amp=False ckpt_sha=bb7044e835d6 log_sha=bb7044e835d6 full_acq_acc=0.867708 -> OK
+csv-physionet_ts2_greedy_entropy_softmax.npz: n=4800 (ts0 4800) T=41 max_rows=None batch=256 policy_amp=False ckpt_sha=80994308484e log_sha=80994308484e full_acq_acc=0.875833 -> OK
+csv-physionet_ts2_random_softmax.npz: n=4800 (ts0 4800) T=41 max_rows=None batch=256 policy_amp=False ckpt_sha=80994308484e log_sha=80994308484e full_acq_acc=0.875833 -> OK
+cube_ts1_greedy_entropy_softmax.npz: n=8000 (ts0 8000) T=20 max_rows=None batch=256 policy_amp=False ckpt_sha=605143887ce1 log_sha=605143887ce1 full_acq_acc=0.952875 -> OK
+cube_ts1_random_softmax.npz: n=8000 (ts0 8000) T=20 max_rows=None batch=256 policy_amp=False ckpt_sha=605143887ce1 log_sha=605143887ce1 full_acq_acc=0.952875 -> OK
+cube_ts2_greedy_entropy_softmax.npz: n=8000 (ts0 8000) T=20 max_rows=None batch=256 policy_amp=False ckpt_sha=273cdde79cee log_sha=273cdde79cee full_acq_acc=0.952000 -> OK
+cube_ts2_random_softmax.npz: n=8000 (ts0 8000) T=20 max_rows=None batch=256 policy_amp=False ckpt_sha=273cdde79cee log_sha=273cdde79cee full_acq_acc=0.952000 -> OK
+fashionmnist_ts1_greedy_entropy_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=730e388f3dcf log_sha=730e388f3dcf full_acq_acc=0.940214 -> OK
+fashionmnist_ts1_random_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=730e388f3dcf log_sha=730e388f3dcf full_acq_acc=0.940214 -> OK
+fashionmnist_ts2_greedy_entropy_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=ec2e2235aa86 log_sha=ec2e2235aa86 full_acq_acc=0.939857 -> OK
+fashionmnist_ts2_random_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=ec2e2235aa86 log_sha=ec2e2235aa86 full_acq_acc=0.939857 -> OK
+image-imagenette_ts1_greedy_entropy_softmax.npz: n=5358 (ts0 5358) T=49 max_rows=None batch=32 policy_amp=True ckpt_sha=7359f6e82058 log_sha=7359f6e82058 full_acq_acc=0.969578 -> OK
+image-imagenette_ts1_random_softmax.npz: n=5358 (ts0 5358) T=49 max_rows=None batch=32 policy_amp=False ckpt_sha=7359f6e82058 log_sha=7359f6e82058 full_acq_acc=0.969578 -> OK
+image-imagenette_ts2_greedy_entropy_softmax.npz: n=5358 (ts0 5358) T=49 max_rows=None batch=32 policy_amp=True ckpt_sha=17499b3ab88b log_sha=17499b3ab88b full_acq_acc=0.975177 -> OK
+image-imagenette_ts2_random_softmax.npz: n=5358 (ts0 5358) T=49 max_rows=None batch=32 policy_amp=False ckpt_sha=17499b3ab88b log_sha=17499b3ab88b full_acq_acc=0.975177 -> OK
+mnist_ts1_greedy_entropy_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=1a6c054c98a9 log_sha=1a6c054c98a9 full_acq_acc=0.994964 -> OK
+mnist_ts1_random_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=1a6c054c98a9 log_sha=1a6c054c98a9 full_acq_acc=0.994964 -> OK
+mnist_ts2_greedy_entropy_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=b2b28c72abdb log_sha=b2b28c72abdb full_acq_acc=0.994964 -> OK
+mnist_ts2_random_softmax.npz: n=28000 (ts0 28000) T=49 max_rows=None batch=256 policy_amp=False ckpt_sha=b2b28c72abdb log_sha=b2b28c72abdb full_acq_acc=0.994964 -> OK
+tabular-MiniBooNE_ts1_greedy_entropy_softmax.npz: n=52026 (ts0 52026) T=50 max_rows=None batch=256 policy_amp=False ckpt_sha=9074b85ee2d3 log_sha=9074b85ee2d3 full_acq_acc=0.922135 -> OK
+tabular-MiniBooNE_ts1_random_softmax.npz: n=52026 (ts0 52026) T=50 max_rows=None batch=256 policy_amp=False ckpt_sha=9074b85ee2d3 log_sha=9074b85ee2d3 full_acq_acc=0.922135 -> OK
+tabular-MiniBooNE_ts2_greedy_entropy_softmax.npz: n=52026 (ts0 52026) T=50 max_rows=None batch=256 policy_amp=False ckpt_sha=15b3e15c9e68 log_sha=15b3e15c9e68 full_acq_acc=0.921232 -> OK
+tabular-MiniBooNE_ts2_random_softmax.npz: n=52026 (ts0 52026) T=50 max_rows=None batch=256 policy_amp=False ckpt_sha=15b3e15c9e68 log_sha=15b3e15c9e68 full_acq_acc=0.921232 -> OK
+tabular-adult_ts1_greedy_entropy_softmax.npz: n=18089 (ts0 18089) T=14 max_rows=None batch=256 policy_amp=False ckpt_sha=dade48fdc961 log_sha=dade48fdc961 full_acq_acc=0.846758 -> OK
+tabular-adult_ts1_random_softmax.npz: n=18089 (ts0 18089) T=14 max_rows=None batch=256 policy_amp=False ckpt_sha=dade48fdc961 log_sha=dade48fdc961 full_acq_acc=0.846758 -> OK
+tabular-adult_ts2_greedy_entropy_softmax.npz: n=18089 (ts0 18089) T=14 max_rows=None batch=256 policy_amp=False ckpt_sha=470936b980cb log_sha=470936b980cb full_acq_acc=0.854221 -> OK
+tabular-adult_ts2_random_softmax.npz: n=18089 (ts0 18089) T=14 max_rows=None batch=256 policy_amp=False ckpt_sha=470936b980cb log_sha=470936b980cb full_acq_acc=0.854221 -> OK
+backbone full_obs_acc, cluster vs seed 0 (stop if more than 0.03 below):
+  csv:diabetes ts1: 0.9104 vs ts0 0.9094 (backbones_csv-diabetes_na_ts0.log) diff +0.0010 -> OK
+  csv:diabetes ts2: 0.9172 vs ts0 0.9094 (backbones_csv-diabetes_na_ts0.log) diff +0.0078 -> OK
+  csv:physionet ts1: 0.8982 vs ts0 0.8936 (backbones_csv-physionet_na_ts0.log) diff +0.0046 -> OK
+  csv:physionet ts2: 0.8972 vs ts0 0.8936 (backbones_csv-physionet_na_ts0.log) diff +0.0036 -> OK
+  cube ts1: 0.9522 vs ts0 0.9598 (retrain60_backbones_cube_na_ts0.log) diff -0.0076 -> OK
+  cube ts2: 0.9526 vs ts0 0.9598 (retrain60_backbones_cube_na_ts0.log) diff -0.0072 -> OK
+  fashionmnist ts1: 0.9725 vs ts0 0.9755 (backbones_fashionmnist_na_ts0.log) diff -0.0030 -> OK
+  fashionmnist ts2: 0.9735 vs ts0 0.9755 (backbones_fashionmnist_na_ts0.log) diff -0.0020 -> OK
+  image:imagenette ts1: 1.0000 vs ts0 1.0000 (backbones_image-imagenette_na_ts0.log) diff +0.0000 -> OK
+  image:imagenette ts2: 1.0000 vs ts0 1.0000 (backbones_image-imagenette_na_ts0.log) diff +0.0000 -> OK
+  mnist ts1: 1.0000 vs ts0 0.9995 (backbones_mnist_na_ts0.log) diff +0.0005 -> OK
+  mnist ts2: 0.9985 vs ts0 0.9995 (backbones_mnist_na_ts0.log) diff -0.0010 -> OK
+  tabular:MiniBooNE ts1: 0.9196 vs ts0 0.9158 (retrain60_backbones_tabular-MiniBooNE_na_ts0.log) diff +0.0038 -> OK
+  tabular:MiniBooNE ts2: 0.9318 vs ts0 0.9158 (retrain60_backbones_tabular-MiniBooNE_na_ts0.log) diff +0.0160 -> OK
+  tabular:adult ts1: 0.8644 vs ts0 0.8626 (backbones_tabular-adult_na_ts0.log) diff +0.0018 -> OK
+  tabular:adult ts2: 0.8540 vs ts0 0.8626 (backbones_tabular-adult_na_ts0.log) diff -0.0086 -> OK
+caches checked: 32 | problems: 0
+errors ts1/ts2/ts0: 141 141 143
+same y ts1-ts2: False | same correct_T: False | same scores: False | same order: False
+heldout digests: 0f85cb72c9a6 5f3f8e973e5a 08068a4d2a46
