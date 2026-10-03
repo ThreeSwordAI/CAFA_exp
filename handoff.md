@@ -1008,3 +1008,16 @@ Both are reported, with the noise-free expected raw and certified rates computed
 - **Seed aggregation:** `make_tables_v3.py` also writes `TABLE_E4_cascade_seeds.{md,csv}`, mean ± sample sd over seeds per (dataset, policy), tested on seed 0 alone (`n_seeds` = 1, value only) and on synthetic 3-seed rows.
 - **Tests:** whole suite `110 passed in 354.09s (0:05:54)` (`results_v3/logs/r2_taskF_pytest_full_suite.log`).
 
+### 12.7 Final checklist (instruction.md §10 + instruction_round2.md; `results_v3/logs/r2_final_checklist.log`)
+
+- [x] `git status` clean on `aistats-v3` after the final commit. Round-2 commits, one or more per task: A `5089d5e`, `3825b6c`; B `ac658f4`, `8e1858e`; C `799b214`; E `00c2c4a`; F `0d02588`, `32fec67` (audit fixes); D `7da8c3c`; then the final content commit and the hash commit (header).
+- [x] Nine v3 test files green at the final state: `33 passed in 34.14s` (`results_v3/logs/r2_final_pytest_nine_v3.log`).
+- [x] Whole suite: `110 passed in 196.75s (0:03:16)`, **0 xfailed, 0 skipped** (`results_v3/logs/r2_final_pytest_full_suite.log`, run with `-rxXs`).
+- [x] `results_v3/run_log.jsonl`, `logs/`, `tables/`, `figures/`, `planted/`, `repair/`, `diagnostics/`, `round1/` present.
+- [x] No smoke artifacts: `$RESULTS_ROOT\pool_v3\` holds 16 caches, none with `max_rows`; `checkpoints_v3\` holds the 8 seed-0 checkpoints; `metrics_v3\` holds 16 JSONs; `configs/committed_v3*` holds 18 commits (8 main, G8, 3 E7 BEFORE, 6 am02), none synthetic.
+- [x] `handoff.md` complete per instruction.md §8 plus §12. Every `TBD-RUN` has its command: seeds 1–2 in `hpc/README_v3.md` (§10 step 1); Phase 1d in §10 step 4.
+- [x] Frozen files: against `aaai27-submission`, `src/cafa/risk_control.py` differs by the one authorised line (§12.1); `tests/test_risk_control.py`, `tests/test_mondrian.py`, `tests/test_baselines.py`, `tests/test_pipeline.py` are unchanged.
+- [x] `git tag` shows `aaai27-submission` (→ `550f8e2`).
+- [x] `$RESULTS_ROOT\metrics_v3_round1\` exists and is untouched: 16 of 16 sha256 OK against `results_v3/round1/metrics_v3_round1.sha256` (`results_v3/logs/r2_round1_archive_check.log` during round 2 and `r2_final_checklist.log` at the end).
+- [x] HPC dry run on the committed tree (`results_v3/logs/hpc_dry_run.log`, header: commit `7da8c3c`, 0 uncommitted files): 72 array tasks, 48 would run (seeds 1–2), 24 skip because their seed-0 output exists.
+

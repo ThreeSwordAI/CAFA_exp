@@ -1,0 +1,30 @@
+# round-2 final checklist checks, 2026-10-03T09:13:01+02:00, HEAD 7da8c3c
+## git tag
+aaai27-submission code as used for the AAAI-27 submission (HB boundary rounding defect present)
+tag -> 550f8e2
+## frozen files vs aaai27-submission (round 2 amends rule 1 for the one-line HB patch only)
+ src/cafa/risk_control.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+-        k = np.ceil(n * rb).astype(int)
++        k = np.ceil(np.round(n * rb, 9)).astype(int)
+## metrics_v3_round1 untouched
+16
+16
+## smoke artifacts
+pool_v3 caches: 16 | with max_rows (smoke): 0
+checkpoints_v3: ['csv-diabetes_ts0.pt', 'csv-physionet_ts0.pt', 'cube_ts0.pt', 'fashionmnist_ts0.pt', 'image-imagenette_ts0.pt', 'mnist_ts0.pt', 'tabular-MiniBooNE_ts0.pt', 'tabular-adult_ts0.pt']
+metrics_v3 JSONs: 16 | metrics_v3_alpha_margin02: 12 | dw: 1 | G8: 1 | hbfix_single: 14
+configs/committed_v3*: 18 []
+## results_v3 directories
+present results_v3/run_log.jsonl
+present results_v3/logs
+present results_v3/tables
+present results_v3/figures
+present results_v3/planted
+present results_v3/repair
+present results_v3/diagnostics
+present results_v3/round1
+## pytest
+33 passed in 34.14s
+110 passed in 196.75s (0:03:16)
+0

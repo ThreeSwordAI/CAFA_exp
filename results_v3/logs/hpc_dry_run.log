@@ -1,4 +1,4 @@
-# hpc dry run: 2026-10-03T02:58:59+02:00 repo /f/FAU/PhD/Side Quest/CAFA_exp commit 799b214 python /f/FAU/PhD/Side Quest/CAFA_exp/.venv/Scripts/python.exe
+# hpc dry run: 2026-10-03T09:07:21+02:00 repo /f/FAU/PhD/Side Quest/CAFA_exp commit 7da8c3c (uncommitted changes under hpc/ scripts/ src/ configs/: 0 files) python /f/FAU/PhD/Side Quest/CAFA_exp/.venv/Scripts/python.exe
 ### backbone_v3.slurm SLURM_ARRAY_TASK_ID=0 CAFA_EXTRA=''
 [drive_v3] skip (exists) backbones:csv:physionet:na:ts0 -> F:\CAFA_results\checkpoints_v3\csv-physionet_ts0.pt
 [drive_v3] backbones: ran 0, skipped 1 existing, 0 missing prerequisites
@@ -114,11 +114,11 @@
 [drive_v3] skip (exists) rollouts:fashionmnist:random:ts0 -> F:\CAFA_results\pool_v3\fashionmnist_ts0_random_softmax.npz
 [drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=14 (image:imagenette greedy_entropy 0)
-[drive_v3] would run rollouts:image:imagenette:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --device cuda --batch-size 32 --policy-amp
-[drive_v3] rollouts: ran 0, skipped 0 existing, 0 missing prerequisites
+[drive_v3] skip (exists) rollouts:image:imagenette:greedy_entropy:ts0 -> F:\CAFA_results\pool_v3\image-imagenette_ts0_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=15 (image:imagenette random 0)
-[drive_v3] would run rollouts:image:imagenette:random:ts0: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy random --device cuda --batch-size 32
-[drive_v3] rollouts: ran 0, skipped 0 existing, 0 missing prerequisites
+[drive_v3] skip (exists) rollouts:image:imagenette:random:ts0 -> F:\CAFA_results\pool_v3\image-imagenette_ts0_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=16 (csv:physionet greedy_entropy 1)
 [drive_v3] would run rollouts:csv:physionet:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: csv-physionet_ts1.pt]
 [drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
