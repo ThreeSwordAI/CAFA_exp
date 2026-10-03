@@ -82,7 +82,8 @@ PYTHON=python bash hpc/dry_run_v3.sh | tail -3                      # every arra
 Array layout (unchanged from round 1): backbone task `i` = dataset `i % 8`, seed `i / 8`, datasets in the
 order `csv:physionet cube tabular:adult csv:diabetes tabular:MiniBooNE mnist fashionmnist image:imagenette`;
 rollout task `i` = line `i` (0-based) of `hpc/cells_v3.txt` = `16·ts + 2·dataset + policy` (greedy 0, random 1).
-Seed 0 (tasks 0–7 and 0–15) is done locally. **Do not submit them.**
+Seed 0 (tasks 0–7 and 0–15) is done locally. **Do not submit them.** The one exception is the round-3 Task-L jobs
+of §8: they reuse indices 6 and 12–13 with a checkpoint tag and write tagged outputs.
 
 ```bash
 cd ~/my_repos/CAFA_exp
@@ -184,3 +185,99 @@ python scripts/make_figures_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --p
 
 The commits use the round-2 code: 5 test splits × 20 draws, the HB fix, `split` block. For the other λ_ref keys,
 the cost scheme and the E9 ablations, use the seed-0 commands of handoff.md §10 with `--seeds 1 2`.
+
+## 8. Round 3, Task L — FashionMNIST predictor upgrade (seed 0, checkpoint tag `repair`)
+
+This is the second E7 predictor-upgrade dataset (`instruction_round3.md`, Task L). A stronger FashionMNIST backbone
+(`width_mult` 4, 60 epochs, `p_full` 0.3, same loader and split) is trained as a NEW checkpoint
+`$RESULTS_ROOT/checkpoints_v3_repair/fashionmnist_ts0.pt`. The greedy and random rollouts use it and write
+`pool_v3/fashionmnist_ts0_{greedy_entropy,random}-repair_softmax.npz`. `--checkpoint-tag repair` changes only the
+checkpoint folder and the cache token suffix. The protocol seed-0 backbone and caches (made on the laptop) are never
+overwritten, and `commit_v3.py` ignores tagged caches. The two jobs use seed-0 array indices: backbone task 6
+(dataset index 6 = `fashionmnist`, seed 0) and rollout lines 12 and 13 of `hpc/cells_v3.txt` (`16·0 + 2·6 + 0/1`,
+greedy and random). §4 says not to submit seed 0; that rule covers the untagged runs. Submit these indices only with
+`CAFA_DRIVER_FLAGS="--checkpoint-tag repair"`, exactly as below. On the cluster they need only the FashionMNIST data
+of §2. The repair itself runs on the laptop.
+
+```bash
+cd ~/my_repos/CAFA_exp
+# backbone: fashionmnist seed 0, width 4, 60 epochs, p_full 0.3 -> checkpoints_v3_repair/fashionmnist_ts0.pt
+BBR=$(CAFA_EXTRA="--epochs 60 --width-mult 4 --p-full 0.3" CAFA_DRIVER_FLAGS="--checkpoint-tag repair" \
+      sbatch --parsable --export=ALL --time=08:00:00 --array=6 hpc/backbone_v3.slurm)
+# rollouts with that backbone: greedy (line 12) and random (line 13) -> pool_v3/fashionmnist_ts0_{greedy_entropy,random}-repair_softmax.npz
+CAFA_DRIVER_FLAGS="--checkpoint-tag repair" sbatch --export=ALL --dependency=afterok:${BBR} --time=24:00:00 \
+      --array=12,13 hpc/rollout_v3.slurm
+squeue -u $USER
+```
+
+- `CAFA_EXTRA` reaches `train_backbone_v3.py` through the driver's `--extra-args`. Both batch scripts append
+  `CAFA_DRIVER_FLAGS` to the driver call, so `--checkpoint-tag repair` reaches `drive_v3.py`. The driver then uses the
+  tagged output and prerequisite paths and passes the flag on to the script. Ledger cells:
+  `backbones:fashionmnist:na-repair:ts0` and `rollouts:fashionmnist:{greedy_entropy,random}-repair:ts0`.
+- Set both variables only in front of `sbatch`, as above. Never `export` them in the login shell: an exported
+  `CAFA_DRIVER_FLAGS` would tag every later submission.
+- Dry run of exactly these two lines (no Slurm, no GPU; prints the tagged checkpoint path and the overrides;
+  covered by `tests/test_hpc_v3.py::test_hpc_dry_run_task_l_lines`):
+  ```bash
+  BB_INDICES=6 RO_INDICES="12 13" BB_EXTRA="--epochs 60 --width-mult 4 --p-full 0.3" \
+    DRY_DRIVER_FLAGS="--checkpoint-tag repair" PYTHON=python bash hpc/dry_run_v3.sh
+  ```
+  It prints `would run backbones:fashionmnist:na-repair:ts0: python scripts/train_backbone_v3.py --dataset fashionmnist
+  --train-seed 0 --device cuda --checkpoint-tag repair --epochs 60 --width-mult 4 --p-full 0.3 [output:
+  …/checkpoints_v3_repair/fashionmnist_ts0.pt]`, and for both rollouts `--checkpoint-tag repair` with
+  `[prerequisite missing now: checkpoints_v3_repair/fashionmnist_ts0.pt]` until the backbone exists.
+
+Expected wall times. These are **estimates, not measurements**. They start from the round-1 laptop ledger for the
+width-2 FashionMNIST seed-0 cells (RTX 3050 4 GB, thermally throttled): backbone 1,602.9 s for 30 epochs, greedy
+rollout 14,565.1 s, random rollout 308.2 s. Width 4 costs roughly 4× the conv FLOPs (they grow with input × output
+channels) and 60 epochs cost 2×. Dividing by the throttling factor 1.4178 of §5 gives the full-clock laptop figure.
+
+| job | laptop ledger (width 2) | scaling | throttled-laptop estimate | full-clock laptop estimate | `--time` |
+|---|---|---|---|---|---|
+| backbone (task 6) | 1,602.9 s (30 epochs) | × 4 (width) × 2 (epochs) | 12,823 s (3.56 h) | 9,045 s (2.51 h) | 08:00:00 |
+| greedy rollout (line 12) | 14,565.1 s | × 4 (width) | 58,260 s (16.18 h) | 41,093 s (11.41 h) | 24:00:00 |
+| random rollout (line 13) | 308.2 s | × 4 (width) | 1,233 s (0.34 h) | 870 s (0.24 h) | 24:00:00 (same array job) |
+
+Measured smoke on the laptop (round 3, 2026-10-03; documented smoke flags, separate tag `smokerepair`, outputs
+deleted afterwards; logs `results_v3/logs/r3_taskL_smoke_{backbone,rollout_greedy,rollout_random,nvidia_smi}.log`):
+width-4 backbone `--epochs 1 --max-train 2000` 85 s (8 optimizer steps; dominated by data loading, so it does not
+time an epoch); greedy rollout `--max-rows 256` 361 s, i.e. 361 × 28,000 / 256 ≈ 39,500 s ≈ 11 h for the full
+heldout split; random rollout `--max-rows 256` 23 s. During the smoke the GPU reported
+`clocks_event_reasons.sw_thermal_slowdown = Active` in every busy sample (mean SM clock 521 MHz of 2,100, mean
+87.9 °C). That is why these jobs are not run on the laptop (instruction.md §6: > 8 h per cell; instruction_round3.md
+Task L: throttled GPU → cluster).
+
+The TinyGPU GPUs are larger and faster than the laptop's, so treat these figures as planning bounds. The greedy
+rollout is the critical path. `--time=24:00:00` assumes a 24 h walltime limit on the TinyGPU partition you submit to
+(check the current limit in the NHR documentation or with `sinfo -o "%P %l"` before submitting); it is about 2× the
+full-clock estimate. A rollout writes its cache only at the end, so if line 12 hits the limit nothing partial is left
+behind: resubmit line 12 alone with the same flags and the dependency removed.
+
+What comes back (laptop, Git Bash). The checkpoint is optional because the cache meta records its sha256,
+`checkpoint_tag` and `checkpoint_dir`. Take the cluster's ledger lines and logs as in §6.
+
+```bash
+H=<user>@tinyx.nhr.fau.de
+scp "$H:/home/vault/iwi5/<user>/CAFA_results/pool_v3/fashionmnist_ts0_*-repair_softmax.npz" /f/CAFA_results/pool_v3/
+mkdir -p /f/CAFA_results/checkpoints_v3_repair
+scp "$H:/home/vault/iwi5/<user>/CAFA_results/checkpoints_v3_repair/fashionmnist_ts0.pt" /f/CAFA_results/checkpoints_v3_repair/   # optional
+```
+
+Local follow-up (PowerShell, repo root). `check_caches_v3.py` checks the tagged pair as its own group
+(`fashionmnist ts0 [repair]`: greedy = random full-acquisition accuracy) and never compares it with the untagged pair.
+The repair then audits the tagged caches on the round-2 strata: BEFORE = `pool_v3/fashionmnist_ts0_{pol}_softmax.npz`
+on `configs/committed_v3_fashionmnist_ts0.json` (`--policy {pol}`), AFTER = `pool_v3/fashionmnist_ts0_{pol}-repair_softmax.npz`.
+
+```powershell
+. .\set_env.ps1
+python scripts/check_caches_v3.py
+python scripts/run_repairs_v3.py --seeds 0 --datasets fashionmnist --repair-tag repair --tag r3L
+#   -> results_v3/repair/fashionmnist_ts0_predictor_upgrade.json (greedy) and fashionmnist_ts0_predictor_upgrade_random.json (random)
+```
+
+The same two jobs on the laptop instead, if its GPU is not throttled (same flags, same outputs):
+
+```powershell
+python scripts/drive_v3.py --phase backbones --seeds 0 --datasets fashionmnist --checkpoint-tag repair --extra-args="--epochs 60 --width-mult 4 --p-full 0.3" --tag r3L
+python scripts/drive_v3.py --phase rollouts  --seeds 0 --datasets fashionmnist --checkpoint-tag repair --tag r3L
+```

@@ -8,11 +8,21 @@ Pairs (as in round 1, handoff.md section 10 step 5):
   * policy_change      BEFORE = the v3 random cache on the main commit (``--policy random``); AFTER = the v3 greedy
                        cache.  Every dataset whose two v3 caches and main commit exist.
 
+Round 3 (Task L), ``--repair-tag TAG``: ONLY the tagged predictor upgrade runs (``--labels`` is ignored), for
+every dataset in ``--datasets`` whose tagged caches exist (else ``skip (missing prerequisite)``), per policy
+``pol`` in greedy_entropy, random:
+  * predictor_upgrade (greedy) / predictor_upgrade_random (random)
+                       BEFORE = the protocol cache ``pool_v3/{ds}_ts{ts}_{pol}_softmax.npz`` on its main commit
+                       ``configs/committed_v3_{ds}_ts{ts}.json`` (``--policy {pol}``); AFTER = the cache of the tagged
+                       backbone ``pool_v3/{ds}_ts{ts}_{pol}-TAG_softmax.npz`` (run_pool_rollout_v3 --checkpoint-tag).
+An empty ``--repair-tag ""`` is a usage error (exit 2), never a silent fallback to the round-2 job list.
+
 Each run writes ``results_v3/repair/{dsname}_ts{ts}_{label}.json`` (skipped if present unless ``--force``), logs to
 ``results_v3/logs/{tag}_repair_{dsname}_{label}_ts{ts}.log`` and appends one ledger line to ``results_v3/run_log.jsonl``.
 
     python scripts/run_repairs_v3.py --seeds 0 --tag r2 --force
     python scripts/run_repairs_v3.py --seeds 1 2 --dry-run
+    python scripts/run_repairs_v3.py --seeds 0 --datasets fashionmnist --repair-tag repair --tag r3L
 """
 
 from __future__ import annotations
@@ -29,16 +39,24 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "scripts"))
 from commit_v3 import dsname_of  # noqa: E402
-from drive_v3 import PRIORITY  # noqa: E402
+from drive_v3 import PRIORITY, checkpoint_tag_arg, tagged_policy_token  # noqa: E402
 
 UPGRADE = ("mnist", "tabular:MiniBooNE", "tabular:adult")
+TAGGED_LABELS = {"greedy_entropy": "predictor_upgrade", "random": "predictor_upgrade_random"}   # round 3, Task L
 
 
-def jobs(seeds, datasets, labels, rr: Path):
+def jobs(seeds, datasets, labels, rr: Path, repair_tag=None):
     for ts in seeds:
         for ds in datasets:
             dn = dsname_of(ds)
             pool = lambda d, p: rr / d / f"{dn}_ts{ts}_{p}_softmax.npz"  # noqa: E731
+            if repair_tag:                   # round 3: only the tagged predictor upgrade (labels ignored)
+                for pol, label in TAGGED_LABELS.items():
+                    yield ds, ts, label, [
+                        "--before-cache", pool("pool_v3", pol),
+                        "--after-cache", pool("pool_v3", tagged_policy_token(pol, repair_tag)),
+                        "--committed", Path("configs") / f"committed_v3_{dn}_ts{ts}.json", "--policy", pol]
+                continue
             if "predictor_upgrade" in labels and ds in UPGRADE:
                 yield ds, ts, "predictor_upgrade", [
                     "--before-cache", pool("pool_v2", "greedy_entropy"), "--after-cache", pool("pool_v3", "greedy_entropy"),
@@ -56,13 +74,15 @@ def main(argv=None) -> int:
     p.add_argument("--labels", nargs="+", default=["predictor_upgrade", "policy_change"])
     p.add_argument("--tag", default="")
     p.add_argument("--force", action="store_true", help="rerun even if the repair JSON exists")
+    p.add_argument("--repair-tag", type=checkpoint_tag_arg, default=None,
+                   help="round 3: ONLY the predictor upgrade to the caches of checkpoint tag TAG ({policy}-TAG)")
     p.add_argument("--dry-run", action="store_true")
     a = p.parse_args(argv)
     os.chdir(REPO)
     rr = Path(os.environ["RESULTS_ROOT"])
     env = dict(os.environ, PYTHONIOENCODING="utf-8", PYTHONUNBUFFERED="1")
     n_run = n_skip = 0
-    for ds, ts, label, extra in jobs(a.seeds, a.datasets, a.labels, rr):
+    for ds, ts, label, extra in jobs(a.seeds, a.datasets, a.labels, rr, a.repair_tag):
         dn = dsname_of(ds)
         out = REPO / "results_v3" / "repair" / f"{dn}_ts{ts}_{label}.json"
         cell = (f"{a.tag}:" if a.tag else "") + f"repair:{ds}:{label}:ts{ts}"

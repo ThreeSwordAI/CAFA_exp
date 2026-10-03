@@ -1,0 +1,4 @@
+# .venv/Scripts/python.exe scripts/run_pool_rollout_v3.py --dataset fashionmnist --policy greedy_entropy --train-seed 0 --device cuda --max-rows 256 --checkpoint-tag smokerepair 
+# start 2026-10-03 13:08:43
+[rollout_v3] fashionmnist ts0 greedy_entropy: n=256 T=49 full-acq acc=0.2344 -> F:\CAFA_results\pool_v3\fashionmnist_ts0_greedy_entropy-smokerepair_softmax.npz
+# end 2026-10-03 13:14:44 returncode 0 seconds 361

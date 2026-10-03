@@ -7,6 +7,10 @@
 * drive_v3 --dry-run prints the command of a cell whose prerequisite is missing (cluster dry run of seeds 1-2);
 * hpc/dry_run_v3.sh runs the real batch scripts for all 24 + 48 array indices; with empty roots every task
   would run, with the documented flags.
+
+Round 3 (Task L): the two README lines of the FashionMNIST predictor upgrade (backbone task 6 with
+CAFA_EXTRA="--epochs 60 --width-mult 4 --p-full 0.3", rollout lines 12 / 13, both with the driver flag
+--checkpoint-tag repair) dry-run through the same batch scripts (BB_EXTRA / DRY_DRIVER_FLAGS of dry_run_v3.sh).
 """
 
 from __future__ import annotations
@@ -117,3 +121,25 @@ def test_hpc_dry_run_all_array_indices(tmp_path):
     assert len(ro) == 6 and all("--batch-size 32" in l for l in ro)
     assert sum("--policy-amp" in l for l in ro) == 3 and all(("--policy-amp" in l) == ("greedy_entropy" in l) for l in ro)
     assert not [l for l in would if "run_pool_rollout_v3.py" in l and "image:imagenette" not in l and "--batch-size" in l]
+
+
+@pytest.mark.skipif(BASH is None or "system32" in BASH.lower(), reason="no POSIX bash on PATH")
+def test_hpc_dry_run_task_l_lines(tmp_path):
+    # hpc/README_v3.md section 8: the flags reach the driver through CAFA_EXTRA / CAFA_DRIVER_FLAGS of the real scripts
+    env = dict(os.environ, DATA_ROOT=str(tmp_path / "d"), RESULTS_ROOT=str(tmp_path / "r"), PYTHON=sys.executable,
+               BB_INDICES="6", RO_INDICES="12 13", BB_EXTRA="--epochs 60 --width-mult 4 --p-full 0.3",
+               DRY_DRIVER_FLAGS="--checkpoint-tag repair")
+    out = subprocess.run([BASH, str(REPO / "hpc" / "dry_run_v3.sh")], capture_output=True, text=True, env=env,
+                         cwd=REPO, timeout=300).stdout
+    would = [l for l in out.splitlines() if "would run" in l]
+    assert "# array tasks without driver output: 0" in out and len(would) == 3
+    bb, ro = would[0], would[1:]
+    assert "backbones:fashionmnist:na-repair:ts0" in bb
+    assert ("scripts/train_backbone_v3.py --dataset fashionmnist --train-seed 0 --device cuda --checkpoint-tag repair "
+            "--epochs 60 --width-mult 4 --p-full 0.3") in bb
+    assert "checkpoints_v3_repair" in bb and bb.rstrip().endswith("fashionmnist_ts0.pt]")      # the tagged output path
+    for line, pol in zip(ro, ("greedy_entropy", "random")):
+        assert f"rollouts:fashionmnist:{pol}-repair:ts0" in line
+        assert f"--dataset fashionmnist --train-seed 0 --policy {pol} --device cuda --checkpoint-tag repair" in line
+        assert "[prerequisite missing now: checkpoints_v3_repair/fashionmnist_ts0.pt]" in line
+        assert f"fashionmnist_ts0_{pol}-repair_softmax.npz" in line and "--epochs" not in line

@@ -1,0 +1,5 @@
+# .venv/Scripts/python.exe scripts/train_backbone_v3.py --dataset fashionmnist --train-seed 0 --device cuda --epochs 1 --max-train 2000 --width-mult 4 --p-full 0.3 --checkpoint-tag smokerepair 
+# start 2026-10-03 13:07:18
+[train v2] epoch   1/1 loss=2.1002 masked_acc=0.2325
+[train_v3] fashionmnist ts0: masked_acc=0.2325 full_obs_acc=0.2545 -> F:\CAFA_results\checkpoints_v3_smokerepair\fashionmnist_ts0.pt (sha256 6acfd16f7d50)
+# end 2026-10-03 13:08:43 returncode 0 seconds 85

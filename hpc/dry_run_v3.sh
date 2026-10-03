@@ -11,6 +11,10 @@
 #
 #   PYTHON=.venv/Scripts/python.exe DATA_ROOT=... RESULTS_ROOT=... bash hpc/dry_run_v3.sh > results_v3/logs/hpc_dry_run.log
 # BB_INDICES / RO_INDICES (space-separated) restrict the backbone / rollout indices (default: all 0-23 / 0-47).
+# Round 3 (Task L lines of hpc/README_v3.md section 8): DRY_DRIVER_FLAGS is appended to --dry-run in CAFA_DRIVER_FLAGS
+# (e.g. "--checkpoint-tag repair"), and BB_EXTRA, when set, replaces the per-index CAFA_EXTRA of the backbone tasks:
+#   BB_INDICES=6 RO_INDICES="12 13" BB_EXTRA="--epochs 60 --width-mult 4 --p-full 0.3" \
+#     DRY_DRIVER_FLAGS="--checkpoint-tag repair" PYTHON=... DATA_ROOT=... RESULTS_ROOT=... bash hpc/dry_run_v3.sh
 set -uo pipefail
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 : "${DATA_ROOT:?set DATA_ROOT}" "${RESULTS_ROOT:?set RESULTS_ROOT}"
@@ -30,12 +34,14 @@ for f in backbone_v3 rollout_v3; do
   sed 's|^source /etc/profile$|: # dry run: source /etc/profile (cluster login profile) not executed|' "$REPO/hpc/$f.slurm" > "$STUB/$f.slurm"
   [ "$(diff "$REPO/hpc/$f.slurm" "$STUB/$f.slurm" | grep -c '^>')" = 1 ] || { echo "unexpected diff in $f.slurm"; exit 1; }
 done
-export PATH="$STUB:$PATH" CAFA_ENV=dry-run CAFA_DRIVER_FLAGS=--dry-run SLURM_SUBMIT_DIR="$REPO" CAFA_REPO="$REPO"
+export PATH="$STUB:$PATH" CAFA_ENV=dry-run CAFA_DRIVER_FLAGS="--dry-run${DRY_DRIVER_FLAGS:+ $DRY_DRIVER_FLAGS}" \
+  SLURM_SUBMIT_DIR="$REPO" CAFA_REPO="$REPO"
 dirty=$(git -C "$REPO" status --porcelain -- hpc scripts src configs | wc -l)
 echo "# hpc dry run: $(date -Iseconds) repo $REPO commit $(git -C "$REPO" rev-parse --short HEAD) (uncommitted changes under hpc/ scripts/ src/ configs/: $dirty files) python $PY"
+if [ -n "${DRY_DRIVER_FLAGS:-}${BB_EXTRA+x}" ]; then echo "# CAFA_DRIVER_FLAGS='$CAFA_DRIVER_FLAGS' BB_EXTRA='${BB_EXTRA-}'"; fi
 fails=0
 for i in ${BB_INDICES:-$(seq 0 23)}; do
-  case $i in 9|12|17|20) ex="--epochs 60" ;; *) ex="" ;; esac
+  if [ -n "${BB_EXTRA+x}" ]; then ex="$BB_EXTRA"; else case $i in 9|12|17|20) ex="--epochs 60" ;; *) ex="" ;; esac; fi
   echo "### backbone_v3.slurm SLURM_ARRAY_TASK_ID=$i CAFA_EXTRA='$ex'"
   CAFA_EXTRA="$ex" SLURM_ARRAY_TASK_ID=$i bash "$STUB/backbone_v3.slurm" 2>&1 | grep -E "\[drive_v3\]|Error|error" || fails=$((fails+1))
 done

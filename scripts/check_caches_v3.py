@@ -9,6 +9,11 @@ identical ``correct[:, T]`` / ``y`` vectors.  With ``--v2-dir`` it also checks t
 v3 cache covers the same heldout rows in the same order as the v2 cache (``y`` equal,
 same n) -- the E7 prerequisite.  Optionally writes a CSV.
 
+Round 3 (Task L): caches are grouped by (dsname, train_seed, score, checkpoint tag).  A tagged pair
+(``greedy_entropy-TAG`` / ``random-TAG``, one backbone ``checkpoints_v3_TAG``) gets the same greedy = random
+check, printed as ``{ds} ts{ts} [TAG]``, and is never compared with the untagged pair; a tagged cache whose
+meta ``checkpoint_tag`` differs from its file name fails.  The ``--v2-dir`` check uses the untagged greedy cache.
+
     python scripts/check_caches_v3.py
     python scripts/check_caches_v3.py --v2-dir F:/CAFA_results/pool_v2 --csv results_v3/phase1_caches.csv
 """
@@ -27,6 +32,9 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from cafa.pool import load_pool_cache  # noqa: E402
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from drive_v3 import split_policy_token, tagged_policy_token  # noqa: E402
+
 _PAT = re.compile(r"^(?P<ds>.+)_ts(?P<ts>\d+)_(?P<pol>.+)_(?P<score>softmax|margin)\.npz$")
 
 
@@ -41,23 +49,30 @@ def main(argv=None) -> int:
     for f in sorted(pool_dir.glob("*.npz")):
         m = _PAT.match(f.name)
         if m:
-            groups.setdefault((m["ds"], int(m["ts"]), m["score"]), {})[m["pol"]] = f
+            base, tag = split_policy_token(m["pol"])            # round 3: tagged caches form their own group
+            groups.setdefault((m["ds"], int(m["ts"]), m["score"], tag or ""), {})[base] = f
     rows, ok_all = [], True
-    for (ds, ts, score), pols in sorted(groups.items()):
+    for (ds, ts, score, tag), pols in sorted(groups.items()):
         loaded = {pol: load_pool_cache(path) for pol, path in pols.items()}
+        cell = f"{ds} ts{ts}" + (f" [{tag}]" if tag else "")
         accs = {}
         for pol, c in loaded.items():
             T = int(c["correct"].shape[1] - 1)
             acc = float(np.mean(c["correct"][:, T]))
             accs[pol] = acc
             meta = c["meta"]
-            row = {"dsname": ds, "train_seed": ts, "policy": pol, "score": score, "n": int(c["scores"].shape[0]),
+            row = {"dsname": ds, "train_seed": ts, "policy": tagged_policy_token(pol, tag), "score": score,
+                   "n": int(c["scores"].shape[0]),
                    "T": T, "full_acq_acc": acc, "acc_depth0": float(np.mean(c["correct"][:, 0])),
                    "checkpoint_sha256": str(meta.get("checkpoint_sha256", ""))[:12],
                    "heldout_digest": str(meta.get("heldout_digest", ""))[:12], "path": str(pols[pol])}
             rows.append(row)
-            print(f"[check_v3] {ds} ts{ts} {pol:>15s}: n={row['n']} T={T} full-acq acc={acc:.6f} "
+            print(f"[check_v3] {cell} {pol:>15s}: n={row['n']} T={T} full-acq acc={acc:.6f} "
                   f"depth0 acc={row['acc_depth0']:.4f} ckpt={row['checkpoint_sha256']}")
+            if (meta.get("checkpoint_tag") or "") != tag:      # file name and rollout meta must agree
+                ok_all = False
+                print(f"[check_v3] {cell} {pol}: meta checkpoint_tag={meta.get('checkpoint_tag')!r} "
+                      f"does not match the file name -> FAIL")
         if "greedy_entropy" in loaded and "random" in loaded:
             g, r = loaded["greedy_entropy"], loaded["random"]
             same_y = bool(np.array_equal(g["y"], r["y"]))
@@ -65,9 +80,9 @@ def main(argv=None) -> int:
             diff = abs(accs["greedy_entropy"] - accs["random"])
             ok = same_y and diff <= 1e-12
             ok_all &= ok
-            print(f"[check_v3] {ds} ts{ts}: greedy vs random |d full-acq acc|={diff:.3e} same_y={same_y} "
+            print(f"[check_v3] {cell}: greedy vs random |d full-acq acc|={diff:.3e} same_y={same_y} "
                   f"same_correct_T={same_c} -> {'PASS' if ok else 'FAIL'}")
-        if a.v2_dir and "greedy_entropy" in loaded:
+        if a.v2_dir and "greedy_entropy" in loaded and not tag:
             v2p = Path(a.v2_dir) / f"{ds}_ts{ts}_greedy_entropy_{score}.npz"
             if v2p.exists():
                 v2 = load_pool_cache(v2p)

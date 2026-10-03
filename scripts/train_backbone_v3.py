@@ -13,6 +13,16 @@ the full-observation train accuracy).
     python scripts/train_backbone_v3.py --dataset csv:physionet --train-seed 0
     python scripts/train_backbone_v3.py --dataset cube --train-seed 0
     python scripts/train_backbone_v3.py --dataset tabular:MiniBooNE --train-seed 0
+
+Round 3 (Task L, the FashionMNIST predictor-upgrade repair): ``--checkpoint-tag TAG`` writes
+``${RESULTS_ROOT}/checkpoints_v3_TAG/{dsname}_ts{ts}.pt`` instead (the protocol backbone is never
+overwritten) and records ``checkpoint_tag`` in the meta; ``--width-mult`` / ``--p-full`` override the
+config (image_patches only; recorded in ``meta["training"]``, the width also in ``meta["arch"]``).
+``--width-mult`` / ``--p-full`` REQUIRE ``--checkpoint-tag`` (a usage error without it, as is an empty
+tag), so a non-protocol backbone can never land in ``checkpoints_v3/``; ``--epochs`` alone stays the
+protocol retrain override (CUBE / MiniBooNE, ``--epochs 60``).  Without these flags the behaviour is unchanged.
+
+    python scripts/train_backbone_v3.py --dataset fashionmnist --train-seed 0 --device cuda --checkpoint-tag repair --epochs 60 --width-mult 4 --p-full 0.3
 """
 
 from __future__ import annotations
@@ -33,9 +43,10 @@ from cafa.repro_utils import file_sha256  # noqa: E402
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from commit_v3 import dsname_of  # noqa: E402
+from drive_v3 import checkpoint_dir_name, checkpoint_tag_arg  # noqa: E402
 
 
-def main(argv=None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
     p.add_argument("--dataset", required=True)
     p.add_argument("--train-seed", type=int, default=0)
@@ -44,15 +55,52 @@ def main(argv=None) -> int:
     p.add_argument("--config", default="configs/experiment_v3.yaml")
     p.add_argument("--epochs", type=int, default=None, help="override the config epochs (smoke tests)")
     p.add_argument("--max-train", type=int, default=None, help="subsample the train split (smoke tests)")
+    # round 3 (Task L): a second, stronger backbone next to the protocol one
+    p.add_argument("--checkpoint-tag", type=checkpoint_tag_arg, default=None,
+                   help="write checkpoints_v3_TAG/{dsname}_ts{ts}.pt (letters, digits, underscore)")
+    p.add_argument("--width-mult", type=int, default=None,
+                   help="image_patches only, needs --checkpoint-tag: override the config width_mult")
+    p.add_argument("--p-full", type=float, default=None,
+                   help="image_patches only, needs --checkpoint-tag: override the config p_full")
+    return p
+
+
+def training_cfg(cfg: dict, kind: str, epochs=None, width_mult=None, p_full=None) -> dict:
+    """The training cfg of one dataset kind (``training_v3``) with the command-line overrides; recorded as
+    ``meta["training"]``.  ``width_mult`` / ``p_full`` exist for the masked patch CNN only (ValueError otherwise)."""
+    tcfg = dict(cfg.get("training_v3", {}).get("tabular" if kind.startswith(("tabular", "synthetic")) else kind, {}))
+    if epochs is not None:
+        tcfg["epochs"] = int(epochs)
+    for flag, val in (("--width-mult", width_mult), ("--p-full", p_full)):
+        if val is not None and kind != "image_patches":
+            raise ValueError(f"{flag} applies to image_patches datasets (mnist, fashionmnist) only; got kind {kind!r}.")
+    if width_mult is not None:
+        if int(width_mult) < 1:
+            raise ValueError(f"--width-mult must be >= 1; got {width_mult}.")
+        tcfg["width_mult"] = int(width_mult)
+    if p_full is not None:
+        if not 0.0 <= float(p_full) <= 1.0:
+            raise ValueError(f"--p-full must be in [0, 1]; got {p_full}.")
+        tcfg["p_full"] = float(p_full)
+    return tcfg
+
+
+def main(argv=None) -> int:
+    p = build_parser()
     a = p.parse_args(argv)
+    if (a.width_mult is not None or a.p_full is not None) and a.checkpoint_tag is None:
+        # round 3: a non-protocol backbone never lands in checkpoints_v3/ (--epochs alone is the protocol retrain)
+        p.error("--width-mult/--p-full change the protocol backbone; give --checkpoint-tag so it is written to "
+                "checkpoints_v3_<tag>/")
 
     cfg = config.load_experiment(a.config)
-    paths = config.load_paths()
     ts = int(a.train_seed)
     kind = dataset_kind(a.dataset)
-    tcfg = dict(cfg.get("training_v3", {}).get("tabular" if kind.startswith(("tabular", "synthetic")) else kind, {}))
-    if a.epochs is not None:
-        tcfg["epochs"] = int(a.epochs)
+    try:
+        tcfg = training_cfg(cfg, kind, a.epochs, a.width_mult, a.p_full)
+    except ValueError as e:
+        p.error(str(e))
+    paths = config.load_paths()
     config.set_seed(ts)
     torch.manual_seed(ts)
 
@@ -97,7 +145,7 @@ def main(argv=None) -> int:
         full_mask = np.ones((min(5000, X_train.shape[0]), X_train.shape[1]), dtype=np.float32)
         full_acc = float((model.predict_proba(X_train[:5000], full_mask, device=device).argmax(1) == y_train[:5000]).mean())
 
-    out_dir = Path(paths.results_root) / "checkpoints_v3"
+    out_dir = Path(paths.results_root) / checkpoint_dir_name(a.checkpoint_tag)
     out_dir.mkdir(parents=True, exist_ok=True)
     out = out_dir / f"{dsname_of(a.dataset)}_ts{ts}.pt"
     meta = {"pipeline": "v3", "dataset": a.dataset, "dsname": dsname_of(a.dataset), "train_seed": ts,
@@ -105,6 +153,8 @@ def main(argv=None) -> int:
             "final_masked_train_acc": float(hist["epoch_acc"][-1]), "full_obs_train_acc": full_acc,
             "feature_costs_by_scheme": {k: np.asarray(v).tolist() for k, v in pool["feature_costs_by_scheme"].items()},
             "created": datetime.now(timezone.utc).isoformat(), "torch_version": torch.__version__}
+    if a.checkpoint_tag:                      # round 3: untagged checkpoints keep the round-2 meta keys
+        meta["checkpoint_tag"] = a.checkpoint_tag
     torch.save({"state_dict": model.state_dict(), "meta": meta}, out)
     print(f"[train_v3] {a.dataset} ts{ts}: masked_acc={meta['final_masked_train_acc']:.4f} "
           f"full_obs_acc={full_acc:.4f} -> {out} (sha256 {file_sha256(out)[:12]})")

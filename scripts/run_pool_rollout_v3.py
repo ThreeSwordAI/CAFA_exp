@@ -15,6 +15,14 @@ matrix, e.g. an AFABench-trained GDFS / AACO; see :mod:`cafa.external_orders`).
     python scripts/run_pool_rollout_v3.py --dataset image:imagenette --policy greedy_entropy --train-seed 0 --device cuda --batch-size 32
     python scripts/run_pool_rollout_v3.py --dataset csv:physionet --policy random --train-seed 0
     python scripts/run_pool_rollout_v3.py --dataset csv:physionet --orders-file $RESULTS_ROOT/orders_v3/physionet_ts0_gdfs.npz --policy-token afabench_gdfs --train-seed 0
+
+Round 3 (Task L): ``--checkpoint-tag TAG`` rolls out the tagged backbone
+``${RESULTS_ROOT}/checkpoints_v3_TAG/{dsname}_ts{ts}.pt`` and writes
+``pool_v3/{dsname}_ts{ts}_{policy_token}-TAG_{score}.npz``; nothing else changes (same policy, seed,
+rows and order of the heldout split).  The cache meta then also records ``checkpoint_tag`` and
+``checkpoint_dir``; ``policy`` stays the untagged token.
+
+    python scripts/run_pool_rollout_v3.py --dataset fashionmnist --policy greedy_entropy --train-seed 0 --device cuda --checkpoint-tag repair
 """
 
 from __future__ import annotations
@@ -42,6 +50,7 @@ from cafa.tabular import _as_feature_groups, expand_feature_mask, get_tabular_po
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from commit_v3 import dsname_of  # noqa: E402
+from drive_v3 import TAG_SEP, checkpoint_path, checkpoint_tag_arg, pool_cache_path  # noqa: E402
 from run_pool_rollout import _MnistEpsGreedy, rollout_mnist_with_order, rollout_tabular_with_order  # noqa: E402
 
 
@@ -151,7 +160,7 @@ def load_backbone(ckpt_path: Path, kind: str, pool: dict, device):
     return model, meta
 
 
-def main(argv=None) -> int:
+def build_parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser()
     p.add_argument("--dataset", required=True)
     p.add_argument("--policy", default="greedy_entropy", help="greedy_entropy | random | eps_greedy")
@@ -168,6 +177,13 @@ def main(argv=None) -> int:
                         "(scoring passes stay fp32); recorded in the cache meta")
     p.add_argument("--cand-chunk", type=int, default=4, help="RGB greedy only: candidates per forward pass")
     p.add_argument("--config", default="configs/experiment_v3.yaml")
+    p.add_argument("--checkpoint-tag", type=checkpoint_tag_arg, default=None,
+                   help="round 3: roll out checkpoints_v3_TAG/... and write the cache token {policy}-TAG")
+    return p
+
+
+def main(argv=None) -> int:
+    p = build_parser()
     a = p.parse_args(argv)
 
     cfg = config.load_experiment(a.config)
@@ -181,6 +197,8 @@ def main(argv=None) -> int:
         policy_token = a.policy_token or "external"
     else:
         policy_token = eps_greedy_policy_token(a.epsilon) if a.policy == "eps_greedy" else a.policy
+    if TAG_SEP in policy_token:               # round 3: "-" marks a checkpoint tag in a cache name (commit_v3 skips it)
+        p.error(f"policy token {policy_token!r} contains {TAG_SEP!r}, reserved for --checkpoint-tag cache names")
     policy_seed = (10_000 + int(round(1000 * float(a.epsilon)))) if a.policy == "eps_greedy" and a.epsilon is not None else ts
     config.set_seed(policy_seed)
     torch.manual_seed(policy_seed)
@@ -190,7 +208,7 @@ def main(argv=None) -> int:
     X_train = pool["train"][0]
     if a.max_rows:
         X_held, y_held = X_held[: a.max_rows], y_held[: a.max_rows]
-    ckpt = Path(paths.results_root) / "checkpoints_v3" / f"{dsname}_ts{ts}.pt"
+    ckpt = checkpoint_path(paths.results_root, dsname, ts, a.checkpoint_tag)
     if not ckpt.exists():
         raise FileNotFoundError(f"{ckpt} not found; run train_backbone_v3.py first.")
     model, ckpt_meta = load_backbone(ckpt, kind, pool, device)
@@ -240,9 +258,10 @@ def main(argv=None) -> int:
             "batch_size": int(bs), "policy_amp": bool(a.policy_amp), "cand_chunk": int(a.cand_chunk),
             "numpy_version": np.__version__, "torch_version": torch.__version__,
             "created": datetime.now(timezone.utc).isoformat()}
-    out_dir = Path(paths.results_root) / "pool_v3"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out = out_dir / f"{dsname}_ts{ts}_{policy_token}_{score_name}.npz"
+    if a.checkpoint_tag:                      # round 3: untagged caches keep the round-2 meta keys
+        meta.update(checkpoint_tag=a.checkpoint_tag, checkpoint_dir=ckpt.parent.name)
+    out = pool_cache_path(paths.results_root, dsname, ts, policy_token, score_name, a.checkpoint_tag)
+    out.parent.mkdir(parents=True, exist_ok=True)
     poolmod.save_pool_cache(out, scores=scores, correct=correct, order=order, y=np.asarray(y_held),
                             row_pos=np.arange(n), meta=meta)
     print(f"[rollout_v3] {a.dataset} ts{ts} {policy_token}: n={n} T={order.shape[1]} "

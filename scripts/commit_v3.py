@@ -121,12 +121,18 @@ def diff_commits(old: dict, new: dict, path: str = "") -> list:
 
 
 def find_policy_caches(pool_dir: Path, dsname: str, ts: int, score: str) -> dict:
+    """policy token -> cache path.  Round 3: a token containing ``-`` is a tagged cache of another backbone
+    (``{policy}-{checkpoint_tag}``, drive_v3.TAG_SEP; e.g. the Task-L ``greedy_entropy-repair``) and is skipped
+    with a one-line note -- it belongs to the E7 repair, never to a commit of the protocol backbone."""
     out = {}
     for p in sorted(Path(pool_dir).glob(f"{dsname}_ts{ts}_*_{score}.npz")):
         stem = p.name[: -len(".npz")]
         tok = stem[len(f"{dsname}_ts{ts}_"):]
         if tok.endswith(f"_{score}"):
             tok = tok[: -len(f"_{score}")]
+        if "-" in tok:
+            print(f"[commit_v3] note: ignoring tagged cache {p.name} (checkpoint tag {tok.rpartition('-')[2]!r})")
+            continue
         out[tok] = p
     return out
 
