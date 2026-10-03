@@ -22,5 +22,6 @@
   (commit `550f8e2`, the base of branch `aistats-v3`).
 - **Superseded results.** Every round-1 Phase-3 number of the v3 campaign (commits, sweeps, tables, figures,
   E7 repairs, E9 ablations; `handoff.md` before round 2) was computed with the defect present. They are
-  superseded by the round-2 results. The round-1 files are kept: `$RESULTS_ROOT/metrics_v3_round1/`,
+  superseded by the round-2 results. So are the cascade quantities of the round-1 E5 planted validation (Phase 2,
+  `results_v3/round1/planted/`); its audit quantities use exact binomial p-values and are unaffected. The round-1 files are kept: `$RESULTS_ROOT/metrics_v3_round1/`,
   `results_v3/round1/`.

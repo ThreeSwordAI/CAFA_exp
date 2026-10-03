@@ -14,27 +14,18 @@ alpha=0.15, delta=0.1, gamma=0.05, T=30, replicates=1000, M=131
 | A_level | 1000 | -0.050 | 0.000 | 0.002 |  |  |  |  |
 | A_level | 2000 | -0.050 | 0.000 | 0.004 |  |  |  |  |
 | A_level | 4000 | -0.050 | 0.000 | 0.003 |  |  |  |  |
-| B_power_C_route | 250 | 0.030 |  | 0.000 | 0.000 | 0.23 | 12075 | 0.881 |
-| B_power_C_route | 500 | 0.030 |  | 0.000 | 0.001 | 0.45 | 12075 | 0.997 |
+| B_power_C_route | 250 | 0.030 |  | 0.000 | 0.000 | 0.23 | 12075 | 0.866 |
+| B_power_C_route | 500 | 0.030 |  | 0.000 | 0.001 | 0.45 | 12075 | 0.996 |
 | B_power_C_route | 1000 | 0.030 |  | 0.000 | 0.108 | 0.90 | 12075 | 1.000 |
 | B_power_C_route | 2000 | 0.030 |  | 0.000 | 0.743 | 1.80 | 12075 | 1.000 |
 | B_power_C_route | 4000 | 0.030 |  | 0.000 | 0.994 | 3.60 | 12075 | 1.000 |
-| B_power_C_route | 250 | 0.050 |  | 0.000 | 0.009 | 0.63 | 4347 | 0.881 |
-| B_power_C_route | 500 | 0.050 |  | 0.000 | 0.273 | 1.25 | 4347 | 0.998 |
+| B_power_C_route | 250 | 0.050 |  | 0.000 | 0.009 | 0.63 | 4347 | 0.866 |
+| B_power_C_route | 500 | 0.050 |  | 0.000 | 0.273 | 1.25 | 4347 | 0.997 |
 | B_power_C_route | 1000 | 0.050 |  | 0.000 | 0.926 | 2.50 | 4347 | 1.000 |
 | B_power_C_route | 2000 | 0.050 |  | 0.000 | 1.000 | 5.00 | 4347 | 1.000 |
 | B_power_C_route | 4000 | 0.050 |  | 0.000 | 1.000 | 10.00 | 4347 | 1.000 |
-| B_power_C_route | 250 | 0.100 |  | 0.000 | 0.843 | 2.50 | 1087 | 0.881 |
-| B_power_C_route | 500 | 0.100 |  | 0.000 | 0.999 | 5.00 | 1087 | 0.998 |
+| B_power_C_route | 250 | 0.100 |  | 0.000 | 0.843 | 2.50 | 1087 | 0.866 |
+| B_power_C_route | 500 | 0.100 |  | 0.000 | 0.999 | 5.00 | 1087 | 0.997 |
 | B_power_C_route | 1000 | 0.100 |  | 0.000 | 1.000 | 10.00 | 1087 | 1.000 |
 | B_power_C_route | 2000 | 0.100 |  | 0.000 | 1.000 | 20.00 | 1087 | 1.000 |
 | B_power_C_route | 4000 | 0.100 |  | 0.000 | 1.000 | 40.00 | 1087 | 1.000 |
-
-## Study D -- test noise (round 2)
-
-Deepest stratum: TRUE full-information risk alpha - 0.004 = 0.1460 (homogeneous; exact by beta quadrature). Blocks of 20 replicates share one test split; certified violation = exact one-sided binomial p <= 0.05 on the test split. Expected rates: noise-free, from the deployed rules' true risks and the test n_k.
-
-| config | n_k cal | n_k test | blocks x draws | cert rate | true viol (<= delta) | raw test viol | raw by block (min-max) | expected raw | certified viol (<= delta + 0.05) | expected certified | mean max_excess_se | deployed true deepest risk (min-max) |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| D1 | 1250 | 2492 | 10 x 20 | 0.055 | 0.000 | 0.020 | 0.00-0.15 | 0.016 | 0.000 | 0.001 | -0.589 | 0.146-0.146 |
-| D2 | 89984 | 2492 | 10 x 20 | 0.880 | 0.000 | 0.235 | 0.00-0.55 | 0.269 | 0.005 | 0.013 | -0.661 | 0.146-0.149 |

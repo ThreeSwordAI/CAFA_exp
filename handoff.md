@@ -294,7 +294,7 @@ Pool caches (`python scripts/report_v3.py --caches`; `check_caches_v3.py` PASS f
 
 ## 7. Phase 2 results
 
-`python scripts/planted_validation.py --output-dir results_v3/planted --n-replicates 1000` ran on CPU from 13:19:07 to 14:01:32 (exit 0). `results_v3/planted/PLANTED_VALIDATION.md`, verbatim:
+**Round 2 rerun** (HB fix; study D added): `python scripts/planted_validation.py --output-dir results_v3/planted --n-replicates 1000` on CPU, 2026-10-03 02:00:23 → 03:32 local (background PID 31672; log `results_v3/logs/r2_phase2_planted_validation.log`). Studies A–C: 1,000 replicates per row (as round 1); study D: 10 blocks × 20 replicates per configuration. The round-1 files are in `results_v3/round1/planted/`. Against round 1, the fix changes 7 study-A/C fields (cascade certification at margin 0.03 and n_k 1000: 0.747 → 0.750; escalation rate at n_k 250: 0.866 → 0.881 for all three Δ; at n_k 500: 0.996 → 0.997 (Δ 0.03), 0.997 → 0.998 (Δ 0.05, 0.10)). It leaves every false-failure, violation and power value unchanged. `results_v3/planted/PLANTED_VALIDATION.md`, verbatim:
 
 ```
 # Planted validation (E5)
@@ -313,31 +313,43 @@ alpha=0.15, delta=0.1, gamma=0.05, T=30, replicates=1000, M=131
 | A_level | 1000 | -0.050 | 0.000 | 0.002 |  |  |  |  |
 | A_level | 2000 | -0.050 | 0.000 | 0.004 |  |  |  |  |
 | A_level | 4000 | -0.050 | 0.000 | 0.003 |  |  |  |  |
-| B_power_C_route | 250 | 0.030 |  | 0.000 | 0.000 | 0.23 | 12075 | 0.866 |
-| B_power_C_route | 500 | 0.030 |  | 0.000 | 0.001 | 0.45 | 12075 | 0.996 |
+| B_power_C_route | 250 | 0.030 |  | 0.000 | 0.000 | 0.23 | 12075 | 0.881 |
+| B_power_C_route | 500 | 0.030 |  | 0.000 | 0.001 | 0.45 | 12075 | 0.997 |
 | B_power_C_route | 1000 | 0.030 |  | 0.000 | 0.108 | 0.90 | 12075 | 1.000 |
 | B_power_C_route | 2000 | 0.030 |  | 0.000 | 0.743 | 1.80 | 12075 | 1.000 |
 | B_power_C_route | 4000 | 0.030 |  | 0.000 | 0.994 | 3.60 | 12075 | 1.000 |
-| B_power_C_route | 250 | 0.050 |  | 0.000 | 0.009 | 0.63 | 4347 | 0.866 |
-| B_power_C_route | 500 | 0.050 |  | 0.000 | 0.273 | 1.25 | 4347 | 0.997 |
+| B_power_C_route | 250 | 0.050 |  | 0.000 | 0.009 | 0.63 | 4347 | 0.881 |
+| B_power_C_route | 500 | 0.050 |  | 0.000 | 0.273 | 1.25 | 4347 | 0.998 |
 | B_power_C_route | 1000 | 0.050 |  | 0.000 | 0.926 | 2.50 | 4347 | 1.000 |
 | B_power_C_route | 2000 | 0.050 |  | 0.000 | 1.000 | 5.00 | 4347 | 1.000 |
 | B_power_C_route | 4000 | 0.050 |  | 0.000 | 1.000 | 10.00 | 4347 | 1.000 |
-| B_power_C_route | 250 | 0.100 |  | 0.000 | 0.843 | 2.50 | 1087 | 0.866 |
-| B_power_C_route | 500 | 0.100 |  | 0.000 | 0.999 | 5.00 | 1087 | 0.997 |
+| B_power_C_route | 250 | 0.100 |  | 0.000 | 0.843 | 2.50 | 1087 | 0.881 |
+| B_power_C_route | 500 | 0.100 |  | 0.000 | 0.999 | 5.00 | 1087 | 0.998 |
 | B_power_C_route | 1000 | 0.100 |  | 0.000 | 1.000 | 10.00 | 1087 | 1.000 |
 | B_power_C_route | 2000 | 0.100 |  | 0.000 | 1.000 | 20.00 | 1087 | 1.000 |
 | B_power_C_route | 4000 | 0.100 |  | 0.000 | 1.000 | 40.00 | 1087 | 1.000 |
+
+## Study D -- test noise (round 2)
+
+Deepest stratum: TRUE full-information risk alpha - 0.004 = 0.1460 (homogeneous; exact by beta quadrature). Blocks of 20 replicates share one test split; certified violation = exact one-sided binomial p <= 0.05 on the test split. Expected rates: noise-free, from the deployed rules' true risks and the test n_k.
+
+| config | n_k cal | n_k test | blocks x draws | cert rate | true viol (<= delta) | raw test viol | raw by block (min-max) | expected raw | certified viol (<= delta + 0.05) | expected certified | mean max_excess_se | deployed true deepest risk (min-max) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| D1 | 1250 | 2492 | 10 x 20 | 0.055 | 0.000 | 0.020 | 0.00-0.15 | 0.016 | 0.000 | 0.001 | -0.589 | 0.146-0.146 |
+| D2 | 89984 | 2492 | 10 x 20 | 0.880 | 0.000 | 0.235 | 0.00-0.55 | 0.269 | 0.005 | 0.013 | -0.661 | 0.146-0.149 |
 ```
 
-`unsafe|esc` is printed only on the console: `0.000` in all 15 study-B/C rows (`results_v3/logs/phase2_planted_validation.log`).
+`unsafe|esc` is printed only on the console: `0.000` in all 15 study-B/C rows (`results_v3/logs/r2_phase2_planted_validation.log`).
 
-| acceptance check (instruction §4.3) | observed | verdict |
+| acceptance check (instruction §4.3, round 2 §B) | observed | verdict |
 |---|---|---|
 | false-failure ≤ 0.05 everywhere | max 0.000 | pass |
-| cascade violation ≤ 0.10 | max 0.005 (study A, margin −0.03, n_k 4000) | pass |
-| power increasing in n_kΔ² (≈ 0.9 at 2.5, 1.0 at ≥ 10) | monotone within each Δ; 0.926 (Δ 0.05) and 0.843 (Δ 0.10) at 2.5; 1.000 at ≥ 10 | pass ("≈ 0.9" is 0.926 / 0.843) |
-| escalation `unsafe|esc` ≈ 0 | 0.000 everywhere; escalation rate 0.866 (n_k 250) → 1.000 (n_k ≥ 1000) | pass |
+| cascade violation ≤ 0.10 | max 0.005 (study A, margin -0.03, n_k 4000) | pass |
+| power increasing in n_kΔ² (≈ 0.9 at 2.5, 1.0 at ≥ 10) | monotone within each Δ; 0.926 (Δ 0.05) and 0.843 (Δ 0.10) at 2.5; 1.000 at ≥ 10 | pass |
+| escalation `unsafe|esc` ≈ 0 | 0.000 everywhere | pass |
+| study D: true violation ≤ δ | D1 0.000, D2 0.000 | pass |
+| study D: raw test violation (expected > δ) | D1 0.020 (the cascade certifies in 5.5 % of D1 replicates only); D2 0.235 (per block 0.00–0.55; noise-free expectation 0.269) | D2: > δ as expected; D1: ≤ δ |
+| study D: certified violation ≤ δ + 0.05 | D1 0.000, D2 0.005 (expected 0.013) | pass |
 
 ## 8. Phase 3 results (round 2: seed 0, 14 cells, 5 splits × 20 draws; Imagenette pending (Task D, §12.4); seeds 1–2 `TBD-RUN` (§10))
 
@@ -809,7 +821,8 @@ python scripts/drive_v3.py --phase sweep --seeds 1 2
 | max stratum risk / α of marginal CAFA (mean over draws) | 0.722 → 0.715 (PhysioNet) … 2.204 → 2.198 (Diabetes greedy); MNIST 0.954 → 0.952 / 0.920 → 0.949; FashionMNIST 1.567 → 1.533 / 1.509 → 1.438; MiniBooNE 1.708 → 1.654 / 1.183 → 1.143 | `results_v3/tables/TABLE_E2_blindness.csv` |
 | hidden certified violation of marginal CAFA (new) | 1.000 in Diabetes, FashionMNIST, MiniBooNE (both policies) and Adult greedy; Adult random 0.210; CUBE 0.320 / 0.500; MNIST 0.020 / 0.000; PhysioNet 0.000 | same (`hidden_certified_violation_rate`) |
 | deepest-stratum verdicts (split 778) | unchanged: `type_II` Diabetes (both), `unresolved` Adult random, `feasible` the other 11; agreement over splits 5/5 except MiniBooNE greedy 2/5 and Adult random 2/5 | `results_v3/tables/TABLE_E3_audit.csv`, `TABLE_E4_cascade.csv` (`verdict_agreement`) |
-| E5 level / power | round 1: false-failure ≤ 0.000, cascade violation ≤ 0.005, power 0.926 / 0.843 at n_kΔ² = 2.5, 1.000 at ≥ 10; round 2: pending (rerun with the HB fix + study D, §12.3) | `results_v3/round1/planted/PLANTED_VALIDATION.md` |
+| E5 level / power | unchanged by the fix: false-failure ≤ 0.000, cascade violation ≤ 0.005, power 0.926 / 0.843 at n_kΔ² = 2.5, 1.000 at ≥ 10, unsafe given escalation 0.000; escalation rate at n_k 250 0.866 → 0.881 | `results_v3/planted/PLANTED_VALIDATION.md`, `results_v3/logs/r2_phase2_planted_validation.log` |
+| E5 study D (test noise, new) | true deepest-stratum risk α − 0.004, test n_k ≈ 2,492, 10 blocks × 20: D2 (powered calibration) certification 0.880, true violation 0.000, raw 0.235 (blocks 0.00–0.55), certified 0.005; D1 (as specified) certification 0.055, raw 0.020, certified 0.000 | `results_v3/planted/PLANTED_VALIDATION.md` |
 | E7 before → after (MNIST, predictor upgrade) | unchanged: `type_II` → `feasible`; family minimum 0.295 → 0.011; tier-1 share 0.00 → 1.00; violation 0.00 → 0.00 (certified 0.00 → 0.00) | `results_v3/repair/mnist_ts0_predictor_upgrade.json` |
 | Imagenette (all quantities) | TBD-RUN (greedy rollout running, §12.4) | — |
 | seeds 1–2 (all quantities) | TBD-RUN (cluster package `hpc/README_v3.md`, Task F) | — |
@@ -899,7 +912,12 @@ Total: **186 of 5,600** (cell, λ_ref, draw) decisions changed, 5 of them change
 **Study D design** (`scripts/planted_validation.py`, appendix evidence for the metric change). Two strata; the deepest is homogeneous with TRUE full-information risk α − 0.004 = 0.146 (r_easy solved analytically; checked by β-quadrature, which also gives the exact true risk of every deployed rule). Replicates come in blocks of 20 that share one test split with n_k ≈ 2,500 in the deepest stratum; 10 blocks = 200 replicates. Two calibration sizes:
 - **D1 (as specified):** per block a calibration pool with n_k ≈ 2,500 and 20 draws of 50 % of it (the real protocol's sizes). In development runs the cascade never certified at these sizes (0 of 40 and 0 of 6 replicates; console and the small test). Certifying a rule this close to α needs a calibration n_k near 90,000, so D1's rates are expected to be ≈ 0.
 - **D2 (powered calibration):** each replicate draws a fresh calibration sample with n_k ≈ 90,000, so the cascade certifies rules whose true risk sits just below α. This is the regime in which test-split noise alone produces raw "violations".
-Both are reported, with the noise-free expected raw and certified rates computed from the deployed rules' true risks and the test n_k. Results: §12.3 (pending the full planted run).
+Both are reported, with the noise-free expected raw and certified rates computed from the deployed rules' true risks and the test n_k.
+
+**Study D results** (`results_v3/planted/PLANTED_VALIDATION.md`, `planted_validation.csv`; full run §7):
+- **D1 (as specified; calibration n_k ≈ 1,250 per draw, test n_k ≈ 2,492):** the cascade certifies in 11 of 200 replicates (rate 0.055). True violation 0.000; raw test violation 0.020 (per block 0.00–0.15; expected 0.016); certified violation 0.000 (expected 0.001). At the real protocol's sizes, a stratum 0.004 below α is almost never certified, so the raw rate stays below δ here.
+- **D2 (powered calibration; n_k ≈ 89,984 per draw, same test sizes):** certification 0.880; deployed rules' true deepest-stratum risk 0.146–0.149 (all ≤ α); **true violation 0.000** (≤ δ); **raw test violation 0.235** (> δ; per block 0.00–0.55; expected 0.269); **certified violation 0.005** (≤ δ + 0.05; expected 0.013); mean max_excess_se −0.661.
+- So when the deployed rules are valid but within a few thousandths of α, test-split noise alone puts the raw rate above δ (and makes it vary from 0 to 0.55 between blocks that share a test split), while the certified-violation rate stays near its nominal level.
 
 ### 12.3 Task C — Phase 3 rerun with the round-2 code (seed 0, 14 cells)
 
