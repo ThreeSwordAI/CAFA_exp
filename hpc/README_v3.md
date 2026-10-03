@@ -181,10 +181,20 @@ python scripts/make_tables_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --ou
 #   -> TABLE_E4_cascade.md (one row per dataset, policy, seed) and TABLE_E4_cascade_seeds.md (mean ± sd over seeds)
 python scripts/report_violations_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --output results_v3/diagnostics/r3_violations_dep.md
 python scripts/make_figures_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures
+# round 3 (instruction_round3.md Task J): E9 alpha-margin commits and sweeps for seeds 1-2 (MNIST / Imagenette
+# refuse at margin 0.02 with rc 7, as at seed 0 -- run them last or leave them out of --datasets)
+python scripts/drive_v3.py --phase commit --seeds 1 2 --commit-prefix committed_v3_am10 --tag r3am10 "--extra-args=--alpha-margin 0.10 --alpha-grid 0.05"
+python scripts/drive_v3.py --phase sweep  --seeds 1 2 --commit-prefix committed_v3_am10 --metrics-dir-name metrics_v3_alpha_margin10 --tag r3am10
+python scripts/drive_v3.py --phase commit --seeds 1 2 --commit-prefix committed_v3_am02 --tag r3am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01"
+python scripts/drive_v3.py --phase sweep  --seeds 1 2 --commit-prefix committed_v3_am02 --metrics-dir-name metrics_v3_alpha_margin02 --tag r3am02
+foreach ($ts in 1, 2) { python scripts/alpha_margin_summary_v3.py --train-seed $ts --output-dir results_v3/tables_e9_alpha_margin_ts$ts }
+# E10 over all seeds (3 x 320 points; reads every seed present in metrics_v3) and F7
+python scripts/margin_analysis_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --calfrac-dir 0.25 $env:RESULTS_ROOT/metrics_v3_calfrac025 --calfrac-dir 1.0 $env:RESULTS_ROOT/metrics_v3_calfrac100 --output-dir results_v3/tables --figure results_v3/figures/F7_margin.pdf
 ```
 
-The commits use the round-2 code: 5 test splits × 20 draws, the HB fix, `split` block. For the other λ_ref keys,
-the cost scheme and the E9 ablations, use the seed-0 commands of handoff.md §10 with `--seeds 1 2`.
+The commits use the round-2 code: 5 test splits × 20 draws, the HB fix, `split` block; the sweeps use the round-3
+code (the ex-post stratum-safe oracles of Task K are added to every metrics file). For the other λ_ref keys, the
+cost scheme and the remaining E9 ablations, use the seed-0 commands of handoff.md §10 with `--seeds 1 2`.
 
 ## 8. Round 3, Task L — FashionMNIST predictor upgrade (seed 0, checkpoint tag `repair`)
 
