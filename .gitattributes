@@ -1,0 +1,3 @@
+# batch scripts run under bash on the cluster: never check them out with CRLF
+*.slurm text eol=lf
+*.sh text eol=lf

@@ -122,7 +122,7 @@ def main(argv=None) -> int:
             n_skip += 1
             continue
         missing = [str(q) for q in prereqs if not q.exists()]
-        if missing:
+        if missing and not a.dry_run:
             print(f"[drive_v3] skip (missing prerequisite) {cell}: {missing}")
             n_prereq += 1
             continue
@@ -144,7 +144,11 @@ def main(argv=None) -> int:
         cmd += shlex.split(a.extra_args)
         shown = " ".join(["python"] + [shlex.quote(c) for c in cmd[1:]])
         if a.dry_run:
-            print(f"[drive_v3] would run {cell}: {shown}")
+            # round 2: show the command even when a prerequisite is missing now (e.g. the cluster dry run of
+            # seeds 1-2, whose checkpoints do not exist on this machine), and say what is missing
+            note = f"  [prerequisite missing now: {', '.join(Path(m).name for m in missing)}]" if missing else ""
+            print(f"[drive_v3] would run {cell}: {shown}{note}")
+            n_prereq += bool(missing)
             continue
         log_path = logs / ((f"{a.tag}_" if a.tag else "") + f"{a.phase}_{dsname_of(ds)}_{pol or 'na'}_ts{ts}.log")
         print(f"[drive_v3] run {cell}: {shown}  (log {log_path.relative_to(REPO)})", flush=True)

@@ -10,9 +10,11 @@
 #      seeds 1 and 2:     sbatch --array=16-47 hpc/rollout_v3.slurm
 # The backbone checkpoint of the cell must exist (hpc/backbone_v3.slurm). Run the greedy cell of a
 # (dataset, seed) before committing it (commit_v3.py needs the greedy cache). Existing caches are
-# skipped (resume by resubmitting). Imagenette uses the same flags as the local seed-0 cells:
-# --batch-size 16 for both policies (identical batching of the depth-T scoring passes) and
-# --policy-amp for greedy (fp16 autocast of the policy's hypothetical-reveal passes only).
+# skipped (resume by resubmitting). Imagenette: --batch-size ${CAFA_RGB_BATCH:-32} for BOTH policies of a
+# seed (identical batching of the depth-T scoring passes within a seed; the local seed-0 cells used 16 on a
+# 4 GB GPU) and --policy-amp for greedy (fp16 autocast of the policy's hypothetical-reveal passes only).
+# Exact submission lines: hpc/README_v3.md.  CAFA_DRIVER_FLAGS (e.g. --dry-run) is appended to the driver
+# call (hpc/dry_run_v3.sh).
 # Preamble as in hpc/pool_rollout.slurm (FAU NHR conventions; env from hpc/env.local.sh).
 set -euo pipefail
 source /etc/profile
@@ -27,8 +29,8 @@ export PYTHONPATH="$PWD/src:${PYTHONPATH:-}"
 read ds pol ts < <(sed -n "$((SLURM_ARRAY_TASK_ID+1))p" hpc/cells_v3.txt)
 extra=()
 if [ "$ds" = "image:imagenette" ]; then
-  extra=(--batch-size 16)
+  extra=(--batch-size "${CAFA_RGB_BATCH:-32}")
   if [ "$pol" = "greedy_entropy" ]; then extra+=(--policy-amp); fi
 fi
 python scripts/drive_v3.py --phase rollouts --datasets "$ds" --policies "$pol" --seeds "$ts" \
-    --device "${CAFA_DEVICE:-cuda}" --extra-args="${extra[*]:-}"
+    --device "${CAFA_DEVICE:-cuda}" --extra-args="${extra[*]:-}" ${CAFA_DRIVER_FLAGS:-}

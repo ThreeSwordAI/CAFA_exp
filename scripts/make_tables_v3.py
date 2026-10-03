@@ -14,6 +14,9 @@ Round 2 (multi-split metrics; the raw columns are unchanged):
     ``verdict_agreement`` (splits whose deepest-stratum audit verdict equals the primary split's,
     x/n).  Round-1 metrics files lack these fields; the cells are left empty.
   * E2: ``hidden_certified_violation_rate``; E6: ``stratum_certified_violation_rate``.
+  * TABLE_E4_cascade_seeds.md / .csv -- one row per (dataset, policy): mean +- sd over the train seeds present
+    (sample sd, ddof = 1; with a single seed the sd is empty and the row says n = 1).  TABLE_E4_cascade keeps one
+    row per (dataset, policy, seed).
 
     python scripts/make_tables_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --scheme uniform
 """
@@ -23,7 +26,11 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import math
 from pathlib import Path
+
+SEED_COLS = ("tier1", "tier2", "tier3", "none", "certified_deployment", "deployed_cost", "cost_premium",
+             "answered_fraction", "test_stratum_violation", "certified_violation", "max_excess_se")
 
 
 def f(v, d=3):
@@ -43,6 +50,32 @@ def by_split_range(s: dict, key: str):
     bs = s.get("by_split") or {}
     v = [x[key] for x in bs.values() if x.get(key) is not None]
     return f"{min(v):.3f}–{max(v):.3f}" if v else None
+
+
+def seed_summary(e4: list) -> "tuple[list, list]":
+    """(markdown rows, csv rows) of mean +- sd over seeds per (dataset, policy) for SEED_COLS."""
+    groups = {}
+    for r in e4:
+        groups.setdefault((r["dataset"], r["policy"]), []).append(r)
+    md, cs = [], []
+    for (ds, pol), rs in sorted(groups.items()):
+        seeds = sorted(int(r["seed"]) for r in rs)
+        mrow = {"dataset": ds, "policy": pol, "n_seeds": len(rs), "seeds": " ".join(map(str, seeds))}
+        crow = dict(mrow)
+        for c in SEED_COLS:
+            v = [float(r[c]) for r in rs if r.get(c) is not None]
+            if not v:
+                mrow[c], crow[c + "_mean"], crow[c + "_sd"] = "", None, None
+                continue
+            m = sum(v) / len(v)
+            sd = math.sqrt(sum((x - m) ** 2 for x in v) / (len(v) - 1)) if len(v) > 1 else None
+            mrow[c] = f"{m:.3f}" + (f" ± {sd:.3f}" if sd is not None else "")
+            crow[c + "_mean"], crow[c + "_sd"] = m, sd
+            if len(v) < len(rs):
+                mrow[c] += f" (n={len(v)})"
+        md.append(mrow)
+        cs.append(crow)
+    return md, cs
 
 
 def main(argv=None) -> int:
@@ -120,6 +153,15 @@ def main(argv=None) -> int:
     write("TABLE_E3_audit", e3)
     write("TABLE_E2_blindness", e2)
     write("TABLE_E6_baselines", e6)
+    md, cs = seed_summary(e4)
+    if md:
+        write("TABLE_E4_cascade_seeds", cs)
+        keys = list(md[0].keys())
+        lines = ["| " + " | ".join(keys) + " |", "|" + "---|" * len(keys)]
+        lines += ["| " + " | ".join(str(r[k]) for k in keys) + " |" for r in md]
+        (out / "TABLE_E4_cascade_seeds.md").write_text(
+            f"# TABLE_E4_cascade_seeds (lambda_ref key = {a.lambda_ref_key}, scheme = {a.scheme}; mean ± sd over train "
+            f"seeds, sample sd; single-seed rows show the value only)\n\n" + "\n".join(lines) + "\n", encoding="utf-8")
     print(f"wrote tables for {len(e4)} cells to {out}")
     return 0
 

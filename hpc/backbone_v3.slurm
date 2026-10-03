@@ -11,8 +11,10 @@
 # target with the config's 40 epochs and were retrained once with --epochs 60 (see handoff.md section 6.3);
 # pass the same override for their seeds 1-2 by setting CAFA_EXTRA when submitting those tasks
 # (cube = tasks 9, 17; MiniBooNE = tasks 12, 20):
-#   sbatch --array=9,12,17,20 --export=ALL,CAFA_EXTRA="--epochs 60" hpc/backbone_v3.slurm
-#   sbatch --array=8,10,11,13,14,16,18,19,21,22 hpc/backbone_v3.slurm          # other non-Imagenette seeds 1-2
+#   CAFA_EXTRA="--epochs 60" sbatch --export=ALL --array=9,12,17,20 hpc/backbone_v3.slurm
+#   sbatch --array=8,10,11,13,14,15,16,18,19,21,22,23 hpc/backbone_v3.slurm    # the other seeds 1-2 (incl. Imagenette)
+# Exact submission lines: hpc/README_v3.md.  CAFA_DRIVER_FLAGS (e.g. --dry-run) is appended to the driver
+# call (hpc/dry_run_v3.sh).
 set -euo pipefail
 source /etc/profile
 module load python/3.12-conda
@@ -27,4 +29,4 @@ DS=(csv:physionet cube tabular:adult csv:diabetes tabular:MiniBooNE mnist fashio
 ds=${DS[$((SLURM_ARRAY_TASK_ID % 8))]}
 ts=$((SLURM_ARRAY_TASK_ID / 8))
 python scripts/drive_v3.py --phase backbones --datasets "$ds" --seeds "$ts" --device "${CAFA_DEVICE:-cuda}" \
-    --extra-args="${CAFA_EXTRA:-}"
+    --extra-args="${CAFA_EXTRA:-}" ${CAFA_DRIVER_FLAGS:-}

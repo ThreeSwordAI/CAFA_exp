@@ -4,7 +4,7 @@
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at session start)
 - Final content commit: `d66522b` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
 - **Session ended at stop condition 5 of instruction §7** (a defect in the frozen p-value primitive `src/cafa/risk_control.py`; question in §9). One GPU job (Imagenette seed-0 greedy rollout) was left running at session end; see §3.
-- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Tasks A–C and E are done; D (Imagenette, GPU) is running; F in progress.
+- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Tasks A–C, E and F are done; D (Imagenette, GPU) is running.
 
 ## 1. Executive summary
 
@@ -759,53 +759,20 @@ Other deviations / open issues:
 
 ## 10. What remains (exact commands; PowerShell, repo root, after `. .\set_env.ps1`)
 
-> **Round 2 state:** step 0 (option (b)) and steps 4–5 are done for seed 0 with the round-2 code (§12.1–12.3). Imagenette seed 0: §12.4. Seeds 1–2 and Imagenette seeds 1–2: cluster package (Task F). The commands below are the round-1 list and are rewritten at the end of round 2.
-
-0. **Answer §9.** If (a): continue with step 1. If (b) or (c):
-   - Implement and test the change.
-   - Re-commit every cell: `python scripts/commit_v3.py --dataset <ds> --train-seed 0 --force` for the 7 datasets, the E7 BEFORE commits (step 5), and the G8 commit (`--n-buckets 8 --out-path configs/committed_v3_G8_mnist_ts0.json --force`).
-   - Delete `$env:RESULTS_ROOT\metrics_v3*\*.json` and `results_v3\repair\*.json`.
-   - Rerun the seed-0 sweeps (`python scripts/drive_v3.py --phase sweep --seeds 0`), the E7 repairs and E9 sweeps (step 5), and the tables and figures (step 4).
-1. **Imagenette seed 0 (TBD-RUN).**
-   - Wait for the greedy rollout in §3, or re-run it if it died; the driver skips the cell once the cache exists:
-     `python scripts/drive_v3.py --phase rollouts --seeds 0 --datasets image:imagenette --policies greedy_entropy "--extra-args=--batch-size 16 --policy-amp"`
-   - Random rollout:
-     `python scripts/drive_v3.py --phase rollouts --seeds 0 --datasets image:imagenette --policies random "--extra-args=--batch-size 16"`
-   - Verify: `python scripts/check_caches_v3.py`
-   - Commit and sweep: `python scripts/drive_v3.py --phase commit --seeds 0` then `python scripts/drive_v3.py --phase sweep --seeds 0`
-2. **Seeds 1 and 2 (TBD-RUN), locally.** Per seed `<ts>`:
-   - `python scripts/drive_v3.py --phase backbones --seeds <ts> --datasets csv:physionet tabular:adult csv:diabetes mnist fashionmnist image:imagenette`
-   - `python scripts/drive_v3.py --phase backbones --seeds <ts> --datasets cube tabular:MiniBooNE "--extra-args=--epochs 60"`
-   - `python scripts/drive_v3.py --phase rollouts --seeds <ts> --datasets csv:physionet cube tabular:adult csv:diabetes tabular:MiniBooNE mnist fashionmnist`
-   - Imagenette greedy and random with the step-1 flags.
-   - Then `--phase commit` and `--phase sweep` with `--seeds <ts>`.
-   - Estimate per seed from the seed-0 durations in `run_log.jsonl`: ≈ 10 h without Imagenette (backbones 3,723.6 s + retrains 429.4 s; rollouts 32,299.9 s); Imagenette greedy alone ≈ 7 h.
-3. **Imagenette seeds 1–2 on TinyGPU**, recommended because the local projection is close to the 8 h limit. Use `hpc/backbone_v3.slurm` and `hpc/rollout_v3.slurm` with `hpc/cells_v3.txt`; submit from the repo root with `hpc/env.local.sh` set:
-
-```
-sbatch --array=15,23 hpc/backbone_v3.slurm                 # image:imagenette ts1, ts2
-sbatch --array=30,31,46,47 hpc/rollout_v3.slurm            # image:imagenette greedy/random ts1, ts2 (after the backbones)
-# full seeds 1-2 on the cluster instead of locally:
-sbatch --array=8,10,11,13,14,16,18,19,21,22 hpc/backbone_v3.slurm                 # physionet, adult, diabetes, mnist, fashionmnist ts1/ts2 (config epochs)
-sbatch --array=9,12,17,20 --export=ALL,CAFA_EXTRA="--epochs 60" hpc/backbone_v3.slurm   # cube (9, 17) and MiniBooNE (12, 20) ts1/ts2
-sbatch --array=16-47 hpc/rollout_v3.slurm
-# then, on the cluster or locally (torch-free):
-python scripts/drive_v3.py --phase commit --seeds 1 2
-python scripts/drive_v3.py --phase sweep --seeds 1 2
-```
-
-4. **Tables and figures** (rerun whenever cells are added):
-   - `python scripts/make_tables_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --output-dir results_v3/tables --lambda-ref-key dep --scheme uniform`
-   - The same with `--output-dir results_v3/tables_inverse_info --scheme inverse_info`, and with `--lambda-ref-key 0.5|0.7|0.9 --output-dir results_v3/tables_e9_lambda_ref_<key>`.
+1. **Seeds 1–2 for all eight datasets, Imagenette seeds 1–2 included (`TBD-RUN`): TinyGPU.** Everything is in **`hpc/README_v3.md`**: what to push, the data to copy or re-download, the environment and `hpc/env.local.sh`, the exact `sbatch` lines, the expected wall times, the files to bring back and the local round-3 commands (commit, sweep, repairs, `TABLE_E4_cascade_seeds.md`). The dry run of every array index is `results_v3/logs/hpc_dry_run.log`.
+2. **Tables and figures** (rerun whenever cells are added; seed 0 as in round 2):
+   - `python scripts/make_tables_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --output-dir results_v3/tables --lambda-ref-key dep --scheme uniform` (also writes `TABLE_E4_cascade_seeds.md`)
+   - the same with `--output-dir results_v3/tables_inverse_info --scheme inverse_info`, and with `--lambda-ref-key 0.5|0.7|0.9 --output-dir results_v3/tables_e9_lambda_ref_<key>`
    - `python scripts/make_figures_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures`
-5. **E7 / E9** (seed 0 as run; for further seeds replace `ts0` / `--train-seed 0`). `<ds>` is the dataset token, `<dsn>` its file name (`tabular:adult` → `tabular-adult`):
-   - Before-commit: `python scripts/commit_v3.py --dataset <ds> --train-seed 0 --pool-dir F:/CAFA_results/pool_v2 --out-path configs/committed_v3before_<dsn>_ts0.json` (mnist, tabular:MiniBooNE, tabular:adult)
-   - Predictor upgrade: `python scripts/repair_experiment.py --dataset <ds> --train-seed 0 --before-cache F:/CAFA_results/pool_v2/<dsn>_ts0_greedy_entropy_softmax.npz --after-cache F:/CAFA_results/pool_v3/<dsn>_ts0_greedy_entropy_softmax.npz --committed configs/committed_v3before_<dsn>_ts0.json --label predictor_upgrade`
-   - Policy change: `python scripts/repair_experiment.py --dataset <ds> --train-seed 0 --before-cache F:/CAFA_results/pool_v3/<dsn>_ts0_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/<dsn>_ts0_greedy_entropy_softmax.npz --committed configs/committed_v3_<dsn>_ts0.json --policy random --label policy_change`
-   - E9: the two `3e` commands in §3.
-   - Diagnostics for new over-δ or `none > 0.05` cells: `python scripts/diagnose_violation_v3.py --dataset <ds> --policy <pol> --train-seed 0 --lambda-ref-key dep --output results_v3/diagnostics/<dsn>_ts0_<pol>_dep.json` and `python scripts/diagnose_refusal_v3.py --dataset <ds> --policy <pol> --train-seed 0 --lambda-ref-key <key> --output results_v3/diagnostics/<dsn>_ts0_<pol>_lr<key>_refusal.json`.
-6. **Optional Phase 1d (AFABench GDFS / AACO):** not run (no AFABench `uv` environment here). Fix the `heldout_digest` replay check first (§9), then follow `PHASES_V3.md` 1d with `--out $env:RESULTS_ROOT\orders_v3\physionet_ts0_heldout.npz`.
-7. **Resume after any interruption:** rerun the same `drive_v3.py` command. It skips cells whose output exists and stops at the first non-zero return code (see `results_v3/run_log.jsonl` and `results_v3/logs/`).
+   - `python scripts/report_violations_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --output results_v3/diagnostics/r2_violations_dep.md`
+3. **E7 / E9 for further seeds** (`<ts>` = 1 or 2; round-2 code):
+   - E7: `python scripts/commit_v3.py --dataset <ds> --train-seed <ts> --pool-dir F:/CAFA_results/pool_v2 --out-path configs/committed_v3before_<dsn>_ts<ts>.json` for mnist, tabular:MiniBooNE, tabular:adult (needs the v2 ts1/ts2 caches), then `python scripts/run_repairs_v3.py --seeds <ts> --tag r3`
+   - E9 δ split: `python scripts/drive_v3.py --phase sweep --seeds <ts> --datasets csv:physionet --policies greedy_entropy --metrics-dir-name metrics_v3_dw --tag r3dw "--extra-args=--delta-weights 0.34,0.33,0.33"`
+   - E9 G = 8: `python scripts/drive_v3.py --phase commit --seeds <ts> --datasets mnist --commit-prefix committed_v3_G8 --tag r3G8 "--extra-args=--n-buckets 8"`, then `--phase sweep` with the same `--commit-prefix` and `--metrics-dir-name metrics_v3_G8`
+   - E9 α rule: `python scripts/drive_v3.py --phase commit --seeds <ts> --commit-prefix committed_v3_am02 --tag r3am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01"` (MNIST stops with rc 7, §8.7; run it last or leave it out), then `--phase sweep --seeds <ts> --commit-prefix committed_v3_am02 --metrics-dir-name metrics_v3_alpha_margin02 --tag r3am02`
+   - Diagnostics for a cell that fails the certified criterion: `python scripts/diagnose_violation_v3.py --dataset <ds> --policy <pol> --train-seed <ts> --lambda-ref-key dep --output results_v3/diagnostics/<dsn>_ts<ts>_<pol>_dep.json` (multi-split).
+4. **Optional Phase 1d (AFABench GDFS / AACO): `TBD-RUN`** (no AFABench `uv` environment here). The two latent items of §9 that affected it are fixed in round 2 (§12.6): `export_heldout_v3.py` now writes to `$RESULTS_ROOT\orders_v3\{dsname}_ts{ts}_heldout.npz` by default, and `run_pool_rollout_v3.py --orders-file` checks the heldout digest. Then follow `PHASES_V3.md` 1d: `python scripts/export_heldout_v3.py --dataset csv:physionet --train-seed 0`, run `scripts/afabench_export_orders.py` in the AFABench environment, and replay with `python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 0 --orders-file $env:RESULTS_ROOT/orders_v3/physionet_ts0_gdfs.npz --policy-token afabench_gdfs`. The column-index vs feature-group issue of `afabench_export_orders.py` for one-hot datasets (Adult, §9) remains open.
+5. **Resume after any interruption:** rerun the same `drive_v3.py` / `run_repairs_v3.py` command. Each skips cells whose output exists and stops at the first non-zero return code (`results_v3/run_log.jsonl`, `results_v3/logs/`).
 
 ## 11. Paper-facing numbers (seed 0, λ_ref `dep`, uniform costs; round 2 = HB fix + 5 splits × 20 draws; `old → new` = round 1 → round 2; `TBD-RUN` where not available)
 
@@ -936,4 +903,14 @@ Both are reported, with the noise-free expected raw and certified rates computed
 - **Runs:** `drive_v3.py --phase commit --seeds 0 --tag r2am02 --commit-prefix committed_v3_am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01"` (6 datasets, rc 0; MNIST rc 7). Sweeps: `drive_v3.py --phase sweep --seeds 0 --tag r2am02 --commit-prefix committed_v3_am02 --metrics-dir-name metrics_v3_alpha_margin02` (12 cells, 4 parallel groups, rc 0). Tables: `make_tables_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3_alpha_margin02 --output-dir results_v3/tables_e9_alpha_margin02`.
 - **Result:** §8.7 (PhysioNet and Adult first).
 - **Imagenette:** its am02 commit follows Task D (§12.4).
+
+### 12.6 Task F — cluster package for seeds 1–2 (prepared, not executed)
+
+- **Latent fixes** (§9): `scripts/run_pool_rollout_v3.py --orders-file` passes `heldout_digest=split_digest(pool["heldout_index"])` to `load_orders`, so an orders file exported from another split is refused. `scripts/export_heldout_v3.py --out` now defaults to `$RESULTS_ROOT\orders_v3\{dsname}_ts{ts}_heldout.npz`, and `orders/` is git-ignored. Tests: `tests/test_hpc_v3.py` (a wrong-digest orders file raises, the right one reaches the replay; the export default path).
+- **`hpc/README_v3.md`** (new): push (`git push -u origin aistats-v3`, plus the tag); data to copy (sizes) or re-download; environment (modules, conda env, torch/torchvision versions, `hpc/env.local.sh` as the cluster's `set_env`); pre-flight (tests, dry run); the `sbatch` lines (backbones: tasks 8,10,11,13,14,15,16,18,19,21,22,23 with config epochs and 9,12,17,20 with `CAFA_EXTRA="--epochs 60"`; rollouts: 16–29,32–45, and Imagenette 30,31,46,47 with `--batch-size 32`, greedy also `--policy-amp`, `--time=12:00:00`; `afterok` dependencies); expected wall times (laptop ledger ÷ the measured throttling factor 1.418, labelled as a full-clock laptop estimate, not a TinyGPU measurement); the files to bring back with `rsync`/`scp` lines; the round-3 local commands.
+- **Slurm scripts:** `hpc/rollout_v3.slurm` runs Imagenette at `--batch-size ${CAFA_RGB_BATCH:-32}` (both policies of a seed) with `--policy-amp` for greedy; both scripts append `${CAFA_DRIVER_FLAGS:-}` to the driver call. `.gitattributes` forces LF for `*.slurm` / `*.sh`.
+- **Driver:** `drive_v3.py --dry-run` now prints the command of a cell whose prerequisite is missing on this machine (marked `[prerequisite missing now: …]`). Before, it printed only `skip (missing prerequisite)`, which hid every seed-1/2 command.
+- **Dry run** (`hpc/dry_run_v3.sh`): executes the real batch scripts for all 24 backbone and 48 rollout array indices under bash, with `SLURM_ARRAY_TASK_ID` set and `CAFA_DRIVER_FLAGS=--dry-run`. `module` and `source activate` are stubbed; `source /etc/profile` is the only line not executed (this workstation's profile is not `set -u` clean). Output: `results_v3/logs/hpc_dry_run.log` (every array task produces a driver line). Covered by `tests/test_hpc_v3.py::test_hpc_dry_run_all_array_indices` (representative indices with empty roots: all would run, `--epochs 60` exactly on 9/12/17/20, Imagenette `--batch-size 32`, `--policy-amp` exactly on greedy).
+- **Seed aggregation:** `make_tables_v3.py` also writes `TABLE_E4_cascade_seeds.{md,csv}`, mean ± sample sd over seeds per (dataset, policy), tested on seed 0 alone (`n_seeds` = 1, value only) and on synthetic 3-seed rows.
+- **Tests:** whole suite `110 passed in 354.09s (0:05:54)` (`results_v3/logs/r2_taskF_pytest_full_suite.log`).
 

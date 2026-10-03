@@ -26,3 +26,5 @@ figures_v2/
 CAFA.zip
 # v3 session: local env script (machine-specific roots)
 set_env.ps1
+# external-policy exports hold feature arrays: keep them under $RESULTS_ROOT/orders_v3, never in the repo
+orders/

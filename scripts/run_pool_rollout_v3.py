@@ -14,7 +14,7 @@ matrix, e.g. an AFABench-trained GDFS / AACO; see :mod:`cafa.external_orders`).
     python scripts/run_pool_rollout_v3.py --dataset fashionmnist --policy greedy_entropy --train-seed 0 --device cuda
     python scripts/run_pool_rollout_v3.py --dataset image:imagenette --policy greedy_entropy --train-seed 0 --device cuda --batch-size 32
     python scripts/run_pool_rollout_v3.py --dataset csv:physionet --policy random --train-seed 0
-    python scripts/run_pool_rollout_v3.py --dataset csv:physionet --orders-file orders/physionet_ts0_gdfs.npz --policy-token afabench_gdfs --train-seed 0
+    python scripts/run_pool_rollout_v3.py --dataset csv:physionet --orders-file $RESULTS_ROOT/orders_v3/physionet_ts0_gdfs.npz --policy-token afabench_gdfs --train-seed 0
 """
 
 from __future__ import annotations
@@ -198,8 +198,9 @@ def main(argv=None) -> int:
 
     if a.orders_file:
         T_expected = int(pool.get("n_patches", pool.get("n_features", 0)))
+        # round 2 (handoff.md section 9): check the orders file was exported from THIS heldout split
         od = load_orders(a.orders_file, n_expected=None if a.max_rows else X_held.shape[0], T_expected=T_expected,
-                         heldout_digest=None)
+                         heldout_digest=split_digest(pool["heldout_index"]))
         orders = od["orders"][: X_held.shape[0]]
         scores, correct, order = rollout_replay(model, orders, score_name, kind, X_held, y_held,
                                                 pool.get("feature_groups"), device, bs)
