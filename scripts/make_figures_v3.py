@@ -2,7 +2,15 @@
 """v3 -- paper figures from metrics_v3 / planted / repair outputs (matplotlib, torch-free).
 
   F2_blindness.pdf   marginal certificate vs. max stratum risk / alpha (per cell)
-  F3_cascade.pdf     tier shares (stacked) + deployed cost vs. marginal / Mondrian oracle / full
+  F3_cascade.pdf     tier shares (stacked) + deployed cost vs. marginal / Mondrian oracle / full; since round 3
+                     the cost panel is in units of cost / T (T from the metrics meta; full acquisition = 1 under
+                     uniform costs, dashed line) and the E2 worst-stratum test risk / alpha of marginal CAFA
+                     (summary ``marginal_max_stratum_over_alpha_mean``) is printed under each cell's bar (red > 1)
+                     so the cost and the blindness are read together.  One bar per cell while every (dataset,
+                     policy) has a single train seed among the loaded cells; once any has several, ONE bar per
+                     (dataset, policy): tier shares, cost / T (with a min-max error bar over the seeds), the
+                     marginal / Mondrian / full-acquisition marks and the E2 number are means over its seeds and
+                     the tick label says "(n seeds)" (:func:`f3_rows`)
   F4_repair.pdf      before/after deepest-stratum family minimum and tier-1 share (repair JSONs)
   F5_planted.pdf     planted power vs n_k Delta^2, false-failure rate, cascade violation rate
   F6_violations.pdf  per cell: raw test stratum-violation rate and certified-violation rate side by side
@@ -26,6 +34,8 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np  # noqa: E402
+
+SHORT_POLICY = {"greedy_entropy": "greedy"}     # F3 tick labels only
 
 
 def load_cells(metrics_dir: Path, key: str, scheme: str):
@@ -62,34 +72,108 @@ def fig_blindness(cells, out: Path):
     plt.close(fig)
 
 
+def _f3_values(m: dict, s: dict) -> dict:
+    """One cell's F3 values: tier shares, costs / T (a zero cost is a real value: only a missing one is NaN), E2."""
+    T = float(m["T"])
+    num = lambda v: np.nan if v is None else float(v) / T  # noqa: E731
+    bl = s["baselines"]
+    return {"tiers": {t: float(s["tier_share"][t]) for t in ("1", "2", "3", "0")},
+            "dep": float(s["cascade_mean_test_cost"]) / T,
+            "marg": num(s["marginal_mean_test_cost"]),
+            "mon": num(bl.get("mondrian_oracle", {}).get("mean_test_cost")),
+            "full": num(bl.get("full_acquisition", {}).get("mean_test_cost")),
+            "e2": s.get("marginal_max_stratum_over_alpha_mean")}
+
+
+def f3_rows(cells) -> list:
+    """The bars of F3, one dict per bar: ``name`` (tick label), ``tiers`` (tier shares by "1"/"2"/"3"/"0"), ``dep``
+    (cascade cost / T) with ``dep_lo`` / ``dep_hi``, ``marg`` / ``mon`` / ``full`` (marginal CAFA, Mondrian oracle,
+    full acquisition; cost / T, NaN when missing), ``e2`` (``marginal_max_stratum_over_alpha_mean``, None when
+    missing) and ``n_seeds``.
+
+    While every (dataset, policy) has a single train seed among ``cells``: one row per cell, in cell order, named
+    "<dsname> <policy> s<seed>" (``dep_lo`` = ``dep_hi`` = ``dep``).  Once any (dataset, policy) has several: ONE row
+    per (dataset, policy), in order of first appearance, named "<dsname> <policy> (n seeds)"; tier shares, costs / T
+    and E2 are means over its seeds (missing values skipped), ``dep_lo`` / ``dep_hi`` the min / max of the cascade
+    cost / T over the seeds.
+    """
+    groups = {}
+    for m, *_, s in cells:
+        groups.setdefault((m["dsname"], m["policy"]), []).append((m, s))
+    short = lambda pol: SHORT_POLICY.get(pol, pol)  # noqa: E731
+    if all(len({m["train_seed"] for m, _ in g}) == 1 for g in groups.values()):
+        rows = []
+        for m, *_, s in cells:
+            v = _f3_values(m, s)
+            v.update(name=f"{m['dsname']} {short(m['policy'])} s{m['train_seed']}", dep_lo=v["dep"], dep_hi=v["dep"],
+                     n_seeds=1)
+            rows.append(v)
+        return rows
+
+    def mean(xs):
+        xs = [x for x in xs if x is not None and np.isfinite(x)]
+        return float(np.mean(xs)) if xs else np.nan
+
+    rows = []
+    for (ds, pol), g in groups.items():
+        vs = [_f3_values(m, s) for m, s in g]
+        n = len({m["train_seed"] for m, _ in g})
+        e2 = [v["e2"] for v in vs if v["e2"] is not None]
+        rows.append({"name": f"{ds} {short(pol)} ({n} seed{'s' if n > 1 else ''})",
+                     "tiers": {t: mean([v["tiers"][t] for v in vs]) for t in ("1", "2", "3", "0")},
+                     "dep": mean([v["dep"] for v in vs]), "dep_lo": min(v["dep"] for v in vs),
+                     "dep_hi": max(v["dep"] for v in vs),
+                     **{k: mean([v[k] for v in vs]) for k in ("marg", "mon", "full")},
+                     "e2": float(np.mean(e2)) if e2 else None, "n_seeds": n})
+    return rows
+
+
 def fig_cascade(cells, out: Path):
     if not cells:
         return
-    fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.2, 3.4))
-    names = [f"{m['dsname']}\n{m['policy']} s{m['train_seed']}" for m, *_ in cells]
-    x = np.arange(len(cells))
-    bottom = np.zeros(len(cells))
+    rows = f3_rows(cells)
+    multi = any(r["n_seeds"] > 1 for r in rows)    # seed means (one bar per (dataset, policy))
+    fig, (a1, a2) = plt.subplots(1, 2, figsize=(7.2, 4.0))
+    # round 3: one-line vertical tick labels (the two-line 60-degree labels of 16 cells overlapped)
+    names = [r["name"] for r in rows]
+    x = np.arange(len(rows))
+    bottom = np.zeros(len(rows))
     for t, lab in (("1", "tier 1: certified stop"), ("2", "tier 2: certified budget"),
                    ("3", "tier 3: certified escalation"), ("0", "no certificate")):
-        v = np.array([s["tier_share"][t] for *_, s in cells])
+        v = np.array([r["tiers"][t] for r in rows])
         a1.bar(x, v, bottom=bottom, label=lab)
         bottom += v
     a1.set_xticks(x)
-    a1.set_xticklabels(names, fontsize=6, rotation=60, ha="right")
-    a1.set_ylabel("share of calibration draws")
-    a1.legend(fontsize=6, loc="lower left")
-    full = np.array([s["baselines"].get("full_acquisition", {}).get("mean_test_cost") or np.nan for *_, s in cells])
-    dep = np.array([s["cascade_mean_test_cost"] for *_, s in cells]) / full
-    marg = np.array([s["marginal_mean_test_cost"] or np.nan for *_, s in cells]) / full
-    mon = np.array([s["baselines"].get("mondrian_oracle", {}).get("mean_test_cost") or np.nan for *_, s in cells]) / full
-    a2.bar(x, dep, 0.5, label="deployed rule (cascade)")
-    a2.plot(x, marg, "k_", ms=14, mew=2, label="marginal CAFA")
-    a2.plot(x, mon, "r_", ms=14, mew=2, label="Mondrian oracle (non-deployable)")
-    a2.axhline(1.0, color="gray", lw=0.8, ls="--")
+    a1.set_xticklabels(names, fontsize=5.5, rotation=90)
+    a1.set_ylabel("share of calibration draws" + ("\n(mean over seeds)" if multi else ""))
+    a1.legend(fontsize=6, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False)
+    # round 3: cost / T (a zero cost is a real value: only a missing one is NaN)
+    dep, lo, hi = (np.array([r[k] for r in rows]) for k in ("dep", "dep_lo", "dep_hi"))
+    marg, mon, full = (np.array([r[k] for r in rows]) for k in ("marg", "mon", "full"))
+    a2.bar(x, dep, 0.5, label="deployed rule (cascade)" + (", mean over seeds" if multi else ""))
+    if multi:
+        i = np.array([r["n_seeds"] > 1 for r in rows])
+        a2.errorbar(x[i], dep[i], yerr=np.vstack([dep[i] - lo[i], hi[i] - dep[i]]), fmt="none", ecolor="k", lw=0.8,
+                    capsize=2, label="cascade, min-max over seeds")
+    a2.plot(x, marg, "k_", ms=10, mew=2, label="marginal CAFA")
+    a2.plot(x, mon, "r_", ms=10, mew=2, label="Mondrian oracle (non-deployable)")
+    a2.axhline(1.0, color="gray", lw=0.8, ls="--", label="T (full acquisition, uniform costs)")
+    if np.any(np.abs(full[np.isfinite(full)] - 1.0) > 1e-9):  # non-uniform cost scheme: full acquisition != T
+        a2.plot(x, full, "_", color="gray", ms=10, mew=2, label="full acquisition")
+    # E2 under each bar: worst-stratum test risk / alpha of marginal CAFA (x in data, y in axes units: just below
+    # the axis, vertical like the tick labels, which are padded down to leave the row free)
+    for xi, r in zip(x, rows):
+        v = r["e2"]
+        a2.text(xi, -0.015, "-" if v is None else f"{v:.2f}", transform=a2.get_xaxis_transform(), ha="center",
+                va="top", rotation=90, fontsize=5, color="tab:red" if v is not None and v > 1.0 else "0.2")
     a2.set_xticks(x)
-    a2.set_xticklabels(names, fontsize=6, rotation=60, ha="right")
-    a2.set_ylabel("cost / full acquisition")
-    a2.legend(fontsize=6)
+    a2.tick_params(axis="x", length=0, pad=17)
+    a2.set_xticklabels(names, fontsize=5.5, rotation=90)
+    a2.set_ylabel("cost / T")
+    a2.set_xlabel("number under each bar: worst-stratum test risk / alpha of marginal CAFA "
+                  + ("\n(E2, mean over seeds; red > 1)" if multi else "(E2; red > 1)"), fontsize=5.5)
+    a2.set_ylim(0, max(1.0, float(np.nanmax(np.concatenate([dep, hi, marg, mon, full])))) * 1.05)
+    a2.legend(fontsize=6, loc="lower center", bbox_to_anchor=(0.5, 1.0), ncol=2, frameon=False)
     fig.tight_layout()
     fig.savefig(out / "F3_cascade.pdf")
     plt.close(fig)
