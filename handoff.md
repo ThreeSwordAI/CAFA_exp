@@ -4,7 +4,7 @@
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at session start)
 - Final content commit: `d66522b` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
 - **Session ended at stop condition 5 of instruction §7** (a defect in the frozen p-value primitive `src/cafa/risk_control.py`; question in §9). One GPU job (Imagenette seed-0 greedy rollout) was left running at session end; see §3.
-- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Tasks A–C are done; D (Imagenette, GPU) is running, E–F in progress.
+- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Tasks A–C and E are done; D (Imagenette, GPU) is running; F in progress.
 
 ## 1. Executive summary
 
@@ -653,7 +653,24 @@ E7 against the plan's expectation (`dep`): **MNIST** predictor upgrade `type_II`
 Other ablations:
 - **δ split:** PhysioNet greedy with `--delta-weights 0.34,0.33,0.33` (`results_v3/tables_e9_delta_weights/`, `$RESULTS_ROOT\metrics_v3_dw\`; ledger `r2dw:sweep:*`): at `dep` tier 1 = 1.00, certified deployment 1.00, raw violation 0.000, certified violation 0.000 — the same as the committed split (§8.1). The same holds at every λ_ref key: tier shares (1/2/3/none) 1.00/0.00/0.00/0.00 at 0.5 and 0.7, 0.01/0.00/0.99/0.00 at 0.9, for both splits of δ (`results_v3/logs/r2_taskC_facts.log`).
 - **Number of strata:** MNIST greedy with `--n-buckets 8` (`configs/committed_v3_G8_mnist_ts0.json`, re-committed in round 2; `results_v3/tables_e9_G8/`; ledger `r2G8:*`): G = 4 after the G-rule (vs 3), tier 1 = 1.00, deployed cost 3.791 (premium 1.084, vs 1.046 at G = 3 (§8.1)), raw violation 0.000, certified violation 0.000.
-- **α rule (margin 0.02, grid 0.01):** Task E, §12.5 (pending).
+- **α rule (margin 0.02, grid 0.01)** (Task E; `commit_v3.py --alpha-margin 0.02 --alpha-grid 0.01 --out-path configs/committed_v3_am02_{dsname}_ts0.json`, sweeps `$RESULTS_ROOT\metrics_v3_alpha_margin02\`, tables `results_v3/tables_e9_alpha_margin02/`, comparison `results_v3/diagnostics/r2_e9_alpha_margin02_vs_default.md`). **PhysioNet:** α 0.20 → 0.15; λ_ref `dep` stays 0 and G stays 1 (the target is still degenerate); the tier pattern changes from tier 1 (1.00) to 0.58 tier 1 / 0.42 tier 3 for both policies. **Adult:** α 0.25 → 0.18; greedy λ_ref `dep` 0.758 → 0.808 with G 2, tier 1 → tier 3 (1.00) and the deepest stratum `feasible` → `type_II`; random λ_ref 0.758 and G 3 unchanged, stays tier 3, `unresolved` → `type_II`. **Other cells:** tier pattern changes in CUBE (both: 1 → 3), MiniBooNE random and FashionMNIST (both: 1+3 → 3) and Diabetes random (3 → none: certified deployment 0.02); unchanged in Diabetes greedy and MiniBooNE greedy (3). The deepest stratum becomes `type_II` in every committed cell except PhysioNet. **MNIST:** not committed. The rule gives α = 0.03 ≤ the design margin 0.05, so `n_min(α, level, margin)` is undefined and `commit_v3.py` stops with rc 7 (`results_v3/logs/r2am02_commit_mnist_na_ts0.log`). In all 12 committed cells, certified violation = 0.000, mean max_excess_se < 0 and raw violation ≤ 0.010 (`results_v3/diagnostics/r2_violations_alpha_margin02_dep.md`).
+
+| dataset | policy | α default → am02 | λ_ref dep default → am02 | G default → am02 | tiers 1/2/3/none default | tiers 1/2/3/none am02 | tier pattern changed | cert. deployment am02 | raw viol am02 | certified viol am02 | max_excess_se am02 | deepest verdict default → am02 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| csv-physionet | greedy_entropy | 0.2 → 0.15 | 0.0000 → 0.0000 | 1 → 1 | 1.00/0.00/0.00/0.00 | 0.58/0.00/0.42/0.00 | yes (1 → 1+3) | 1.00 | 0.010 | 0.000 | -3.39 | feasible → feasible |
+| csv-physionet | random | 0.2 → 0.15 | 0.0000 → 0.0000 | 1 → 1 | 1.00/0.00/0.00/0.00 | 0.58/0.00/0.42/0.00 | yes (1 → 1+3) | 1.00 | 0.010 | 0.000 | -3.18 | feasible → feasible |
+| tabular-adult | greedy_entropy | 0.25 → 0.18 | 0.7576 → 0.8081 | 2 → 2 | 1.00/0.00/0.00/0.00 | 0.00/0.00/1.00/0.00 | yes (1 → 3) | 1.00 | 0.000 | 0.000 | -2.97 | feasible → type_II |
+| tabular-adult | random | 0.25 → 0.18 | 0.7576 → 0.7576 | 3 → 3 | 0.00/0.00/1.00/0.00 | 0.00/0.00/1.00/0.00 | no (3) | 1.00 | 0.000 | 0.000 | -2.89 | unresolved → type_II |
+| csv-diabetes | greedy_entropy | 0.15 → 0.12 | 0.7980 → 0.7980 | 2 → 2 | 0.00/0.00/1.00/0.00 | 0.00/0.00/1.00/0.00 | no (3) | 1.00 | 0.000 | 0.000 | -4.24 | type_II → type_II |
+| csv-diabetes | random | 0.15 → 0.12 | 0.8283 → 0.9091 | 4 → 5 | 0.00/0.00/1.00/0.00 | 0.00/0.00/0.02/0.98 | yes (3 → none) | 0.02 | 0.000 | 0.000 | -0.80 | type_II → type_II |
+| cube | greedy_entropy | 0.15 → 0.08 | 0.7980 → 0.9293 | 3 → 5 | 1.00/0.00/0.00/0.00 | 0.00/0.00/1.00/0.00 | yes (1 → 3) | 1.00 | 0.000 | 0.000 | -4.06 | feasible → type_II |
+| cube | random | 0.15 → 0.08 | 0.7071 → 0.8990 | 4 → 5 | 0.99/0.00/0.01/0.00 | 0.00/0.00/0.99/0.01 | yes (1 → 3) | 0.99 | 0.000 | 0.000 | -3.98 | feasible → type_II |
+| tabular-MiniBooNE | greedy_entropy | 0.15 → 0.1 | 0.7475 → 0.8788 | 3 → 5 | 0.01/0.00/0.99/0.00 | 0.00/0.00/1.00/0.00 | no (3) | 1.00 | 0.000 | 0.000 | -3.43 | feasible → type_II |
+| tabular-MiniBooNE | random | 0.15 → 0.1 | 0.7778 → 0.8889 | 4 → 5 | 0.26/0.00/0.74/0.00 | 0.00/0.00/1.00/0.00 | yes (1+3 → 3) | 1.00 | 0.000 | 0.000 | -4.26 | feasible → type_II |
+| fashionmnist | greedy_entropy | 0.15 → 0.09 | 0.7778 → 0.9293 | 5 → 5 | 0.12/0.00/0.88/0.00 | 0.00/0.00/1.00/0.00 | yes (1+3 → 3) | 1.00 | 0.000 | 0.000 | -4.17 | feasible → type_II |
+| fashionmnist | random | 0.15 → 0.09 | 0.7778 → 0.9192 | 5 → 5 | 0.12/0.00/0.88/0.00 | 0.00/0.00/1.00/0.00 | yes (1+3 → 3) | 1.00 | 0.000 | 0.000 | -3.43 | feasible → type_II |
+| mnist | greedy_entropy | 0.1 → not committed | | | | | | | | | | |
+| mnist | random | 0.1 → not committed | | | | | | | | | | |
 - **Cost schemes:** `results_v3/tables_inverse_info/`.
 
 ### 8.8 Figures
@@ -893,4 +910,12 @@ Both are reported, with the noise-free expected raw and certified rates computed
 **Tables / figures / reports:** `results_v3/logs/r2_taskC_make_tables.log`; figures `results_v3/figures/` (F5 still from the round-1 planted CSV until the round-2 planted run ends); `scripts/report_violations_v3.py` → `results_v3/diagnostics/r2_violations_{dep,lr0.5,lr0.7,lr0.9}.{md,json}` (no cell fails an acceptance check at any λ_ref key); `results_v3/diagnostics/r2_e9_lambda_ref_summary.md`.
 
 **Acceptance (headline, `dep`):** certified deployment 1.00 in all 14 cells; certified violation ≤ 0.010 ≤ δ + 0.05 in every cell; mean max_excess_se < 0 in every cell (max −3.273). So `scripts/diagnose_violation_v3.py` was not required; it was run once on FashionMNIST random `dep` (largest single-split raw rate) to check the multi-split diagnostic on real data (§8.5). **By-split ranges of the cells over δ in round 1:** FashionMNIST greedy 0.000–0.450, FashionMNIST random 0.000–0.500, MiniBooNE greedy 0.000–0.100, MiniBooNE random 0.000–0.150; in each case the maximum is split 778 and the other four splits are ≤ 0.050 (§8.5).
+
+### 12.5 Task E — E9 α-rule sensitivity (seed 0)
+
+- **Code:** `scripts/commit_v3.py` gains `--alpha-margin` (default 0.05) and `--alpha-grid` (default 0.05), implemented in the v3-local `alpha_from_floor(floor, margin, grid)`. With the defaults the commit still calls `cafa.data.feasible_alpha_from_floor`, and a non-default rule is recorded as `alpha_rule` in the commit and requires `--out-path`, so the main commits cannot be overwritten with it. A rule giving α ≤ the design margin stops with rc 7 instead of a traceback.
+- **Tests:** `tests/test_alpha_rule_v3.py`: `alpha_from_floor` with the defaults equals `feasible_alpha_from_floor` exactly on 20,001 + 147 floors (grid multiples, float-dust cases, the seed-0 probe floors); the tighter rule's values on the seed-0 floors (0.15, 0.08, 0.18, 0.12, 0.10, 0.03, 0.09); `alpha_rule` recording and the rc-7 refusal. Re-committing all 7 seed-0 datasets with the options at their defaults reproduces `configs/committed_v3_*_ts0.json` except `created` (`results_v3/logs/r2_taskE_default_rule_unchanged.log`).
+- **Runs:** `drive_v3.py --phase commit --seeds 0 --tag r2am02 --commit-prefix committed_v3_am02 "--extra-args=--alpha-margin 0.02 --alpha-grid 0.01"` (6 datasets, rc 0; MNIST rc 7). Sweeps: `drive_v3.py --phase sweep --seeds 0 --tag r2am02 --commit-prefix committed_v3_am02 --metrics-dir-name metrics_v3_alpha_margin02` (12 cells, 4 parallel groups, rc 0). Tables: `make_tables_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3_alpha_margin02 --output-dir results_v3/tables_e9_alpha_margin02`.
+- **Result:** §8.7 (PhysioNet and Adult first).
+- **Imagenette:** its am02 commit follows Task D (§12.4).
 

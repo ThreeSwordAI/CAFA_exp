@@ -9,7 +9,11 @@ Everything committed here is a function of the independent PROBE split (v2
 probe, seed 777 -- byte-identical to the AAAI commitments) and fixed config:
 
   * ``alpha``                  same fixed rule as v2 (floor + 0.05, ceil to 0.05 grid)
-                               on the greedy cache's probe full-acquisition error;
+                               on the greedy cache's probe full-acquisition error
+                               (:func:`alpha_from_floor`; ``--alpha-margin`` / ``--alpha-grid``
+                               change margin and grid for the E9 alpha-rule sensitivity only,
+                               written to a separate ``--out-path``; a non-default rule is
+                               recorded as ``alpha_rule`` in the commit);
   * ``lambda_refs``            the committed sweep {0.5, 0.7, 0.9} PLUS the
                                deployment-aligned value ``"dep"`` per policy
                                (plug-in operating point on the probe);
@@ -39,6 +43,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -77,6 +82,27 @@ def build_grid(method_cfg: dict) -> np.ndarray:
     return np.linspace(float(g["g_min"]), float(g["g_max"]), int(g["n"]))
 
 
+ALPHA_MARGIN, ALPHA_GRID = 0.05, 0.05     # the committed rule (cafa.data.feasible_alpha_from_floor defaults)
+
+
+def alpha_from_floor(floor: float, margin: float = ALPHA_MARGIN, grid: float = ALPHA_GRID) -> float:
+    """v3-local copy of the probe alpha rule with a configurable margin and grid (E9 sensitivity).
+
+    ``alpha`` = the smallest multiple of ``grid`` that is >= ``floor + margin`` (the quotient is rounded to
+    9 decimals before the ceiling, against float dust), clipped to ``[grid, 1]`` and rounded to 4
+    decimals -- line for line the computation of :func:`cafa.data.feasible_alpha_from_floor`, whose
+    ``headroom`` / ``step`` are ``margin`` / ``grid`` here.  With the defaults it reproduces that function
+    exactly (tests/test_alpha_rule_v3.py).
+    """
+    floor = float(floor)
+    if not math.isfinite(floor):
+        raise ValueError(f"floor must be finite; got {floor!r}.")
+    floor = max(0.0, floor)
+    n_steps = math.ceil(round((floor + float(margin)) / float(grid), 9))
+    alpha = min(1.0, max(float(grid), n_steps * float(grid)))
+    return round(alpha, 4)
+
+
 def diff_commits(old: dict, new: dict, path: str = "") -> list:
     """Paths (``/a/b/c``) of the leaves that differ between two committed JSONs (added or removed keys
     are reported with the suffix `` (added)`` / `` (removed)``).  Used to check that a re-commit changes
@@ -106,7 +132,8 @@ def find_policy_caches(pool_dir: Path, dsname: str, ts: int, score: str) -> dict
 
 
 def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg: dict,
-           force: bool = False, n_buckets: int = None) -> int:
+           force: bool = False, n_buckets: int = None, alpha_margin: float = ALPHA_MARGIN,
+           alpha_grid: float = ALPHA_GRID) -> int:
     ts = int(train_seed)
     dsname = dsname_of(dataset)
     pool_dir = Path(pool_dir)
@@ -174,7 +201,14 @@ def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg
             "digest": {"calpool": split_digest(ps["calpool"]), "test": split_digest(ps["test"])}}
 
     floor = float(np.mean(1.0 - np.asarray(greedy["correct"])[probe_pos, T]))
-    alpha = float(feasible_alpha_from_floor(floor))
+    default_rule = (float(alpha_margin), float(alpha_grid)) == (ALPHA_MARGIN, ALPHA_GRID)
+    alpha = float(feasible_alpha_from_floor(floor)) if default_rule else alpha_from_floor(floor, alpha_margin, alpha_grid)
+    if alpha <= margin:
+        # n_min(alpha, level, design_margin) needs alpha - design_margin > 0 (cafa.commit_rules.n_min_required)
+        print(f"ERROR: alpha={alpha} (floor {floor:.4f}, alpha rule margin {alpha_margin} / grid {alpha_grid}) is not "
+              f"above the design margin {margin}: the detectability rule n_min(alpha, level, margin) is undefined; "
+              "nothing committed.", file=sys.stderr)
+        return 7
     n_min_1 = n_min_required(alpha, d1, margin)
     n_min_3 = n_min_required(alpha, d3, margin)
 
@@ -220,6 +254,7 @@ def commit(*, dataset: str, train_seed: int, score: str, pool_dir, out_path, cfg
         "probe_n": int(probe_pos.size),
         "floor": {"estimate": round(floor, 6)},
         "alpha": alpha,
+        **({} if default_rule else {"alpha_rule": {"margin": float(alpha_margin), "grid": float(alpha_grid)}}),
         "delta": delta, "delta_alloc": [d1, d2, d3], "design_margin": margin,
         "feature_costs_by_scheme": greedy["meta"].get("feature_costs_by_scheme", {}),
         "grid": {"g_min": float(grid[0]), "g_max": float(grid[-1]), "n": int(grid.size)},
@@ -264,7 +299,12 @@ def main(argv=None) -> int:
     p.add_argument("--out-path", default=None, help="override configs/committed_v3_{dsname}_ts{ts}.json "
                    "(ablations; the repair experiment's BEFORE commit)")
     p.add_argument("--n-buckets", type=int, default=None, help="nominal strata before the G-rule (ablation)")
+    p.add_argument("--alpha-margin", type=float, default=ALPHA_MARGIN,
+                   help="alpha = ceil-to-grid(floor + margin) (default 0.05 = the committed rule; E9 ablation only)")
+    p.add_argument("--alpha-grid", type=float, default=ALPHA_GRID, help="alpha grid (default 0.05; E9 ablation only)")
     a = p.parse_args(argv)
+    if (a.alpha_margin, a.alpha_grid) != (ALPHA_MARGIN, ALPHA_GRID) and not a.out_path:
+        p.error("a non-default alpha rule needs --out-path (the main commit is made with the committed rule only)")
     cfg = config.load_experiment(a.config)
     paths = config.load_paths()
     score = a.score or cfg["method"].get("procedure_score", "softmax")
@@ -272,7 +312,8 @@ def main(argv=None) -> int:
     out_path = Path(a.out_path) if a.out_path else \
         Path("configs") / f"committed_v3_{dsname_of(a.dataset)}_ts{int(a.train_seed)}.json"
     return commit(dataset=a.dataset, train_seed=a.train_seed, score=score, pool_dir=pool_dir,
-                  out_path=out_path, cfg=cfg, force=a.force, n_buckets=a.n_buckets)
+                  out_path=out_path, cfg=cfg, force=a.force, n_buckets=a.n_buckets,
+                  alpha_margin=a.alpha_margin, alpha_grid=a.alpha_grid)
 
 
 if __name__ == "__main__":

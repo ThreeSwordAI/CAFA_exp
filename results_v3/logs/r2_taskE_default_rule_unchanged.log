@@ -1,0 +1,8 @@
+Task E: commit_v3.py with the alpha-rule options at their defaults vs the committed round-2 JSONs (configs/)
+  committed_v3_csv-diabetes_ts0.json: diffs other than created: none
+  committed_v3_csv-physionet_ts0.json: diffs other than created: none
+  committed_v3_cube_ts0.json: diffs other than created: none
+  committed_v3_fashionmnist_ts0.json: diffs other than created: none
+  committed_v3_mnist_ts0.json: diffs other than created: none
+  committed_v3_tabular-MiniBooNE_ts0.json: diffs other than created: none
+  committed_v3_tabular-adult_ts0.json: diffs other than created: none
