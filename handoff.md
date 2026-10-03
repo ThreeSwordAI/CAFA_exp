@@ -9,7 +9,7 @@
   - Part 3b (Task J: seeds 1–2) then ran, with its first log at 14:43 (§13.8).
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at the round-1 session start; tagged `aaai27-submission`)
 - Round-2 final content commit: `25c04ad`.
-- Round-3 final content commit: written by the follow-up hash commit; that commit changes only this line. `git log -1 aistats-v3` gives the branch tip. The tag `aistats-v3-results` points to the final commit (§13.9).
+- Round-3 final content commit: `782846d` (the follow-up hash commit changes only this line). `git log -1 aistats-v3` gives the branch tip. The tag `aistats-v3-results` points to the final commit (§13.9).
 - No job is running at the end of round 3.
 
 ## 1. Executive summary
