@@ -1,0 +1,13 @@
+tabular-MiniBooNE_ts0_greedy_entropy 0.5 deepest 0 verdicts by split {'778': 'feasible', '779': 'feasible', '780': 'feasible', '781': 'feasible', '782': 'feasible'} agree 5
+tabular-MiniBooNE_ts0_greedy_entropy 0.7 deepest 0 verdicts by split {'778': 'feasible', '779': 'feasible', '780': 'feasible', '781': 'feasible', '782': 'feasible'} agree 5
+tabular-MiniBooNE_ts0_greedy_entropy 0.9 deepest 4 verdicts by split {'778': 'type_II', '779': 'type_II', '780': 'type_II', '781': 'type_II', '782': 'type_II'} agree 5
+tabular-MiniBooNE_ts0_greedy_entropy dep deepest 2 verdicts by split {'778': 'feasible', '779': 'unresolved', '780': 'type_II', '781': 'unresolved', '782': 'feasible'} agree 2
+tabular-adult_ts0_random 0.5 deepest 0 verdicts by split {'778': 'feasible', '779': 'feasible', '780': 'feasible', '781': 'feasible', '782': 'feasible'} agree 5
+tabular-adult_ts0_random 0.7 deepest 0 verdicts by split {'778': 'feasible', '779': 'feasible', '780': 'feasible', '781': 'feasible', '782': 'feasible'} agree 5
+tabular-adult_ts0_random 0.9 deepest 2 verdicts by split {'778': 'type_II', '779': 'type_II', '780': 'type_II', '781': 'type_II', '782': 'type_II'} agree 5
+tabular-adult_ts0_random dep deepest 2 verdicts by split {'778': 'unresolved', '779': 'feasible', '780': 'feasible', '781': 'feasible', '782': 'unresolved'} agree 2
+delta-split (0.34,0.33,0.33) vs committed (0.5,0.25,0.25), PhysioNet greedy, tier shares 1/2/3/none and raw viol per key:
+  0.5: dw 1.00/0.00/0.00/0.00 viol 0.000 cert 0.000 | committed 1.00/0.00/0.00/0.00 viol 0.000 cert 0.000
+  0.7: dw 1.00/0.00/0.00/0.00 viol 0.000 cert 0.000 | committed 1.00/0.00/0.00/0.00 viol 0.000 cert 0.000
+  0.9: dw 0.01/0.00/0.99/0.00 viol 0.010 cert 0.000 | committed 0.01/0.00/0.99/0.00 viol 0.010 cert 0.000
+  dep: dw 1.00/0.00/0.00/0.00 viol 0.000 cert 0.000 | committed 1.00/0.00/0.00/0.00 viol 0.000 cert 0.000

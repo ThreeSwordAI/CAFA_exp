@@ -5,7 +5,7 @@
   "score": "softmax",
   "pipeline": "v3",
   "tool": "commit_v3.py",
-  "created": "2026-10-02T23:09:06.151243+00:00",
+  "created": "2026-10-03T00:00:44.647676+00:00",
   "cache_meta": {
     "dataset": "tabular:adult",
     "dsname": "tabular-adult",
@@ -1338,6 +1338,63 @@
       "probe": "76a989994606e2a5c70e49af0897e47abf46441ffb6c8365c0f307a706bae23c",
       "calpool": "7099febd54179ef3c754d77bb0cb7e7acf87fce82268ab028cf24caf515d3e83",
       "test": "a036c0e515bb21aabeb2e322356026da7030bde1ad2bae904b0356ebd3cdafce"
+    },
+    "test_seeds": [
+      778,
+      779,
+      780,
+      781,
+      782
+    ],
+    "n_draws": 100,
+    "draws_per_split": 20,
+    "draw_id_stride": 1000,
+    "by_test_seed": {
+      "778": {
+        "split_index": 0,
+        "n_calpool": 8140,
+        "n_test": 8140,
+        "digest": {
+          "calpool": "7099febd54179ef3c754d77bb0cb7e7acf87fce82268ab028cf24caf515d3e83",
+          "test": "a036c0e515bb21aabeb2e322356026da7030bde1ad2bae904b0356ebd3cdafce"
+        }
+      },
+      "779": {
+        "split_index": 1,
+        "n_calpool": 8140,
+        "n_test": 8140,
+        "digest": {
+          "calpool": "de5020d52595832e6681cabbe50193358c378778aa235ce3ef0c3eb1af4b11b9",
+          "test": "a081b1099ea9198a9f2f2106fdafa7b4260bb62d724ccd538c55e0ec9f9020e5"
+        }
+      },
+      "780": {
+        "split_index": 2,
+        "n_calpool": 8140,
+        "n_test": 8140,
+        "digest": {
+          "calpool": "fa47227dd625387bf58dd1ff12fd96af5bc188385fcb535ea5bd4b7de84169af",
+          "test": "50fdc22fe5ee36e7df4ad086fe5d8825f532f97db91678da476355a76607c062"
+        }
+      },
+      "781": {
+        "split_index": 3,
+        "n_calpool": 8140,
+        "n_test": 8140,
+        "digest": {
+          "calpool": "11f3fccbb142ff7586a42e5fd9331aa8f4cbd271666de20f153955de1f65fbd9",
+          "test": "cc3ae90e2f0f8f87f1243ea7899685a2a1821efd1ce68800dc710992024cb999"
+        }
+      },
+      "782": {
+        "split_index": 4,
+        "n_calpool": 8140,
+        "n_test": 8140,
+        "digest": {
+          "calpool": "6b9231cea887995b0af5c08a5f6050eb6f71da4a378b076ad44504e66b5a8938",
+          "test": "bc79ca392a37d7129360dc4a2dbc75add31967f0dbaea9f3d283543a909f0da2"
+        }
+      }
     }
   }
 }

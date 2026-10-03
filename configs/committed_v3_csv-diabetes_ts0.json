@@ -5,7 +5,7 @@
   "score": "softmax",
   "pipeline": "v3",
   "tool": "commit_v3.py",
-  "created": "2026-10-02T23:09:08.739336+00:00",
+  "created": "2026-10-03T00:00:48.219281+00:00",
   "cache_meta": {
     "dataset": "csv:diabetes",
     "dsname": "csv-diabetes",
@@ -1528,6 +1528,63 @@
       "probe": "606b2d237d4a56b910cd71832b8722c9b6007a02a40d52955f3b042f2a80f953",
       "calpool": "df1b349b6604657ecb97179d217f7e505d6181b38530c1e582f94aa7c1c70cef",
       "test": "a0ef43e7250bff4b87ea078767d812d49a75f0ef694ad8d6a392df188a8ddb98"
+    },
+    "test_seeds": [
+      778,
+      779,
+      780,
+      781,
+      782
+    ],
+    "n_draws": 100,
+    "draws_per_split": 20,
+    "draw_id_stride": 1000,
+    "by_test_seed": {
+      "778": {
+        "split_index": 0,
+        "n_calpool": 16571,
+        "n_test": 16572,
+        "digest": {
+          "calpool": "df1b349b6604657ecb97179d217f7e505d6181b38530c1e582f94aa7c1c70cef",
+          "test": "a0ef43e7250bff4b87ea078767d812d49a75f0ef694ad8d6a392df188a8ddb98"
+        }
+      },
+      "779": {
+        "split_index": 1,
+        "n_calpool": 16571,
+        "n_test": 16572,
+        "digest": {
+          "calpool": "c2e59236308a01afe12bc55f08c0b1a01e901890d0af2f09347cf8ec25a392c5",
+          "test": "84ea7aea2b4f9e62852660088a5348f6b4b32aa9397982059e17f4a9b254f9b1"
+        }
+      },
+      "780": {
+        "split_index": 2,
+        "n_calpool": 16571,
+        "n_test": 16572,
+        "digest": {
+          "calpool": "e41e4888da5ea9162803b52ef20e7d3ff3773a2d243a33ce4e6b871eca384a38",
+          "test": "dd2af7e5042bd5f3fc2e17cefcc75176145ef47973e472e1da62c3d7dd2b9fc0"
+        }
+      },
+      "781": {
+        "split_index": 3,
+        "n_calpool": 16571,
+        "n_test": 16572,
+        "digest": {
+          "calpool": "bcd0167316770f88fa75ec5a66e88bc0e3fcc61e31cec8f20781700d26196790",
+          "test": "3837af35e96fe103ca1aa2110ec2a22524b4ce3399a3ef1ce8d511b710e97821"
+        }
+      },
+      "782": {
+        "split_index": 4,
+        "n_calpool": 16571,
+        "n_test": 16572,
+        "digest": {
+          "calpool": "c3c55a6ba73f633fd158410aec80370693386b69d4497f0d0c38dc5669d5bfbf",
+          "test": "5487795a3eb15faec7304e3eef05c2dc9cca8ad77e6b103b291409b486e34918"
+        }
+      }
     }
   }
 }

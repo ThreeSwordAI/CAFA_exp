@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset tabular:adult --train-seed 0 --before-cache F:/CAFA_results/pool_v2/tabular-adult_ts0_greedy_entropy_softmax.npz --after-cache F:/CAFA_results/pool_v3/tabular-adult_ts0_greedy_entropy_softmax.npz --committed configs/committed_v3before_tabular-adult_ts0.json --label predictor_upgrade
+# start 2026-10-03T00:13:19.880496+00:00
+[repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.148, full 0.148) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.148, full 0.148) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[0.9]=0.900 deepest k=2: type_II (rmin 0.296, full 0.296) -> type_II (rmin 0.292, full 0.292); tier1 0.00 -> 0.00; viol 0.11 -> 0.18; certviol 0.00 -> 0.05; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[dep]=0.758 deepest k=1: feasible (rmin 0.196, full 0.197) -> feasible (rmin 0.194, full 0.194); tier1 1.00 -> 0.99; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\tabular-adult_ts0_predictor_upgrade.json
+# returncode 0

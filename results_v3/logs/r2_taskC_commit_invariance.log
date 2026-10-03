@@ -1,0 +1,13 @@
+vs Task-A commits (git HEAD, made with the HB fix and the round-1 commit code): allowed /split/* additions only
+  committed_v3_csv-diabetes_ts0.json: 5 diffs, all /split/ additions: True []
+  committed_v3_csv-physionet_ts0.json: 5 diffs, all /split/ additions: True []
+  committed_v3_cube_ts0.json: 5 diffs, all /split/ additions: True []
+  committed_v3_fashionmnist_ts0.json: 5 diffs, all /split/ additions: True []
+  committed_v3_mnist_ts0.json: 5 diffs, all /split/ additions: True []
+  committed_v3_tabular-MiniBooNE_ts0.json: 5 diffs, all /split/ additions: True []
+  committed_v3_tabular-adult_ts0.json: 5 diffs, all /split/ additions: True []
+vs round-1 commits (results_v3/round1/configs; HB defect present; not re-committed in Task A): allowed /split/* additions and escalation orders
+  committed_v3_G8_mnist_ts0.json: orders changed 3 of 8; other diffs outside /split/ additions: none
+  committed_v3before_mnist_ts0.json: orders changed 16 of 16; other diffs outside /split/ additions: none
+  committed_v3before_tabular-MiniBooNE_ts0.json: orders changed 16 of 16; other diffs outside /split/ additions: none
+  committed_v3before_tabular-adult_ts0.json: orders changed 16 of 16; other diffs outside /split/ additions: none

@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset csv:physionet --train-seed 0 --before-cache F:/CAFA_results/pool_v3/csv-physionet_ts0_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/csv-physionet_ts0_greedy_entropy_softmax.npz --committed configs/committed_v3_csv-physionet_ts0.json --policy random --label policy_change
+# start 2026-10-03T00:10:35.990676+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=1: feasible (rmin 0.184, full 0.187) -> feasible (rmin 0.187, full 0.187); tier1 0.15 -> 0.15; viol 0.06 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[dep]=0.000 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\csv-physionet_ts0_policy_change.json
+# returncode 0

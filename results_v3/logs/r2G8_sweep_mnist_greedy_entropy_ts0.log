@@ -1,0 +1,8 @@
+# python scripts/run_cascade_sweep.py --dataset mnist --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_G8 --committed configs/committed_v3_G8_mnist_ts0.json
+# start 2026-10-03T00:04:59.553192+00:00
+[cascade] mnist ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] mnist ts0 greedy_entropy lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] mnist ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] mnist ts0 greedy_entropy lr[dep]=0.788 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] wrote F:\CAFA_results\metrics_v3_G8\mnist_ts0_greedy_entropy_softmax.json
+# returncode 0

@@ -1,2 +1,2 @@
-dataset,policy,seed,alpha,marginal_test_risk,marginal_aggregate_violation,max_stratum_over_alpha,hidden_stratum_violation_rate
-csv-physionet,greedy_entropy,0,0.2,0.14444444444444438,0.0,0.7222222222222224,0.0
+dataset,policy,seed,alpha,marginal_test_risk,marginal_aggregate_violation,max_stratum_over_alpha,hidden_stratum_violation_rate,hidden_certified_violation_rate
+csv-physionet,greedy_entropy,0,0.2,0.14305555555555557,0.0,0.7152777777777775,0.0,0.0

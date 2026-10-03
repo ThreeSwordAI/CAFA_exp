@@ -1,0 +1,29 @@
+[drive_v3] run r2dw:sweep:csv:physionet:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_dw --delta-weights 0.34,0.33,0.33  (log results_v3\logs\r2dw_sweep_csv-physionet_greedy_entropy_ts0.log)
+    [cascade] csv-physionet ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts0 greedy_entropy lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.01, '2': 0.0, '3': 0.99} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 4/5)
+    [cascade] csv-physionet ts0 greedy_entropy lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_dw\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] done r2dw:sweep:csv:physionet:greedy_entropy:ts0: rc=0 in 113.8s
+[drive_v3] sweep: ran 1, skipped 0 existing, 0 missing prerequisites
+[drive_v3] run r2G8:sweep:mnist:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset mnist --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_G8 --committed configs/committed_v3_G8_mnist_ts0.json  (log results_v3\logs\r2G8_sweep_mnist_greedy_entropy_ts0.log)
+    [cascade] mnist ts0 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] mnist ts0 greedy_entropy lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] mnist ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] mnist ts0 greedy_entropy lr[dep]=0.788 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_G8\mnist_ts0_greedy_entropy_softmax.json
+[drive_v3] done r2G8:sweep:mnist:greedy_entropy:ts0: rc=0 in 331.8s
+[drive_v3] sweep: ran 1, skipped 0 existing, 0 missing prerequisites
+[repairs] done r2:repair:csv:physionet:policy_change:ts0: rc=0 in 61.9s
+[repairs] done r2:repair:cube:policy_change:ts0: rc=0 in 102.0s
+[repairs] done r2:repair:tabular:adult:predictor_upgrade:ts0: rc=0 in 112.8s
+[repairs] done r2:repair:tabular:adult:policy_change:ts0: rc=0 in 120.8s
+[repairs] done r2:repair:csv:diabetes:policy_change:ts0: rc=0 in 362.7s
+[repairs] done r2:repair:tabular:MiniBooNE:predictor_upgrade:ts0: rc=0 in 494.4s
+[repairs] done r2:repair:tabular:MiniBooNE:policy_change:ts0: rc=0 in 385.8s
+[repairs] done r2:repair:mnist:predictor_upgrade:ts0: rc=0 in 213.7s
+[repairs] done r2:repair:mnist:policy_change:ts0: rc=0 in 220.0s
+[repairs] done r2:repair:fashionmnist:policy_change:ts0: rc=0 in 216.4s
+[repairs] skip (missing prerequisite) r2:repair:image:imagenette:policy_change:ts0: ['F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_random_softmax.npz', 'F:\\CAFA_results\\pool_v3\\image-imagenette_ts0_greedy_entropy_softmax.npz', 'configs\\committed_v3_image-imagenette_ts0.json']
+[repairs] ran 10, skipped 1
+chain done 2026-10-03T02:48:48.7539380+02:00

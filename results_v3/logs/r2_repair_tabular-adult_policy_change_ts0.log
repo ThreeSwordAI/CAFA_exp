@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset tabular:adult --train-seed 0 --before-cache F:/CAFA_results/pool_v3/tabular-adult_ts0_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/tabular-adult_ts0_greedy_entropy_softmax.npz --committed configs/committed_v3_tabular-adult_ts0.json --policy random --label policy_change
+# start 2026-10-03T00:15:12.715340+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.147, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.147, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=2: type_II (rmin 0.302, full 0.303) -> type_II (rmin 0.301, full 0.303); tier1 0.00 -> 0.00; viol 0.05 -> 0.05; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[dep]=0.758 deepest k=2: unresolved (rmin 0.253, full 0.254) -> feasible (rmin 0.248, full 0.254); tier1 0.00 -> 0.00; viol 0.02 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 2/5 -> 4/5
+wrote results_v3\repair\tabular-adult_ts0_policy_change.json
+# returncode 0

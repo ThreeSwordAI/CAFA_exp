@@ -5,7 +5,7 @@
   "score": "softmax",
   "pipeline": "v3",
   "tool": "commit_v3.py",
-  "created": "2026-10-02T23:09:03.302046+00:00",
+  "created": "2026-10-03T00:00:38.931072+00:00",
   "cache_meta": {
     "dataset": "csv:physionet",
     "dsname": "csv-physionet",
@@ -1488,6 +1488,63 @@
       "probe": "f3d62abf461dec9c8bb7528f9cccd80b2898b8dbcdc85e47d5003b3c45e0c8e9",
       "calpool": "e36c65dd6d215483c88839f8070630458d647a43abd7c068f515f78831d9b7bc",
       "test": "8213266bfbe47816e1358c29a82cdc5c4330e7ce9be6817fb70f86cd0da083a2"
+    },
+    "test_seeds": [
+      778,
+      779,
+      780,
+      781,
+      782
+    ],
+    "n_draws": 100,
+    "draws_per_split": 20,
+    "draw_id_stride": 1000,
+    "by_test_seed": {
+      "778": {
+        "split_index": 0,
+        "n_calpool": 2160,
+        "n_test": 2160,
+        "digest": {
+          "calpool": "e36c65dd6d215483c88839f8070630458d647a43abd7c068f515f78831d9b7bc",
+          "test": "8213266bfbe47816e1358c29a82cdc5c4330e7ce9be6817fb70f86cd0da083a2"
+        }
+      },
+      "779": {
+        "split_index": 1,
+        "n_calpool": 2160,
+        "n_test": 2160,
+        "digest": {
+          "calpool": "7945de9e17a1693225b1280c0f6c256f5d4730c823b3d551f47670e2907cb2a2",
+          "test": "98eba9811719b4a9d8031215cb08521cb31afee4670689b0cfde5b15bb7ddda6"
+        }
+      },
+      "780": {
+        "split_index": 2,
+        "n_calpool": 2160,
+        "n_test": 2160,
+        "digest": {
+          "calpool": "9ac32f52e27d80d28d69eebca1bfca7b855bd07cbd1f2bbced34368413db19d2",
+          "test": "adda28034e7d751ac38740a93acc0450df18bdce7d93350aaf3b4cce8180fb5b"
+        }
+      },
+      "781": {
+        "split_index": 3,
+        "n_calpool": 2160,
+        "n_test": 2160,
+        "digest": {
+          "calpool": "370d00513670f94ed49568b402457109149d5b8608468e8678768caf02be58c2",
+          "test": "3cbf2a610b02aefb34f2753f1e22c122932b8f5927836696bedf4660dce28db3"
+        }
+      },
+      "782": {
+        "split_index": 4,
+        "n_calpool": 2160,
+        "n_test": 2160,
+        "digest": {
+          "calpool": "7e3a479a8853b8f28ec74d0b25960116ab9d75105da6ee46f5ddc756472bd1c1",
+          "test": "fe5d55056e5de38f6557da75b2aba82e8a27f73298aa6b5491d50254bd37165c"
+        }
+      }
     }
   }
 }

@@ -4,11 +4,13 @@
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at session start)
 - Final content commit: `d66522b` (one follow-up commit only writes this hash into this file; `git log -1 aistats-v3` gives the branch tip)
 - **Session ended at stop condition 5 of instruction §7** (a defect in the frozen p-value primitive `src/cafa/risk_control.py`; question in §9). One GPU job (Imagenette seed-0 greedy rollout) was left running at session end; see §3.
-- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Tasks A and B are done; Tasks C–F in progress.
+- **Round 2** (`instruction_round2.md`, Tasks A–F): started 2026-10-03 00:55 local; progress and results in §12. Tasks A–C are done; D (Imagenette, GPU) is running, E–F in progress.
 
 ## 1. Executive summary
 
-**Round 2 status (interim, after Task A).** The Hoeffding–Bentkus boundary defect of §9 is fixed (option (b) of §9, the authors' decision; tag `aaai27-submission`, `CHANGELOG.md`, §12.1). Every Phase-3 number below (§8, §11) was computed in round 1 **with the defect present** and is superseded by round 2; the round-1 files are archived (`$RESULTS_ROOT\metrics_v3_round1\`, `results_v3/round1/`). On the round-1 protocol the fix changes 186 of 5,600 deployed (cell, λ_ref, draw) decisions (§12.1). The Imagenette greedy rollout left running in round 1 had died at 1296/5358 rows without writing a cache; it was relaunched (§12.1).
+**Round 2 status (interim, after Task C).** Seed 0, 14 cells, HB fix + 5 calibration/test splits × 20 draws: certified deployment 1.00, certified violation ≤ 0.010 (≤ δ + 0.05) and mean max_excess_se < 0 in every cell; raw pooled violation ≤ 0.100 everywhere (FashionMNIST up to 0.50 on split 778 alone). Tables in §8, `old → new` in §11, details in §12.3.
+
+**Round 2, Task A.** The Hoeffding–Bentkus boundary defect of §9 is fixed (option (b) of §9, the authors' decision; tag `aaai27-submission`, `CHANGELOG.md`, §12.1). Every Phase-3 number below (§8, §11) was computed in round 1 **with the defect present** and is superseded by round 2; the round-1 files are archived (`$RESULTS_ROOT\metrics_v3_round1\`, `results_v3/round1/`). On the round-1 protocol the fix changes 186 of 5,600 deployed (cell, λ_ref, draw) decisions (§12.1). The Imagenette greedy rollout left running in round 1 had died at 1296/5358 rows without writing a cache; it was relaunched (§12.1).
 
 Round-1 summary (superseded numbers kept for reference):
 
@@ -337,39 +339,41 @@ alpha=0.15, delta=0.1, gamma=0.05, T=30, replicates=1000, M=131
 | power increasing in n_kΔ² (≈ 0.9 at 2.5, 1.0 at ≥ 10) | monotone within each Δ; 0.926 (Δ 0.05) and 0.843 (Δ 0.10) at 2.5; 1.000 at ≥ 10 | pass ("≈ 0.9" is 0.926 / 0.843) |
 | escalation `unsafe|esc` ≈ 0 | 0.000 everywhere; escalation rate 0.866 (n_k 250) → 1.000 (n_k ≥ 1000) | pass |
 
-## 8. Phase 3 results (seed 0, 14 cells; Imagenette and seeds 1–2 `TBD-RUN`)
+## 8. Phase 3 results (round 2: seed 0, 14 cells, 5 splits × 20 draws; Imagenette pending (Task D, §12.4); seeds 1–2 `TBD-RUN` (§10))
 
-> **Round 1, superseded.** Everything in §8 was computed with the HB boundary defect present and with the single-split protocol; the round-2 results replace it (§12). The files are archived in `$RESULTS_ROOT\metrics_v3_round1\` and `results_v3/round1/`.
+All round-2 metrics JSONs are at `$RESULTS_ROOT\metrics_v3\{dsname}_ts0_{policy}_softmax.json`: 100 draws = 5 calibration/test splits (test seeds 778–782) × 20 draws, HB boundary fix in place (§12). Tables: `make_tables_v3.py --lambda-ref-key dep --scheme uniform` → `results_v3/tables/`; `--scheme inverse_info` → `results_v3/tables_inverse_info/` (tabular cells only; image cells have uniform costs). The round-1 versions of every table, figure and repair file are in `results_v3/round1/` (HB defect present, single split; superseded).
 
-All metrics JSONs are at `$RESULTS_ROOT\metrics_v3\{dsname}_ts0_{policy}_softmax.json` (100 draws each). Tables come from `make_tables_v3.py --lambda-ref-key dep --scheme uniform` → `results_v3/tables/`; `--scheme inverse_info` → `results_v3/tables_inverse_info/` (10 tabular cells; image cells have uniform costs only and are skipped).
+Column meanings added in round 2: `violation_by_split` = min–max over the 5 splits of the raw test stratum-violation rate; `certified_violation` = share of the 100 draws in which some K_cal stratum's exact one-sided binomial test-split p-value (H0: R_k ≤ α) is ≤ 0.05; `max_excess_se` = mean over draws of max_k (R̂_test,k − α)/√(α(1−α)/n_k); `verdict_agreement` = splits whose deepest-stratum audit verdict equals split 778's.
 
 ### 8.1 TABLE_E4_cascade (headline)
 
-| dataset | policy | seed | alpha | G | lambda_ref | marginal_cost | tier1 | tier2 | tier3 | none | certified_deployment | deployed_cost | cost_premium | answered_fraction | test_stratum_violation | delta | deepest_verdict |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| csv-diabetes | greedy_entropy | 0 | 0.150 | 2 | 0.798 | 6.879 | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 45.000 | 6.542 | 0.822 | 0.000 | 0.100 | type_II |
-| csv-diabetes | random | 0 | 0.150 | 4 | 0.828 | 11.402 | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 45.000 | 3.947 | 0.890 | 0.010 | 0.100 | type_II |
-| csv-physionet | greedy_entropy | 0 | 0.200 | 1 | 0.000 | 0.000 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  | 1.000 | 0.000 | 0.100 | feasible |
-| csv-physionet | random | 0 | 0.200 | 1 | 0.000 | 0.000 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  | 1.000 | 0.000 | 0.100 | feasible |
-| cube | greedy_entropy | 0 | 0.150 | 3 | 0.798 | 4.167 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 5.781 | 1.387 | 1.000 | 0.000 | 0.100 | feasible |
-| cube | random | 0 | 0.150 | 4 | 0.707 | 9.942 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 11.469 | 1.154 | 1.000 | 0.000 | 0.100 | feasible |
-| fashionmnist | greedy_entropy | 0 | 0.150 | 5 | 0.778 | 5.413 | 0.350 | 0.000 | 0.650 | 0.000 | 1.000 | 39.073 | 7.219 | 0.987 | 0.350 | 0.100 | feasible |
-| fashionmnist | random | 0 | 0.150 | 5 | 0.778 | 7.900 | 0.580 | 0.000 | 0.420 | 0.000 | 1.000 | 31.990 | 4.050 | 0.995 | 0.580 | 0.100 | feasible |
-| mnist | greedy_entropy | 0 | 0.100 | 3 | 0.788 | 3.495 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 3.662 | 1.048 | 1.000 | 0.000 | 0.100 | feasible |
-| mnist | random | 0 | 0.100 | 5 | 0.788 | 8.257 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 9.126 | 1.105 | 1.000 | 0.000 | 0.100 | feasible |
-| tabular-adult | greedy_entropy | 0 | 0.250 | 2 | 0.758 | 2.379 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 2.903 | 1.220 | 1.000 | 0.000 | 0.100 | feasible |
-| tabular-adult | random | 0 | 0.250 | 3 | 0.758 | 3.489 | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 14.000 | 4.012 | 0.897 | 0.000 | 0.100 | unresolved |
-| tabular-MiniBooNE | greedy_entropy | 0 | 0.150 | 3 | 0.747 | 3.047 | 0.040 | 0.000 | 0.960 | 0.000 | 1.000 | 48.658 | 15.967 | 0.973 | 0.110 | 0.100 | feasible |
-| tabular-MiniBooNE | random | 0 | 0.150 | 4 | 0.778 | 7.672 | 0.730 | 0.000 | 0.270 | 0.000 | 1.000 | 27.524 | 3.588 | 0.996 | 0.120 | 0.100 | feasible |
+| dataset | policy | seed | alpha | G | lambda_ref | marginal_cost | tier1 | tier2 | tier3 | none | certified_deployment | deployed_cost | cost_premium | answered_fraction | test_stratum_violation | violation_by_split | certified_violation | max_excess_se | delta | deepest_verdict | verdict_agreement |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0 | 0.150 | 2 | 0.798 | 6.915 | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 45.000 | 6.507 | 0.817 | 0.000 | 0.000–0.000 | 0.000 | -3.877 | 0.100 | type_II | 5/5 |
+| csv-diabetes | random | 0 | 0.150 | 4 | 0.828 | 11.211 | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 45.000 | 4.014 | 0.892 | 0.000 | 0.000–0.000 | 0.000 | -3.937 | 0.100 | type_II | 5/5 |
+| csv-physionet | greedy_entropy | 0 | 0.200 | 1 | 0.000 | 0.000 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  | 1.000 | 0.000 | 0.000–0.000 | 0.000 | -6.616 | 0.100 | feasible | 5/5 |
+| csv-physionet | random | 0 | 0.200 | 1 | 0.000 | 0.000 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  | 1.000 | 0.000 | 0.000–0.000 | 0.000 | -6.616 | 0.100 | feasible | 5/5 |
+| cube | greedy_entropy | 0 | 0.150 | 3 | 0.798 | 4.183 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 5.786 | 1.383 | 1.000 | 0.010 | 0.000–0.050 | 0.000 | -3.368 | 0.100 | feasible | 5/5 |
+| cube | random | 0 | 0.150 | 4 | 0.707 | 9.917 | 0.990 | 0.000 | 0.010 | 0.000 | 1.000 | 11.527 | 1.162 | 1.000 | 0.000 | 0.000–0.000 | 0.000 | -3.338 | 0.100 | feasible | 5/5 |
+| fashionmnist | greedy_entropy | 0 | 0.150 | 5 | 0.778 | 5.388 | 0.120 | 0.000 | 0.880 | 0.000 | 1.000 | 45.544 | 8.453 | 0.982 | 0.100 | 0.000–0.450 | 0.000 | -4.109 | 0.100 | feasible | 5/5 |
+| fashionmnist | random | 0 | 0.150 | 5 | 0.778 | 7.919 | 0.120 | 0.000 | 0.880 | 0.000 | 1.000 | 45.367 | 5.729 | 0.985 | 0.100 | 0.000–0.500 | 0.010 | -3.966 | 0.100 | feasible | 5/5 |
+| mnist | greedy_entropy | 0 | 0.100 | 3 | 0.788 | 3.497 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 3.657 | 1.046 | 1.000 | 0.000 | 0.000–0.000 | 0.000 | -3.514 | 0.100 | feasible | 5/5 |
+| mnist | random | 0 | 0.100 | 5 | 0.788 | 8.286 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 8.994 | 1.085 | 1.000 | 0.000 | 0.000–0.000 | 0.000 | -3.759 | 0.100 | feasible | 5/5 |
+| tabular-adult | greedy_entropy | 0 | 0.250 | 2 | 0.758 | 2.382 | 1.000 | 0.000 | 0.000 | 0.000 | 1.000 | 2.985 | 1.253 | 1.000 | 0.010 | 0.000–0.050 | 0.000 | -3.812 | 0.100 | feasible | 5/5 |
+| tabular-adult | random | 0 | 0.250 | 3 | 0.758 | 3.461 | 0.000 | 0.000 | 1.000 | 0.000 | 1.000 | 14.000 | 4.045 | 0.902 | 0.020 | 0.000–0.100 | 0.000 | -3.273 | 0.100 | unresolved | 2/5 |
+| tabular-MiniBooNE | greedy_entropy | 0 | 0.150 | 3 | 0.747 | 3.070 | 0.010 | 0.000 | 0.990 | 0.000 | 1.000 | 49.653 | 16.174 | 0.965 | 0.020 | 0.000–0.100 | 0.010 | -4.055 | 0.100 | feasible | 2/5 |
+| tabular-MiniBooNE | random | 0 | 0.150 | 4 | 0.778 | 7.741 | 0.260 | 0.000 | 0.740 | 0.000 | 1.000 | 43.097 | 5.567 | 0.985 | 0.030 | 0.000–0.150 | 0.000 | -4.613 | 0.100 | feasible | 5/5 |
 
-Acceptance against instruction §4.4:
-- **Certified deployment:** 1.00 in all 14 cells (pass).
-- **Test stratum violation ≤ 0.10:** holds in 10 cells; **exceeded** in MiniBooNE greedy 0.110 and random 0.120, and FashionMNIST greedy 0.350 and random 0.580 (§8.5).
-- **Tier-1 dominance and premium:** tier 1 dominates on MNIST (1.00 / 1.00, premium 1.048 / 1.105) and CUBE (1.00 / 1.00, 1.387 / 1.154). It does not dominate on FashionMNIST (0.35 / 0.58) or MiniBooNE-greedy (0.04; random 0.73).
-- **Tier 3 (tier-3 share / answered fraction):** Diabetes 1.00 / 0.822 and 1.00 / 0.890, Adult random 1.00 / 0.897, MiniBooNE greedy 0.96 / 0.973, FashionMNIST greedy 0.65 / 0.987, FashionMNIST random 0.42 / 0.995, MiniBooNE random 0.27 / 0.996. The answered fraction is the mean over all draws, so tier-1 draws contribute 1.0.
-- **PhysioNet:** committed at α = 0.20 with λ_ref `dep` = 0.0 and G = 1, so it deploys tier 1 at zero acquisition cost (marginal cost 0.000; cost premium undefined).
+Acceptance (instruction_round2 Task C):
+- **Certified deployment ≈ 1.00:** 1.000 in all 14 cells (pass).
+- **Certified violation ≤ δ + 0.05 = 0.15:** max 0.010 (FashionMNIST random, MiniBooNE greedy); 0.000 in the other 12 cells (pass in every cell).
+- **Mean `max_excess_se` ≤ 0:** negative in all 14 cells, from −6.616 (PhysioNet) to −3.273 (Adult random) (pass in every cell; no cell needs its `by_split` range listed for this criterion).
+- **Raw `test_stratum_violation`** (reported, no threshold): pooled ≤ 0.100 in all 14 cells; per split up to 0.450 (FashionMNIST greedy) and 0.500 (FashionMNIST random), both on split 778 (§8.5).
+- **Tier pattern at `dep`:** tier 1 ≥ 0.99 on MNIST (1.00 / 1.00), CUBE (1.00 / 0.99), Adult greedy (1.00) and PhysioNet (1.00 / 1.00); tier 3 is the majority on Diabetes (1.00 / 1.00), Adult random (1.00), MiniBooNE greedy (0.99), FashionMNIST (0.88 / 0.88) and MiniBooNE random (0.74). Cost premium in the tier-1 cells: MNIST 1.046 / 1.085, CUBE 1.383 / 1.162, Adult greedy 1.253.
+- **PhysioNet:** α = 0.20 makes the `dep` target degenerate (λ_ref = 0, G = 1, tier 1 at zero acquisition cost); kept as is and moved to the appendix (author decision, round 2 §0; α-rule sensitivity in §8.7).
+- **Changes against round 1** (HB fix + 5 splits; `old → new` in §11): tier-1 share FashionMNIST 0.35 → 0.12 (greedy) and 0.58 → 0.12 (random), MiniBooNE 0.04 → 0.01 (greedy) and 0.73 → 0.26 (random); raw violation FashionMNIST 0.350 → 0.100 and 0.580 → 0.100, MiniBooNE 0.110 → 0.020 and 0.120 → 0.030; all other cells change by ≤ 0.02 in tier shares and raw violation.
 
-### 8.2 TABLE_E3_audit (deepest stratum)
+### 8.2 TABLE_E3_audit (deepest stratum; audit of record = split 778's calibration pool)
 
 | dataset | policy | seed | k | n_k | alpha | rmin_thr | rmin_depth | r_full | p_thr | p_depth | verdict | all_verdicts |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -388,273 +392,275 @@ Acceptance against instruction §4.4:
 | tabular-MiniBooNE | greedy_entropy | 0 | 2 | 6883 | 0.150 | 0.144 | 0.146 | 0.146 | 0.932 | 0.852 | feasible | 0:feasible 1:feasible 2:feasible |
 | tabular-MiniBooNE | random | 0 | 3 | 4635 | 0.150 | 0.132 | 0.132 | 0.132 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible |
 
+`verdict_agreement` (§8.1) is 5/5 in 12 cells. The two exceptions sit at α: MiniBooNE greedy (`dep`, deepest stratum k = 2) is `feasible` on splits 778 and 782, `unresolved` on 779 and 781 and `type_II` on 780; Adult random (`dep`, k = 2) is `unresolved` on 778 and 782 and `feasible` on 779–781 (`results_v3/logs/r2_taskC_facts.log`, from `deepest_verdict_by_split` in the metrics JSONs). At λ_ref 0.9 both cells are `type_II` on all 5 splits.
+
 ### 8.3 TABLE_E2_blindness
 
-| dataset | policy | seed | alpha | marginal_test_risk | marginal_aggregate_violation | max_stratum_over_alpha | hidden_stratum_violation_rate |
-|---|---|---|---|---|---|---|---|
-| csv-diabetes | greedy_entropy | 0 | 0.150 | 0.100 | 0.000 | 2.204 | 1.000 |
-| csv-diabetes | random | 0 | 0.150 | 0.141 | 0.000 | 1.708 | 1.000 |
-| csv-physionet | greedy_entropy | 0 | 0.200 | 0.144 | 0.000 | 0.722 | 0.000 |
-| csv-physionet | random | 0 | 0.200 | 0.144 | 0.000 | 0.722 | 0.000 |
-| cube | greedy_entropy | 0 | 0.150 | 0.130 | 0.000 | 1.062 | 0.820 |
-| cube | random | 0 | 0.150 | 0.127 | 0.000 | 1.092 | 0.980 |
-| fashionmnist | greedy_entropy | 0 | 0.150 | 0.136 | 0.000 | 1.567 | 1.000 |
-| fashionmnist | random | 0 | 0.150 | 0.142 | 0.000 | 1.509 | 1.000 |
-| mnist | greedy_entropy | 0 | 0.100 | 0.090 | 0.000 | 0.954 | 0.270 |
-| mnist | random | 0 | 0.100 | 0.087 | 0.000 | 0.920 | 0.100 |
-| tabular-adult | greedy_entropy | 0 | 0.250 | 0.195 | 0.000 | 1.179 | 1.000 |
-| tabular-adult | random | 0 | 0.250 | 0.183 | 0.000 | 1.027 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | 0.150 | 0.132 | 0.000 | 1.708 | 1.000 |
-| tabular-MiniBooNE | random | 0 | 0.150 | 0.143 | 0.000 | 1.183 | 1.000 |
+| dataset | policy | seed | alpha | marginal_test_risk | marginal_aggregate_violation | max_stratum_over_alpha | hidden_stratum_violation_rate | hidden_certified_violation_rate |
+|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0 | 0.150 | 0.099 | 0.000 | 2.198 | 1.000 | 1.000 |
+| csv-diabetes | random | 0 | 0.150 | 0.143 | 0.010 | 1.730 | 1.000 | 1.000 |
+| csv-physionet | greedy_entropy | 0 | 0.200 | 0.143 | 0.000 | 0.715 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | 0.200 | 0.143 | 0.000 | 0.715 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | 0.150 | 0.133 | 0.010 | 1.095 | 0.910 | 0.320 |
+| cube | random | 0 | 0.150 | 0.136 | 0.070 | 1.109 | 0.930 | 0.500 |
+| fashionmnist | greedy_entropy | 0 | 0.150 | 0.137 | 0.000 | 1.533 | 1.000 | 1.000 |
+| fashionmnist | random | 0 | 0.150 | 0.139 | 0.000 | 1.438 | 1.000 | 1.000 |
+| mnist | greedy_entropy | 0 | 0.100 | 0.091 | 0.000 | 0.952 | 0.300 | 0.020 |
+| mnist | random | 0 | 0.100 | 0.089 | 0.000 | 0.949 | 0.140 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | 0.250 | 0.197 | 0.010 | 1.180 | 1.000 | 1.000 |
+| tabular-adult | random | 0 | 0.250 | 0.186 | 0.010 | 1.049 | 1.000 | 0.210 |
+| tabular-MiniBooNE | greedy_entropy | 0 | 0.150 | 0.130 | 0.000 | 1.654 | 1.000 | 1.000 |
+| tabular-MiniBooNE | random | 0 | 0.150 | 0.141 | 0.000 | 1.143 | 1.000 | 1.000 |
 
 ### 8.4 TABLE_E6_baselines
 
-Convention for `mondrian_oracle.stratum_violation` (fixed this session, §4): strata where the per-stratum oracle certifies no λ fall back to full acquisition, the same rule its `test_risk` and `test_cost` use.
+Convention for `mondrian_oracle.stratum_violation`: strata where the per-stratum oracle certifies no λ fall back to full acquisition, the same rule its `test_risk` and `test_cost` use.
 
-| dataset | policy | seed | baseline | mean_test_risk | mean_test_cost | stratum_violation_rate | aggregate_violation_rate |
-|---|---|---|---|---|---|---|---|
-| csv-diabetes | greedy_entropy | 0 | budget_0.25 | 0.095 | 11.000 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | budget_0.5 | 0.094 | 22.000 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | budget_0.75 | 0.094 | 34.000 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.9 | 0.097 | 9.408 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.95 | 0.096 | 12.099 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.99 | 0.096 | 13.134 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | full_acquisition | 0.097 | 45.000 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | mondrian_oracle | 0.113 | 11.617 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | oracle_cheapest_valid | 0.100 | 6.879 | 1.000 | 0.000 |
-| csv-diabetes | greedy_entropy | 0 | plugin | 0.100 | 6.879 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | budget_0.25 | 0.165 | 11.000 | 1.000 | 1.000 |
-| csv-diabetes | random | 0 | budget_0.5 | 0.132 | 22.000 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | budget_0.75 | 0.109 | 34.000 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | fixed_conf_0.9 | 0.117 | 16.265 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | fixed_conf_0.95 | 0.104 | 19.781 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | fixed_conf_0.99 | 0.098 | 24.243 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | full_acquisition | 0.097 | 45.000 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | mondrian_oracle | 0.148 | 10.729 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | oracle_cheapest_valid | 0.147 | 10.302 | 1.000 | 0.000 |
-| csv-diabetes | random | 0 | plugin | 0.148 | 10.206 | 1.000 | 0.220 |
-| csv-physionet | greedy_entropy | 0 | budget_0.25 | 0.142 | 10.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | budget_0.5 | 0.134 | 20.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | budget_0.75 | 0.127 | 31.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | fixed_conf_0.9 | 0.131 | 7.430 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | fixed_conf_0.95 | 0.129 | 14.346 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | fixed_conf_0.99 | 0.127 | 26.977 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | mondrian_oracle | 0.144 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | oracle_cheapest_valid | 0.144 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | plugin | 0.144 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | budget_0.25 | 0.145 | 10.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | budget_0.5 | 0.137 | 20.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | budget_0.75 | 0.131 | 31.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | fixed_conf_0.9 | 0.134 | 11.871 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | fixed_conf_0.95 | 0.129 | 24.002 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | fixed_conf_0.99 | 0.127 | 36.217 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | mondrian_oracle | 0.144 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | oracle_cheapest_valid | 0.144 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | plugin | 0.144 | 0.000 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | budget_0.25 | 0.133 | 5.000 | 1.000 | 0.000 |
-| cube | greedy_entropy | 0 | budget_0.5 | 0.069 | 10.000 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | budget_0.75 | 0.059 | 15.000 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | fixed_conf_0.9 | 0.084 | 6.520 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | fixed_conf_0.95 | 0.062 | 8.288 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | fixed_conf_0.99 | 0.047 | 11.666 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | full_acquisition | 0.045 | 20.000 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | mondrian_oracle | 0.109 | 4.978 | 0.000 | 0.000 |
-| cube | greedy_entropy | 0 | oracle_cheapest_valid | 0.150 | 3.621 | 1.000 | 0.000 |
-| cube | greedy_entropy | 0 | plugin | 0.144 | 3.753 | 1.000 | 0.040 |
-| cube | random | 0 | budget_0.25 | 0.526 | 5.000 | 1.000 | 1.000 |
-| cube | random | 0 | budget_0.5 | 0.268 | 10.000 | 1.000 | 1.000 |
-| cube | random | 0 | budget_0.75 | 0.113 | 15.000 | 1.000 | 0.000 |
-| cube | random | 0 | fixed_conf_0.9 | 0.076 | 12.764 | 0.000 | 0.000 |
-| cube | random | 0 | fixed_conf_0.95 | 0.059 | 14.167 | 0.000 | 0.000 |
-| cube | random | 0 | fixed_conf_0.99 | 0.046 | 16.114 | 0.000 | 0.000 |
-| cube | random | 0 | full_acquisition | 0.045 | 20.000 | 0.000 | 0.000 |
-| cube | random | 0 | mondrian_oracle | 0.104 | 11.030 | 0.000 | 0.000 |
-| cube | random | 0 | oracle_cheapest_valid | 0.150 | 9.249 | 1.000 | 0.000 |
-| cube | random | 0 | plugin | 0.138 | 9.565 | 1.000 | 0.020 |
-| fashionmnist | greedy_entropy | 0 | budget_0.25 | 0.117 | 12.000 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | budget_0.5 | 0.080 | 24.000 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | budget_0.75 | 0.066 | 37.000 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | fixed_conf_0.9 | 0.091 | 9.025 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.073 | 12.600 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.062 | 20.912 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | full_acquisition | 0.059 | 49.000 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | mondrian_oracle | 0.123 | 12.690 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.147 | 4.778 | 1.000 | 0.000 |
-| fashionmnist | greedy_entropy | 0 | plugin | 0.143 | 5.045 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | budget_0.25 | 0.139 | 12.000 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | budget_0.5 | 0.090 | 24.000 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | budget_0.75 | 0.070 | 37.000 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | fixed_conf_0.9 | 0.090 | 12.373 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | fixed_conf_0.95 | 0.071 | 15.935 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | fixed_conf_0.99 | 0.060 | 23.117 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | full_acquisition | 0.059 | 49.000 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | mondrian_oracle | 0.130 | 13.340 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | oracle_cheapest_valid | 0.150 | 7.454 | 1.000 | 0.000 |
-| fashionmnist | random | 0 | plugin | 0.149 | 7.480 | 1.000 | 0.180 |
-| mnist | greedy_entropy | 0 | budget_0.25 | 0.026 | 12.000 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | budget_0.5 | 0.015 | 24.000 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | budget_0.75 | 0.010 | 37.000 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | fixed_conf_0.9 | 0.046 | 4.583 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.025 | 5.970 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.010 | 10.324 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | full_acquisition | 0.006 | 49.000 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | mondrian_oracle | 0.083 | 3.601 | 0.000 | 0.000 |
-| mnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.099 | 3.392 | 1.000 | 0.000 |
-| mnist | greedy_entropy | 0 | plugin | 0.097 | 3.417 | 0.990 | 0.040 |
-| mnist | random | 0 | budget_0.25 | 0.114 | 12.000 | 1.000 | 1.000 |
-| mnist | random | 0 | budget_0.5 | 0.024 | 24.000 | 0.000 | 0.000 |
-| mnist | random | 0 | budget_0.75 | 0.009 | 37.000 | 0.000 | 0.000 |
-| mnist | random | 0 | fixed_conf_0.9 | 0.054 | 9.689 | 0.000 | 0.000 |
-| mnist | random | 0 | fixed_conf_0.95 | 0.031 | 11.393 | 0.000 | 0.000 |
-| mnist | random | 0 | fixed_conf_0.99 | 0.010 | 15.268 | 0.000 | 0.000 |
-| mnist | random | 0 | full_acquisition | 0.006 | 49.000 | 0.000 | 0.000 |
-| mnist | random | 0 | mondrian_oracle | 0.075 | 8.720 | 0.000 | 0.000 |
-| mnist | random | 0 | oracle_cheapest_valid | 0.100 | 7.885 | 1.000 | 0.000 |
-| mnist | random | 0 | plugin | 0.095 | 8.047 | 0.870 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | budget_0.25 | 0.214 | 4.000 | 1.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | budget_0.5 | 0.180 | 7.000 | 1.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | budget_0.75 | 0.156 | 10.000 | 0.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | fixed_conf_0.9 | 0.151 | 7.374 | 0.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | fixed_conf_0.95 | 0.149 | 8.525 | 0.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | fixed_conf_0.99 | 0.147 | 11.624 | 0.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | full_acquisition | 0.147 | 14.000 | 0.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | mondrian_oracle | 0.176 | 2.065 | 0.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | oracle_cheapest_valid | 0.243 | 0.000 | 1.000 | 0.000 |
-| tabular-adult | greedy_entropy | 0 | plugin | 0.207 | 1.808 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | budget_0.25 | 0.205 | 4.000 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | budget_0.75 | 0.160 | 10.000 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | fixed_conf_0.9 | 0.150 | 7.965 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | fixed_conf_0.95 | 0.149 | 9.622 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | fixed_conf_0.99 | 0.147 | 12.014 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | full_acquisition | 0.147 | 14.000 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | mondrian_oracle | 0.186 | 3.590 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | oracle_cheapest_valid | 0.243 | 0.000 | 1.000 | 0.000 |
-| tabular-adult | random | 0 | plugin | 0.198 | 2.652 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.25 | 0.112 | 12.000 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.5 | 0.094 | 25.000 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.75 | 0.087 | 38.000 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.9 | 0.092 | 10.543 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.95 | 0.083 | 16.778 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.99 | 0.081 | 28.607 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | full_acquisition | 0.080 | 50.000 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | mondrian_oracle | 0.105 | 15.084 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | oracle_cheapest_valid | 0.132 | 3.047 | 1.000 | 0.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | plugin | 0.132 | 3.047 | 1.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | budget_0.25 | 0.157 | 12.000 | 1.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | budget_0.5 | 0.110 | 25.000 | 1.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | budget_0.75 | 0.092 | 38.000 | 1.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | fixed_conf_0.9 | 0.096 | 16.651 | 0.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | fixed_conf_0.95 | 0.085 | 23.469 | 0.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | fixed_conf_0.99 | 0.080 | 35.175 | 0.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | full_acquisition | 0.080 | 50.000 | 0.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | mondrian_oracle | 0.135 | 11.550 | 0.090 | 0.000 |
-| tabular-MiniBooNE | random | 0 | oracle_cheapest_valid | 0.148 | 7.121 | 1.000 | 0.000 |
-| tabular-MiniBooNE | random | 0 | plugin | 0.148 | 7.120 | 1.000 | 0.080 |
+| dataset | policy | seed | baseline | mean_test_risk | mean_test_cost | stratum_violation_rate | aggregate_violation_rate | stratum_certified_violation_rate |
+|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0 | budget_0.25 | 0.095 | 11.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | budget_0.5 | 0.095 | 22.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | budget_0.75 | 0.095 | 34.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.9 | 0.096 | 9.496 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.95 | 0.096 | 12.179 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.99 | 0.096 | 13.218 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | mondrian_oracle | 0.114 | 11.650 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | oracle_cheapest_valid | 0.099 | 6.915 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | greedy_entropy | 0 | plugin | 0.099 | 6.915 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | budget_0.25 | 0.164 | 11.000 | 1.000 | 1.000 | 1.000 |
+| csv-diabetes | random | 0 | budget_0.5 | 0.131 | 22.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | budget_0.75 | 0.107 | 34.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | fixed_conf_0.9 | 0.117 | 16.332 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | fixed_conf_0.95 | 0.103 | 19.841 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | fixed_conf_0.99 | 0.098 | 24.320 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | mondrian_oracle | 0.150 | 10.563 | 1.000 | 0.380 | 1.000 |
+| csv-diabetes | random | 0 | oracle_cheapest_valid | 0.148 | 10.300 | 1.000 | 0.000 | 1.000 |
+| csv-diabetes | random | 0 | plugin | 0.150 | 9.908 | 1.000 | 0.400 | 1.000 |
+| csv-physionet | greedy_entropy | 0 | budget_0.25 | 0.141 | 10.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | budget_0.5 | 0.136 | 20.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | budget_0.75 | 0.128 | 31.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | fixed_conf_0.9 | 0.132 | 7.622 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | fixed_conf_0.95 | 0.128 | 14.584 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | fixed_conf_0.99 | 0.127 | 27.377 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | mondrian_oracle | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | oracle_cheapest_valid | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | greedy_entropy | 0 | plugin | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | budget_0.25 | 0.144 | 10.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | budget_0.5 | 0.138 | 20.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | budget_0.75 | 0.136 | 31.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | fixed_conf_0.9 | 0.133 | 12.147 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | fixed_conf_0.95 | 0.129 | 24.435 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | fixed_conf_0.99 | 0.127 | 36.329 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | mondrian_oracle | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | oracle_cheapest_valid | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 |
+| csv-physionet | random | 0 | plugin | 0.143 | 0.000 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | budget_0.25 | 0.133 | 5.000 | 1.000 | 0.000 | 1.000 |
+| cube | greedy_entropy | 0 | budget_0.5 | 0.069 | 10.000 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | budget_0.75 | 0.059 | 15.000 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | fixed_conf_0.9 | 0.085 | 6.589 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | fixed_conf_0.95 | 0.063 | 8.354 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | fixed_conf_0.99 | 0.048 | 11.685 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | full_acquisition | 0.046 | 20.000 | 0.000 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | mondrian_oracle | 0.115 | 4.960 | 0.050 | 0.000 | 0.000 |
+| cube | greedy_entropy | 0 | oracle_cheapest_valid | 0.149 | 3.733 | 1.000 | 0.000 | 1.000 |
+| cube | greedy_entropy | 0 | plugin | 0.148 | 3.749 | 1.000 | 0.310 | 0.990 |
+| cube | random | 0 | budget_0.25 | 0.531 | 5.000 | 1.000 | 1.000 | 1.000 |
+| cube | random | 0 | budget_0.5 | 0.274 | 10.000 | 1.000 | 1.000 | 1.000 |
+| cube | random | 0 | budget_0.75 | 0.119 | 15.000 | 1.000 | 0.000 | 1.000 |
+| cube | random | 0 | fixed_conf_0.9 | 0.076 | 12.820 | 0.000 | 0.000 | 0.000 |
+| cube | random | 0 | fixed_conf_0.95 | 0.058 | 14.195 | 0.000 | 0.000 | 0.000 |
+| cube | random | 0 | fixed_conf_0.99 | 0.047 | 16.120 | 0.000 | 0.000 | 0.000 |
+| cube | random | 0 | full_acquisition | 0.046 | 20.000 | 0.000 | 0.000 | 0.000 |
+| cube | random | 0 | mondrian_oracle | 0.112 | 10.954 | 0.030 | 0.000 | 0.000 |
+| cube | random | 0 | oracle_cheapest_valid | 0.147 | 9.602 | 1.000 | 0.000 | 1.000 |
+| cube | random | 0 | plugin | 0.151 | 9.470 | 1.000 | 0.570 | 1.000 |
+| fashionmnist | greedy_entropy | 0 | budget_0.25 | 0.117 | 12.000 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | greedy_entropy | 0 | budget_0.5 | 0.079 | 24.000 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | greedy_entropy | 0 | budget_0.75 | 0.065 | 37.000 | 1.000 | 0.000 | 0.200 |
+| fashionmnist | greedy_entropy | 0 | fixed_conf_0.9 | 0.091 | 9.031 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.073 | 12.621 | 0.600 | 0.000 | 0.000 |
+| fashionmnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.060 | 20.979 | 0.200 | 0.000 | 0.000 |
+| fashionmnist | greedy_entropy | 0 | full_acquisition | 0.058 | 49.000 | 0.200 | 0.000 | 0.000 |
+| fashionmnist | greedy_entropy | 0 | mondrian_oracle | 0.123 | 12.859 | 0.210 | 0.000 | 0.000 |
+| fashionmnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.148 | 4.793 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | greedy_entropy | 0 | plugin | 0.144 | 5.003 | 1.000 | 0.040 | 1.000 |
+| fashionmnist | random | 0 | budget_0.25 | 0.141 | 12.000 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | random | 0 | budget_0.5 | 0.090 | 24.000 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | random | 0 | budget_0.75 | 0.069 | 37.000 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | random | 0 | fixed_conf_0.9 | 0.089 | 12.345 | 1.000 | 0.000 | 0.800 |
+| fashionmnist | random | 0 | fixed_conf_0.95 | 0.071 | 15.923 | 0.600 | 0.000 | 0.200 |
+| fashionmnist | random | 0 | fixed_conf_0.99 | 0.059 | 23.110 | 0.200 | 0.000 | 0.000 |
+| fashionmnist | random | 0 | full_acquisition | 0.058 | 49.000 | 0.200 | 0.000 | 0.000 |
+| fashionmnist | random | 0 | mondrian_oracle | 0.127 | 14.402 | 0.210 | 0.000 | 0.010 |
+| fashionmnist | random | 0 | oracle_cheapest_valid | 0.147 | 7.452 | 1.000 | 0.000 | 1.000 |
+| fashionmnist | random | 0 | plugin | 0.147 | 7.469 | 1.000 | 0.250 | 1.000 |
+| mnist | greedy_entropy | 0 | budget_0.25 | 0.027 | 12.000 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | budget_0.5 | 0.016 | 24.000 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | budget_0.75 | 0.010 | 37.000 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | fixed_conf_0.9 | 0.046 | 4.608 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.026 | 5.957 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.011 | 10.331 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | full_acquisition | 0.006 | 49.000 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | mondrian_oracle | 0.084 | 3.604 | 0.000 | 0.000 | 0.000 |
+| mnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.098 | 3.406 | 1.000 | 0.000 | 0.800 |
+| mnist | greedy_entropy | 0 | plugin | 0.098 | 3.415 | 0.970 | 0.190 | 0.620 |
+| mnist | random | 0 | budget_0.25 | 0.115 | 12.000 | 1.000 | 1.000 | 1.000 |
+| mnist | random | 0 | budget_0.5 | 0.025 | 24.000 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | budget_0.75 | 0.009 | 37.000 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | fixed_conf_0.9 | 0.055 | 9.741 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | fixed_conf_0.95 | 0.031 | 11.456 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | fixed_conf_0.99 | 0.010 | 15.352 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | full_acquisition | 0.006 | 49.000 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | mondrian_oracle | 0.076 | 8.727 | 0.000 | 0.000 | 0.000 |
+| mnist | random | 0 | oracle_cheapest_valid | 0.097 | 8.036 | 1.000 | 0.000 | 0.000 |
+| mnist | random | 0 | plugin | 0.096 | 8.072 | 0.760 | 0.280 | 0.090 |
+| tabular-adult | greedy_entropy | 0 | budget_0.25 | 0.216 | 4.000 | 1.000 | 0.000 | 1.000 |
+| tabular-adult | greedy_entropy | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.000 | 1.000 |
+| tabular-adult | greedy_entropy | 0 | budget_0.75 | 0.158 | 10.000 | 0.000 | 0.000 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | fixed_conf_0.9 | 0.151 | 7.320 | 0.000 | 0.000 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | fixed_conf_0.95 | 0.149 | 8.469 | 0.000 | 0.000 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | fixed_conf_0.99 | 0.147 | 11.556 | 0.000 | 0.000 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | full_acquisition | 0.147 | 14.000 | 0.000 | 0.000 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | mondrian_oracle | 0.179 | 2.113 | 0.010 | 0.000 | 0.000 |
+| tabular-adult | greedy_entropy | 0 | oracle_cheapest_valid | 0.237 | 0.476 | 1.000 | 0.000 | 1.000 |
+| tabular-adult | greedy_entropy | 0 | plugin | 0.220 | 1.273 | 1.000 | 0.150 | 1.000 |
+| tabular-adult | random | 0 | budget_0.25 | 0.206 | 4.000 | 1.000 | 0.000 | 1.000 |
+| tabular-adult | random | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.000 | 1.000 |
+| tabular-adult | random | 0 | budget_0.75 | 0.160 | 10.000 | 1.000 | 0.000 | 1.000 |
+| tabular-adult | random | 0 | fixed_conf_0.9 | 0.151 | 7.943 | 0.800 | 0.000 | 0.000 |
+| tabular-adult | random | 0 | fixed_conf_0.95 | 0.149 | 9.583 | 0.800 | 0.000 | 0.000 |
+| tabular-adult | random | 0 | fixed_conf_0.99 | 0.147 | 11.953 | 0.800 | 0.000 | 0.000 |
+| tabular-adult | random | 0 | full_acquisition | 0.147 | 14.000 | 0.800 | 0.000 | 0.000 |
+| tabular-adult | random | 0 | mondrian_oracle | 0.190 | 3.564 | 0.800 | 0.000 | 0.000 |
+| tabular-adult | random | 0 | oracle_cheapest_valid | 0.234 | 0.688 | 1.000 | 0.000 | 0.800 |
+| tabular-adult | random | 0 | plugin | 0.214 | 1.856 | 1.000 | 0.150 | 0.560 |
+| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.25 | 0.110 | 12.000 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.5 | 0.092 | 25.000 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.75 | 0.085 | 38.000 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.9 | 0.090 | 10.580 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.95 | 0.081 | 16.828 | 0.800 | 0.000 | 0.200 |
+| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.99 | 0.078 | 28.661 | 0.600 | 0.000 | 0.200 |
+| tabular-MiniBooNE | greedy_entropy | 0 | full_acquisition | 0.077 | 50.000 | 0.600 | 0.000 | 0.200 |
+| tabular-MiniBooNE | greedy_entropy | 0 | mondrian_oracle | 0.103 | 15.161 | 0.600 | 0.000 | 0.200 |
+| tabular-MiniBooNE | greedy_entropy | 0 | oracle_cheapest_valid | 0.130 | 3.070 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | greedy_entropy | 0 | plugin | 0.130 | 3.070 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | random | 0 | budget_0.25 | 0.155 | 12.000 | 1.000 | 1.000 | 1.000 |
+| tabular-MiniBooNE | random | 0 | budget_0.5 | 0.108 | 25.000 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | random | 0 | budget_0.75 | 0.090 | 38.000 | 1.000 | 0.000 | 0.800 |
+| tabular-MiniBooNE | random | 0 | fixed_conf_0.9 | 0.093 | 16.647 | 0.000 | 0.000 | 0.000 |
+| tabular-MiniBooNE | random | 0 | fixed_conf_0.95 | 0.082 | 23.538 | 0.000 | 0.000 | 0.000 |
+| tabular-MiniBooNE | random | 0 | fixed_conf_0.99 | 0.077 | 35.213 | 0.000 | 0.000 | 0.000 |
+| tabular-MiniBooNE | random | 0 | full_acquisition | 0.077 | 50.000 | 0.000 | 0.000 | 0.000 |
+| tabular-MiniBooNE | random | 0 | mondrian_oracle | 0.132 | 12.771 | 0.030 | 0.000 | 0.000 |
+| tabular-MiniBooNE | random | 0 | oracle_cheapest_valid | 0.147 | 7.113 | 1.000 | 0.000 | 1.000 |
+| tabular-MiniBooNE | random | 0 | plugin | 0.146 | 7.188 | 1.000 | 0.080 | 1.000 |
 
-### 8.5 Cells above δ and refusals — diagnosis
+### 8.5 Violations per split (cells over δ in round 1, and every other cell)
 
-Over-δ cells at `dep`: MiniBooNE greedy 0.110 and random 0.120, FashionMNIST greedy 0.350 and random 0.580. Each was diagnosed with `scripts/diagnose_violation_v3.py` (→ `results_v3/diagnostics/{tabular-MiniBooNE,fashionmnist}_ts0_{greedy_entropy,random}_dep.json`), which recomputes everything independently of the sweep code:
-- **Split integrity:** probe/calpool/test digests and sizes match the commit; the three splits are disjoint and cover the heldout set.
-- **Stratum alignment:** plain-numpy bucket ids equal `reference_buckets` on calpool and test.
-- **Calibration rows:** every flagged draw's rows lie in the calpool and none in the test split.
-- **Certificates:** each flagged draw's deepest-stratum HB p on its calibration rows is ≤ its tier level. FashionMNIST: all flagged draws are tier 1, with max p 0.0496 / 0.0494 ≤ δ₁ = 0.05. MiniBooNE: tier 1 and tier 3, with p 0.0035–0.047 ≤ the respective tier levels.
+`python scripts/report_violations_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --focus ...` → `results_v3/diagnostics/r2_violations_dep.md` (and `r2_violations_lr{0.5,0.7,0.9}.md`). By-split columns are in test-seed order 778, 779, 780, 781, 782.
 
-No implementation bug was found. The common pattern: the deepest stratum's risk on the fixed test split exceeds its calibration-pool risk, and all 100 draws share one calpool and one test split.
 
-| cell | deepest-stratum full-acquisition risk, calpool → test | flagged draws | flagged rules whose pooled calpool+test risk is ≤ α |
-|---|---|---|---|
-| FashionMNIST greedy | 0.1326 → 0.1508 | 35 (all tier 1) | 35 of 35 (pooled 0.1416–0.1494) |
-| FashionMNIST random | 0.1287 → 0.1557 | 58 (all tier 1) | 48 of 58 (the other 10 draws: λ 0.919–0.949, pooled 0.151–0.160) |
-| MiniBooNE greedy | 0.1456 → 0.1590 | 11 | 7 (tier 3, μ 0.529, pooled 0.1451); the other 4 are tier 1, pooled 0.153–0.155 |
-| MiniBooNE random | 0.1320 → 0.1404 | 12 (all tier 1) | 9 (λ 0.859 / 0.848, pooled 0.146 / 0.149); the other 3 at λ 0.828 / 0.838, pooled 0.153 / 0.152 |
+Metrics: F:/CAFA_results/metrics_v3; lambda_ref key dep; scheme uniform; by-split columns in test-seed order ['778', '779', '780', '781', '782'].
 
-Context checks:
-- **Split balance** (`scripts/split_balance_v3.py` → `results_v3/diagnostics/*_ts0_split_balance.json`): the overall full-acquisition error differs between calpool and test with z = +0.09 (PhysioNet), +0.45 (Diabetes), −0.34 (CUBE), −0.07 (Adult), +0.75 (FashionMNIST), +1.40 (MNIST), +1.93 (MiniBooNE). All |z| < 2.
-- **Sign over strata** (`results_v3/diagnostics/calpool_vs_test_full_acq_ts0.json`): across 161 (cell, λ_ref, stratum) rows, test > calpool in 95 and test < calpool in 65.
-- **Shared splits:** v3 positions depend only on n_heldout, so MNIST and FashionMNIST (both 28,000) share one split.
+| cell | focus | cert. deployment | raw viol pooled | raw by split | certified viol | certified by split | max_excess_se mean | q90 | by split (means) | certified ≤ δ+0.05 | mean excess ≤ 0 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes:greedy_entropy:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.877 | -1.821 | -3.863 -4.150 -3.414 -2.365 -5.592 | pass | pass |
+| csv-diabetes:random:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.937 | -1.845 | -4.295 -3.904 -4.000 -2.911 -4.576 | pass | pass |
+| csv-physionet:greedy_entropy:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -6.616 | -5.756 | -6.455 -7.262 -6.509 -7.100 -5.756 | pass | pass |
+| csv-physionet:random:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -6.616 | -5.756 | -6.455 -7.262 -6.509 -7.100 -5.756 | pass | pass |
+| cube:greedy_entropy:ts0 |  | 1.00 | 0.010 | 0.000 0.000 0.000 0.000 0.050 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.368 | -2.093 | -4.010 -3.323 -4.189 -2.856 -2.462 | pass | pass |
+| cube:random:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.338 | -2.108 | -3.350 -4.547 -3.267 -2.936 -2.588 | pass | pass |
+| fashionmnist:greedy_entropy:ts0 | yes | 1.00 | 0.100 | 0.450 0.000 0.050 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -4.109 | -0.026 | -1.934 -4.967 -2.713 -5.508 -5.425 | pass | pass |
+| fashionmnist:random:ts0 | yes | 1.00 | 0.100 | 0.500 0.000 0.000 0.000 0.000 | 0.010 | 0.050 0.000 0.000 0.000 0.000 | -3.966 | -0.209 | -0.088 -5.250 -3.352 -5.256 -5.884 | pass | pass |
+| mnist:greedy_entropy:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.514 | -2.681 | -3.823 -3.415 -2.923 -3.167 -4.243 | pass | pass |
+| mnist:random:ts0 |  | 1.00 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.759 | -3.015 | -4.622 -3.444 -3.651 -3.699 -3.381 | pass | pass |
+| tabular-adult:greedy_entropy:ts0 |  | 1.00 | 0.010 | 0.000 0.000 0.000 0.000 0.050 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.812 | -3.320 | -4.154 -3.320 -3.393 -4.219 -3.973 | pass | pass |
+| tabular-adult:random:ts0 |  | 1.00 | 0.020 | 0.000 0.100 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -3.273 | -0.816 | -3.993 -1.200 -3.401 -3.012 -4.760 | pass | pass |
+| tabular-MiniBooNE:greedy_entropy:ts0 | yes | 1.00 | 0.020 | 0.100 0.000 0.000 0.000 0.000 | 0.010 | 0.050 0.000 0.000 0.000 0.000 | -4.055 | -1.557 | -1.670 -4.127 -6.551 -6.038 -1.890 | pass | pass |
+| tabular-MiniBooNE:random:ts0 | yes | 1.00 | 0.030 | 0.150 0.000 0.000 0.000 0.000 | 0.000 | 0.000 0.000 0.000 0.000 0.000 | -4.613 | -1.458 | -1.445 -5.308 -5.714 -5.880 -4.717 | pass | pass |
 
-Refusals (`none > 0.05`) occur only at λ_ref 0.9: Diabetes greedy 0.97, random 0.43 (`results_v3/tables_e9_lambda_ref_0.9/`). `scripts/diagnose_refusal_v3.py` (→ `results_v3/diagnostics/csv-diabetes_ts0_*_lr0.9_refusal.json`) replays the committed tier-3 walk:
-- **Greedy:** the probe-committed order starts at level 39 (probe answered fraction 0.074). In the 97 refusing draws, only 78–123 (median 102) of 1,583–1,734 deep-stratum (k = 1) calibration rows are answered at that level. Their selective risk is 0.065–0.167 and p = 0.0264–1.0 > δ₃ = 0.025, so the walk stops at the first level. Three draws (61, 80, 90) certify level 39. The replay refuses in 97/100 draws, matching the sweep.
-- **Random:** the replay refuses in 39/100 draws against the sweep's 43/100. `scripts/hb_boundary_draws_v3.py` (→ `results_v3/diagnostics/csv-diabetes_ts0_random_lr0.9_hb_boundary_draws.json`) identifies the 4 differing draws: 8, 40, 66, 88, all at level 37, stratum 4, with (n, errors) = (197, 17), (186, 16), (196, 17), (201, 18). The cascade's p-values from the frozen primitive (r̂ = 1 − mean(correct)) are 0.0270 / 0.0321 / 0.0291 / 0.0373 > δ₃. The exact-count p-values are 0.0149 / 0.0180 / 0.0161 / 0.0208 ≤ δ₃. This is the defect described in §9. The sweep's 43 is the reported number.
+Cells failing an acceptance check: none
 
-### 8.6 E7 — audit-guided repair (`results_v3/repair/*.json`, 100 draws each)
+The four cells over δ in round 1 (raw rate on split 778 alone): FashionMNIST greedy 0.350 → by split 0.450 / 0.000 / 0.050 / 0.000 / 0.000 (pooled 0.100); FashionMNIST random 0.580 → 0.500 / 0.000 / 0.000 / 0.000 / 0.000 (0.100); MiniBooNE greedy 0.110 → 0.100 / 0.000 / 0.000 / 0.000 / 0.000 (0.020); MiniBooNE random 0.120 → 0.150 / 0.000 / 0.000 / 0.000 / 0.000 (0.030). In every one of them the excess is confined to split 778, and the certified-violation rate is ≤ 0.010 pooled (≤ 0.05 on split 778).
 
-Predictor upgrade (BEFORE = AAAI v2 cache + v2-based commit `configs/committed_v3before_{ds}_ts0.json`; AFTER = v3 greedy cache on the BEFORE strata):
+Multi-split diagnosis of FashionMNIST random `dep` (`python scripts/diagnose_violation_v3.py --dataset fashionmnist --policy random --train-seed 0 --lambda-ref-key dep --output results_v3/diagnostics/r2_fashionmnist_ts0_random_dep.json`; log `results_v3/logs/r2_taskC_diagnose_fashionmnist_random_dep.log`). Every split passes every integrity check (digests, sizes, disjointness and coverage, numpy-vs-`reference_buckets` strata; the flagged draws' calibration rows lie in their own calpool and outside the test split; the test p-values recomputed independently equal the sweep's). Deepest-stratum (k = 4) full-acquisition risk, calibration pool → test split: 778 0.1287 → 0.1557; 779 0.1480 → 0.1364; 780 0.1422 → 0.1421; 781 0.1443 → 0.1400; 782 0.1487 → 0.1356. Only split 778 pairs an optimistic calibration pool with a pessimistic test split, and only split 778 has raw violations (0.50; certified 0.05). The round-1 diagnoses of these cells are in `results_v3/round1/diagnostics/` (superseded; they used split 778 only).
 
-```
-mnist  [repair:predictor_upgrade] lr[0.5]=0.500 deepest k=4: feasible (rmin 0.144, full 0.145) -> feasible (rmin 0.008, full 0.008); tier1 0.00 -> 1.00; viol 0.00 -> 0.00
-mnist  [repair:predictor_upgrade] lr[0.7]=0.700 deepest k=4: type_II (rmin 0.195, full 0.196) -> feasible (rmin 0.010, full 0.010); tier1 0.00 -> 1.00; viol 0.00 -> 0.00
-mnist  [repair:predictor_upgrade] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.255, full 0.255) -> feasible (rmin 0.011, full 0.011); tier1 0.00 -> 1.00; viol 0.00 -> 0.00
-mnist  [repair:predictor_upgrade] lr[dep]=0.869 deepest k=4: type_II (rmin 0.295, full 0.296) -> feasible (rmin 0.011, full 0.012); tier1 0.00 -> 1.00; viol 0.00 -> 0.00
-tabular-adult  [repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.148, full 0.148) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-adult  [repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.148, full 0.148) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-adult  [repair:predictor_upgrade] lr[0.9]=0.900 deepest k=2: type_II (rmin 0.296, full 0.296) -> type_II (rmin 0.292, full 0.292); tier1 0.00 -> 0.00; viol 0.00 -> 0.01
-tabular-adult  [repair:predictor_upgrade] lr[dep]=0.758 deepest k=1: feasible (rmin 0.196, full 0.197) -> feasible (rmin 0.194, full 0.194); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-MiniBooNE  [repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.082, full 0.082) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-MiniBooNE  [repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.082, full 0.082) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-MiniBooNE  [repair:predictor_upgrade] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.247, full 0.248) -> type_II (rmin 0.223, full 0.223); tier1 0.00 -> 0.00; viol 0.01 -> 0.01
-tabular-MiniBooNE  [repair:predictor_upgrade] lr[dep]=0.727 deepest k=3: unresolved (rmin 0.157, full 0.157) -> feasible (rmin 0.142, full 0.143); tier1 0.00 -> 0.07; viol 0.00 -> 0.07
-```
+### 8.6 E7 — audit-guided repair (`results_v3/repair/*.json`, 5 splits × 20 draws each)
 
-Policy change within v3 (BEFORE = random cache on the main v3 commit with `--policy random`; AFTER = greedy cache):
+`python scripts/run_repairs_v3.py --seeds 0 --tag r2 --force` (ledger `r2:repair:*`; logs `results_v3/logs/r2_repair_*.log`; console lines collected in `results_v3/logs/r2_taskC_repair_console.log`). Predictor upgrade: BEFORE = AAAI v2 cache + `configs/committed_v3before_{ds}_ts0.json` (re-committed in round 2), AFTER = v3 greedy cache on the BEFORE strata. Policy change: BEFORE = v3 random cache on the main commit (`--policy random`), AFTER = v3 greedy cache. Policy change covers the 7 seed-0 datasets (round 1 ran 6; FashionMNIST added because Task C says "policy change for the 7 datasets").
 
 ```
-csv-diabetes  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.095, full 0.095) -> feasible (rmin 0.094, full 0.095); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-csv-diabetes  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.095, full 0.095) -> feasible (rmin 0.094, full 0.095); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-csv-diabetes  [repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.357, full 0.357) -> type_II (rmin 0.352, full 0.357); tier1 0.00 -> 0.00; viol 0.00 -> 0.00
-csv-diabetes  [repair:policy_change] lr[dep]=0.828 deepest k=3: type_II (rmin 0.241, full 0.241) -> type_II (rmin 0.236, full 0.241); tier1 0.00 -> 0.00; viol 0.01 -> 0.01
-csv-physionet  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-csv-physionet  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-csv-physionet  [repair:policy_change] lr[0.9]=0.900 deepest k=1: feasible (rmin 0.184, full 0.187) -> feasible (rmin 0.187, full 0.187); tier1 0.05 -> 0.05; viol 0.00 -> 0.00
-csv-physionet  [repair:policy_change] lr[dep]=0.000 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-cube  [repair:policy_change] lr[0.5]=0.500 deepest k=3: feasible (rmin 0.054, full 0.054) -> feasible (rmin 0.054, full 0.054); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-cube  [repair:policy_change] lr[0.7]=0.700 deepest k=3: feasible (rmin 0.080, full 0.083) -> feasible (rmin 0.083, full 0.083); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-cube  [repair:policy_change] lr[0.9]=0.900 deepest k=3: feasible (rmin 0.145, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 0.00 -> 0.00; viol 0.00 -> 0.00
-cube  [repair:policy_change] lr[dep]=0.707 deepest k=3: feasible (rmin 0.080, full 0.083) -> feasible (rmin 0.083, full 0.083); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-mnist  [repair:policy_change] lr[0.5]=0.500 deepest k=4: feasible (rmin 0.006, full 0.006) -> feasible (rmin 0.006, full 0.006); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-mnist  [repair:policy_change] lr[0.7]=0.700 deepest k=4: feasible (rmin 0.008, full 0.008) -> feasible (rmin 0.008, full 0.008); tier1 1.00 -> 1.00; viol 0.00 -> 0.12
-mnist  [repair:policy_change] lr[0.9]=0.900 deepest k=4: feasible (rmin 0.013, full 0.013) -> feasible (rmin 0.013, full 0.013); tier1 1.00 -> 1.00; viol 0.00 -> 0.01
-mnist  [repair:policy_change] lr[dep]=0.788 deepest k=4: feasible (rmin 0.012, full 0.012) -> feasible (rmin 0.012, full 0.012); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-adult  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.147, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-adult  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.147, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-adult  [repair:policy_change] lr[0.9]=0.900 deepest k=2: type_II (rmin 0.302, full 0.303) -> type_II (rmin 0.301, full 0.303); tier1 0.00 -> 0.00; viol 0.01 -> 0.01
-tabular-adult  [repair:policy_change] lr[dep]=0.758 deepest k=2: unresolved (rmin 0.253, full 0.254) -> feasible (rmin 0.248, full 0.254); tier1 0.00 -> 0.00; viol 0.00 -> 0.00
-tabular-MiniBooNE  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.075, full 0.075) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-MiniBooNE  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.075, full 0.075) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00
-tabular-MiniBooNE  [repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.198, full 0.198) -> type_II (rmin 0.198, full 0.198); tier1 0.00 -> 0.00; viol 0.07 -> 0.07
-tabular-MiniBooNE  [repair:policy_change] lr[dep]=0.778 deepest k=3: feasible (rmin 0.132, full 0.132) -> feasible (rmin 0.132, full 0.132); tier1 0.73 -> 0.73; viol 0.12 -> 0.04
+csv-diabetes_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.095, full 0.095) -> feasible (rmin 0.094, full 0.095); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-diabetes_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.095, full 0.095) -> feasible (rmin 0.094, full 0.095); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-diabetes_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.357, full 0.357) -> type_II (rmin 0.352, full 0.357); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-diabetes_policy_change  [repair:policy_change] lr[dep]=0.828 deepest k=3: type_II (rmin 0.241, full 0.241) -> type_II (rmin 0.236, full 0.241); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-physionet_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-physionet_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-physionet_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=1: feasible (rmin 0.184, full 0.187) -> feasible (rmin 0.187, full 0.187); tier1 0.15 -> 0.15; viol 0.06 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-physionet_policy_change  [repair:policy_change] lr[dep]=0.000 deepest k=0: feasible (rmin 0.126, full 0.126) -> feasible (rmin 0.126, full 0.126); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+cube_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=3: feasible (rmin 0.054, full 0.054) -> feasible (rmin 0.054, full 0.054); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+cube_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=3: feasible (rmin 0.080, full 0.083) -> feasible (rmin 0.083, full 0.083); tier1 0.99 -> 0.99; viol 0.00 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+cube_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=3: feasible (rmin 0.145, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 0.03 -> 0.03; viol 0.02 -> 0.02; certviol 0.00 -> 0.01; verdict agreement 5/5 -> 5/5
+cube_policy_change  [repair:policy_change] lr[dep]=0.707 deepest k=3: feasible (rmin 0.080, full 0.083) -> feasible (rmin 0.083, full 0.083); tier1 0.99 -> 0.99; viol 0.00 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+fashionmnist_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=3: feasible (rmin 0.082, full 0.085) -> feasible (rmin 0.084, full 0.085); tier1 1.00 -> 1.00; viol 0.03 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+fashionmnist_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=4: feasible (rmin 0.114, full 0.116) -> feasible (rmin 0.116, full 0.116); tier1 0.70 -> 0.70; viol 0.13 -> 0.01; certviol 0.01 -> 0.00; verdict agreement 5/5 -> 5/5
+fashionmnist_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.170, full 0.171) -> type_II (rmin 0.171, full 0.171); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+fashionmnist_policy_change  [repair:policy_change] lr[dep]=0.778 deepest k=4: feasible (rmin 0.126, full 0.129) -> feasible (rmin 0.128, full 0.129); tier1 0.12 -> 0.12; viol 0.10 -> 0.10; certviol 0.01 -> 0.01; verdict agreement 5/5 -> 5/5
+mnist_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=4: feasible (rmin 0.006, full 0.006) -> feasible (rmin 0.006, full 0.006); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=4: feasible (rmin 0.008, full 0.008) -> feasible (rmin 0.008, full 0.008); tier1 1.00 -> 1.00; viol 0.00 -> 0.16; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=4: feasible (rmin 0.013, full 0.013) -> feasible (rmin 0.013, full 0.013); tier1 1.00 -> 1.00; viol 0.00 -> 0.05; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_policy_change  [repair:policy_change] lr[dep]=0.788 deepest k=4: feasible (rmin 0.012, full 0.012) -> feasible (rmin 0.012, full 0.012); tier1 1.00 -> 1.00; viol 0.00 -> 0.08; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_predictor_upgrade  [repair:predictor_upgrade] lr[0.5]=0.500 deepest k=4: feasible (rmin 0.144, full 0.145) -> feasible (rmin 0.008, full 0.008); tier1 0.04 -> 1.00; viol 0.04 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_predictor_upgrade  [repair:predictor_upgrade] lr[0.7]=0.700 deepest k=4: type_II (rmin 0.195, full 0.196) -> feasible (rmin 0.010, full 0.010); tier1 0.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_predictor_upgrade  [repair:predictor_upgrade] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.255, full 0.255) -> feasible (rmin 0.011, full 0.011); tier1 0.00 -> 1.00; viol 0.00 -> 0.03; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_predictor_upgrade  [repair:predictor_upgrade] lr[dep]=0.869 deepest k=4: type_II (rmin 0.295, full 0.296) -> feasible (rmin 0.011, full 0.012); tier1 0.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.075, full 0.075) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.075, full 0.075) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.198, full 0.198) -> type_II (rmin 0.198, full 0.198); tier1 0.00 -> 0.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_policy_change  [repair:policy_change] lr[dep]=0.778 deepest k=3: feasible (rmin 0.132, full 0.132) -> feasible (rmin 0.132, full 0.132); tier1 0.26 -> 0.26; viol 0.03 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_predictor_upgrade  [repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.082, full 0.082) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_predictor_upgrade  [repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.082, full 0.082) -> feasible (rmin 0.075, full 0.075); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_predictor_upgrade  [repair:predictor_upgrade] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.247, full 0.248) -> type_II (rmin 0.223, full 0.223); tier1 0.00 -> 0.00; viol 0.03 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_predictor_upgrade  [repair:predictor_upgrade] lr[dep]=0.727 deepest k=3: unresolved (rmin 0.157, full 0.157) -> feasible (rmin 0.142, full 0.143); tier1 0.00 -> 0.01; viol 0.00 -> 0.01; certviol 0.00 -> 0.01; verdict agreement 1/5 -> 2/5
+tabular-adult_policy_change  [repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.147, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_policy_change  [repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.147, full 0.147) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_policy_change  [repair:policy_change] lr[0.9]=0.900 deepest k=2: type_II (rmin 0.302, full 0.303) -> type_II (rmin 0.301, full 0.303); tier1 0.00 -> 0.00; viol 0.05 -> 0.05; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_policy_change  [repair:policy_change] lr[dep]=0.758 deepest k=2: unresolved (rmin 0.253, full 0.254) -> feasible (rmin 0.248, full 0.254); tier1 0.00 -> 0.00; viol 0.02 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 2/5 -> 4/5
+tabular-adult_predictor_upgrade  [repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.148, full 0.148) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_predictor_upgrade  [repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.148, full 0.148) -> feasible (rmin 0.147, full 0.147); tier1 1.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_predictor_upgrade  [repair:predictor_upgrade] lr[0.9]=0.900 deepest k=2: type_II (rmin 0.296, full 0.296) -> type_II (rmin 0.292, full 0.292); tier1 0.00 -> 0.00; viol 0.11 -> 0.18; certviol 0.00 -> 0.05; verdict agreement 5/5 -> 5/5
+tabular-adult_predictor_upgrade  [repair:predictor_upgrade] lr[dep]=0.758 deepest k=1: feasible (rmin 0.196, full 0.197) -> feasible (rmin 0.194, full 0.194); tier1 1.00 -> 0.99; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
 ```
 
-E7 expectations from instruction §4.4:
-- **MNIST:** deepest stratum `type_II` → `feasible` and tier-1 share 0 → ≈ 1 at `dep`, 0.7 and 0.9 — **met**.
-- **Adult:** stays `type_II` at λ_ref 0.9 (family minimum 0.296 → 0.292 vs α = 0.25); `feasible` at `dep`.
-- **MiniBooNE:** `unresolved` → `feasible` at `dep`, tier 1 0.00 → 0.07; `type_II` at 0.9 (0.247 → 0.223).
-- **α of the BEFORE commits:** MNIST 0.15, MiniBooNE 0.15, Adult 0.25.
+E7 against the plan's expectation (`dep`): **MNIST** predictor upgrade `type_II` → `feasible` (family minimum 0.295 → 0.011), tier-1 share 0.00 → 1.00 (also at λ_ref 0.7 and 0.9); raw violation 0.00 → 0.00, certified 0.00 → 0.00 (`results_v3/repair/mnist_ts0_predictor_upgrade.json`). **MiniBooNE** predictor upgrade `unresolved` → `feasible` (0.157 → 0.142), tier 1 0.00 → 0.01 (round 1: 0.07; verdict agreement 1/5 → 2/5). **Adult** policy change `unresolved` → `feasible` (0.253 → 0.248; agreement 2/5 → 4/5), tier 1 unchanged at 0.00. The `type_II` verdicts at λ_ref 0.9 (Adult, MiniBooNE, Diabetes, FashionMNIST) are unchanged by either repair.
 
 ### 8.7 E9 — sensitivity
 
-λ_ref sweep (`results_v3/tables_e9_lambda_ref_{0.5,0.7,0.9}/`, `results_v3/tables/` for `dep`). Columns are over the 14 seed-0 cells:
+λ_ref sweep (`results_v3/tables_e9_lambda_ref_{0.5,0.7,0.9}/`, `results_v3/tables/` for `dep`; summary `results_v3/diagnostics/r2_e9_lambda_ref_summary.md`):
 
-| λ_ref key | cells | min certified | mean certified | mean tier-1 share | mean tier-3 share | max test violation | cells with violation > δ | cells with none > 0.05 |
-|---|---|---|---|---|---|---|---|---|
-| 0.5 | 14 | 1.00 | 1.000 | 1.000 | 0.000 | 0.220 | 1: fashionmnist random 0.220 | 0 |
-| 0.7 | 14 | 1.00 | 1.000 | 0.998 | 0.002 | 0.340 | 1: fashionmnist random 0.340 | 0 |
-| 0.9 | 14 | 0.03 | 0.900 | 0.146 | 0.754 | 0.180 | 1: tabular-MiniBooNE greedy_entropy 0.180 | 2: csv-diabetes greedy_entropy 0.97; csv-diabetes random 0.43 |
-| dep | 14 | 1.00 | 1.000 | 0.621 | 0.379 | 0.580 | 4: fashionmnist greedy_entropy 0.350; fashionmnist random 0.580; tabular-MiniBooNE greedy_entropy 0.110; tabular-MiniBooNE random 0.120 | 0 |
+| λ_ref key | cells | min certified | mean certified | mean tier-1 | mean tier-3 | max raw violation | cells raw > δ | max certified violation | cells certified > δ+0.05 | cells mean max_excess_se > 0 | cells none > 0.05 |
+|---|---|---|---|---|---|---|---|---|---|---|---|
+| 0.5 | 14 | 1.00 | 1.000 | 1.000 | 0.000 | 0.030 (fashionmnist random) | 0 | 0.000 (csv-diabetes greedy_entropy) | 0 | 0 | 0 |
+| 0.7 | 14 | 1.00 | 1.000 | 0.972 | 0.028 | 0.130 (fashionmnist random) | 1: fashionmnist random 0.130 | 0.010 (fashionmnist random) | 0 | 0 | 0 |
+| 0.9 | 14 | 0.00 | 0.919 | 0.156 | 0.763 | 0.170 (tabular-adult greedy_entropy) | 1: tabular-adult greedy_entropy 0.170 | 0.000 (csv-diabetes greedy_entropy) | 0 | 0 | 2: csv-diabetes greedy_entropy 1.00; csv-diabetes random 0.13 |
+| dep | 14 | 1.00 | 1.000 | 0.536 | 0.464 | 0.100 (fashionmnist greedy_entropy) | 0 | 0.010 (fashionmnist random) | 0 | 0 | 0 |
 
 Other ablations:
-- **δ split:** PhysioNet greedy with `--delta-weights 0.34,0.33,0.33` (`results_v3/tables_e9_delta_weights/`, `$RESULTS_ROOT\metrics_v3_dw\`) gives the same tier pattern as the committed split at every λ_ref key; at `dep`, tier 1 = 1.00 with 0 violations.
-- **Number of strata:** MNIST greedy with `--n-buckets 8` (`configs/committed_v3_G8_mnist_ts0.json`, `results_v3/tables_e9_G8/`) gives G = 4 after the G-rule (vs 3), tier 1 = 1.00, deployed cost 3.745 (premium 1.072, vs 1.048), 0 violations.
+- **δ split:** PhysioNet greedy with `--delta-weights 0.34,0.33,0.33` (`results_v3/tables_e9_delta_weights/`, `$RESULTS_ROOT\metrics_v3_dw\`; ledger `r2dw:sweep:*`): at `dep` tier 1 = 1.00, certified deployment 1.00, raw violation 0.000, certified violation 0.000 — the same as the committed split (§8.1). The same holds at every λ_ref key: tier shares (1/2/3/none) 1.00/0.00/0.00/0.00 at 0.5 and 0.7, 0.01/0.00/0.99/0.00 at 0.9, for both splits of δ (`results_v3/logs/r2_taskC_facts.log`).
+- **Number of strata:** MNIST greedy with `--n-buckets 8` (`configs/committed_v3_G8_mnist_ts0.json`, re-committed in round 2; `results_v3/tables_e9_G8/`; ledger `r2G8:*`): G = 4 after the G-rule (vs 3), tier 1 = 1.00, deployed cost 3.791 (premium 1.084, vs 1.046 at G = 3 (§8.1)), raw violation 0.000, certified violation 0.000.
+- **α rule (margin 0.02, grid 0.01):** Task E, §12.5 (pending).
 - **Cost schemes:** `results_v3/tables_inverse_info/`.
 
 ### 8.8 Figures
 
-`results_v3/figures/F2_blindness.pdf`, `F3_cascade.pdf`, `F4_repair.pdf`, `F5_planted.pdf` (`make_figures_v3.py --metrics-dir $env:RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures`; 14 cells).
+`python scripts/make_figures_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures` → `results_v3/figures/F2_blindness.pdf`, `F3_cascade.pdf`, `F4_repair.pdf`, `F5_planted.pdf`, `F6_violations.pdf` (new: raw pooled rate with the min–max over splits, certified rate, lines at δ and δ + 0.05). 14 cells; F5 is redrawn from the round-2 planted run (§12.3) once it finishes (Task B/C commits).
 
-### 8.9 Committed JSONs (`python scripts/report_v3.py --commits`)
+### 8.9 Committed JSONs (`python scripts/report_v3.py --commits`; round-2 re-commits)
 
 | commit | alpha | probe floor | n_cal expected | n_min tier1 | policy | G (0.5 / 0.7 / 0.9 / dep) | lambda_ref dep | tier-3 start (dep, answered frac.) |
 |---|---|---|---|---|---|---|---|---|
@@ -672,7 +678,7 @@ Other ablations:
 | `committed_v3_mnist_ts0.json` | 0.1 | 0.003929 | 6300 | 180 | random | 5 / 5 / 5 / 5 | 0.7879 | 0.881 |
 | `committed_v3_tabular-adult_ts0.json` | 0.25 | 0.154229 | 4070 | 428 | greedy_entropy | 1 / 1 / 3 / 2 | 0.7576 | 0.240 |
 | `committed_v3_tabular-adult_ts0.json` | 0.25 | 0.154229 | 4070 | 428 | random | 1 / 1 / 3 / 3 | 0.7576 | 0.454 |
-| `committed_v3_tabular-MiniBooNE_ts0.json` | 0.15 | 0.07438 | 11706 | 275 | greedy_entropy | 1 / 1 / 5 / 3 | 0.7475 | 0.573 |
+| `committed_v3_tabular-MiniBooNE_ts0.json` | 0.15 | 0.07438 | 11706 | 275 | greedy_entropy | 1 / 1 / 5 / 3 | 0.7475 | 0.430 |
 | `committed_v3_tabular-MiniBooNE_ts0.json` | 0.15 | 0.07438 | 11706 | 275 | random | 1 / 1 / 5 / 4 | 0.7778 | 0.477 |
 | `committed_v3before_mnist_ts0.json` | 0.15 | 0.097143 | 6300 | 275 | eps_greedy_eps0.25 | 5 / 5 / 5 / 5 | 0.8384 | 0.335 |
 | `committed_v3before_mnist_ts0.json` | 0.15 | 0.097143 | 6300 | 275 | eps_greedy_eps0.5 | 5 / 5 / 5 / 5 | 0.8081 | 0.359 |
@@ -681,15 +687,17 @@ Other ablations:
 | `committed_v3before_tabular-adult_ts0.json` | 0.25 | 0.155887 | 4070 | 428 | eps_greedy_eps0.25 | 1 / 1 / 4 / 2 | 0.7576 | 0.193 |
 | `committed_v3before_tabular-adult_ts0.json` | 0.25 | 0.155887 | 4070 | 428 | eps_greedy_eps0.5 | 1 / 1 / 4 / 2 | 0.7576 | 0.193 |
 | `committed_v3before_tabular-adult_ts0.json` | 0.25 | 0.155887 | 4070 | 428 | greedy_entropy | 1 / 1 / 3 / 2 | 0.7576 | 0.216 |
-| `committed_v3before_tabular-adult_ts0.json` | 0.25 | 0.155887 | 4070 | 428 | random | 1 / 1 / 4 / 3 | 0.7576 | 0.193 |
+| `committed_v3before_tabular-adult_ts0.json` | 0.25 | 0.155887 | 4070 | 428 | random | 1 / 1 / 4 / 3 | 0.7576 | 0.335 |
 | `committed_v3before_tabular-MiniBooNE_ts0.json` | 0.15 | 0.085143 | 11706 | 275 | eps_greedy_eps0.25 | 1 / 1 / 5 / 4 | 0.7273 | 0.311 |
 | `committed_v3before_tabular-MiniBooNE_ts0.json` | 0.15 | 0.085143 | 11706 | 275 | eps_greedy_eps0.5 | 1 / 1 / 5 / 4 | 0.7374 | 0.454 |
 | `committed_v3before_tabular-MiniBooNE_ts0.json` | 0.15 | 0.085143 | 11706 | 275 | greedy_entropy | 1 / 1 / 5 / 4 | 0.7273 | 0.430 |
 | `committed_v3before_tabular-MiniBooNE_ts0.json` | 0.15 | 0.085143 | 11706 | 275 | random | 1 / 1 / 5 / 5 | 0.7879 | 0.477 |
 
-The G-rule acceptance asks for G ≥ 2 at `dep` except possibly PhysioNet / CUBE. It holds for all datasets except PhysioNet, where G = 1 because λ_ref `dep` = 0.0. Each commit was made once; the only `--force` was the synthetic Phase-0 smoke.
+Every round-2 commit was made with `--force` (reasons: Task A changes the tier-3 order, Task B adds the multi-split `split` block); α, λ_ref, edges, μ and G are unchanged from round 1 (`results_v3/logs/r2_taskC_commit_invariance.log`). The G-rule gives G ≥ 2 at `dep` for every dataset except PhysioNet (G = 1 because λ_ref `dep` = 0).
 
 ## 9. Deviations, open issues, questions
+
+**Resolved in round 2:** the authors chose option (b) below; the primitive is fixed (§12.1, `CHANGELOG.md`). The text below is the round-1 record.
 
 **STOP-CONDITION QUESTION (instruction §7, item 5): a defect in the frozen p-value primitive.**
 - **The defect:** `src/cafa/risk_control.py::_hb_pvalue_array` computes the Bentkus term as `_E * binom.cdf(np.ceil(n * rb).astype(int), n, alpha)`. For a 0/1 loss, r̂ = k/n with an integer error count k, but r̂ arrives as a float. n·r̂ can land a few ulps above k, so `ceil` gives k + 1 and the p-value is computed for one error more than observed.
@@ -721,6 +729,8 @@ Other deviations / open issues:
   - `commit_v3.py` raises `ValueError` if the probe full-acquisition error is exactly 0 (α = 0.05 = design margin). This is not reached on any planned dataset.
 
 ## 10. What remains (exact commands; PowerShell, repo root, after `. .\set_env.ps1`)
+
+> **Round 2 state:** step 0 (option (b)) and steps 4–5 are done for seed 0 with the round-2 code (§12.1–12.3). Imagenette seed 0: §12.4. Seeds 1–2 and Imagenette seeds 1–2: cluster package (Task F). The commands below are the round-1 list and are rewritten at the end of round 2.
 
 0. **Answer §9.** If (a): continue with step 1. If (b) or (c):
    - Implement and test the change.
@@ -768,23 +778,24 @@ python scripts/drive_v3.py --phase sweep --seeds 1 2
 6. **Optional Phase 1d (AFABench GDFS / AACO):** not run (no AFABench `uv` environment here). Fix the `heldout_digest` replay check first (§9), then follow `PHASES_V3.md` 1d with `--out $env:RESULTS_ROOT\orders_v3\physionet_ts0_heldout.npz`.
 7. **Resume after any interruption:** rerun the same `drive_v3.py` command. It skips cells whose output exists and stops at the first non-zero return code (see `results_v3/run_log.jsonl` and `results_v3/logs/`).
 
-## 11. Paper-facing numbers (seed 0, λ_ref `dep`, uniform costs; `TBD-RUN` where not available)
-
-> **Round 1, superseded** (HB defect present, single split). Round-2 values: pending Tasks C–D (§12).
+## 11. Paper-facing numbers (seed 0, λ_ref `dep`, uniform costs; round 2 = HB fix + 5 splits × 20 draws; `old → new` = round 1 → round 2; `TBD-RUN` where not available)
 
 | quantity (plan abstract / §7) | value | source |
 |---|---|---|
-| certified deployment % | 100 % in each of the 14 seed-0 cells (14 × 100 draws) | `results_v3/tables/TABLE_E4_cascade.csv` (`certified_deployment`) |
-| tier-1 % | MNIST 100 / 100, CUBE 100 / 100, Adult greedy 100, PhysioNet 100 / 100, MiniBooNE random 73, FashionMNIST random 58 / greedy 35, MiniBooNE greedy 4, Adult random 0, Diabetes 0 / 0 (greedy / random); mean over 14 cells 62.1 % | same (`tier1`); §8.7 |
-| cost premium (cascade / marginal) | tier-1 cells: MNIST 1.048 / 1.105, CUBE 1.387 / 1.154, Adult greedy 1.220; all cells: same table (`cost_premium`); PhysioNet undefined (marginal cost 0) | same |
-| answered fraction (mean over draws; tier-1 draws count as 1.0) | cells where tier 3 is the majority tier: Diabetes 0.822 / 0.890, Adult random 0.897, MiniBooNE greedy 0.973, FashionMNIST greedy 0.987; other cells with some tier-3 draws: FashionMNIST random 0.995, MiniBooNE random 0.996 | same (`answered_fraction`, `tier3`) |
-| test stratum-violation frequency vs δ = 0.10 | ≤ 0.010 in 10 cells; 0.110 / 0.120 (MiniBooNE), 0.350 / 0.580 (FashionMNIST) | same (`test_stratum_violation`); §8.5 |
-| max stratum risk / α of marginal CAFA (mean over draws) | 0.722 (PhysioNet) … 2.204 (Diabetes greedy); MNIST 0.954 / 0.920; FashionMNIST 1.567 / 1.509; MiniBooNE 1.708 / 1.183 | `results_v3/tables/TABLE_E2_blindness.csv` |
-| deepest-stratum verdicts | `type_II`: Diabetes (both); `unresolved`: Adult random; `feasible`: the other 11 | `results_v3/tables/TABLE_E3_audit.csv` |
-| E5 level / power | false-failure ≤ 0.000; cascade violation ≤ 0.005; power 0.926 / 0.843 at n_kΔ² = 2.5, 1.000 at ≥ 10; unsafe given escalation 0.000 | `results_v3/planted/PLANTED_VALIDATION.md`, `phase2_planted_validation.log` |
-| E7 before → after (MNIST, predictor upgrade) | `type_II` → `feasible`; family minimum 0.295 → 0.011; tier-1 share 0.00 → 1.00; violation 0.00 → 0.00 | `results_v3/repair/mnist_ts0_predictor_upgrade.json` |
-| Imagenette (all quantities) | TBD-RUN | — |
-| seeds 1–2 (all quantities) | TBD-RUN | — |
+| certified deployment % | 100 % in each of the 14 seed-0 cells (unchanged) | `results_v3/tables/TABLE_E4_cascade.csv` (`certified_deployment`) |
+| tier-1 % | MNIST 100 / 100, CUBE 100 / 100 → 100 / 99, Adult greedy 100, PhysioNet 100 / 100, MiniBooNE random 73 → 26, FashionMNIST random 58 → 12, FashionMNIST greedy 35 → 12, MiniBooNE greedy 4 → 1, Adult random 0, Diabetes 0 / 0 (greedy / random); mean over 14 cells 62.1 % → 53.6 % | same (`tier1`); `results_v3/diagnostics/r2_e9_lambda_ref_summary.md` |
+| cost premium (cascade / marginal) | tier-1 cells: MNIST 1.048 → 1.046 / 1.105 → 1.085, CUBE 1.387 → 1.383 / 1.154 → 1.162, Adult greedy 1.220 → 1.253; PhysioNet undefined (marginal cost 0) | same (`cost_premium`) |
+| answered fraction (mean over draws; tier-1 draws count as 1.0) | Diabetes 0.822 → 0.817 / 0.890 → 0.892, Adult random 0.897 → 0.902, MiniBooNE greedy 0.973 → 0.965, FashionMNIST greedy 0.987 → 0.982, FashionMNIST random 0.995 → 0.985, MiniBooNE random 0.996 → 0.985 | same (`answered_fraction`) |
+| raw test stratum-violation frequency (pooled; no threshold since round 2) | FashionMNIST 0.350 → 0.100 / 0.580 → 0.100, MiniBooNE 0.110 → 0.020 / 0.120 → 0.030, CUBE greedy 0.000 → 0.010, Adult 0.000 → 0.010 / 0.000 → 0.020, Diabetes random 0.010 → 0.000, all others 0.000; per split at most 0.450 / 0.500 (FashionMNIST, split 778) | same (`test_stratum_violation`, `violation_by_split`); `results_v3/diagnostics/r2_violations_dep.md` |
+| certified violation (new) | ≤ 0.010 in every cell (0.010: FashionMNIST random, MiniBooNE greedy) vs δ + 0.05 = 0.15 | same (`certified_violation`) |
+| max_excess_se (new; mean over draws) | negative in every cell, −6.616 (PhysioNet) … −3.273 (Adult random) | same (`max_excess_se`) |
+| max stratum risk / α of marginal CAFA (mean over draws) | 0.722 → 0.715 (PhysioNet) … 2.204 → 2.198 (Diabetes greedy); MNIST 0.954 → 0.952 / 0.920 → 0.949; FashionMNIST 1.567 → 1.533 / 1.509 → 1.438; MiniBooNE 1.708 → 1.654 / 1.183 → 1.143 | `results_v3/tables/TABLE_E2_blindness.csv` |
+| hidden certified violation of marginal CAFA (new) | 1.000 in Diabetes, FashionMNIST, MiniBooNE (both policies) and Adult greedy; Adult random 0.210; CUBE 0.320 / 0.500; MNIST 0.020 / 0.000; PhysioNet 0.000 | same (`hidden_certified_violation_rate`) |
+| deepest-stratum verdicts (split 778) | unchanged: `type_II` Diabetes (both), `unresolved` Adult random, `feasible` the other 11; agreement over splits 5/5 except MiniBooNE greedy 2/5 and Adult random 2/5 | `results_v3/tables/TABLE_E3_audit.csv`, `TABLE_E4_cascade.csv` (`verdict_agreement`) |
+| E5 level / power | round 1: false-failure ≤ 0.000, cascade violation ≤ 0.005, power 0.926 / 0.843 at n_kΔ² = 2.5, 1.000 at ≥ 10; round 2: pending (rerun with the HB fix + study D, §12.3) | `results_v3/round1/planted/PLANTED_VALIDATION.md` |
+| E7 before → after (MNIST, predictor upgrade) | unchanged: `type_II` → `feasible`; family minimum 0.295 → 0.011; tier-1 share 0.00 → 1.00; violation 0.00 → 0.00 (certified 0.00 → 0.00) | `results_v3/repair/mnist_ts0_predictor_upgrade.json` |
+| Imagenette (all quantities) | TBD-RUN (greedy rollout running, §12.4) | — |
+| seeds 1–2 (all quantities) | TBD-RUN (cluster package `hpc/README_v3.md`, Task F) | — |
 | external AFABench policies | TBD-RUN | — |
 
 ## 12. Round 2
@@ -872,4 +883,14 @@ Total: **186 of 5,600** (cell, λ_ref, draw) decisions changed, 5 of them change
 - **D1 (as specified):** per block a calibration pool with n_k ≈ 2,500 and 20 draws of 50 % of it (the real protocol's sizes). In development runs the cascade never certified at these sizes (0 of 40 and 0 of 6 replicates; console and the small test). Certifying a rule this close to α needs a calibration n_k near 90,000, so D1's rates are expected to be ≈ 0.
 - **D2 (powered calibration):** each replicate draws a fresh calibration sample with n_k ≈ 90,000, so the cascade certifies rules whose true risk sits just below α. This is the regime in which test-split noise alone produces raw "violations".
 Both are reported, with the noise-free expected raw and certified rates computed from the deployed rules' true risks and the test n_k. Results: §12.3 (pending the full planted run).
+
+### 12.3 Task C — Phase 3 rerun with the round-2 code (seed 0, 14 cells)
+
+**Commits** (all `--force`; reason: Task A changes the tier-3 order, Task B adds the `split` block). `drive_v3.py --phase commit --seeds 0 --force --tag r2` (7 datasets); `drive_v3.py --phase commit --seeds 0 --datasets mnist --force --tag r2G8 --commit-prefix committed_v3_G8 "--extra-args=--n-buckets 8"`; the three E7 BEFORE commits `commit_v3.py --dataset <ds> --train-seed 0 --pool-dir F:/CAFA_results/pool_v2 --out-path configs/committed_v3before_<dsn>_ts0.json --force` (logs `results_v3/logs/r2_commit_*`, `r2G8_commit_*`, `r2_commit_before_*`). Invariance on the real data (`results_v3/logs/r2_taskC_commit_invariance.log`): the 7 main commits differ from the Task-A commits only by added `split` keys; G8 and the BEFORE commits (not re-committed in Task A) differ from round 1 only by added `split` keys and tier-3 orders (G8: 3 of 8 orders; BEFORE: 16 of 16 each).
+
+**Sweeps** (`$RESULTS_ROOT\metrics_v3\`, the round-1 files having been moved, §12.1): 4 parallel `drive_v3.py --phase sweep --seeds 0 --tag r2 --datasets …` processes (ledger `r2:sweep:*`, 14 runs, rc 0; logs `results_v3/logs/r2_sweep_*.log`, `driver_r2_sweep_g{0..3}.out`). E9: `r2dw:sweep:csv:physionet:greedy_entropy:ts0` (`--delta-weights 0.34,0.33,0.33` → `metrics_v3_dw`) and `r2G8:sweep:mnist:greedy_entropy:ts0` (→ `metrics_v3_G8`). E7: `scripts/run_repairs_v3.py --seeds 0 --tag r2 --force` (new ledgered runner; 10 runs, rc 0). These ran as one chain (`results_v3/logs/driver_r2_e9_e7_chain.out`) concurrently with the sweeps, the planted rerun and the Imagenette rollout.
+
+**Tables / figures / reports:** `results_v3/logs/r2_taskC_make_tables.log`; figures `results_v3/figures/` (F5 still from the round-1 planted CSV until the round-2 planted run ends); `scripts/report_violations_v3.py` → `results_v3/diagnostics/r2_violations_{dep,lr0.5,lr0.7,lr0.9}.{md,json}` (no cell fails an acceptance check at any λ_ref key); `results_v3/diagnostics/r2_e9_lambda_ref_summary.md`.
+
+**Acceptance (headline, `dep`):** certified deployment 1.00 in all 14 cells; certified violation ≤ 0.010 ≤ δ + 0.05 in every cell; mean max_excess_se < 0 in every cell (max −3.273). So `scripts/diagnose_violation_v3.py` was not required; it was run once on FashionMNIST random `dep` (largest single-split raw rate) to check the multi-split diagnostic on real data (§8.5). **By-split ranges of the cells over δ in round 1:** FashionMNIST greedy 0.000–0.450, FashionMNIST random 0.000–0.500, MiniBooNE greedy 0.000–0.100, MiniBooNE random 0.000–0.150; in each case the maximum is split 778 and the other four splits are ≤ 0.050 (§8.5).
 

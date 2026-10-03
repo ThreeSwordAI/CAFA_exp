@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset mnist --train-seed 0 --before-cache F:/CAFA_results/pool_v2/mnist_ts0_greedy_entropy_softmax.npz --after-cache F:/CAFA_results/pool_v3/mnist_ts0_greedy_entropy_softmax.npz --committed configs/committed_v3before_mnist_ts0.json --label predictor_upgrade
+# start 2026-10-03T00:37:56.376208+00:00
+[repair:predictor_upgrade] lr[0.5]=0.500 deepest k=4: feasible (rmin 0.144, full 0.145) -> feasible (rmin 0.008, full 0.008); tier1 0.04 -> 1.00; viol 0.04 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[0.7]=0.700 deepest k=4: type_II (rmin 0.195, full 0.196) -> feasible (rmin 0.010, full 0.010); tier1 0.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.255, full 0.255) -> feasible (rmin 0.011, full 0.011); tier1 0.00 -> 1.00; viol 0.00 -> 0.03; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[dep]=0.869 deepest k=4: type_II (rmin 0.295, full 0.296) -> feasible (rmin 0.011, full 0.012); tier1 0.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\mnist_ts0_predictor_upgrade.json
+# returncode 0
