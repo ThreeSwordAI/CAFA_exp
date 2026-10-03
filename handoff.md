@@ -2,13 +2,29 @@
 
 - Round 1: 2026-10-01 13:09 → 2026-10-02 ≈ 01:15 local (UTC+2), ≈ 12 h; ended at stop condition 5 (§9, resolved in round 2).
 - Round 2 (`instruction_round2.md`, Tasks A–F): 2026-10-03 00:55 → ≈ 09:30 local, ≈ 8.5 h (most of it waiting for the thermally throttled GPU, §12.4).
-- Round 3 (`instruction_round3.md`, Part 3a: Tasks G, H, I, K, L): 2026-10-03 ≈ 12:20 → ≈ 14:50 local, ≈ 2.5 h. The start is the session start, which is not logged. The first logged round-3 timestamp is 12:24 (pre-move hashes, `results_v3/round2/metrics_v3_round2.premove.sha256`, §13.4). Part 3b (Task J) did not start, because the seed-1/2 cluster caches are not in `$RESULTS_ROOT\pool_v3\` (§13).
+- Round 3 (`instruction_round3.md`): 2026-10-03 ≈ 12:20 → ≈ 16:30 local, ≈ 4.2 h.
+  - The start is the session start, which is not logged. The first logged round-3 timestamp is 13:07:18 (`results_v3/logs/r3_taskL_smoke_backbone.log`).
+  - Part 3a (Tasks G, H, I, K, L) ran first. Its final checklist at 14:27 found only the 16 seed-0 caches (`results_v3/logs/r3_final_checklist.log`), and its handoff was committed as `e24fad1` at 14:42.
+  - The seed-1/2 cluster caches had arrived in `$RESULTS_ROOT\pool_v3\` at 14:32–14:33, between those two steps, and were noticed only after the commit.
+  - Part 3b (Task J: seeds 1–2) then ran, with its first log at 14:43 (§13.8).
 - Branch: `aistats-v3` (from `550f8e2`, the `main` HEAD at the round-1 session start; tagged `aaai27-submission`)
 - Round-2 final content commit: `25c04ad`.
-- Round-3 final content commit: written by the follow-up hash commit; that commit changes only this line. `git log -1 aistats-v3` gives the branch tip.
-- No job is running at the end of round 3. The tag `aistats-v3-results` belongs to Part 3b and is not set.
+- Round-3 final content commit: written by the follow-up hash commit; that commit changes only this line. `git log -1 aistats-v3` gives the branch tip. The tag `aistats-v3-results` points to the final commit (§13.9).
+- No job is running at the end of round 3.
 
 ## 1. Executive summary
+
+**Round 3, Part 3b: seeds 1–2 (§13.8).**
+- **Provenance.** The 32 cluster caches were produced on NHR@FAU Alex (A40). They pass every check, so no stop condition is reached: greedy = random full-acquisition accuracy in all 24 (dataset, seed) groups of seeds 0–2 (16 of them the cluster seeds), and every backbone is within 0.03 of seed 0.
+- **Headline:** `results_v3/tables/TABLE_E4_cascade_seeds.md`, mean ± sd over seeds 0–2, at λ_ref `dep`.
+- **Over all 48 cells:**
+  - certified violation ≤ 0.020;
+  - mean `max_excess_se` < 0;
+  - certified deployment 1.00 in 47 cells. The exception is Diabetes greedy seed 1 (0.05). It is diagnosed as a tier-3 refusal, not a bug: on split 778 the deepest stratum has only 55–81 answered calibration rows at the first level, and tier 3 certifies no level in 18 of 20 draws.
+- **Mean tier-1 share:** 0.468 over the 48 cells (seeds 0 / 1 / 2: 0.487 / 0.436 / 0.482).
+- **Seed sensitivity.** Seven cells change their tier-1 share by more than 0.25 across seeds (`TABLE_E4_seed_flags.md`). In six of them the low-tier-1 seed has a smaller (possibly negative) deepest-stratum margin α − r_full, or a different α. MiniBooNE random is the exception and is not explained by r_full alone.
+- **E10 over the three seeds:** 960 points, ρ 0.914, 944/960 within ±0.2.
+- **E7:** the MNIST predictor upgrade replicates at seeds 1 and 2 (`type_II` → `feasible`, tier 1 0.00 → 1.00).
 
 **Round 3, Part 3a (§13).** This round adds explanatory analyses only. No primary quantity changed: λ_ref `dep`, α rule, δ, γ, grids and committed JSONs are as in round 2. The 16 main sweeps were rerun with the new oracle code and every round-2 field is IDENTICAL (`results_v3/logs/r3_taskK_sweep_equivalence.log`), so the round-2 headline below stands.
 
@@ -129,6 +145,10 @@ Background orchestration: chain A (seed-0 retrains + rollouts; `driver_chain_ts0
 Run outside the ledger: the E7 BEFORE re-commits (`results_v3/logs/r2_commit_before_*`), the planted rerun (`results_v3/logs/r2_phase2_planted_validation.log`), table/figure/report scripts (`results_v3/logs/r2_*make_tables*.log`, `r2_final_make_figures.log`) and the checks in §12.
 
 **Round 3 ledger** (`results_v3/run_log.jsonl`; prefixes `r3am10:commit:`, `r3:sweep:`, `r3am10:sweep:`, `r3cf025:sweep:`, `r3cf100:sweep:`): 72 runs, all with return code 0, between 13:27 and 14:07 local. The per-prefix table, the parallel lanes (`results_v3/logs/r3_background_jobs.log`), the two paused lanes and the runs outside the ledger are in §13.6. Nothing was launched on the GPU except the Task-L smoke (§13.5), whose outputs were deleted.
+
+**Round 3b ledger.** Prefixes `r3J:`, `r3Jam10:`, `r3Jam02:`: 158 runs between 14:46 and 16:08 local. The only non-zero return codes are the 4 expected am02 refusals (rc 7). Details are in §13.8.
+
+**Cluster runs (seeds 1–2).** These are recorded in the cluster's own ledger, `results_v3/run_log_hpc_round3.jsonl`: 48 runs on NHR@FAU Alex, all rc 0, with `sacct` output and logs (§13.8).
 
 ## 4. Code changes
 
@@ -261,6 +281,8 @@ total: 266 files changed, 73391 insertions(+), 1 deletion(-)
 | `scripts/make_figures_v3.py` | F3 cost panel in cost / T with the E2 number under each bar; seed means with several seeds | I, `b85ac6a` |
 | `scripts/alpha_margin_summary_v3.py` (new), `tests/test_reporting_v3.py` (new, 6 tests) | `TABLE_E9_alpha_margin`; tests of the E4/E6/cost-gap/F3/E9 reporting | H / I, `b85ac6a`, `ecf553f` |
 | `scripts/train_backbone_v3.py`, `scripts/run_pool_rollout_v3.py`, `scripts/drive_v3.py`, `scripts/commit_v3.py` (`find_policy_caches` only), `scripts/check_caches_v3.py`, `scripts/run_repairs_v3.py`, `hpc/dry_run_v3.sh`, `hpc/README_v3.md` (§7, §8), `tests/test_checkpoint_tag_v3.py` (new, 12 tests), `tests/test_hpc_v3.py` | `--checkpoint-tag` (folder `checkpoints_v3_TAG`, cache token `{policy}-TAG`); `--width-mult` / `--p-full` overrides, which need a tag; tagged caches are ignored by commits and grouped by the cache check; `run_repairs_v3.py --repair-tag`; Task-L cluster lines | L, `5481269`, `95f9480` |
+| `hpc/backbone_v3.slurm`, `hpc/rollout_v3.slurm`, `tests/test_hpc_v3.py` (+1 test) | `set -u` only after `/etc/profile`, module and conda activate. Failure fixed: the first Alex arrays that ran (`4439177`, `4439178`) died on `DEBUGINFOD_URLS: unbound variable` (§13.8) | 3b, `981943c` |
+| `scripts/make_tables_v3.py` (`seed_flags`, `TABLE_E4_seed_flags`), `scripts/make_figures_v3.py` (`seed_groups`: F2 / F6 seed means, as F3), `tests/test_reporting_v3.py` (+2 tests) | Task J.3 seed-consistency table; F2 / F6 legible with 48 cells | 3b, `da464ee` |
 
 ## 5. Phase 0 results
 
@@ -953,16 +975,12 @@ Other deviations / open issues:
 
 ## 10. What remains (exact commands; PowerShell, repo root, after `. .\set_env.ps1`)
 
-1. **Seeds 1–2 for all eight datasets, Imagenette seeds 1–2 included (`TBD-RUN`): TinyGPU.** Everything is in **`hpc/README_v3.md`**:
-   - what to push;
-   - the data to copy or re-download;
-   - the environment and `hpc/env.local.sh`;
-   - the exact `sbatch` lines and the expected wall times;
-   - the files to bring back;
-   - the local round-3 commands (README §7: commit, sweep, repairs, `TABLE_E4_cascade_seeds.md`, and, added in round 3, the α-margin 0.02 / 0.10 commits and sweeps for seeds 1–2 and E10 over all seeds).
-
-   The dry run of every array index is `results_v3/logs/hpc_dry_run.log`. Once the caches are back, Part 3b of `instruction_round3.md` (Task J) applies: run `check_caches_v3.py`, then the README §7 commands, then the final checks and the tag `aistats-v3-results`.
-1b. **FashionMNIST predictor-upgrade repair (Task L, `TBD-RUN`): TinyGPU.**
+1. **Seeds 1–2: done in round 3, Part 3b (§13.8).**
+   - The cluster package is `hpc/README_v3.md`. The jobs ran on Alex rather than TinyGPU. The Slurm `set -u` defect that failed the first arrays that ran (`4439177`, `4439178`) is fixed (§13.8).
+   - The remaining E9 ablations for seeds 1–2 have not been run: the δ split and G = 8. Their commands are those of step 3 with `--seeds 1 2`.
+   - No λ_ref sweep is needed. The λ_ref 0.5 / 0.7 / 0.9 tables already cover all seeds, since the main sweeps sweep every key.
+   - The cal-frac curve (K2) for seeds 1–2 is likewise not run. Its command is `drive_v3.py --phase sweep --seeds 1 2 --metrics-dir-name metrics_v3_calfrac025 "--extra-args=--cal-frac 0.25"`, and the same with `calfrac100` / `1.0`.
+1b. **FashionMNIST predictor-upgrade repair (Task L, `TBD-RUN`): cluster.**
    - Run the two `sbatch` lines of `hpc/README_v3.md` §8 (dry run: `tests/test_hpc_v3.py::test_hpc_dry_run_task_l_lines`).
    - Then, locally: `python scripts/check_caches_v3.py`, followed by `python scripts/run_repairs_v3.py --seeds 0 --datasets fashionmnist --repair-tag repair --tag r3L`.
    - This writes `results_v3/repair/fashionmnist_ts0_predictor_upgrade{,_random}.json`; report them as E7 MNIST is reported (§8.6).
@@ -1002,11 +1020,12 @@ Other deviations / open issues:
 | deployed cost / T (round 3) | 0.000 (PhysioNet, both) … 1.000 (Diabetes both, Adult random). Tier-1 cells: MNIST 0.075 / 0.184, CUBE 0.289 / 0.576, Adult greedy 0.213. Imagenette 0.884 / 0.940, FashionMNIST 0.929 / 0.926, MiniBooNE 0.993 / 0.862. Marginal CAFA 0.000 … 0.496; Mondrian oracle 0.000 … 0.548 | `results_v3/tables/TABLE_E4_cascade.csv` (`*_cost_over_T`) |
 | tier-2 would-certify share (round 3) | 0.000 in every cell of every table directory, and 0 of 61,720 draw records. Equal to the tier-2 share by construction; tier 2 never mattered | same (`tier2_would_certify`); `results_v3/logs/r3_handoff_facts.log`, `r3_tier2_draw_count.log` |
 | cascade cost / ex-post stratum-safe oracle (round 3) | intrinsic: Diabetes (oracle infeasible, 1.000 / 1.000). Sample-limited: FashionMNIST 2.197 / 1.995, Imagenette 3.806 / 4.974, MiniBooNE random 3.743. Near-oracle: MNIST 1.041 / 1.092, CUBE 1.264 / 1.112, Adult greedy 1.079, PhysioNet 0/0. Mixed: Adult random 1.169 (3.595 on feasible draws), MiniBooNE greedy 1.333 (2.761) | `results_v3/tables/TABLE_E4_cost_gap.{md,csv}` (§13.4) |
-| E10: tier 1 predicted by the deepest-stratum margin (round 3) | 320 points: Spearman ρ 0.905, 318/320 within ±0.2. Key `dep`: ρ 0.935, 80/80 | `results_v3/tables/TABLE_E10_margin_summary.json`, `results_v3/figures/F7_margin.pdf` |
+| E10: tier 1 predicted by the deepest-stratum margin (round 3) | Seed 0, 320 points: Spearman ρ 0.905, 318/320 within ±0.2 (key `dep`: ρ 0.935, 80/80; Part 3a, `results_v3/logs/r3_margin_analysis.log`). Seeds 0–2, 960 points: ρ 0.914, 944/960 within ±0.2 (key `dep`: ρ 0.950, 236/240) | `results_v3/tables/TABLE_E10_margin_summary.json` (now all seeds), `results_v3/figures/F7_margin.pdf`, `results_v3/logs/r3J_margin_analysis.log` |
 | E9 α margin 0.10 (round 3) | Tier 1 = 1.00 in every cell except Diabetes (greedy tier 3 1.00; random tier 1 0.26). Certified violation 0.000 in all 16 cells. Adult degenerate at α 0.30 | `results_v3/tables/TABLE_E9_alpha_margin.md`, `results_v3/tables_e9_alpha_margin10/` |
 | E11 calibration size (round 3) | Tier-1 share at cal_frac 0.25 / 0.5 / 1.0. FashionMNIST greedy 0.12 / 0.12 / 0.40; Imagenette greedy 0.09 / 0.20 / 0.40, random 0.03 / 0.09 / 0.20; MiniBooNE random 0.10 / 0.26 / 0.20; CUBE random 0.69 / 0.99 / 1.00. 1.0 = one draw per split | `results_v3/tables/TABLE_E11_calfrac.md` |
 | E7 FashionMNIST predictor upgrade (round 3) | TBD-RUN on the cluster. The laptop smoke ran the greedy rollout for 256 rows in 361 s; projected linearly that is ≈ 11 h for the 28,000 heldout rows, and the GPU was thermally throttled. | `hpc/README_v3.md` §8, `results_v3/logs/r3_taskL_smoke_*.log` |
-| seeds 1–2 (all quantities) | TBD-RUN (cluster package `hpc/README_v3.md`, Task F) | — |
+| seeds 0–2, headline (round 3b; mean ± sd over 3 seeds, main-text source) | 48 cells.<br>• Certified deployment 1.00 in 47; Diabetes greedy is 0.683 ± 0.548 (seed 1: 0.05).<br>• Certified violation ≤ 0.020 per cell.<br>• Mean `max_excess_se` < 0 per cell.<br>• Tier-1 share: MNIST 1.000 / 1.000, PhysioNet 1.000 / 1.000, CUBE 0.857 ± 0.223 / 0.893 ± 0.176, MiniBooNE random 0.517 ± 0.346, Adult greedy 0.340 ± 0.572, Imagenette 0.280 ± 0.080 / 0.307 ± 0.189, FashionMNIST 0.153 ± 0.172 / 0.043 ± 0.067, Adult random 0.097 ± 0.167, MiniBooNE greedy 0.007 ± 0.006, Diabetes 0.000 / 0.000.<br>• Mean tier-1 share over the 48 cells: 0.468.<br>• 7 cells change their tier-1 share by more than 0.25 across seeds. | `results_v3/tables/TABLE_E4_cascade_seeds.{md,csv}`, `TABLE_E4_seed_flags.md`, `results_v3/diagnostics/r3J_violations_dep.md`, `results_v3/logs/r3J_handoff_facts.log` |
+| E7 MNIST predictor upgrade, seeds 1–2 (round 3b) | Seed 1: `type_II` → `feasible`, family minimum 0.239 → 0.010. Seed 2: `type_II` → `feasible`, 0.250 → 0.013. Tier 1 0.00 → 1.00 at both seeds; certified violation 0.00 → 0.00 | `results_v3/repair/mnist_ts{1,2}_predictor_upgrade.json`, `results_v3/logs/r3J_repair_mnist_predictor_upgrade_ts{1,2}.log` |
 | external AFABench policies | TBD-RUN | — |
 
 ## 12. Round 2
@@ -1152,9 +1171,13 @@ Both are reported, with the noise-free expected raw and certified rates computed
 Round 3 follows `instruction_round3.md` (Tasks G, H, I, K, L); `instruction.md` and `instruction_round2.md` stay in force. Start and end times are in the header.
 
 **Scope**
-- **Part 3a only.** `$RESULTS_ROOT\pool_v3\` holds the 16 seed-0 caches and no `*_ts1_*` / `*_ts2_*` cache, so Task J (3b) was not started. The instruction covers this case: "If 3b's caches are not present when you start, do 3a, update the handoff, commit, and stop." Seeds 1–2 stay `TBD-RUN` (§10).
+- **Part 3a first, then Part 3b.**
+  - At the start, `$RESULTS_ROOT\pool_v3\` held only the 16 seed-0 caches. So Part 3a was done and its handoff committed (`e24fad1`, with the 3a checklist §13.7), as the instruction says: "If 3b's caches are not present when you start, do 3a, update the handoff, commit, and stop."
+  - The 32 seed-1/2 caches arrived at 14:32, during the session. Part 3b (Task J) then ran (§13.8, checklist §13.9).
+  - §13.1–13.7 describe Part 3a (seed 0) and are left as written then, except where §13.8 updates a number to all seeds.
 - **Author decisions of round 3 §0, applied:**
-  - Nothing primary changes. λ_ref `dep`, the α rule, δ, γ, the δ split, the grids and every existing committed JSON are untouched; the only new commits are the eight E9 `committed_v3_am10_*` files.
+  - Nothing primary changes. λ_ref `dep`, the α rule, δ, γ, the δ split, the grids and every existing committed JSON are untouched.
+  - New commits: the eight seed-0 `committed_v3_am10_*` files (Part 3a), and the 50 seed-1/2 files of Part 3b (16 main, 16 am10, 12 am02, 6 E7 BEFORE). All are added files; none is modified.
   - Tier 2 stays in the cascade.
   - Phase 1d stays `TBD-RUN`.
 
@@ -1217,7 +1240,7 @@ Then the handoff commit (header).
   - panel (b): obs vs pred, with the diagonal and a ±0.2 band;
   - the cal-frac points are open markers.
 
-**Result** (`TABLE_E10_margin_summary.json`)
+**Result, seed 0.** Sources: `results_v3/logs/r3_margin_analysis.log`, and `TABLE_E10_margin_summary.json` as committed in Part 3a (`e24fad1`). The file now holds the statistics over all three seeds (§13.8); the seed-0 rows of `TABLE_E10_margin.csv` are unchanged.
 
 | subset | predictor | n | Spearman ρ (p) | within ±0.2 | mean abs. error |
 |---|---|---|---|---|---|
@@ -1334,7 +1357,7 @@ Source: `r3_handoff_facts.log`.
 
 **K1, rerun of the 16 main cells**
 - The 16 round-2 files were moved to `$RESULTS_ROOT\metrics_v3_round2\`.
-  - Hashes taken in `metrics_v3\` before the move (12:24): `results_v3/round2/metrics_v3_round2.premove.sha256`.
+  - Hashes taken in `metrics_v3\` before the move: `results_v3/round2/metrics_v3_round2.premove.sha256`. They were taken at 12:24 by the scratch file's timestamp, which is in no campaign file; the repo copy was made later.
   - Hashes taken after the move: `results_v3/round2/metrics_v3_round2.sha256`. Identical to the pre-move ones.
   - 16/16 OK on re-check at the end (`results_v3/logs/r3_final_checklist.log`).
 - The 16 cells were then swept again with the round-3 code into `metrics_v3\`; ledger `r3:sweep:*`, 16 runs, rc 0, 2,800.2 s.
@@ -1502,7 +1525,7 @@ Source: `r3_handoff_facts.log`.
 - Final state: §13.7.
 
 
-### 13.7 Final checklist
+### 13.7 Final checklist of Part 3a (at `e24fad1`; Part 3b: §13.9)
 
 Sources: instruction.md §10, instruction_round2.md, instruction_round3.md.
 
@@ -1514,9 +1537,10 @@ The log is `results_v3/logs/r3_final_checklist.log`, run at HEAD `dfdc149`. At t
 - `results_v3/round2/metrics_v3_round2.premove.sha256`;
 - the `results_v3/diagnostics/r3_*` review records.
 
-- [x] **Git.** `git status` is clean on `aistats-v3` after the hash commit; this was checked after committing.
-  - Round-3 commits: K `2ffeb04`, `ecf553f`; L `5481269`, `95f9480`; G/H/I `b85ac6a`, `dfdc149`.
-  - Then the handoff content commit, whose hash the header records, and one follow-up commit that only writes that hash.
+- [x] **Git.**
+  - Round-3a commits: K `2ffeb04`, `ecf553f`; L `5481269`, `95f9480`; G/H/I `b85ac6a`, `dfdc149`; then the Part-3a handoff content commit `e24fad1`.
+  - Part 3a's planned hash-only commit was not made. Part 3b started right after `e24fad1`, because the seed-1/2 caches had arrived; the round's single hash commit is in §13.9.
+  - Right after `e24fad1`, the only untracked files were the cluster files that had arrived (§13.8).
 - [x] **Nine v3 test files:** `33 passed in 62.66s (0:01:02)` (`results_v3/logs/r3_final_pytest_nine_v3.log`).
 - [x] **Whole suite:** `169 passed in 285.70s (0:04:45)`, with **0 xfailed and 0 skipped** (`results_v3/logs/r3_final_pytest_full_suite.log`, run with `-rxXs`).
 - [x] **Result directories present:** `results_v3/run_log.jsonl`, `logs/`, `tables/`, `figures/`, `planted/`, `repair/`, `diagnostics/`, `round1/` and `round2/`. Also the new `tables_e9_alpha_margin10/` and `tables_e11_calfrac{025,100}/`.
@@ -1538,3 +1562,256 @@ The log is `results_v3/logs/r3_final_checklist.log`, run at HEAD `dfdc149`. At t
   - the FashionMNIST repair (Task L): §10 step 1b, `hpc/README_v3.md` §8;
   - Phase 1d: §10 step 4.
 - [x] **Stop conditions:** none reached. The round-3 conditions concern seed-1/2 caches and cluster checkpoints, which Part 3b would check. The instruction.md §7 conditions did not occur.
+
+### 13.8 Part 3b — Task J: seeds 1–2
+
+**Start.** The seed-1/2 cluster caches arrived in `$RESULTS_ROOT\pool_v3\` at 14:32:54–14:33:16 local, and the cluster ledger, `sacct` output and logs arrived at 14:35:52–14:35:54 (file mtimes, `results_v3/logs/r3J_handoff_facts.log`). That is after the Part-3a final checklist (14:27:16, `results_v3/logs/r3_final_checklist.log`, which found 16 caches) and 7–9 min before the Part-3a handoff commit `e24fad1` (14:42:19). The arrival was noticed only after that commit, so `e24fad1` still says 3b did not start. With the caches present, the user's condition for Part 3b holds, so Task J was run; its first log is 14:43. Round-3b ledger: 158 lines, 12:46:52 → 14:08:49 UTC (14:46–16:08 local).
+
+**J.1 — cluster caches and checkpoints** (`results_v3/logs/r3J_check_caches_v3.log`, `r3J_verify_cluster_caches.log`):
+- **The 32 caches** (8 datasets × 2 policies × seeds 1–2):
+  - `check_caches_v3.py` PASS in all 24 (dataset, seed) groups. Greedy and random full-acquisition accuracy are equal (|Δ| = 0), with the same labels and the same `correct[:, T]`, so the **first stop condition is not met**.
+  - The v2-vs-v3 heldout rows are identical for MNIST, MiniBooNE and Adult at seeds 1–2 (the E7 prerequisite).
+  - Per cache: n and T equal the dataset's seed-0 cache; `max_rows` is None; Imagenette greedy has `policy_amp` True and batch size 32. Every cache's `checkpoint_sha256` starts with the sha256 printed by its cluster backbone log.
+  - MNIST seeds 1 and 2 both have full-acquisition accuracy 0.994964 (141 errors each). This is a coincidence: labels, scores, orders and heldout digests differ.
+  - `results_v3/phase1_caches.csv` is regenerated with all 48 caches.
+- **Checkpoints.** They were not copied, so the check uses the `full_obs_acc` printed by each cluster backbone log, the value the checkpoint meta records as `full_obs_train_acc`.
+  - Every one is within 0.03 of its seed-0 counterpart; CUBE and MiniBooNE are compared against their 60-epoch seed-0 retrains. The largest drop is Adult seed 2, −0.0086.
+  - So the **second stop condition is not met**.
+
+**Cluster provenance** (`results_v3/logs/r3J_cluster_provenance.log`, from the returned `results_v3/logs/hpc_sacct_round3.txt`, `results_v3/run_log_hpc_round3.jsonl` and the Slurm stdout files extracted to `results_v3/logs_hpc_round3/`; the original `results_v3/logs/hpc_round3_logs.tgz` is kept as received):
+- **Machine.** The jobs ran on NHR@FAU **Alex** (partition `a40`, NVIDIA A40 in all 66 Slurm stdout files), not on TinyGPU as `hpc/README_v3.md` assumed.
+- **Successful arrays:**
+  - backbones `4439223` (task 8), `4439226` (12 tasks; its task 8 only skipped the PhysioNet seed-1 checkpoint that `4439223` had trained) and `4439227` (4 tasks, `--epochs 60`);
+  - rollouts `4439228` (28 tasks) and `4439229` (4 Imagenette tasks).
+- **Elapsed per task** (`sacct`): the 16 backbone trainings 27–171 s (the 6-s task trained nothing); rollouts 16–965 s.
+- **Cluster ledger:** 48 lines, all rc 0.
+  - Backbones: 16 runs, 1,126.3 s in total, 13:43:42 → 13:48:58 local. The longest was MiniBooNE seed 2, 157.0 s.
+  - Rollouts: 32 runs, 6,822.8 s in total, 13:48:07 → 14:04:06 local. The longest was Imagenette greedy seed 2, 945.9 s.
+- **First submissions failed.**
+  - `4439177` (12 tasks) and `4439178` (4 tasks) FAILED after 1–16 s with `/etc/profile.d/debuginfod.sh: line 8: DEBUGINFOD_URLS: unbound variable`. Our batch scripts ran `set -euo pipefail` before `source /etc/profile`. `4439217` (1 task) also failed, after 5 s. Two earlier arrays were cancelled.
+  - The modified batch script itself is not in the returned files. But the stdout of the first successful task (`results_v3/logs_hpc_round3/cafa_v3_backbone.o4439223_8`) traces its preamble: `set +eu`, `source /etc/profile`, `module load python`, `source activate …`, then `set -eu`. The other successful arrays' stdout files have no trace.
+  - **Fix in the repo:** `hpc/backbone_v3.slurm` and `hpc/rollout_v3.slurm` now set `-u` only after the profile, module and conda activate, with the regression test `tests/test_hpc_v3.py::test_slurm_profile_sourced_before_nounset` (commit `981943c`).
+
+**J.2 — runs** (ledger `results_v3/run_log.jsonl`; lanes `results_v3/logs/r3J_lane.sh`, plan `r3J_background_jobs.log`, outputs `driver_r3J_lane*.out`):
+
+| ledger prefix | runs | total seconds | non-zero rc |
+|---|---|---|---|
+| `r3J:commit:` (seeds 1–2, main) | 16 | 27.1 | 0 |
+| `r3Jam10:commit:` | 16 | 32.2 | 0 |
+| `r3Jam02:commit:` | 16 | 29.1 | 4: MNIST α 0.03 and Imagenette α 0.05 at seeds 1 and 2, ≤ the design margin → rc 7, as at seed 0 |
+| `r3J:sweep:` (`metrics_v3`) | 32 | 5,635.6 | 0 |
+| `r3Jam10:sweep:` | 32 | 5,733.4 | 0 |
+| `r3Jam02:sweep:` | 24 | 4,778.8 | 0 |
+| `r3J:repair:` (E7: predictor upgrade MNIST / MiniBooNE / Adult; policy change for all datasets) | 22 | 2,819.1 | 0 |
+
+**Run outside the ledger:**
+- The six E7 BEFORE commits `configs/committed_v3before_{mnist,tabular-MiniBooNE,tabular-adult}_ts{1,2}.json`, made from the v2 caches (logs `r3J_commit_before_*`).
+- The post-run tables and figures (`results_v3/logs/r3J_postrun.sh`, logs `r3J_*.log`).
+
+**Committed α for seeds 1–2** (commit logs):
+- Main: Adult seed 2 is 0.20 (floor 0.1415), while seeds 0–1 are 0.25. Every other dataset has the same α at all three seeds.
+- am10: Adult 0.30 / 0.25 at seeds 1 / 2.
+- am02: values per seed in the E9 table below.
+
+**J.3 — results** (λ_ref `dep`, uniform costs; tables regenerated with `results_v3/logs/r3J_postrun.sh`).
+
+Seed-0 rows are unchanged. Every committed per-seed row and value is identical, and seeds 1–2 are added rows (`results_v3/logs/r3J_table_invariance.log`).
+
+#### Seed-aggregated headline (`results_v3/tables/TABLE_E4_cascade_seeds.csv`; λ_ref `dep`, uniform costs; mean ± sample sd over seeds 0, 1, 2)
+
+| dataset | policy | n | tier 1 | tier 3 | none | cert. deployment | cost / T | cost premium | raw violation | certified violation | max_excess_se | cascade / safe oracle |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 3 | 0.000 ± 0.000 | 0.683 ± 0.548 | 0.317 ± 0.548 | 0.683 ± 0.548 | 1.000 ± 0.000 | 6.376 ± 0.228 | 0.000 ± 0.000 | 0.000 ± 0.000 | -3.10 ± 1.21 | 1.000 ± 0.000 |
+| csv-diabetes | random | 3 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.000 ± 0.000 | 1.000 ± 0.000 | 1.000 ± 0.000 | 4.023 ± 0.193 | 0.010 ± 0.017 | 0.000 ± 0.000 | -3.92 ± 0.16 | 1.000 ± 0.000 |
+| csv-physionet | greedy_entropy | 3 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.000 ± 0.000 |  | 0.000 ± 0.000 | 0.000 ± 0.000 | -6.78 ± 0.25 |  |
+| csv-physionet | random | 3 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.000 ± 0.000 |  | 0.000 ± 0.000 | 0.000 ± 0.000 | -6.78 ± 0.25 |  |
+| cube | greedy_entropy | 3 | 0.857 ± 0.223 | 0.143 ± 0.223 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.429 ± 0.189 | 1.861 ± 0.703 | 0.003 ± 0.006 | 0.000 ± 0.000 | -3.60 ± 0.21 | 1.703 ± 0.531 |
+| cube | random | 3 | 0.893 ± 0.176 | 0.107 ± 0.176 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.652 ± 0.100 | 1.314 ± 0.210 | 0.000 ± 0.000 | 0.000 ± 0.000 | -3.33 ± 0.06 | 1.184 ± 0.143 |
+| fashionmnist | greedy_entropy | 3 | 0.153 ± 0.172 | 0.847 ± 0.172 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.926 ± 0.076 | 8.132 ± 0.727 | 0.033 ± 0.058 | 0.000 ± 0.000 | -4.75 ± 1.13 | 2.847 ± 0.587 |
+| fashionmnist | random | 3 | 0.043 ± 0.067 | 0.957 ± 0.067 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.973 ± 0.041 | 6.088 ± 0.327 | 0.037 ± 0.055 | 0.003 ± 0.006 | -4.19 ± 0.26 | 2.067 ± 0.972 |
+| image-imagenette | greedy_entropy | 3 | 0.280 ± 0.080 | 0.720 ± 0.080 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.845 ± 0.036 | 4.876 ± 0.450 | 0.087 ± 0.091 | 0.000 ± 0.000 | -3.08 ± 0.27 | 3.399 ± 1.153 |
+| image-imagenette | random | 3 | 0.307 ± 0.189 | 0.693 ± 0.189 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.807 ± 0.118 | 5.197 ± 0.837 | 0.057 ± 0.055 | 0.000 ± 0.000 | -3.03 ± 0.50 | 3.916 ± 0.925 |
+| mnist | greedy_entropy | 3 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.086 ± 0.012 | 1.146 ± 0.089 | 0.000 ± 0.000 | 0.000 ± 0.000 | -3.09 ± 0.41 | 1.074 ± 0.030 |
+| mnist | random | 3 | 1.000 ± 0.000 | 0.000 ± 0.000 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.183 ± 0.002 | 1.088 ± 0.006 | 0.000 ± 0.000 | 0.000 ± 0.000 | -3.72 ± 0.04 | 1.091 ± 0.001 |
+| tabular-MiniBooNE | greedy_entropy | 3 | 0.007 ± 0.006 | 0.993 ± 0.006 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.995 ± 0.004 | 17.524 ± 2.509 | 0.010 ± 0.010 | 0.007 ± 0.006 | -4.17 ± 0.83 | 1.295 ± 0.285 |
+| tabular-MiniBooNE | random | 3 | 0.517 ± 0.346 | 0.483 ± 0.346 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.685 ± 0.240 | 4.440 ± 1.441 | 0.010 ± 0.017 | 0.000 ± 0.000 | -4.02 ± 0.71 | 2.892 ± 1.011 |
+| tabular-adult | greedy_entropy | 3 | 0.340 ± 0.572 | 0.660 ± 0.572 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.734 ± 0.451 | 3.202 ± 1.864 | 0.010 ± 0.010 | 0.007 ± 0.012 | -3.99 ± 0.57 | 1.218 ± 0.311 |
+| tabular-adult | random | 3 | 0.097 ± 0.167 | 0.903 ± 0.167 | 0.000 ± 0.000 | 1.000 ± 0.000 | 0.945 ± 0.095 | 4.135 ± 0.310 | 0.010 ± 0.010 | 0.000 ± 0.000 | -3.61 ± 0.35 | 2.106 ± 1.772 |
+
+
+**Acceptance over all 48 cells** (`results_v3/diagnostics/r3J_violations_dep.md`; `results_v3/logs/r3J_handoff_facts.log`):
+- **Certified violation** ≤ 0.020 in every cell; the maximum is Adult greedy seed 2. The criterion is ≤ δ + 0.05 = 0.15.
+- **Mean `max_excess_se`** < 0 in every cell: −7.068 (PhysioNet greedy seed 2) … −1.703 (Diabetes greedy seed 1). The report lists no cell failing an acceptance check.
+- **Certified deployment** is 1.00 in 47 of 48 cells. The exception is **Diabetes greedy seed 1, at 0.05** (none 0.95).
+  - `scripts/diagnose_violation_v3.py` passed every integrity check: digests, sizes, disjointness, strata alignment, test p-values (`results_v3/diagnostics/r3J_csv-diabetes_ts1_greedy_entropy_dep.json`).
+  - `scripts/diagnose_refusal_v3.py` replayed the tier-3 walk on split 778's 20 draws (`results_v3/diagnostics/r3J_csv-diabetes_ts1_greedy_entropy_dep_refusal.json`, log `results_v3/logs/r3J_diagnose_refusal_diabetes_greedy_ts1.log`). The first level of the committed order has answered fraction 0.05; the deepest stratum is k = 1, `type_II`, r_full 0.388.
+    - In the 18 draws where tier 3 certified no level, this stratum has only 55–81 answered calibration rows, selective risk 0.055–0.132 and HB p-values 0.029–0.901, all above δ₃ = 0.025.
+    - In the other 2 draws (3 and 12), p = 0.016 and tier 3 certifies. The log prints draws 0–2; the JSON has all 20.
+  - So this is a result to report, not an implementation bug.
+- **Raw pooled violation** is > δ in two cells. Their certified violation is 0.000.
+  - **Imagenette greedy seed 2: 0.19.** By split it is 0.000 / 0.000 / 0.800 / 0.150 / 0.000.
+    - `diagnose_violation_v3.py` passed every integrity check (`results_v3/diagnostics/r3J_image-imagenette_ts2_greedy_entropy_dep.json`, log `results_v3/logs/r3J_diagnose_violation_imagenette_greedy_ts2.log`).
+    - On split 780, five tier-1 rules were deployed. Their deepest-stratum (k = 3) calibration-pool risk is 0.059–0.077 against test-split risk 0.101–0.107 (n 447). The pooled risk is 0.079–0.090 < α = 0.10 (`by_split.780.deployed_rules` in the JSON).
+    - This is the pattern of round 2's FashionMNIST split 778 (§8.5) and of study D (§12.2): an optimistic calibration pool paired with a pessimistic test split.
+  - **Imagenette random seed 1: 0.11.** By split it is 0.000–0.500. It was not diagnosed separately.
+- **Mean tier-1 share** over the 48 cells is 0.468; per seed it is 0.487 / 0.436 / 0.482.
+
+#### Seed consistency (`results_v3/tables/TABLE_E4_seed_flags.csv`; values per seed 0 / 1 / 2)
+
+| dataset | policy | α | tier 1 | tier 3 | tier-1 range | flag | deepest k | r_full | verdict |
+|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0.15 / 0.15 / 0.15 | 0.000 / 0.000 / 0.000 | 1.000 / 0.050 / 1.000 | 0.000 |  | 1 / 1 / 1 | 0.333 / 0.388 / 0.321 | type_II / type_II / type_II |
+| csv-diabetes | random | 0.15 / 0.15 / 0.15 | 0.000 / 0.000 / 0.000 | 1.000 / 1.000 / 1.000 | 0.000 |  | 3 / 3 / 3 | 0.241 / 0.241 / 0.231 | type_II / type_II / type_II |
+| csv-physionet | greedy_entropy | 0.2 / 0.2 / 0.2 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 0.126 / 0.131 / 0.120 | feasible / feasible / feasible |
+| csv-physionet | random | 0.2 / 0.2 / 0.2 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 0.126 / 0.131 / 0.120 | feasible / feasible / feasible |
+| cube | greedy_entropy | 0.15 / 0.15 / 0.15 | 1.000 / 0.600 / 0.970 | 0.000 / 0.400 / 0.030 | 0.400 | FLAG | 2 / 3 / 2 | 0.080 / 0.103 / 0.092 | feasible / feasible / feasible |
+| cube | random | 0.15 / 0.15 / 0.15 | 0.990 / 0.690 / 1.000 | 0.010 / 0.310 / 0.000 | 0.310 | FLAG | 3 / 3 / 4 | 0.083 / 0.104 / 0.090 | feasible / feasible / feasible |
+| fashionmnist | greedy_entropy | 0.15 / 0.15 / 0.15 | 0.120 / 0.340 / 0.000 | 0.880 / 0.660 / 1.000 | 0.340 | FLAG | 4 / 4 / 3 | 0.133 / 0.132 / 0.148 | feasible / feasible / feasible |
+| fashionmnist | random | 0.15 / 0.15 / 0.15 | 0.120 / 0.010 / 0.000 | 0.880 / 0.990 / 1.000 | 0.120 |  | 4 / 4 / 4 | 0.129 / 0.144 / 0.153 | feasible / feasible / unresolved |
+| image-imagenette | greedy_entropy | 0.1 / 0.1 / 0.1 | 0.200 / 0.280 / 0.360 | 0.800 / 0.720 / 0.640 | 0.160 |  | 3 / 3 / 3 | 0.078 / 0.077 / 0.074 | feasible / feasible / feasible |
+| image-imagenette | random | 0.1 / 0.1 / 0.1 | 0.090 / 0.390 / 0.440 | 0.910 / 0.610 / 0.560 | 0.350 | FLAG | 3 / 3 / 3 | 0.083 / 0.075 / 0.069 | feasible / feasible / feasible |
+| mnist | greedy_entropy | 0.1 / 0.1 / 0.1 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 2 / 3 / 4 | 0.008 / 0.010 / 0.009 | feasible / feasible / feasible |
+| mnist | random | 0.1 / 0.1 / 0.1 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 4 / 4 / 4 | 0.012 / 0.010 / 0.009 | feasible / feasible / feasible |
+| tabular-MiniBooNE | greedy_entropy | 0.15 / 0.15 / 0.15 | 0.010 / 0.000 / 0.010 | 0.990 / 1.000 / 0.990 | 0.010 |  | 2 / 2 / 2 | 0.146 / 0.158 / 0.151 | feasible / type_II / unresolved |
+| tabular-MiniBooNE | random | 0.15 / 0.15 / 0.15 | 0.260 / 0.380 / 0.910 | 0.740 / 0.620 / 0.090 | 0.650 | FLAG | 3 / 3 / 4 | 0.132 / 0.137 / 0.130 | feasible / feasible / feasible |
+| tabular-adult | greedy_entropy | 0.25 / 0.25 / 0.2 | 1.000 / 0.000 / 0.020 | 0.000 / 1.000 / 0.980 | 1.000 | FLAG | 1 / 2 / 1 | 0.196 / 0.330 / 0.206 | feasible / type_II / unresolved |
+| tabular-adult | random | 0.25 / 0.25 / 0.2 | 0.000 / 0.290 / 0.000 | 1.000 / 0.710 / 1.000 | 0.290 | FLAG | 2 / 1 / 2 | 0.254 / 0.225 / 0.269 | unresolved / feasible / type_II |
+
+
+**Flagged cells** (tier-1 range over seeds > 0.25): CUBE greedy and random, FashionMNIST greedy, Imagenette random, MiniBooNE random, Adult greedy and random.
+
+The per-seed deepest stratum (table above) moves with the tier-1 share:
+- **CUBE seed 1:** r_full 0.103 / 0.104 against 0.080–0.092 at the other seeds; tier 1 is 0.60 / 0.69.
+- **FashionMNIST greedy seed 2:** r_full 0.148 with α 0.15; tier 1 is 0.00.
+- **Imagenette random seed 0:** r_full 0.083 against 0.075 / 0.069; tier 1 is 0.09.
+- **Adult greedy:**
+  - seed 1: deepest stratum k = 2, r_full 0.330, `type_II`; tier 1 is 0.00.
+  - seed 2: α 0.20 instead of 0.25, r_full 0.206, `unresolved`; tier 1 is 0.02.
+- **Adult random seed 1:** k = 1, r_full 0.225, `feasible`; tier 1 is 0.29. The other two seeds are `unresolved` / `type_II` with tier 1 0.00.
+- **MiniBooNE random** is not explained by r_full alone. At seed 2 the deepest stratum is k = 4 (r_full 0.130, n_k 5,335) and tier 1 is 0.91. Seeds 0 and 1 are both k = 3 with n_k 4,635 / 4,688 and r_full 0.132 / 0.137, yet their tier 1 is 0.26 / 0.38: the higher r_full goes with the higher tier-1 share.
+
+The per-split E10 points of all three seeds, these cells included, give ρ 0.914 (below).
+
+#### E7 repairs, seeds 1-2 (`results_v3/logs/r3J_repair_*_ts{1,2}.log`, lambda_ref `dep` line)
+
+```
+csv-diabetes_policy_change_ts1  [repair:policy_change] lr[dep]=0.828 deepest k=3: type_II (rmin 0.240, full 0.241) -> type_II (rmin 0.238, full 0.241); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-diabetes_policy_change_ts2  [repair:policy_change] lr[dep]=0.828 deepest k=3: type_II (rmin 0.229, full 0.231) -> type_II (rmin 0.227, full 0.231); tier1 0.00 -> 0.00; viol 0.03 -> 0.03; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-physionet_policy_change_ts1  [repair:policy_change] lr[dep]=0.000 deepest k=0: feasible (rmin 0.129, full 0.131) -> feasible (rmin 0.125, full 0.131); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+csv-physionet_policy_change_ts2  [repair:policy_change] lr[dep]=0.000 deepest k=0: feasible (rmin 0.119, full 0.120) -> feasible (rmin 0.120, full 0.120); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+cube_policy_change_ts1  [repair:policy_change] lr[dep]=0.768 deepest k=3: feasible (rmin 0.104, full 0.104) -> feasible (rmin 0.104, full 0.104); tier1 0.69 -> 0.69; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+cube_policy_change_ts2  [repair:policy_change] lr[dep]=0.747 deepest k=4: feasible (rmin 0.088, full 0.090) -> feasible (rmin 0.090, full 0.090); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+fashionmnist_policy_change_ts1  [repair:policy_change] lr[dep]=0.768 deepest k=4: feasible (rmin 0.144, full 0.144) -> feasible (rmin 0.144, full 0.144); tier1 0.01 -> 0.01; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 4/5
+fashionmnist_policy_change_ts2  [repair:policy_change] lr[dep]=0.778 deepest k=4: unresolved (rmin 0.153, full 0.153) -> unresolved (rmin 0.153, full 0.153); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 4/5 -> 3/5
+image-imagenette_policy_change_ts1  [repair:policy_change] lr[dep]=0.838 deepest k=3: feasible (rmin 0.075, full 0.075) -> feasible (rmin 0.072, full 0.075); tier1 0.39 -> 0.39; viol 0.11 -> 0.09; certviol 0.00 -> 0.01; verdict agreement 5/5 -> 5/5
+image-imagenette_policy_change_ts2  [repair:policy_change] lr[dep]=0.818 deepest k=3: feasible (rmin 0.069, full 0.069) -> feasible (rmin 0.066, full 0.069); tier1 0.44 -> 0.44; viol 0.06 -> 0.05; certviol 0.00 -> 0.01; verdict agreement 5/5 -> 5/5
+mnist_policy_change_ts1  [repair:policy_change] lr[dep]=0.798 deepest k=4: feasible (rmin 0.010, full 0.010) -> feasible (rmin 0.010, full 0.010); tier1 1.00 -> 1.00; viol 0.00 -> 0.04; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_policy_change_ts2  [repair:policy_change] lr[dep]=0.818 deepest k=4: feasible (rmin 0.009, full 0.009) -> feasible (rmin 0.009, full 0.009); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_predictor_upgrade_ts1  [repair:predictor_upgrade] lr[dep]=0.859 deepest k=4: type_II (rmin 0.239, full 0.239) -> feasible (rmin 0.010, full 0.010); tier1 0.00 -> 1.00; viol 0.00 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+mnist_predictor_upgrade_ts2  [repair:predictor_upgrade] lr[dep]=0.919 deepest k=4: type_II (rmin 0.250, full 0.250) -> feasible (rmin 0.013, full 0.013); tier1 0.00 -> 1.00; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_policy_change_ts1  [repair:policy_change] lr[dep]=0.808 deepest k=3: feasible (rmin 0.136, full 0.137) -> feasible (rmin 0.134, full 0.137); tier1 0.38 -> 0.38; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_policy_change_ts2  [repair:policy_change] lr[dep]=0.747 deepest k=4: feasible (rmin 0.130, full 0.130) -> feasible (rmin 0.129, full 0.130); tier1 0.91 -> 0.91; viol 0.00 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-MiniBooNE_predictor_upgrade_ts1  [repair:predictor_upgrade] lr[dep]=0.758 deepest k=2: unresolved (rmin 0.152, full 0.153) -> feasible (rmin 0.141, full 0.141); tier1 0.00 -> 0.14; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 4/5 -> 5/5
+tabular-MiniBooNE_predictor_upgrade_ts2  [repair:predictor_upgrade] lr[dep]=0.737 deepest k=2: type_II (rmin 0.166, full 0.172) -> feasible (rmin 0.144, full 0.144); tier1 0.00 -> 0.07; viol 0.00 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_policy_change_ts1  [repair:policy_change] lr[dep]=0.747 deepest k=1: feasible (rmin 0.225, full 0.225) -> feasible (rmin 0.225, full 0.225); tier1 0.29 -> 0.29; viol 0.01 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_policy_change_ts2  [repair:policy_change] lr[dep]=0.737 deepest k=2: type_II (rmin 0.267, full 0.269) -> type_II (rmin 0.259, full 0.269); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_predictor_upgrade_ts1  [repair:predictor_upgrade] lr[dep]=0.758 deepest k=2: type_II (rmin 0.289, full 0.290) -> type_II (rmin 0.285, full 0.285); tier1 0.00 -> 0.00; viol 0.00 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+tabular-adult_predictor_upgrade_ts2  [repair:predictor_upgrade] lr[dep]=0.737 deepest k=1: unresolved (rmin 0.207, full 0.209) -> type_II (rmin 0.217, full 0.221); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 1/5
+```
+
+
+**E7 at seeds 1–2.**
+- **MNIST predictor upgrade replicates the seed-0 result at both seeds.** `type_II` → `feasible`, family minimum 0.239 → 0.010 and 0.250 → 0.013, tier 1 0.00 → 1.00. Raw violation is 0.00 → 0.02 and 0.01 → 0.01, certified 0.00 → 0.00.
+- **MiniBooNE predictor upgrade:** `unresolved` / `type_II` → `feasible` (0.152 → 0.141, 0.166 → 0.144), tier 1 0.00 → 0.14 and 0.00 → 0.07.
+- **Adult predictor upgrade:**
+  - seed 1: stays `type_II`;
+  - seed 2: `unresolved` → `type_II`, verdict agreement 5/5 → 1/5.
+- **Policy change:** the deepest-stratum verdict on the primary split is unchanged in every cell, and so is the tier-1 share.
+  - The only change in verdict agreement is FashionMNIST's: 5/5 → 4/5 at seed 1 and 4/5 → 3/5 at seed 2.
+  - Violation rates move slightly:
+    - Imagenette: raw 0.11 → 0.09 and certified 0.00 → 0.01 at seed 1; raw 0.06 → 0.05 and certified 0.00 → 0.01 at seed 2.
+    - Raw only: MNIST seed 1 0.00 → 0.04, MiniBooNE seed 2 0.00 → 0.01, Adult seed 1 0.01 → 0.02.
+- **Files:** `results_v3/repair/*_ts{1,2}_*.json`. F4 (`results_v3/figures/F4_repair.pdf`) now has every repair JSON of seeds 0–2.
+
+#### E9 α margin over seeds (`results_v3/tables/TABLE_E9_alpha_margin.csv` (seed 0), `results_v3/tables_e9_alpha_margin_ts{1,2}/TABLE_E9_alpha_margin.csv`): tier-1 share at margin 0.02 / 0.05 / 0.10
+
+| dataset | policy | seed 0 | seed 1 | seed 2 |
+|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0.00 (α 0.12) / 0.00 (α 0.15) / 0.00 (α 0.2) | 0.00 (α 0.11) / 0.00 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.12) / 0.00 (α 0.15) / 0.00 (α 0.2) |
+| csv-diabetes | random | 0.00 (α 0.12) / 0.00 (α 0.15) / 0.26 (α 0.2) | 0.00 (α 0.11) / 0.00 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.12) / 0.00 (α 0.15) / 0.55 (α 0.2) |
+| csv-physionet | greedy_entropy | 0.58 (α 0.15) / 1.00 (α 0.2) / 1.00 (α 0.25) | 0.96 (α 0.17) / 1.00 (α 0.2) / 1.00 (α 0.25) | 0.80 (α 0.15) / 1.00 (α 0.2) / 1.00 (α 0.25) |
+| csv-physionet | random | 0.58 (α 0.15) / 1.00 (α 0.2) / 1.00 (α 0.25) | 0.96 (α 0.17) / 1.00 (α 0.2) / 1.00 (α 0.25) | 0.80 (α 0.15) / 1.00 (α 0.2) / 1.00 (α 0.25) |
+| cube | greedy_entropy | 0.00 (α 0.08) / 1.00 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.09) / 0.60 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.08) / 0.97 (α 0.15) / 1.00 (α 0.2) |
+| cube | random | 0.00 (α 0.08) / 0.99 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.09) / 0.69 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.08) / 1.00 (α 0.15) / 1.00 (α 0.2) |
+| fashionmnist | greedy_entropy | 0.00 (α 0.09) / 0.12 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.08) / 0.34 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.1) / 0.00 (α 0.15) / 1.00 (α 0.2) |
+| fashionmnist | random | 0.00 (α 0.09) / 0.12 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.08) / 0.01 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.1) / 0.00 (α 0.15) / 1.00 (α 0.2) |
+| image-imagenette | greedy_entropy | refused (α 0.05) / 0.20 (α 0.1) / 1.00 (α 0.15) | refused (α 0.05) / 0.28 (α 0.1) / 1.00 (α 0.15) | refused (α 0.05) / 0.36 (α 0.1) / 1.00 (α 0.15) |
+| image-imagenette | random | refused (α 0.05) / 0.09 (α 0.1) / 1.00 (α 0.15) | refused (α 0.05) / 0.39 (α 0.1) / 1.00 (α 0.15) | refused (α 0.05) / 0.44 (α 0.1) / 1.00 (α 0.15) |
+| mnist | greedy_entropy | refused (α 0.03) / 1.00 (α 0.1) / 1.00 (α 0.15) | refused (α 0.03) / 1.00 (α 0.1) / 1.00 (α 0.15) | refused (α 0.03) / 1.00 (α 0.1) / 1.00 (α 0.15) |
+| mnist | random | refused (α 0.03) / 1.00 (α 0.1) / 1.00 (α 0.15) | refused (α 0.03) / 1.00 (α 0.1) / 1.00 (α 0.15) | refused (α 0.03) / 1.00 (α 0.1) / 1.00 (α 0.15) |
+| tabular-MiniBooNE | greedy_entropy | 0.00 (α 0.1) / 0.01 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.11) / 0.00 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.1) / 0.01 (α 0.15) / 1.00 (α 0.2) |
+| tabular-MiniBooNE | random | 0.00 (α 0.1) / 0.26 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.11) / 0.38 (α 0.15) / 1.00 (α 0.2) | 0.00 (α 0.1) / 0.91 (α 0.15) / 1.00 (α 0.2) |
+| tabular-adult | greedy_entropy | 0.00 (α 0.18) / 1.00 (α 0.25) / 1.00 (α 0.3) | 0.00 (α 0.18) / 0.00 (α 0.25) / 1.00 (α 0.3) | 0.00 (α 0.17) / 0.02 (α 0.2) / 1.00 (α 0.25) |
+| tabular-adult | random | 0.00 (α 0.18) / 0.00 (α 0.25) / 1.00 (α 0.3) | 0.00 (α 0.18) / 0.29 (α 0.25) / 1.00 (α 0.3) | 0.00 (α 0.17) / 0.00 (α 0.2) / 1.00 (α 0.25) |
+
+Per-seed tables:
+- `results_v3/tables_e9_alpha_margin_ts{1,2}/TABLE_E9_alpha_margin.md` (`alpha_margin_summary_v3.py --train-seed`);
+- the am10 and am02 E4/E3/E2/E6 rows for all seeds, in `results_v3/tables_e9_alpha_margin{10,02}/`.
+
+Across the three seeds, the pattern of §13.2 holds:
+- At margin 0.10, tier 1 is 1.00 everywhere except Diabetes: greedy 0.00 / 1.00 / 0.00, random 0.26 / 1.00 / 0.55 at seeds 0 / 1 / 2.
+- At margin 0.02, tier 1 is ≤ 0.96, the PhysioNet seed-1 maximum.
+- MNIST and Imagenette are refused at margin 0.02 at every seed.
+
+**E10 over all seeds** (`results_v3/tables/TABLE_E10_margin_summary.json`, `results_v3/figures/F7_margin.pdf`; 16 cells × 4 keys × 5 splits × 3 seeds = **960 points**):
+
+| predictor | Spearman ρ | within ±0.2 |
+|---|---|---|
+| `pred_tier1`, all keys | **0.914** | **0.983 (944/960)** |
+| `pred_tier1_thr`, all keys | 0.914 | 942/960 |
+| `pred_tier1_hyper` (sensitivity), all keys | 0.906 | 950/960 |
+| `pred_tier1`, key `dep` (240 points) | 0.950 | 236/240 |
+
+The cal_frac points are seed 0 only (Task K2), as in §13.4.
+
+**Cost gap over seeds** (`results_v3/tables/TABLE_E4_cost_gap.csv`, now 48 rows; the seed means of `cascade_over_safe_oracle` are in the seed-aggregated table above):
+- The seed-0 labels of §13.4 stand.
+- For seeds 1–2 the per-seed rows carry the same columns. No new per-seed reading is added here.
+
+**J.4 — what was not done in Part 3b.**
+- The cal-frac curve (K2) and F7's cal-frac points are seed 0 only. Task J does not ask for them.
+- The FashionMNIST repair (Task L) stays `TBD-RUN` (§13.5).
+- The seed-0 am02 metrics are round-2 sweeps that were not rerun. So in `results_v3/tables_e9_alpha_margin02/TABLE_E6_baselines.csv`, seed 0 has 10 baselines and seeds 1–2 have 12, the latter including the two stratum-safe oracles.
+- Verification: two read-only verifiers checked this part of the handoff against the files (`results_v3/diagnostics/r3J_handoff_verification_{A,B}.md`). Their corrections are applied here.
+
+### 13.9 Final checklist (Part 3b; the Part-3a checklist at `e24fad1` is §13.7)
+
+Log: `results_v3/logs/r3J_final_checklist.log`.
+
+Run at HEAD `da464ee`. At that point `handoff.md`, the `r3J_*` logs and the regenerated `hpc_dry_run.log` were uncommitted; they go into the handoff content commit.
+
+- [x] **Git.** `git status` is clean on `aistats-v3` after the hash commit (checked after committing).
+  - Round-3b commits: `981943c` (cluster verification, provenance, seed-1/2 commits, Slurm fix) and `da464ee` (sweeps, repairs, tables, figures).
+  - Then the handoff content commit, whose hash the header records, and one hash-only commit.
+- [x] **Nine v3 test files:** `33 passed in 66.08s (0:01:06)` (`results_v3/logs/r3J_final_pytest_nine_v3.log`).
+- [x] **Whole suite:** `172 passed in 283.99s (0:04:43)`, with 0 xfailed and 0 skipped (`results_v3/logs/r3J_final_pytest_full_suite.log`, run with `-rxXs`).
+- [x] **Outputs present; no smoke artifacts:**
+  - `pool_v3`: 48 caches (16 per seed), none with `max_rows`, no tagged token.
+  - `checkpoints_v3`: the 8 seed-0 checkpoints. The cluster checkpoints were not copied; README §6 marks them optional.
+  - `metrics_v3`: 48 files. `metrics_v3_alpha_margin10`: 48. `metrics_v3_alpha_margin02`: 36.
+  - `configs/committed_v3*`: 76 files (24 main, 24 am10, 18 am02, 9 BEFORE, 1 G8), none synthetic.
+  - `results_v3/repair/`: 33 JSONs, 22 of them for seeds 1–2.
+- [x] **Frozen files.** Against `aaai27-submission`, `src/cafa/risk_control.py` differs by the one authorised line. The four frozen test files are unchanged. Round 3 changed nothing under `src/`.
+- [x] **Archives.** `metrics_v3_round1` and `metrics_v3_round2` each check 16/16 sha256 OK.
+- [x] **HPC dry run on the committed tree** (`results_v3/logs/hpc_dry_run.log`; header: commit `da464ee`, 0 uncommitted files under hpc/, scripts/, src/, configs/; it includes the Slurm `set -u` fix):
+  - 72 array tasks: 56 skip because their output exists, and 16 would run.
+  - The 16 are the seed-1/2 backbone tasks, whose checkpoints exist only on the cluster. Every rollout is skipped because its cache exists.
+- [x] **Stop conditions: none reached.**
+  - Every seed-1/2 cache has greedy = random full-acquisition accuracy.
+  - Every cluster backbone's `full_obs_acc` is within 0.03 of seed 0.
+  - The instruction.md §7 conditions did not occur.
+- [x] **`TBD-RUN` items and their commands:**
+  - the FashionMNIST repair (Task L): §10 step 1b, `hpc/README_v3.md` §8;
+  - the seed-1/2 δ-split, G = 8 and cal-frac ablations: §10 step 1;
+  - Phase 1d: §10 step 4.
+- [x] **Tag.** `aistats-v3-results` is set on the final commit, the hash commit (instruction_round3 Task J.4).

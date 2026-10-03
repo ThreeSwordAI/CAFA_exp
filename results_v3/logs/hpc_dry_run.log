@@ -1,4 +1,4 @@
-# hpc dry run: 2026-10-03T14:24:57+02:00 repo /f/FAU/PhD/Side Quest/CAFA_exp commit dfdc149 (uncommitted changes under hpc/ scripts/ src/ configs/: 0 files) python /f/FAU/PhD/Side Quest/CAFA_exp/.venv/Scripts/python.exe
+# hpc dry run: 2026-10-03T16:21:44+02:00 repo /f/FAU/PhD/Side Quest/CAFA_exp commit da464ee (uncommitted changes under hpc/ scripts/ src/ configs/: 0 files) python /f/FAU/PhD/Side Quest/CAFA_exp/.venv/Scripts/python.exe
 ### backbone_v3.slurm SLURM_ARRAY_TASK_ID=0 CAFA_EXTRA=''
 [drive_v3] skip (exists) backbones:csv:physionet:na:ts0 -> F:\CAFA_results\checkpoints_v3\csv-physionet_ts0.pt
 [drive_v3] backbones: ran 0, skipped 1 existing, 0 missing prerequisites
@@ -120,99 +120,99 @@
 [drive_v3] skip (exists) rollouts:image:imagenette:random:ts0 -> F:\CAFA_results\pool_v3\image-imagenette_ts0_random_softmax.npz
 [drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=16 (csv:physionet greedy_entropy 1)
-[drive_v3] would run rollouts:csv:physionet:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: csv-physionet_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:physionet:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\csv-physionet_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=17 (csv:physionet random 1)
-[drive_v3] would run rollouts:csv:physionet:random:ts1: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 1 --policy random --device cuda  [prerequisite missing now: csv-physionet_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:physionet:random:ts1 -> F:\CAFA_results\pool_v3\csv-physionet_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=18 (cube greedy_entropy 1)
-[drive_v3] would run rollouts:cube:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: cube_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:cube:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\cube_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=19 (cube random 1)
-[drive_v3] would run rollouts:cube:random:ts1: python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 1 --policy random --device cuda  [prerequisite missing now: cube_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:cube:random:ts1 -> F:\CAFA_results\pool_v3\cube_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=20 (tabular:adult greedy_entropy 1)
-[drive_v3] would run rollouts:tabular:adult:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: tabular-adult_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:adult:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\tabular-adult_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=21 (tabular:adult random 1)
-[drive_v3] would run rollouts:tabular:adult:random:ts1: python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 1 --policy random --device cuda  [prerequisite missing now: tabular-adult_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:adult:random:ts1 -> F:\CAFA_results\pool_v3\tabular-adult_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=22 (csv:diabetes greedy_entropy 1)
-[drive_v3] would run rollouts:csv:diabetes:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: csv-diabetes_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:diabetes:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\csv-diabetes_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=23 (csv:diabetes random 1)
-[drive_v3] would run rollouts:csv:diabetes:random:ts1: python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 1 --policy random --device cuda  [prerequisite missing now: csv-diabetes_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:diabetes:random:ts1 -> F:\CAFA_results\pool_v3\csv-diabetes_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=24 (tabular:MiniBooNE greedy_entropy 1)
-[drive_v3] would run rollouts:tabular:MiniBooNE:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: tabular-MiniBooNE_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:MiniBooNE:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=25 (tabular:MiniBooNE random 1)
-[drive_v3] would run rollouts:tabular:MiniBooNE:random:ts1: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 1 --policy random --device cuda  [prerequisite missing now: tabular-MiniBooNE_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:MiniBooNE:random:ts1 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=26 (mnist greedy_entropy 1)
-[drive_v3] would run rollouts:mnist:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset mnist --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: mnist_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:mnist:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\mnist_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=27 (mnist random 1)
-[drive_v3] would run rollouts:mnist:random:ts1: python scripts/run_pool_rollout_v3.py --dataset mnist --train-seed 1 --policy random --device cuda  [prerequisite missing now: mnist_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:mnist:random:ts1 -> F:\CAFA_results\pool_v3\mnist_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=28 (fashionmnist greedy_entropy 1)
-[drive_v3] would run rollouts:fashionmnist:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset fashionmnist --train-seed 1 --policy greedy_entropy --device cuda  [prerequisite missing now: fashionmnist_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:fashionmnist:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\fashionmnist_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=29 (fashionmnist random 1)
-[drive_v3] would run rollouts:fashionmnist:random:ts1: python scripts/run_pool_rollout_v3.py --dataset fashionmnist --train-seed 1 --policy random --device cuda  [prerequisite missing now: fashionmnist_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:fashionmnist:random:ts1 -> F:\CAFA_results\pool_v3\fashionmnist_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=30 (image:imagenette greedy_entropy 1)
-[drive_v3] would run rollouts:image:imagenette:greedy_entropy:ts1: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 1 --policy greedy_entropy --device cuda --batch-size 32 --policy-amp  [prerequisite missing now: image-imagenette_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:image:imagenette:greedy_entropy:ts1 -> F:\CAFA_results\pool_v3\image-imagenette_ts1_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=31 (image:imagenette random 1)
-[drive_v3] would run rollouts:image:imagenette:random:ts1: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 1 --policy random --device cuda --batch-size 32  [prerequisite missing now: image-imagenette_ts1.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:image:imagenette:random:ts1 -> F:\CAFA_results\pool_v3\image-imagenette_ts1_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=32 (csv:physionet greedy_entropy 2)
-[drive_v3] would run rollouts:csv:physionet:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: csv-physionet_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:physionet:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\csv-physionet_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=33 (csv:physionet random 2)
-[drive_v3] would run rollouts:csv:physionet:random:ts2: python scripts/run_pool_rollout_v3.py --dataset csv:physionet --train-seed 2 --policy random --device cuda  [prerequisite missing now: csv-physionet_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:physionet:random:ts2 -> F:\CAFA_results\pool_v3\csv-physionet_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=34 (cube greedy_entropy 2)
-[drive_v3] would run rollouts:cube:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: cube_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:cube:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\cube_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=35 (cube random 2)
-[drive_v3] would run rollouts:cube:random:ts2: python scripts/run_pool_rollout_v3.py --dataset cube --train-seed 2 --policy random --device cuda  [prerequisite missing now: cube_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:cube:random:ts2 -> F:\CAFA_results\pool_v3\cube_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=36 (tabular:adult greedy_entropy 2)
-[drive_v3] would run rollouts:tabular:adult:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: tabular-adult_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:adult:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\tabular-adult_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=37 (tabular:adult random 2)
-[drive_v3] would run rollouts:tabular:adult:random:ts2: python scripts/run_pool_rollout_v3.py --dataset tabular:adult --train-seed 2 --policy random --device cuda  [prerequisite missing now: tabular-adult_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:adult:random:ts2 -> F:\CAFA_results\pool_v3\tabular-adult_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=38 (csv:diabetes greedy_entropy 2)
-[drive_v3] would run rollouts:csv:diabetes:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: csv-diabetes_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:diabetes:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\csv-diabetes_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=39 (csv:diabetes random 2)
-[drive_v3] would run rollouts:csv:diabetes:random:ts2: python scripts/run_pool_rollout_v3.py --dataset csv:diabetes --train-seed 2 --policy random --device cuda  [prerequisite missing now: csv-diabetes_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:csv:diabetes:random:ts2 -> F:\CAFA_results\pool_v3\csv-diabetes_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=40 (tabular:MiniBooNE greedy_entropy 2)
-[drive_v3] would run rollouts:tabular:MiniBooNE:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: tabular-MiniBooNE_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:MiniBooNE:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=41 (tabular:MiniBooNE random 2)
-[drive_v3] would run rollouts:tabular:MiniBooNE:random:ts2: python scripts/run_pool_rollout_v3.py --dataset tabular:MiniBooNE --train-seed 2 --policy random --device cuda  [prerequisite missing now: tabular-MiniBooNE_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:tabular:MiniBooNE:random:ts2 -> F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=42 (mnist greedy_entropy 2)
-[drive_v3] would run rollouts:mnist:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset mnist --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: mnist_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:mnist:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\mnist_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=43 (mnist random 2)
-[drive_v3] would run rollouts:mnist:random:ts2: python scripts/run_pool_rollout_v3.py --dataset mnist --train-seed 2 --policy random --device cuda  [prerequisite missing now: mnist_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:mnist:random:ts2 -> F:\CAFA_results\pool_v3\mnist_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=44 (fashionmnist greedy_entropy 2)
-[drive_v3] would run rollouts:fashionmnist:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset fashionmnist --train-seed 2 --policy greedy_entropy --device cuda  [prerequisite missing now: fashionmnist_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:fashionmnist:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\fashionmnist_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=45 (fashionmnist random 2)
-[drive_v3] would run rollouts:fashionmnist:random:ts2: python scripts/run_pool_rollout_v3.py --dataset fashionmnist --train-seed 2 --policy random --device cuda  [prerequisite missing now: fashionmnist_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:fashionmnist:random:ts2 -> F:\CAFA_results\pool_v3\fashionmnist_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=46 (image:imagenette greedy_entropy 2)
-[drive_v3] would run rollouts:image:imagenette:greedy_entropy:ts2: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 2 --policy greedy_entropy --device cuda --batch-size 32 --policy-amp  [prerequisite missing now: image-imagenette_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:image:imagenette:greedy_entropy:ts2 -> F:\CAFA_results\pool_v3\image-imagenette_ts2_greedy_entropy_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 ### rollout_v3.slurm SLURM_ARRAY_TASK_ID=47 (image:imagenette random 2)
-[drive_v3] would run rollouts:image:imagenette:random:ts2: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 2 --policy random --device cuda --batch-size 32  [prerequisite missing now: image-imagenette_ts2.pt]
-[drive_v3] rollouts: ran 0, skipped 0 existing, 1 missing prerequisites
+[drive_v3] skip (exists) rollouts:image:imagenette:random:ts2 -> F:\CAFA_results\pool_v3\image-imagenette_ts2_random_softmax.npz
+[drive_v3] rollouts: ran 0, skipped 1 existing, 0 missing prerequisites
 # array tasks without driver output: 0

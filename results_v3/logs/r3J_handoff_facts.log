@@ -1,0 +1,17 @@
+TABLE_E4_cascade.csv, 48 rows; seeds 1-2 rows: 32
+  certified_deployment: min (0.05, 'csv-diabetes', 'greedy_entropy', '1') max (1.0, 'tabular-adult', 'random', '2')
+  certified_violation: min (0.0, 'csv-diabetes', 'greedy_entropy', '0') max (0.02, 'tabular-adult', 'greedy_entropy', '2')
+  test_stratum_violation: min (0.0, 'csv-diabetes', 'greedy_entropy', '0') max (0.19, 'image-imagenette', 'greedy_entropy', '2')
+  max_excess_se: min (-7.068194606828539, 'csv-physionet', 'greedy_entropy', '2') max (-1.7034642131349742, 'csv-diabetes', 'greedy_entropy', '1')
+  none: min (0.0, 'csv-diabetes', 'greedy_entropy', '0') max (0.95, 'csv-diabetes', 'greedy_entropy', '1')
+  cells with certified_deployment < 1: [('csv-diabetes', 'greedy_entropy', '1', '0.05')]
+  cells with raw test_stratum_violation > 0.10: [('image-imagenette', 'random', '1', '0.11', '0.000–0.500'), ('image-imagenette', 'greedy_entropy', '2', '0.19', '0.000–0.800')]
+  mean tier-1 share over the 48 cells: 0.4683; seed 0 / 1 / 2 means: [0.4869, 0.4362, 0.4819]
+TABLE_E4_seed_flags.csv flagged: [('cube', 'greedy_entropy', '1.000 / 0.600 / 0.970'), ('cube', 'random', '0.990 / 0.690 / 1.000'), ('fashionmnist', 'greedy_entropy', '0.120 / 0.340 / 0.000'), ('image-imagenette', 'random', '0.090 / 0.390 / 0.440'), ('tabular-MiniBooNE', 'random', '0.260 / 0.380 / 0.910'), ('tabular-adult', 'greedy_entropy', '1.000 / 0.000 / 0.020'), ('tabular-adult', 'random', '0.000 / 0.290 / 0.000')]
+TABLE_E10_margin_summary.json: n_points 960 main {'pred_tier1': (0.914, 944, 0.983), 'pred_tier1_thr': (0.914, 942, 0.981), 'pred_tier1_nk_calpool': (0.914, 946, 0.985), 'pred_tier1_hyper': (0.906, 950, 0.99)} dep {'pred_tier1': (0.95, 236), 'pred_tier1_thr': (0.951, 236), 'pred_tier1_nk_calpool': (0.951, 238), 'pred_tier1_hyper': (0.95, 237)}
+cache mtime csv-diabetes_ts1_greedy_entropy_softmax.npz 2026-10-03 14:32:54
+cache mtime tabular-adult_ts2_random_softmax.npz 2026-10-03 14:33:16
+file mtime results_v3/logs/hpc_round3_logs.tgz 2026-10-03 14:35:54
+file mtime results_v3/logs/hpc_sacct_round3.txt 2026-10-03 14:35:52
+file mtime results_v3/run_log_hpc_round3.jsonl 2026-10-03 14:35:53
+round-3b ledger lines: 158 non-zero: [('r3Jam02:commit:mnist:na:ts1', 7), ('r3Jam02:commit:image:imagenette:na:ts1', 7), ('r3Jam02:commit:mnist:na:ts2', 7), ('r3Jam02:commit:image:imagenette:na:ts2', 7)] first start 2026-10-03T12:46:52.560377+00:00 last end 2026-10-03T14:08:49.787137+00:00 (UTC)

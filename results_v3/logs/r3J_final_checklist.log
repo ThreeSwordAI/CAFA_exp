@@ -1,0 +1,34 @@
+# round-3 (3b) final checklist checks, 2026-10-03T16:23:58+02:00, HEAD da464ee (uncommitted: handoff.md, r3J_* logs, hpc_dry_run.log)
+## git tag
+aaai27-submission code as used for the AAAI-27 submission (HB boundary rounding defect present)
+aaai27-submission -> 550f8e2; aistats-v3-results set: 0 (set on the final commit after this check)
+## frozen files vs aaai27-submission
+ src/cafa/risk_control.py | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+## src/ changes in round 3 (16da5a0..HEAD): 0 diff lines
+## archives
+metrics_v3_round1: 16 listed, check rc 0
+metrics_v3_round2: 16 listed, check rc 0
+## smoke artifacts / outputs
+pool_v3 caches: 48 | per seed: {0: 16, 1: 16, 2: 16} | with max_rows: 0 | tagged tokens: 0
+checkpoints_v3: 8 (seed 0 only; cluster checkpoints not copied) | checkpoint folders: ['checkpoints', 'checkpoints_v2', 'checkpoints_v3', 'checkpoints_v3_superseded']
+  metrics_v3 48
+  metrics_v3_round2 16
+  metrics_v3_alpha_margin02 36
+  metrics_v3_alpha_margin10 48
+  metrics_v3_calfrac025 16
+  metrics_v3_calfrac100 16
+  metrics_v3_dw 1
+  metrics_v3_G8 1
+configs/committed_v3*: 76 {'committed_v3_am02': 18, 'committed_v3_am10': 24, 'committed_v3_G8': 1, 'committed_v3before': 9} | synthetic: []
+repair JSONs: 33 | seeds 1-2: 22
+## tests
+33 passed in 66.08s (0:01:06)
+172 passed in 283.99s (0:04:43)
+0
+## hpc dry run
+# hpc dry run: 2026-10-03T16:21:44+02:00 repo /f/FAU/PhD/Side Quest/CAFA_exp commit da464ee (uncommitted changes under hpc/ scripts/ src/ configs/: 0 files) python /f/FAU/PhD/Side Quest/CAFA_exp/.venv/Scripts/python.exe
+array tasks 72, would run 16, skip (exists) 56
+        1 backbones:csv:diabetes:na:ts1
+        1 backbones:csv:diabetes:na:ts2
+        1 backbones:csv:physionet:na:ts1
