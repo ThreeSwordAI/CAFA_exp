@@ -1,124 +1,124 @@
 # TABLE_E6_baselines (lambda_ref key = dep, scheme = uniform)
 
-| dataset | policy | seed | baseline | mean_test_risk | mean_test_cost | stratum_violation_rate | aggregate_violation_rate | stratum_certified_violation_rate |
-|---|---|---|---|---|---|---|---|---|
-| csv-diabetes | greedy_entropy | 0 | budget_0.25 | 0.095 | 11.000 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | budget_0.5 | 0.095 | 22.000 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | budget_0.75 | 0.095 | 34.000 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.9 | 0.096 | 9.496 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.95 | 0.096 | 12.179 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.99 | 0.096 | 13.218 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | mondrian_oracle | 0.114 | 11.650 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | oracle_cheapest_valid | 0.099 | 6.915 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | greedy_entropy | 0 | plugin | 0.099 | 6.915 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | budget_0.25 | 0.164 | 11.000 | 1.000 | 1.000 | 1.000 |
-| csv-diabetes | random | 0 | budget_0.5 | 0.131 | 22.000 | 1.000 | 1.000 | 1.000 |
-| csv-diabetes | random | 0 | budget_0.75 | 0.107 | 34.000 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | fixed_conf_0.9 | 0.117 | 16.332 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | fixed_conf_0.95 | 0.103 | 19.841 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | fixed_conf_0.99 | 0.098 | 24.320 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | mondrian_oracle | 0.126 | 11.774 | 1.000 | 1.000 | 1.000 |
-| csv-diabetes | random | 0 | oracle_cheapest_valid | 0.117 | 16.332 | 1.000 | 0.000 | 1.000 |
-| csv-diabetes | random | 0 | plugin | 0.119 | 16.076 | 1.000 | 0.440 | 1.000 |
-| csv-physionet | greedy_entropy | 0 | budget_0.25 | 0.141 | 10.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | budget_0.5 | 0.136 | 20.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | budget_0.75 | 0.128 | 31.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | fixed_conf_0.9 | 0.132 | 7.622 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | fixed_conf_0.95 | 0.128 | 14.584 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | fixed_conf_0.99 | 0.127 | 27.377 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | mondrian_oracle | 0.131 | 17.222 | 0.050 | 0.050 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | oracle_cheapest_valid | 0.140 | 1.197 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | greedy_entropy | 0 | plugin | 0.141 | 1.060 | 0.200 | 0.200 | 0.000 |
-| csv-physionet | random | 0 | budget_0.25 | 0.144 | 10.000 | 0.200 | 0.200 | 0.000 |
-| csv-physionet | random | 0 | budget_0.5 | 0.138 | 20.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | budget_0.75 | 0.136 | 31.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | fixed_conf_0.9 | 0.133 | 12.147 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | fixed_conf_0.95 | 0.129 | 24.435 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | fixed_conf_0.99 | 0.127 | 36.329 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | mondrian_oracle | 0.133 | 20.642 | 0.050 | 0.050 | 0.000 |
-| csv-physionet | random | 0 | oracle_cheapest_valid | 0.142 | 1.165 | 0.000 | 0.000 | 0.000 |
-| csv-physionet | random | 0 | plugin | 0.142 | 1.306 | 0.200 | 0.200 | 0.000 |
-| cube | greedy_entropy | 0 | budget_0.25 | 0.133 | 5.000 | 1.000 | 1.000 | 1.000 |
-| cube | greedy_entropy | 0 | budget_0.5 | 0.069 | 10.000 | 1.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | budget_0.75 | 0.059 | 15.000 | 1.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | fixed_conf_0.9 | 0.085 | 6.589 | 1.000 | 1.000 | 1.000 |
-| cube | greedy_entropy | 0 | fixed_conf_0.95 | 0.063 | 8.354 | 1.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | fixed_conf_0.99 | 0.048 | 11.685 | 1.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | full_acquisition | 0.046 | 20.000 | 1.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | mondrian_oracle | 0.070 | 8.669 | 1.000 | 0.030 | 1.000 |
-| cube | greedy_entropy | 0 | oracle_cheapest_valid | 0.079 | 6.983 | 1.000 | 0.000 | 1.000 |
-| cube | greedy_entropy | 0 | plugin | 0.078 | 7.098 | 1.000 | 0.230 | 1.000 |
-| cube | random | 0 | budget_0.25 | 0.531 | 5.000 | 1.000 | 1.000 | 1.000 |
-| cube | random | 0 | budget_0.5 | 0.274 | 10.000 | 1.000 | 1.000 | 1.000 |
-| cube | random | 0 | budget_0.75 | 0.119 | 15.000 | 1.000 | 1.000 | 1.000 |
-| cube | random | 0 | fixed_conf_0.9 | 0.076 | 12.820 | 1.000 | 0.000 | 1.000 |
-| cube | random | 0 | fixed_conf_0.95 | 0.058 | 14.195 | 1.000 | 0.000 | 1.000 |
-| cube | random | 0 | fixed_conf_0.99 | 0.047 | 16.120 | 1.000 | 0.000 | 1.000 |
-| cube | random | 0 | full_acquisition | 0.046 | 20.000 | 1.000 | 0.000 | 1.000 |
-| cube | random | 0 | mondrian_oracle | 0.065 | 13.791 | 1.000 | 0.010 | 1.000 |
-| cube | random | 0 | oracle_cheapest_valid | 0.078 | 12.595 | 1.000 | 0.000 | 1.000 |
-| cube | random | 0 | plugin | 0.080 | 12.462 | 1.000 | 0.570 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | budget_0.25 | 0.117 | 12.000 | 1.000 | 1.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | budget_0.5 | 0.079 | 24.000 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | budget_0.75 | 0.065 | 37.000 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | fixed_conf_0.9 | 0.091 | 9.031 | 1.000 | 0.800 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.073 | 12.621 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.060 | 20.979 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | full_acquisition | 0.058 | 49.000 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | mondrian_oracle | 0.088 | 15.772 | 1.000 | 0.210 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.088 | 9.474 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | greedy_entropy | 0 | plugin | 0.084 | 10.172 | 1.000 | 0.020 | 1.000 |
-| fashionmnist | random | 0 | budget_0.25 | 0.141 | 12.000 | 1.000 | 1.000 | 1.000 |
-| fashionmnist | random | 0 | budget_0.5 | 0.090 | 24.000 | 1.000 | 0.200 | 1.000 |
-| fashionmnist | random | 0 | budget_0.75 | 0.069 | 37.000 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | random | 0 | fixed_conf_0.9 | 0.089 | 12.345 | 1.000 | 0.400 | 1.000 |
-| fashionmnist | random | 0 | fixed_conf_0.95 | 0.071 | 15.923 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | random | 0 | fixed_conf_0.99 | 0.059 | 23.110 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | random | 0 | full_acquisition | 0.058 | 49.000 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | random | 0 | mondrian_oracle | 0.095 | 15.590 | 1.000 | 0.890 | 1.000 |
-| fashionmnist | random | 0 | oracle_cheapest_valid | 0.087 | 12.576 | 1.000 | 0.000 | 1.000 |
-| fashionmnist | random | 0 | plugin | 0.089 | 12.337 | 1.000 | 0.430 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | budget_0.25 | 0.216 | 4.000 | 1.000 | 1.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.600 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | budget_0.75 | 0.158 | 10.000 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | fixed_conf_0.9 | 0.151 | 7.320 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | fixed_conf_0.95 | 0.149 | 8.469 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | fixed_conf_0.99 | 0.147 | 11.556 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | full_acquisition | 0.147 | 14.000 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | mondrian_oracle | 0.165 | 5.140 | 1.000 | 0.010 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | oracle_cheapest_valid | 0.178 | 3.023 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | greedy_entropy | 0 | plugin | 0.175 | 3.372 | 1.000 | 0.320 | 1.000 |
-| tabular-adult | random | 0 | budget_0.25 | 0.206 | 4.000 | 1.000 | 1.000 | 1.000 |
-| tabular-adult | random | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.800 | 1.000 |
-| tabular-adult | random | 0 | budget_0.75 | 0.160 | 10.000 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | random | 0 | fixed_conf_0.9 | 0.151 | 7.943 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | random | 0 | fixed_conf_0.95 | 0.149 | 9.583 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | random | 0 | fixed_conf_0.99 | 0.147 | 11.953 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | random | 0 | full_acquisition | 0.147 | 14.000 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | random | 0 | mondrian_oracle | 0.173 | 4.942 | 1.000 | 0.040 | 1.000 |
-| tabular-adult | random | 0 | oracle_cheapest_valid | 0.176 | 4.058 | 1.000 | 0.000 | 1.000 |
-| tabular-adult | random | 0 | plugin | 0.173 | 4.282 | 1.000 | 0.150 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.25 | 0.110 | 12.000 | 1.000 | 1.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.5 | 0.092 | 25.000 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.75 | 0.085 | 38.000 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.9 | 0.090 | 10.580 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.95 | 0.081 | 16.828 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.99 | 0.078 | 28.661 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | full_acquisition | 0.077 | 50.000 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | mondrian_oracle | 0.099 | 15.682 | 1.000 | 0.380 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | oracle_cheapest_valid | 0.099 | 7.270 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | greedy_entropy | 0 | plugin | 0.098 | 7.470 | 1.000 | 0.360 | 1.000 |
-| tabular-MiniBooNE | random | 0 | budget_0.25 | 0.155 | 12.000 | 1.000 | 1.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | budget_0.5 | 0.108 | 25.000 | 1.000 | 1.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | budget_0.75 | 0.090 | 38.000 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | fixed_conf_0.9 | 0.093 | 16.647 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | fixed_conf_0.95 | 0.082 | 23.538 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | fixed_conf_0.99 | 0.077 | 35.213 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | full_acquisition | 0.077 | 50.000 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | mondrian_oracle | 0.104 | 15.180 | 1.000 | 0.980 | 1.000 |
-| tabular-MiniBooNE | random | 0 | oracle_cheapest_valid | 0.098 | 14.578 | 1.000 | 0.000 | 1.000 |
-| tabular-MiniBooNE | random | 0 | plugin | 0.098 | 14.823 | 1.000 | 0.290 | 1.000 |
+| dataset | policy | seed | baseline | mean_test_risk | mean_test_cost | stratum_violation_rate | aggregate_violation_rate | stratum_certified_violation_rate | feasible_rate |
+|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0 | budget_0.25 | 0.095 | 11.000 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | budget_0.5 | 0.095 | 22.000 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | budget_0.75 | 0.095 | 34.000 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.9 | 0.096 | 9.496 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.95 | 0.096 | 12.179 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | fixed_conf_0.99 | 0.096 | 13.218 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | mondrian_oracle | 0.114 | 11.650 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | oracle_cheapest_valid | 0.099 | 6.915 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | greedy_entropy | 0 | plugin | 0.099 | 6.915 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | budget_0.25 | 0.164 | 11.000 | 1.000 | 1.000 | 1.000 |  |
+| csv-diabetes | random | 0 | budget_0.5 | 0.131 | 22.000 | 1.000 | 1.000 | 1.000 |  |
+| csv-diabetes | random | 0 | budget_0.75 | 0.107 | 34.000 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | fixed_conf_0.9 | 0.117 | 16.332 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | fixed_conf_0.95 | 0.103 | 19.841 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | fixed_conf_0.99 | 0.098 | 24.320 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | full_acquisition | 0.096 | 45.000 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | mondrian_oracle | 0.126 | 11.774 | 1.000 | 1.000 | 1.000 |  |
+| csv-diabetes | random | 0 | oracle_cheapest_valid | 0.117 | 16.332 | 1.000 | 0.000 | 1.000 |  |
+| csv-diabetes | random | 0 | plugin | 0.119 | 16.076 | 1.000 | 0.440 | 1.000 |  |
+| csv-physionet | greedy_entropy | 0 | budget_0.25 | 0.141 | 10.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | budget_0.5 | 0.136 | 20.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | budget_0.75 | 0.128 | 31.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | fixed_conf_0.9 | 0.132 | 7.622 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | fixed_conf_0.95 | 0.128 | 14.584 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | fixed_conf_0.99 | 0.127 | 27.377 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | mondrian_oracle | 0.131 | 17.222 | 0.050 | 0.050 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | oracle_cheapest_valid | 0.140 | 1.197 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | greedy_entropy | 0 | plugin | 0.141 | 1.060 | 0.200 | 0.200 | 0.000 |  |
+| csv-physionet | random | 0 | budget_0.25 | 0.144 | 10.000 | 0.200 | 0.200 | 0.000 |  |
+| csv-physionet | random | 0 | budget_0.5 | 0.138 | 20.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | budget_0.75 | 0.136 | 31.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | fixed_conf_0.9 | 0.133 | 12.147 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | fixed_conf_0.95 | 0.129 | 24.435 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | fixed_conf_0.99 | 0.127 | 36.329 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | full_acquisition | 0.127 | 41.000 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | mondrian_oracle | 0.133 | 20.642 | 0.050 | 0.050 | 0.000 |  |
+| csv-physionet | random | 0 | oracle_cheapest_valid | 0.142 | 1.165 | 0.000 | 0.000 | 0.000 |  |
+| csv-physionet | random | 0 | plugin | 0.142 | 1.306 | 0.200 | 0.200 | 0.000 |  |
+| cube | greedy_entropy | 0 | budget_0.25 | 0.133 | 5.000 | 1.000 | 1.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | budget_0.5 | 0.069 | 10.000 | 1.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | budget_0.75 | 0.059 | 15.000 | 1.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | fixed_conf_0.9 | 0.085 | 6.589 | 1.000 | 1.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | fixed_conf_0.95 | 0.063 | 8.354 | 1.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | fixed_conf_0.99 | 0.048 | 11.685 | 1.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | full_acquisition | 0.046 | 20.000 | 1.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | mondrian_oracle | 0.070 | 8.669 | 1.000 | 0.030 | 1.000 |  |
+| cube | greedy_entropy | 0 | oracle_cheapest_valid | 0.079 | 6.983 | 1.000 | 0.000 | 1.000 |  |
+| cube | greedy_entropy | 0 | plugin | 0.078 | 7.098 | 1.000 | 0.230 | 1.000 |  |
+| cube | random | 0 | budget_0.25 | 0.531 | 5.000 | 1.000 | 1.000 | 1.000 |  |
+| cube | random | 0 | budget_0.5 | 0.274 | 10.000 | 1.000 | 1.000 | 1.000 |  |
+| cube | random | 0 | budget_0.75 | 0.119 | 15.000 | 1.000 | 1.000 | 1.000 |  |
+| cube | random | 0 | fixed_conf_0.9 | 0.076 | 12.820 | 1.000 | 0.000 | 1.000 |  |
+| cube | random | 0 | fixed_conf_0.95 | 0.058 | 14.195 | 1.000 | 0.000 | 1.000 |  |
+| cube | random | 0 | fixed_conf_0.99 | 0.047 | 16.120 | 1.000 | 0.000 | 1.000 |  |
+| cube | random | 0 | full_acquisition | 0.046 | 20.000 | 1.000 | 0.000 | 1.000 |  |
+| cube | random | 0 | mondrian_oracle | 0.065 | 13.791 | 1.000 | 0.010 | 1.000 |  |
+| cube | random | 0 | oracle_cheapest_valid | 0.078 | 12.595 | 1.000 | 0.000 | 1.000 |  |
+| cube | random | 0 | plugin | 0.080 | 12.462 | 1.000 | 0.570 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | budget_0.25 | 0.117 | 12.000 | 1.000 | 1.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | budget_0.5 | 0.079 | 24.000 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | budget_0.75 | 0.065 | 37.000 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | fixed_conf_0.9 | 0.091 | 9.031 | 1.000 | 0.800 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | fixed_conf_0.95 | 0.073 | 12.621 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | fixed_conf_0.99 | 0.060 | 20.979 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | full_acquisition | 0.058 | 49.000 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | mondrian_oracle | 0.088 | 15.772 | 1.000 | 0.210 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | oracle_cheapest_valid | 0.088 | 9.474 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | greedy_entropy | 0 | plugin | 0.084 | 10.172 | 1.000 | 0.020 | 1.000 |  |
+| fashionmnist | random | 0 | budget_0.25 | 0.141 | 12.000 | 1.000 | 1.000 | 1.000 |  |
+| fashionmnist | random | 0 | budget_0.5 | 0.090 | 24.000 | 1.000 | 0.200 | 1.000 |  |
+| fashionmnist | random | 0 | budget_0.75 | 0.069 | 37.000 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | random | 0 | fixed_conf_0.9 | 0.089 | 12.345 | 1.000 | 0.400 | 1.000 |  |
+| fashionmnist | random | 0 | fixed_conf_0.95 | 0.071 | 15.923 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | random | 0 | fixed_conf_0.99 | 0.059 | 23.110 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | random | 0 | full_acquisition | 0.058 | 49.000 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | random | 0 | mondrian_oracle | 0.095 | 15.590 | 1.000 | 0.890 | 1.000 |  |
+| fashionmnist | random | 0 | oracle_cheapest_valid | 0.087 | 12.576 | 1.000 | 0.000 | 1.000 |  |
+| fashionmnist | random | 0 | plugin | 0.089 | 12.337 | 1.000 | 0.430 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | budget_0.25 | 0.216 | 4.000 | 1.000 | 1.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.600 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | budget_0.75 | 0.158 | 10.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | fixed_conf_0.9 | 0.151 | 7.320 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | fixed_conf_0.95 | 0.149 | 8.469 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | fixed_conf_0.99 | 0.147 | 11.556 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | full_acquisition | 0.147 | 14.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | mondrian_oracle | 0.165 | 5.140 | 1.000 | 0.010 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | oracle_cheapest_valid | 0.178 | 3.023 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | greedy_entropy | 0 | plugin | 0.175 | 3.372 | 1.000 | 0.320 | 1.000 |  |
+| tabular-adult | random | 0 | budget_0.25 | 0.206 | 4.000 | 1.000 | 1.000 | 1.000 |  |
+| tabular-adult | random | 0 | budget_0.5 | 0.181 | 7.000 | 1.000 | 0.800 | 1.000 |  |
+| tabular-adult | random | 0 | budget_0.75 | 0.160 | 10.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | random | 0 | fixed_conf_0.9 | 0.151 | 7.943 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | random | 0 | fixed_conf_0.95 | 0.149 | 9.583 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | random | 0 | fixed_conf_0.99 | 0.147 | 11.953 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | random | 0 | full_acquisition | 0.147 | 14.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | random | 0 | mondrian_oracle | 0.173 | 4.942 | 1.000 | 0.040 | 1.000 |  |
+| tabular-adult | random | 0 | oracle_cheapest_valid | 0.176 | 4.058 | 1.000 | 0.000 | 1.000 |  |
+| tabular-adult | random | 0 | plugin | 0.173 | 4.282 | 1.000 | 0.150 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.25 | 0.110 | 12.000 | 1.000 | 1.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.5 | 0.092 | 25.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | budget_0.75 | 0.085 | 38.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.9 | 0.090 | 10.580 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.95 | 0.081 | 16.828 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | fixed_conf_0.99 | 0.078 | 28.661 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | full_acquisition | 0.077 | 50.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | mondrian_oracle | 0.099 | 15.682 | 1.000 | 0.380 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | oracle_cheapest_valid | 0.099 | 7.270 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | greedy_entropy | 0 | plugin | 0.098 | 7.470 | 1.000 | 0.360 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | budget_0.25 | 0.155 | 12.000 | 1.000 | 1.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | budget_0.5 | 0.108 | 25.000 | 1.000 | 1.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | budget_0.75 | 0.090 | 38.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | fixed_conf_0.9 | 0.093 | 16.647 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | fixed_conf_0.95 | 0.082 | 23.538 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | fixed_conf_0.99 | 0.077 | 35.213 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | full_acquisition | 0.077 | 50.000 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | mondrian_oracle | 0.104 | 15.180 | 1.000 | 0.980 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | oracle_cheapest_valid | 0.098 | 14.578 | 1.000 | 0.000 | 1.000 |  |
+| tabular-MiniBooNE | random | 0 | plugin | 0.098 | 14.823 | 1.000 | 0.290 | 1.000 |  |

@@ -1,0 +1,3 @@
+[lane lane6] start 2026-10-03 13:28:59
+[lane lane6] 13:28:59 am10 csv:diabetes
+[drive_v3] run r3am10:sweep:csv:diabetes:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset csv:diabetes --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_csv-diabetes_ts0.json  (log results_v3\logs\r3am10_sweep_csv-diabetes_greedy_entropy_ts0.log)

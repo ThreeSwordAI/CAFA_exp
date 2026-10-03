@@ -1,0 +1,30 @@
+[lane lane5] start 2026-10-03 13:50:38
+[lane lane5] 13:50:38 cf025 tabular:MiniBooNE
+[drive_v3] run r3cf025:sweep:tabular:MiniBooNE:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac025 --cal-frac 0.25  (log results_v3\logs\r3cf025_sweep_tabular-MiniBooNE_greedy_entropy_ts0.log)
+    [cascade] tabular-MiniBooNE ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-MiniBooNE ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-MiniBooNE ts0 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-MiniBooNE ts0 greedy_entropy lr[dep]=0.747 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.02, '2': 0.0, '3': 0.98} viol=0.030 (by split 0.00-0.10) certviol=0.010 | deepest stratum verdict=feasible (agree 2/5) | cal_frac=0.25
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac025\tabular-MiniBooNE_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3cf025:sweep:tabular:MiniBooNE:greedy_entropy:ts0: rc=0 in 330.4s
+[drive_v3] run r3cf025:sweep:tabular:MiniBooNE:random:ts0: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 0 --policy random --out-dir F:/CAFA_results/metrics_v3_calfrac025 --cal-frac 0.25  (log results_v3\logs\r3cf025_sweep_tabular-MiniBooNE_random_ts0.log)
+    [cascade] tabular-MiniBooNE ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-MiniBooNE ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-MiniBooNE ts0 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.020 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-MiniBooNE ts0 random lr[dep]=0.778 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.1, '2': 0.0, '3': 0.9} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac025\tabular-MiniBooNE_ts0_random_softmax.json
+[drive_v3] done r3cf025:sweep:tabular:MiniBooNE:random:ts0: rc=0 in 298.2s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane5] 14:01:09 am10 csv:physionet
+[drive_v3] skip (exists) r3am10:sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3_alpha_margin10\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) r3am10:sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3_alpha_margin10\csv-physionet_ts0_random_softmax.json
+[drive_v3] sweep: ran 0, skipped 2 existing, 0 missing prerequisites
+[lane lane5] 14:01:11 am10 mnist
+[drive_v3] skip (exists) r3am10:sweep:mnist:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3_alpha_margin10\mnist_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) r3am10:sweep:mnist:random:ts0 -> F:\CAFA_results\metrics_v3_alpha_margin10\mnist_ts0_random_softmax.json
+[drive_v3] sweep: ran 0, skipped 2 existing, 0 missing prerequisites
+[lane lane5] 14:01:13 cf025 csv:physionet
+[drive_v3] skip (exists) r3cf025:sweep:csv:physionet:greedy_entropy:ts0 -> F:\CAFA_results\metrics_v3_calfrac025\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] skip (exists) r3cf025:sweep:csv:physionet:random:ts0 -> F:\CAFA_results\metrics_v3_calfrac025\csv-physionet_ts0_random_softmax.json
+[drive_v3] sweep: ran 0, skipped 2 existing, 0 missing prerequisites
+[lane lane5] end 2026-10-03 14:01:15

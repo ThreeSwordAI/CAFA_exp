@@ -1,0 +1,10 @@
+# .venv/Scripts/python.exe scripts/make_tables_v3.py --metrics-dir F:/CAFA_results/metrics_v3 --output-dir results_v3/tables_inverse_info --lambda-ref-key dep --scheme inverse_info
+# start 2026-10-03 14:07:44
+skip fashionmnist_ts0_greedy_entropy_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip fashionmnist_ts0_random_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip image-imagenette_ts0_greedy_entropy_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip image-imagenette_ts0_random_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip mnist_ts0_greedy_entropy_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip mnist_ts0_random_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+wrote tables for 10 cells to results_v3\tables_inverse_info
+# returncode 0

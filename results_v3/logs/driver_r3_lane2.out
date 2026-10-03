@@ -1,0 +1,102 @@
+[lane lane2] start 2026-10-03 13:28:58
+[lane lane2] 13:28:58 main csv:diabetes
+[drive_v3] run r3:sweep:csv:diabetes:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset csv:diabetes --train-seed 0 --policy greedy_entropy  (log results_v3\logs\r3_sweep_csv-diabetes_greedy_entropy_ts0.log)
+    [cascade] csv-diabetes ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-diabetes ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-diabetes ts0 greedy_entropy lr[0.9]=0.900 G=2 | cert=0.00 tiers={'0': 1.0, '1': 0.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] csv-diabetes ts0 greedy_entropy lr[dep]=0.798 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\csv-diabetes_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3:sweep:csv:diabetes:greedy_entropy:ts0: rc=0 in 312.5s
+[drive_v3] run r3:sweep:csv:diabetes:random:ts0: python scripts/run_cascade_sweep.py --dataset csv:diabetes --train-seed 0 --policy random  (log results_v3\logs\r3_sweep_csv-diabetes_random_ts0.log)
+    [cascade] csv-diabetes ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-diabetes ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-diabetes ts0 random lr[0.9]=0.900 G=5 | cert=0.87 tiers={'0': 0.13, '1': 0.0, '2': 0.0, '3': 0.87} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] csv-diabetes ts0 random lr[dep]=0.828 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\csv-diabetes_ts0_random_softmax.json
+[drive_v3] done r3:sweep:csv:diabetes:random:ts0: rc=0 in 327.0s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane2] 13:39:40 main tabular:adult
+[drive_v3] run r3:sweep:tabular:adult:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy greedy_entropy  (log results_v3\logs\r3_sweep_tabular-adult_greedy_entropy_ts0.log)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.170 (by split 0.00-0.75) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-adult ts0 greedy_entropy lr[dep]=0.758 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3:sweep:tabular:adult:greedy_entropy:ts0: rc=0 in 107.5s
+[drive_v3] run r3:sweep:tabular:adult:random:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy random  (log results_v3\logs\r3_sweep_tabular-adult_random_ts0.log)
+    [cascade] tabular-adult ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 random lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.050 (by split 0.00-0.15) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-adult ts0 random lr[dep]=0.758 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=unresolved (agree 2/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\tabular-adult_ts0_random_softmax.json
+[drive_v3] done r3:sweep:tabular:adult:random:ts0: rc=0 in 109.4s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane2] 13:43:20 am10 tabular:adult
+[drive_v3] run r3am10:sweep:tabular:adult:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_tabular-adult_ts0.json  (log results_v3\logs\r3am10_sweep_tabular-adult_greedy_entropy_ts0.log)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.08, '2': 0.0, '3': 0.92} viol=0.090 (by split 0.00-0.45) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 greedy_entropy lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3am10:sweep:tabular:adult:greedy_entropy:ts0: rc=0 in 108.0s
+[drive_v3] run r3am10:sweep:tabular:adult:random:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_tabular-adult_ts0.json  (log results_v3\logs\r3am10_sweep_tabular-adult_random_ts0.log)
+    [cascade] tabular-adult ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts0 random lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.03, '2': 0.0, '3': 0.97} viol=0.050 (by split 0.00-0.25) certviol=0.030 | deepest stratum verdict=unresolved (agree 3/5)
+    [cascade] tabular-adult ts0 random lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\tabular-adult_ts0_random_softmax.json
+[drive_v3] done r3am10:sweep:tabular:adult:random:ts0: rc=0 in 107.9s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane2] 13:46:58 cf025 tabular:adult
+[drive_v3] run r3cf025:sweep:tabular:adult:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac025 --cal-frac 0.25  (log results_v3\logs\r3cf025_sweep_tabular-adult_greedy_entropy_ts0.log)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.9]=0.900 G=3 | cert=0.99 tiers={'0': 0.01, '1': 0.0, '2': 0.0, '3': 0.99} viol=0.070 (by split 0.00-0.25) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-adult ts0 greedy_entropy lr[dep]=0.758 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.81, '2': 0.0, '3': 0.19} viol=0.010 (by split 0.00-0.05) certviol=0.010 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac025\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3cf025:sweep:tabular:adult:greedy_entropy:ts0: rc=0 in 72.7s
+[drive_v3] run r3cf025:sweep:tabular:adult:random:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy random --out-dir F:/CAFA_results/metrics_v3_calfrac025 --cal-frac 0.25  (log results_v3\logs\r3cf025_sweep_tabular-adult_random_ts0.log)
+    [cascade] tabular-adult ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-adult ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-adult ts0 random lr[0.9]=0.900 G=3 | cert=0.83 tiers={'0': 0.17, '1': 0.0, '2': 0.0, '3': 0.83} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=0.25
+    [cascade] tabular-adult ts0 random lr[dep]=0.758 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.02, '2': 0.0, '3': 0.98} viol=0.020 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=unresolved (agree 2/5) | cal_frac=0.25
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac025\tabular-adult_ts0_random_softmax.json
+[drive_v3] done r3cf025:sweep:tabular:adult:random:ts0: rc=0 in 75.1s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane2] 13:49:28 cf100 tabular:adult
+[drive_v3] run r3cf100:sweep:tabular:adult:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac100 --cal-frac 1.0  (log results_v3\logs\r3cf100_sweep_tabular-adult_greedy_entropy_ts0.log)
+    [cascade] cal_frac 1.0: 1 draw per split (5 draws; every draw of a split is the whole calibration pool)
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] tabular-adult ts0 greedy_entropy lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.200 (by split 0.00-1.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=1.0
+    [cascade] tabular-adult ts0 greedy_entropy lr[dep]=0.758 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac100\tabular-adult_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3cf100:sweep:tabular:adult:greedy_entropy:ts0: rc=0 in 17.3s
+[drive_v3] run r3cf100:sweep:tabular:adult:random:ts0: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 0 --policy random --out-dir F:/CAFA_results/metrics_v3_calfrac100 --cal-frac 1.0  (log results_v3\logs\r3cf100_sweep_tabular-adult_random_ts0.log)
+    [cascade] cal_frac 1.0: 1 draw per split (5 draws; every draw of a split is the whole calibration pool)
+    [cascade] tabular-adult ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] tabular-adult ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] tabular-adult ts0 random lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5) | cal_frac=1.0
+    [cascade] tabular-adult ts0 random lr[dep]=0.758 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=unresolved (agree 2/5) | cal_frac=1.0
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac100\tabular-adult_ts0_random_softmax.json
+[drive_v3] done r3cf100:sweep:tabular:adult:random:ts0: rc=0 in 17.0s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane2] 13:50:05 cf100 csv:physionet
+[drive_v3] run r3cf100:sweep:csv:physionet:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac100 --cal-frac 1.0  (log results_v3\logs\r3cf100_sweep_csv-physionet_greedy_entropy_ts0.log)
+    [cascade] cal_frac 1.0: 1 draw per split (5 draws; every draw of a split is the whole calibration pool)
+    [cascade] csv-physionet ts0 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] csv-physionet ts0 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] csv-physionet ts0 greedy_entropy lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 4/5) | cal_frac=1.0
+    [cascade] csv-physionet ts0 greedy_entropy lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac100\csv-physionet_ts0_greedy_entropy_softmax.json
+[drive_v3] done r3cf100:sweep:csv:physionet:greedy_entropy:ts0: rc=0 in 10.1s
+[drive_v3] run r3cf100:sweep:csv:physionet:random:ts0: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 0 --policy random --out-dir F:/CAFA_results/metrics_v3_calfrac100 --cal-frac 1.0  (log results_v3\logs\r3cf100_sweep_csv-physionet_random_ts0.log)
+    [cascade] cal_frac 1.0: 1 draw per split (5 draws; every draw of a split is the whole calibration pool)
+    [cascade] csv-physionet ts0 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] csv-physionet ts0 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] csv-physionet ts0 random lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.4, '2': 0.0, '3': 0.6} viol=0.200 (by split 0.00-1.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] csv-physionet ts0 random lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5) | cal_frac=1.0
+    [cascade] wrote F:\CAFA_results\metrics_v3_calfrac100\csv-physionet_ts0_random_softmax.json
+[drive_v3] done r3cf100:sweep:csv:physionet:random:ts0: rc=0 in 9.4s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane lane2] end 2026-10-03 13:50:26

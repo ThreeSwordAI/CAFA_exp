@@ -1,0 +1,12 @@
+# round 3a sweep lanes, launched 2026-10-03 13:28:44 local; each lane = bash results_v3/logs/r3_lane.sh <lane> fam:dataset ... (sequential drive_v3.py --phase sweep calls; families main=r3 -> metrics_v3, am10=r3am10 -> metrics_v3_alpha_margin10, cf025=r3cf025 -> metrics_v3_calfrac025 (--cal-frac 0.25), cf100=r3cf100 -> metrics_v3_calfrac100 (--cal-frac 1.0))
+lane1: main:tabular:MiniBooNE main:csv:physionet main:image:imagenette cf100:tabular:MiniBooNE cf100:image:imagenette
+lane2: main:csv:diabetes main:tabular:adult am10:tabular:adult cf025:tabular:adult cf100:tabular:adult cf100:csv:physionet
+lane3: main:fashionmnist main:mnist main:cube am10:fashionmnist cf025:fashionmnist
+lane4: am10:tabular:MiniBooNE cf100:csv:diabetes cf100:fashionmnist cf100:mnist am10:image:imagenette cf025:image:imagenette cf100:cube am10:cube cf025:cube
+lane5: cf025:tabular:MiniBooNE am10:csv:physionet am10:mnist cf025:csv:physionet
+lane6: am10:csv:diabetes cf025:csv:diabetes cf025:mnist
+background task ids: lane1 b7unmxvij, lane2 b77yboepf, lane3 byfjmrrjd, lane4 b8zp9ekg4, lane5 bg3o1w2dl, lane6 b9oof4rr8 (Claude Code background shells; driver outputs results_v3/logs/driver_r3_lane{1..6}.out)
+lanes 5 and 6 paused at 13:29:56 (process trees killed before their first cell finished: no ledger line, no metrics file; relaunch later with the same lane commands)
+lane6 resumed 13:50:32 -> results_v3/logs/driver_r3_lane6_resume.out
+lane5 resumed 13:50:38 -> results_v3/logs/driver_r3_lane5_resume.out
+lane7 started 13:52:44 (takes the short tail jobs of lanes 5/6 first; they skip them as existing) -> results_v3/logs/driver_r3_lane7.out: am10:csv:physionet am10:mnist cf025:csv:physionet cf025:mnist

@@ -1,0 +1,10 @@
+# .venv/Scripts/python.exe scripts/margin_analysis_v3.py --metrics-dir F:/CAFA_results/metrics_v3 --calfrac-dir 0.25 F:/CAFA_results/metrics_v3_calfrac025 --calfrac-dir 1.0 F:/CAFA_results/metrics_v3_calfrac100 --output-dir results_v3/tables --figure results_v3/figures/F7_margin.pdf
+# start 2026-10-03 14:08:11
+[margin] E10: 320 points from 16 metrics files in F:/CAFA_results/metrics_v3 (cal_frac 0.5); cal_frac 0.25: 320 points; cal_frac 1.0: 320 points
+[margin] main (all keys)        n= 320 | pred_tier1: Spearman rho = 0.905 (p = 3.28e-120), within tol = 0.994 (318/320) | pred_tier1_thr: Spearman rho = 0.905 (p = 2.56e-120), within tol = 0.988 (316/320) | pred_tier1_hyper: Spearman rho = 0.894 (p = 3.55e-113), within tol = 0.997 (319/320)
+[margin] main, key dep          n=  80 | pred_tier1: Spearman rho = 0.935 (p = 7.17e-37), within tol = 1.000 (80/80) | pred_tier1_thr: Spearman rho = 0.936 (p = 3.69e-37), within tol = 1.000 (80/80) | pred_tier1_hyper: Spearman rho = 0.934 (p = 1.61e-36), within tol = 1.000 (80/80)
+[margin] cal_frac 0.25          n= 320 | pred_tier1: Spearman rho = 0.944 (p = 9.01e-155), within tol = 0.975 (312/320) | pred_tier1_thr: Spearman rho = 0.944 (p = 1.16e-154), within tol = 0.975 (312/320) | pred_tier1_hyper: Spearman rho = 0.933 (p = 5.88e-143), within tol = 0.984 (315/320)
+[margin] cal_frac 1.0           n= 320 | pred_tier1: Spearman rho = 0.838 (p = 1.12e-85), within tol = 0.906 (290/320) | pred_tier1_thr: Spearman rho = 0.838 (p = 1.21e-85), within tol = 0.906 (290/320) | pred_tier1_hyper: Spearman rho = 1.000 (p = 0.00e+00), within tol = 1.000 (320/320)
+[margin] main + cal_frac        n= 960 | pred_tier1: Spearman rho = 0.897 (p = 0.00e+00), within tol = 0.958 (920/960) | pred_tier1_thr: Spearman rho = 0.897 (p = 0.00e+00), within tol = 0.956 (918/960) | pred_tier1_hyper: Spearman rho = 0.909 (p = 0.00e+00), within tol = 0.994 (954/960)
+[margin] wrote TABLE_E10_margin.{md,csv}, TABLE_E10_margin_summary.{json,md}, TABLE_E11_calfrac.{md,csv}, TABLE_E10_margin_calfrac.csv to results_v3\tables; figure results_v3/figures/F7_margin.pdf (12.8 s)
+# returncode 0

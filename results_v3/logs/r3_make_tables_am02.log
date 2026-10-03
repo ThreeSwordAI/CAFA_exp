@@ -1,0 +1,4 @@
+# .venv/Scripts/python.exe scripts/make_tables_v3.py --metrics-dir F:/CAFA_results/metrics_v3_alpha_margin02 --output-dir results_v3/tables_e9_alpha_margin02 --lambda-ref-key dep --scheme uniform
+# start 2026-10-03 14:07:57
+wrote tables for 12 cells to results_v3\tables_e9_alpha_margin02
+# returncode 0

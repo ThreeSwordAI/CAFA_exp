@@ -1,0 +1,3 @@
+[lane lane5] start 2026-10-03 13:28:59
+[lane lane5] 13:28:59 cf025 tabular:MiniBooNE
+[drive_v3] run r3cf025:sweep:tabular:MiniBooNE:greedy_entropy:ts0: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 0 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_calfrac025 --cal-frac 0.25  (log results_v3\logs\r3cf025_sweep_tabular-MiniBooNE_greedy_entropy_ts0.log)
