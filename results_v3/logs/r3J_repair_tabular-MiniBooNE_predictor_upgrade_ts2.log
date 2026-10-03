@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset tabular:MiniBooNE --train-seed 2 --before-cache F:/CAFA_results/pool_v2/tabular-MiniBooNE_ts2_greedy_entropy_softmax.npz --after-cache F:/CAFA_results/pool_v3/tabular-MiniBooNE_ts2_greedy_entropy_softmax.npz --committed configs/committed_v3before_tabular-MiniBooNE_ts2.json --label predictor_upgrade
+# start 2026-10-03T13:11:29.576135+00:00
+[repair:predictor_upgrade] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.086, full 0.088) -> feasible (rmin 0.076, full 0.076); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.086, full 0.088) -> feasible (rmin 0.076, full 0.076); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.237, full 0.250) -> type_II (rmin 0.202, full 0.202); tier1 0.00 -> 0.00; viol 0.01 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:predictor_upgrade] lr[dep]=0.737 deepest k=2: type_II (rmin 0.166, full 0.172) -> feasible (rmin 0.144, full 0.144); tier1 0.00 -> 0.07; viol 0.00 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\tabular-MiniBooNE_ts2_predictor_upgrade.json
+# returncode 0

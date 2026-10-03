@@ -1,0 +1,4 @@
+# .venv/Scripts/python.exe scripts/make_figures_v3.py --metrics-dir F:/CAFA_results/metrics_v3 --planted results_v3/planted --repair-dir results_v3/repair --output-dir results_v3/figures
+# start 2026-10-03 16:09:50
+figures -> results_v3\figures (48 cells)
+# returncode 0

@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset fashionmnist --train-seed 1 --before-cache F:/CAFA_results/pool_v3/fashionmnist_ts1_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/fashionmnist_ts1_greedy_entropy_softmax.npz --committed configs/committed_v3_fashionmnist_ts1.json --policy random --label policy_change
+# start 2026-10-03T13:32:55.103767+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=3: feasible (rmin 0.088, full 0.088) -> feasible (rmin 0.088, full 0.088); tier1 1.00 -> 1.00; viol 0.01 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=4: feasible (rmin 0.139, full 0.139) -> feasible (rmin 0.139, full 0.139); tier1 0.17 -> 0.17; viol 0.06 -> 0.05; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.188, full 0.188) -> type_II (rmin 0.183, full 0.188); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[dep]=0.768 deepest k=4: feasible (rmin 0.144, full 0.144) -> feasible (rmin 0.144, full 0.144); tier1 0.01 -> 0.01; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 4/5
+wrote results_v3\repair\fashionmnist_ts1_policy_change.json
+# returncode 0

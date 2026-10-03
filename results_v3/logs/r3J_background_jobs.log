@@ -4,3 +4,5 @@ J2: main:1:csv:diabetes main:2:csv:diabetes main:1:csv:physionet main:2:csv:phys
 J3: main:1:fashionmnist main:2:fashionmnist main:1:image:imagenette main:2:image:imagenette repair:1:tabular:MiniBooNE repair:2:tabular:MiniBooNE am02:2:tabular:MiniBooNE am02:1:csv:diabetes am02:2:csv:diabetes
 J4: main:1:mnist main:2:mnist main:1:tabular:adult main:2:tabular:adult main:1:cube main:2:cube repair:1:mnist repair:2:mnist repair:1:tabular:adult repair:2:tabular:adult repair:1:csv:diabetes repair:2:csv:diabetes repair:1:fashionmnist repair:2:fashionmnist repair:1:cube repair:2:cube repair:1:csv:physionet repair:2:csv:physionet
 J5 (started when a lane frees): am10:1:fashionmnist am10:2:fashionmnist am10:1:mnist am10:2:mnist am10:1:tabular:adult am10:2:tabular:adult am10:1:cube am10:2:cube am10:1:csv:physionet am10:2:csv:physionet am02:1:fashionmnist am02:2:fashionmnist am02:1:tabular:adult am02:2:tabular:adult am02:1:cube am02:2:cube
+J5 started 15:20:28 -> results_v3/logs/driver_r3J_laneJ5.out
+J6 started 15:56:54 (J5's tail in reverse order; J5 skips them as existing) -> results_v3/logs/driver_r3J_laneJ6.out: am02:2:cube am02:1:cube am02:2:tabular:adult

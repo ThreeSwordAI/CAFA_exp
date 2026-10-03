@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 """v3 -- paper figures from metrics_v3 / planted / repair outputs (matplotlib, torch-free).
 
-  F2_blindness.pdf   marginal certificate vs. max stratum risk / alpha (per cell)
+  F2_blindness.pdf   marginal certificate vs. max stratum risk / alpha (per cell; with several train seeds per
+                     (dataset, policy): seed means, as F3 and F6 -- :func:`seed_groups`, round 3b)
   F3_cascade.pdf     tier shares (stacked) + deployed cost vs. marginal / Mondrian oracle / full; since round 3
                      the cost panel is in units of cost / T (T from the metrics meta; full acquisition = 1 under
                      uniform costs, dashed line) and the E2 worst-stratum test risk / alpha of marginal CAFA
@@ -15,7 +16,7 @@
   F5_planted.pdf     planted power vs n_k Delta^2, false-failure rate, cascade violation rate
   F6_violations.pdf  per cell: raw test stratum-violation rate and certified-violation rate side by side
                      (round 2), with the min-max of the raw rate over the splits, and reference lines
-                     at delta and delta + 0.05
+                     at delta and delta + 0.05; with several seeds: seed means, min-max over splits and seeds
 
     python scripts/make_figures_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --planted results_v3/planted \
         --repair-dir results_v3/repair --output-dir results_v3/figures --lambda-ref-key dep --scheme uniform
@@ -52,16 +53,44 @@ def load_cells(metrics_dir: Path, key: str, scheme: str):
     return cells
 
 
+def seed_groups(cells) -> "tuple[list, bool]":
+    """(groups, multi_seed) for the per-cell figures F2 / F6: while every (dataset, policy) has a single train seed,
+    one group per cell (in cell order, named "<dsname>\\n<policy> s<seed>" as before); once any has several, ONE group
+    per (dataset, policy) in order of first appearance, named "<dsname>\\n<policy> (n seeds)".  Each group is
+    ``(name, [cells])``."""
+    by = {}
+    for c in cells:
+        by.setdefault((c[0]["dsname"], c[0]["policy"]), []).append(c)
+    if all(len({c[0]["train_seed"] for c in g}) == 1 for g in by.values()):
+        return [(f"{c[0]['dsname']}\n{c[0]['policy']} s{c[0]['train_seed']}", [c]) for c in cells], False
+    return [(f"{ds}\n{pol} ({len(g)} seed{'s' if len(g) > 1 else ''})", g) for (ds, pol), g in by.items()], True
+
+
+def _mean(xs):
+    xs = [float(x) for x in xs if x is not None and np.isfinite(x)]
+    return float(np.mean(xs)) if xs else np.nan
+
+
 def fig_blindness(cells, out: Path):
+    """F2; with several seeds per (dataset, policy) the bars are seed means and the max-stratum bar gets a min-max
+    error bar over the seeds (:func:`seed_groups`)."""
     if not cells:
         return
+    groups, multi = seed_groups(cells)
     fig, ax = plt.subplots(figsize=(6.4, 3.4))
-    names = [f"{m['dsname']}\n{m['policy']} s{m['train_seed']}" for m, *_ in cells]
-    agg = [s["marginal_mean_test_risk"] / a if s["marginal_mean_test_risk"] else np.nan for m, a, dl, b, s in cells]
-    mx = [s["marginal_max_stratum_over_alpha_mean"] or np.nan for m, a, dl, b, s in cells]
-    x = np.arange(len(cells))
-    ax.bar(x - 0.2, agg, 0.4, label="aggregate risk / alpha (marginal CAFA)")
-    ax.bar(x + 0.2, mx, 0.4, label="max stratum risk / alpha")
+    names = [n for n, _ in groups]
+    agg_of = lambda m, a, dl, b, s: s["marginal_mean_test_risk"] / a if s["marginal_mean_test_risk"] else np.nan  # noqa: E731
+    mx_of = lambda m, a, dl, b, s: s["marginal_max_stratum_over_alpha_mean"] or np.nan  # noqa: E731
+    agg = [_mean([agg_of(*c) for c in g]) for _, g in groups]
+    mxs = [[mx_of(*c) for c in g] for _, g in groups]
+    mx = [_mean(v) for v in mxs]
+    x = np.arange(len(groups))
+    ax.bar(x - 0.2, agg, 0.4, label="aggregate risk / alpha (marginal CAFA)" + (", mean over seeds" if multi else ""))
+    ax.bar(x + 0.2, mx, 0.4, label="max stratum risk / alpha" + (", mean over seeds" if multi else ""))
+    if multi:
+        lo = np.array([np.nanmin(v) for v in mxs]); hi = np.array([np.nanmax(v) for v in mxs]); mxa = np.array(mx)
+        ax.errorbar(x + 0.2, mxa, yerr=np.vstack([mxa - lo, hi - mxa]), fmt="none", ecolor="k", lw=0.8, capsize=2,
+                    label="max stratum, min-max over seeds")
     ax.axhline(1.0, color="k", lw=0.8, ls="--")
     ax.set_xticks(x)
     ax.set_xticklabels(names, fontsize=6, rotation=60, ha="right")
@@ -180,22 +209,28 @@ def fig_cascade(cells, out: Path):
 
 
 def fig_violations(cells, out: Path):
+    """F6; with several seeds per (dataset, policy) the bars are seed means and the error bar spans the min-max of
+    the raw rate over all splits of all seeds (:func:`seed_groups`)."""
     cells = [c for c in cells if "cascade_certified_violation_rate" in c[4]]  # round-2 metrics only
     if not cells:
         return
+    groups, multi = seed_groups(cells)
     fig, ax = plt.subplots(figsize=(7.2, 3.4))
-    names = [f"{m['dsname']}\n{m['policy']} s{m['train_seed']}" for m, *_ in cells]
-    x = np.arange(len(cells))
-    raw =np.array([s["cascade_violation_rate"] for *_, s in cells])
-    cert = np.array([s["cascade_certified_violation_rate"] for *_, s in cells])
-    lo = np.array([min(v["cascade_violation_rate"] for v in s.get("by_split", {}).values()) if s.get("by_split") else r
-                   for (*_, s), r in zip(cells, raw)])
-    hi = np.array([max(v["cascade_violation_rate"] for v in s.get("by_split", {}).values()) if s.get("by_split") else r
-                   for (*_, s), r in zip(cells, raw)])
-    ax.bar(x - 0.2, raw, 0.4, label="raw test stratum violation (pooled)")
+    names = [n for n, _ in groups]
+    x = np.arange(len(groups))
+
+    def split_rates(s):
+        bs = s.get("by_split") or {}
+        return [v["cascade_violation_rate"] for v in bs.values()] or [s["cascade_violation_rate"]]
+
+    raw = np.array([_mean([c[4]["cascade_violation_rate"] for c in g]) for _, g in groups])
+    cert = np.array([_mean([c[4]["cascade_certified_violation_rate"] for c in g]) for _, g in groups])
+    lo = np.array([min(r for c in g for r in split_rates(c[4])) for _, g in groups])
+    hi = np.array([max(r for c in g for r in split_rates(c[4])) for _, g in groups])
+    ax.bar(x - 0.2, raw, 0.4, label="raw test stratum violation (pooled" + ("; mean over seeds)" if multi else ")"))
     ax.errorbar(x - 0.2, raw, yerr=np.vstack([raw - lo, hi - raw]), fmt="none", ecolor="k", lw=0.8, capsize=2,
-                label="raw, min-max over splits")
-    ax.bar(x + 0.2, cert, 0.4, label="certified violation (exact binomial p <= 0.05)")
+                label="raw, min-max over splits" + (" and seeds" if multi else ""))
+    ax.bar(x + 0.2, cert, 0.4, label="certified violation (exact binomial p <= 0.05)" + ("; mean over seeds" if multi else ""))
     dl = float(cells[0][2])
     ax.axhline(dl, color="k", lw=0.8, ls="--", label=f"delta = {dl:g}")
     ax.axhline(dl + 0.05, color="gray", lw=0.8, ls=":", label=f"delta + 0.05 = {dl + 0.05:g}")

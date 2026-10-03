@@ -1,0 +1,14 @@
+# .venv/Scripts/python.exe scripts/diagnose_violation_v3.py --dataset csv:diabetes --policy greedy_entropy --train-seed 1 --lambda-ref-key dep --output results_v3/diagnostics/r3J_csv-diabetes_ts1_greedy_entropy_dep.json   (integrity checks for the cell with none > 0.05)
+[diag] lambda_ref=0.8081 edges=[3.0] splits=[778, 779, 780, 781, 782]
+[diag] split 778: digests=True sizes=True disjoint+cover=True buckets={'calpool': True, 'test': True} | draws 20 raw viol 0.0 certified 0.0
+[diag]   tier 3 param 0.8985: deployed in 2 draws, flagged 0 | k0: cal 0.0066 (n 12342) test 0.0072 (n 12280) pooled 0.0069; k1: cal 0.0919 (n 370) test 0.1237 (n 380) pooled 0.1080
+[diag] split 779: digests=True sizes=True disjoint+cover=True buckets={'calpool': True, 'test': True} | draws 20 raw viol 0.0 certified 0.0
+[diag] split 780: digests=True sizes=True disjoint+cover=True buckets={'calpool': True, 'test': True} | draws 20 raw viol 0.0 certified 0.0
+[diag]   tier 3 param 0.9430: deployed in 1 draws, flagged 0 | k0: cal 0.0057 (n 11995) test 0.0043 (n 12015) pooled 0.0050; k1: cal 0.1069 (n 131) test 0.0769 (n 156) pooled 0.0906
+[diag] split 781: digests=True sizes=True disjoint+cover=True buckets={'calpool': True, 'test': True} | draws 20 raw viol 0.0 certified 0.0
+[diag] split 782: digests=True sizes=True disjoint+cover=True buckets={'calpool': True, 'test': True} | draws 20 raw viol 0.0 certified 0.0
+[diag]   tier 3 param 0.9292: deployed in 1 draws, flagged 0 | k0: cal 0.0048 (n 12143) test 0.0060 (n 12083) pooled 0.0054; k1: cal 0.0986 (n 213) test 0.1090 (n 211) pooled 0.1038
+[diag]   tier 3 param 0.9430: deployed in 1 draws, flagged 0 | k0: cal 0.0044 (n 12044) test 0.0056 (n 11966) pooled 0.0050; k1: cal 0.0748 (n 147) test 0.1071 (n 140) pooled 0.0906
+[diag] checks: {'split_digests_match': True, 'split_sizes_match': True, 'probe_calpool_test_disjoint_and_cover': True, 'bucket_ids_numpy_vs_reference_buckets': True, 'all_flagged_cal_rows_ok': True, 'all_test_pvalues_match_sweep': True}
+[diag] wrote results_v3/diagnostics/r3J_csv-diabetes_ts1_greedy_entropy_dep.json
+# returncode 0

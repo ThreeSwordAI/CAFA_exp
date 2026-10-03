@@ -10,17 +10,49 @@
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | csv-diabetes | greedy_entropy | 0 | 45 | 0.150 | 0.154 | 0.154 | 0.154 | 1.000 | 0.154 | 1.000 | 1.000 | near-oracle |  | 0 | 8285.500 | 0.099 | 259.979 | 233–289 | 5/5 | 0.031 |
 | csv-diabetes | random | 0 | 45 | 0.150 | 0.254 | 0.229 | 0.229 | 1.000 | 0.229 | 1.109 | 1.109 | near-oracle |  | 0 | 8285.500 | 0.146 | 40535.295 | 18572–60585 | 5/5 | 4.892 |
+| csv-diabetes | greedy_entropy | 1 | 45 | 0.150 | 0.164 | 0.164 | 0.164 | 1.000 | 0.164 | 1.000 | 1.000 | near-oracle |  | 0 | 8285.500 | 0.099 | 259.330 | 241–282 | 5/5 | 0.031 |
+| csv-diabetes | random | 1 | 45 | 0.150 | 0.266 | 0.241 | 0.241 | 1.000 | 0.241 | 1.103 | 1.103 | near-oracle |  | 0 | 8285.500 | 0.142 | 25839.250 | 12492–54814 | 5/5 | 3.119 |
+| csv-diabetes | greedy_entropy | 2 | 45 | 0.150 | 0.154 | 0.154 | 0.154 | 1.000 | 0.154 | 1.000 | 1.000 | near-oracle |  | 0 | 8285.500 | 0.097 | 240.890 | 207–259 | 5/5 | 0.029 |
+| csv-diabetes | random | 2 | 45 | 0.150 | 0.241 | 0.227 | 0.227 | 1.000 | 0.227 | 1.059 | 1.059 | near-oracle |  | 0 | 8285.500 | 0.145 | 24184.750 | 2560–34490 | 5/5 | 2.919 |
 | csv-physionet | greedy_entropy | 0 | 41 | 0.200 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  |  | near-oracle |  | 0 | 1080.000 | 0.141 | 254.937 | 205–325 | 5/5 | 0.236 |
 | csv-physionet | random | 0 | 41 | 0.200 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  |  | near-oracle |  | 0 | 1080.000 | 0.141 | 254.937 | 205–325 | 5/5 | 0.236 |
+| csv-physionet | greedy_entropy | 1 | 41 | 0.200 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  |  | near-oracle |  | 0 | 1080.000 | 0.141 | 238.874 | 211–268 | 5/5 | 0.221 |
+| csv-physionet | random | 1 | 41 | 0.200 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  |  | near-oracle |  | 0 | 1080.000 | 0.141 | 238.874 | 211–268 | 5/5 | 0.221 |
+| csv-physionet | greedy_entropy | 2 | 41 | 0.200 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  |  | near-oracle |  | 0 | 1080.000 | 0.140 | 214.090 | 165–243 | 5/5 | 0.198 |
+| csv-physionet | random | 2 | 41 | 0.200 | 0.000 | 0.000 | 0.000 | 1.000 | 0.000 |  |  | near-oracle |  | 0 | 1080.000 | 0.140 | 214.090 | 165–243 | 5/5 | 0.198 |
 | cube | greedy_entropy | 0 | 20 | 0.150 | 0.269 | 0.218 | 0.218 | 1.000 | 0.185 | 1.233 | 1.233 | near-oracle |  | 1 | 931.000 | 0.102 | 266.834 | 259–357 | 5/5 | 0.287 |
 | cube | random | 0 | 20 | 0.150 | 0.575 | 0.515 | 0.515 | 1.000 | 0.484 | 1.117 | 1.117 | near-oracle |  | 3 | 353.500 | 0.105 | 334.277 | 200–462 | 5/5 | 0.946 |
+| cube | greedy_entropy | 1 | 20 | 0.150 | 0.312 | 0.264 | 0.264 | 1.000 | 0.205 | 1.182 | 1.182 | near-oracle |  | 1 | 1191.000 | 0.104 | 410.195 | 207–644 | 5/5 | 0.344 |
+| cube | random | 1 | 20 | 0.150 | 0.575 | 0.512 | 0.512 | 1.000 | 0.486 | 1.124 | 1.124 | near-oracle |  | 3 | 338.500 | 0.118 | 487.784 | 361–1299 | 5/5 | 1.441 |
+| cube | greedy_entropy | 2 | 20 | 0.150 | 0.272 | 0.219 | 0.219 | 1.000 | 0.199 | 1.241 | 1.241 | near-oracle |  | 1 | 779.500 | 0.129 | 746.606 | 582–1652 | 5/5 | 0.958 |
+| cube | random | 2 | 20 | 0.150 | 0.566 | 0.502 | 0.502 | 1.000 | 0.474 | 1.127 | 1.127 | near-oracle |  | 3 | 466.500 | 0.116 | 866.728 | 608–7497 | 5/5 | 1.858 |
 | fashionmnist | greedy_entropy | 0 | 49 | 0.150 | 0.196 | 0.153 | 0.153 | 1.000 | 0.110 | 1.281 | 1.281 | near-oracle | n_needed inf in 2/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 1555.500 | 0.149 | 2713021.318 | 5689–inf | 3/5 | 1744.147 |
 | fashionmnist | random | 0 | 49 | 0.150 | 0.226 | 0.182 | 0.182 | 1.000 | 0.159 | 1.242 | 1.242 | near-oracle | n_needed inf in 3/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 3 | 1947.000 | 0.135 | inf | 3114–inf | 2/5 | inf |
+| fashionmnist | greedy_entropy | 1 | 49 | 0.150 | 0.152 | 0.124 | 0.124 | 1.000 | 0.110 | 1.221 | 1.221 | near-oracle | n_needed inf in 3/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 2480.500 | 0.150 | inf | 16478–inf | 2/5 | inf |
+| fashionmnist | random | 1 | 49 | 0.150 | 0.212 | 0.180 | 0.180 | 1.000 | 0.153 | 1.175 | 1.175 | near-oracle | n_needed inf in 3/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 3 | 1839.500 | 0.138 | inf | 5509–inf | 2/5 | inf |
+| fashionmnist | greedy_entropy | 2 | 49 | 0.150 | 0.253 | 0.178 | 0.178 | 1.000 | 0.128 | 1.421 | 1.421 | near-oracle | n_needed inf in 4/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 1525.500 | 0.152 | inf | 1986950–inf | 1/5 | inf |
+| fashionmnist | random | 2 | 49 | 0.150 | 0.222 | 0.190 | 0.190 | 1.000 | 0.161 | 1.170 | 1.170 | near-oracle | n_needed inf in 2/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 3 | 1993.000 | 0.141 | 4465908.395 | 2104–inf | 3/5 | 2240.797 |
 | image-imagenette | greedy_entropy | 0 | 49 | 0.100 | 0.243 | 0.165 | 0.165 | 1.000 | 0.149 | 1.476 | 1.476 | near-oracle | n_needed inf in 3/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 405.500 | 0.110 | inf | 2715–inf | 2/5 | inf |
 | image-imagenette | random | 0 | 49 | 0.100 | 0.511 | 0.175 | 0.175 | 1.000 | 0.142 | 2.926 | 2.926 | sample-limited | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 241.000 | 0.085 | 31080.374 | 1435–inf | 4/5 | 128.964 |
+| image-imagenette | greedy_entropy | 1 | 49 | 0.100 | 0.374 | 0.172 | 0.172 | 1.000 | 0.161 | 2.169 | 2.169 | sample-limited |  | 3 | 241.000 | 0.098 | 1882.947 | 293–86352 | 5/5 | 7.813 |
+| image-imagenette | random | 1 | 49 | 0.100 | 0.212 | 0.172 | 0.172 | 1.000 | 0.150 | 1.229 | 1.229 | near-oracle | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 423.500 | 0.098 | 27229.665 | 229–inf | 4/5 | 64.297 |
+| image-imagenette | greedy_entropy | 2 | 49 | 0.100 | 0.263 | 0.185 | 0.185 | 1.000 | 0.166 | 1.426 | 1.426 | near-oracle | n_needed inf in 2/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 3 | 262.500 | 0.107 | 2861.101 | 454–inf | 3/5 | 10.899 |
+| image-imagenette | random | 2 | 49 | 0.100 | 0.419 | 0.169 | 0.169 | 1.000 | 0.136 | 2.473 | 2.473 | sample-limited | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 244.000 | 0.100 | 1921.472 | 1213–inf | 4/5 | 7.875 |
 | mnist | greedy_entropy | 0 | 49 | 0.100 | 0.077 | 0.072 | 0.072 | 1.000 | 0.070 | 1.072 | 1.072 | near-oracle | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 1329.000 | 0.099 | 17513.616 | 3630–inf | 4/5 | 13.178 |
 | mnist | random | 0 | 49 | 0.100 | 0.185 | 0.168 | 0.168 | 1.000 | 0.164 | 1.102 | 1.102 | near-oracle |  | 4 | 1293.500 | 0.087 | 6063.207 | 2415–81391 | 5/5 | 4.687 |
+| mnist | greedy_entropy | 1 | 49 | 0.100 | 0.078 | 0.074 | 0.074 | 1.000 | 0.072 | 1.056 | 1.056 | near-oracle | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 2 | 1368.500 | 0.095 | 21199.431 | 1024–inf | 4/5 | 15.491 |
+| mnist | random | 1 | 49 | 0.100 | 0.179 | 0.165 | 0.165 | 1.000 | 0.161 | 1.084 | 1.084 | near-oracle |  | 4 | 1216.500 | 0.091 | 6849.589 | 1610–62680 | 5/5 | 5.631 |
+| mnist | greedy_entropy | 2 | 49 | 0.100 | 0.085 | 0.080 | 0.080 | 1.000 | 0.078 | 1.064 | 1.064 | near-oracle |  | 2 | 1452.500 | 0.085 | 2115.317 | 1121–2407 | 5/5 | 1.456 |
+| mnist | random | 2 | 49 | 0.100 | 0.184 | 0.168 | 0.168 | 1.000 | 0.165 | 1.091 | 1.091 | near-oracle |  | 4 | 1276.000 | 0.098 | 11025.404 | 721–129089 | 5/5 | 8.641 |
 | tabular-adult | greedy_entropy | 0 | 14 | 0.250 | 0.170 | 0.034 | 0.034 | 1.000 | 0.034 | 4.999 | 4.999 | sample-limited | n_needed inf in 2/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 0 | 4070.000 | 0.253 | 2975813.205 | 373–inf | 3/5 | 731.158 |
 | tabular-adult | random | 0 | 14 | 0.250 | 0.247 | 0.049 | 0.049 | 1.000 | 0.049 | 5.031 | 5.031 | sample-limited | n_needed inf in 2/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 0 | 4070.000 | 0.253 | 2975813.205 | 271–inf | 3/5 | 731.158 |
+| tabular-adult | greedy_entropy | 1 | 14 | 0.250 | 0.295 | 0.295 | 0.295 | 1.000 | 0.295 | 1.000 | 1.000 | near-oracle |  | 0 | 4070.000 | 0.171 | 164.682 | 152–188 | 5/5 | 0.040 |
+| tabular-adult | random | 1 | 14 | 0.250 | 0.186 | 0.186 | 0.186 | 1.000 | 0.186 | 1.000 | 1.000 | near-oracle |  | 0 | 4070.000 | 0.208 | 569.486 | 480–622 | 5/5 | 0.140 |
+| tabular-adult | greedy_entropy | 2 | 14 | 0.200 | 0.203 | 0.194 | 0.194 | 1.000 | 0.194 | 1.047 | 1.047 | near-oracle |  | 0 | 4070.000 | 0.186 | 3215.568 | 1602–6253 | 5/5 | 0.790 |
+| tabular-adult | random | 2 | 14 | 0.200 | 0.261 | 0.241 | 0.241 | 1.000 | 0.241 | 1.084 | 1.084 | near-oracle |  | 0 | 4070.000 | 0.189 | 4974.789 | 4117–14432 | 5/5 | 1.222 |
 | tabular-MiniBooNE | greedy_entropy | 0 | 50 | 0.150 | 0.061 | 0.061 | 0.061 | 1.000 | 0.061 | 1.000 | 1.000 | near-oracle |  | 0 | 11705.500 | 0.129 | 2242.307 | 1643–3126 | 5/5 | 0.192 |
 | tabular-MiniBooNE | random | 0 | 50 | 0.150 | 0.157 | 0.142 | 0.142 | 1.000 | 0.142 | 1.102 | 1.102 | near-oracle | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 0 | 11705.500 | 0.147 | 90998.406 | 32700–inf | 4/5 | 7.774 |
+| tabular-MiniBooNE | greedy_entropy | 1 | 50 | 0.150 | 0.064 | 0.057 | 0.057 | 1.000 | 0.057 | 1.115 | 1.115 | near-oracle |  | 0 | 11705.500 | 0.150 | 310803.518 | 102828–153765602 | 5/5 | 26.552 |
+| tabular-MiniBooNE | random | 1 | 50 | 0.150 | 0.160 | 0.140 | 0.140 | 1.000 | 0.140 | 1.146 | 1.146 | near-oracle | n_needed inf in 3/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 0 | 11705.500 | 0.151 | inf | 59607563–inf | 2/5 | inf |
+| tabular-MiniBooNE | greedy_entropy | 2 | 50 | 0.150 | 0.049 | 0.049 | 0.049 | 1.000 | 0.049 | 1.003 | 1.003 | near-oracle |  | 0 | 11705.500 | 0.137 | 4807.620 | 3798–9278 | 5/5 | 0.411 |
+| tabular-MiniBooNE | random | 2 | 50 | 0.150 | 0.148 | 0.139 | 0.139 | 1.000 | 0.139 | 1.070 | 1.070 | near-oracle | n_needed inf in 1/5 splits (r_cal(lambda*) >= alpha or no feasible draw) | 0 | 11705.500 | 0.143 | 23905.992 | 12506–inf | 4/5 | 2.042 |

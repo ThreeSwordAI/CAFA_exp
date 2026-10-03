@@ -1,0 +1,4 @@
+# .venv/Scripts/python.exe scripts/alpha_margin_summary_v3.py --train-seed 1 --output-dir results_v3/tables_e9_alpha_margin_ts1
+# start 2026-10-03 16:10:24
+wrote TABLE_E9_alpha_margin for 16 cells to results_v3\tables_e9_alpha_margin_ts1
+# returncode 0

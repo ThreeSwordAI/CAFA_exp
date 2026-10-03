@@ -427,3 +427,43 @@ def test_alpha_margin_summary(tmp_path, monkeypatch):
     monkeypatch.delenv("RESULTS_ROOT")
     with pytest.raises(SystemExit):
         alpha_margin_summary_v3.main(["--configs-dir", str(cfg), "--output-dir", str(out)])
+
+
+def test_seed_flags_flags_tier1_range_above_quarter(tmp_path):
+    """TABLE_E4_seed_flags (round 3b, Task J.3): a (dataset, policy) is flagged when its tier-1 share differs across
+    seeds by more than 0.25; per-seed r_full comes from the E3 audit rows; single-seed cells get no row."""
+    def e4(ds, seed, t1):
+        return {"dataset": ds, "policy": "greedy_entropy", "seed": seed, "alpha": 0.15, "tier1": t1, "tier3": 1 - t1}
+
+    def e3(ds, seed, r):
+        return {"dataset": ds, "policy": "greedy_entropy", "seed": seed, "k": 2, "n_k": 900, "r_full": r,
+                "rmin_thr": r - 0.01, "verdict": "feasible"}
+
+    rows = make_tables_v3.seed_flags(
+        [e4("dsF", 0, 0.12), e4("dsF", 1, 0.40), e4("dsF", 2, 0.05), e4("dsQ", 0, 0.50), e4("dsQ", 2, 0.75),
+         e4("dsS", 0, 1.0)],
+        [e3("dsF", 0, 0.133), e3("dsF", 1, 0.121), e3("dsF", 2, 0.140), e3("dsQ", 0, 0.1), e3("dsQ", 2, 0.1)])
+    by = {r["dataset"]: r for r in rows}
+    assert set(by) == {"dsF", "dsQ"}                                   # dsS has one seed only
+    assert by["dsF"]["flag"] == "FLAG" and by["dsF"]["tier1_range"] == pytest.approx(0.35)
+    assert by["dsF"]["seeds"] == "0 / 1 / 2" and by["dsF"]["r_full"] == "0.133 / 0.121 / 0.140"
+    assert by["dsQ"]["flag"] == "" and by["dsQ"]["tier1_range"] == pytest.approx(0.25)   # exactly 0.25: not flagged
+
+
+def test_seed_groups_for_f2_f6(mdir, tmp_path):
+    """F2 / F6 (round 3b): one bar per cell while every (dataset, policy) has one seed (names unchanged), one bar per
+    (dataset, policy) with seed means once any has several; both figures are written in either mode."""
+    cells = make_figures_v3.load_cells(mdir, "dep", "uniform")
+    groups, multi = make_figures_v3.seed_groups(cells)
+    assert multi                                                       # dsA has seeds 0 and 1
+    names = [n for n, _ in groups]
+    assert "dsA\ngreedy_entropy (2 seeds)" in names and len(names) == len({(c[0]["dsname"], c[0]["policy"]) for c in cells})
+    single = [c for c in cells if c[0]["dsname"] != "dsA"]
+    g1, multi1 = make_figures_v3.seed_groups(single)
+    assert not multi1 and [n for n, _ in g1] == [f"{c[0]['dsname']}\n{c[0]['policy']} s{c[0]['train_seed']}" for c in single]
+    for cs, sub in ((cells, "multi"), (single, "single")):
+        out = tmp_path / sub
+        out.mkdir()
+        make_figures_v3.fig_blindness(cs, out)
+        make_figures_v3.fig_violations(cs, out)
+        assert (out / "F2_blindness.pdf").exists() and (out / "F6_violations.pdf").exists()

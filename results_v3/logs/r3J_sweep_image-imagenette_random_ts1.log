@@ -1,0 +1,8 @@
+# python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 1 --policy random
+# start 2026-10-03T13:00:53.439112+00:00
+[cascade] image-imagenette ts1 random lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] image-imagenette ts1 random lr[0.7]=0.700 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.7, '2': 0.0, '3': 0.3} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] image-imagenette ts1 random lr[0.9]=0.900 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.55, '2': 0.0, '3': 0.45} viol=0.090 (by split 0.00-0.40) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] image-imagenette ts1 random lr[dep]=0.838 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.39, '2': 0.0, '3': 0.61} viol=0.110 (by split 0.00-0.50) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] wrote F:\CAFA_results\metrics_v3\image-imagenette_ts1_random_softmax.json
+# returncode 0

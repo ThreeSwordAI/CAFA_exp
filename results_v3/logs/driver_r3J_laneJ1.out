@@ -1,0 +1,130 @@
+[lane J1] start 2026-10-03 14:49:54
+[lane J1] 14:49:54 main ts1 tabular:MiniBooNE
+[drive_v3] run r3J:sweep:tabular:MiniBooNE:greedy_entropy:ts1: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 1 --policy greedy_entropy  (log results_v3\logs\r3J_sweep_tabular-MiniBooNE_greedy_entropy_ts1.log)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[dep]=0.758 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 1/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts1_greedy_entropy_softmax.json
+[drive_v3] done r3J:sweep:tabular:MiniBooNE:greedy_entropy:ts1: rc=0 in 496.7s
+[drive_v3] run r3J:sweep:tabular:MiniBooNE:random:ts1: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 1 --policy random  (log results_v3\logs\r3J_sweep_tabular-MiniBooNE_random_ts1.log)
+    [cascade] tabular-MiniBooNE ts1 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 random lr[dep]=0.808 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.38, '2': 0.0, '3': 0.62} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts1_random_softmax.json
+[drive_v3] done r3J:sweep:tabular:MiniBooNE:random:ts1: rc=0 in 504.0s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 15:06:36 main ts2 tabular:MiniBooNE
+[drive_v3] run r3J:sweep:tabular:MiniBooNE:greedy_entropy:ts2: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 2 --policy greedy_entropy  (log results_v3\logs\r3J_sweep_tabular-MiniBooNE_greedy_entropy_ts2.log)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[0.7]=0.700 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.03, '2': 0.0, '3': 0.97} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[dep]=0.687 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.01, '2': 0.0, '3': 0.99} viol=0.010 (by split 0.00-0.05) certviol=0.010 | deepest stratum verdict=unresolved (agree 3/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts2_greedy_entropy_softmax.json
+[drive_v3] done r3J:sweep:tabular:MiniBooNE:greedy_entropy:ts2: rc=0 in 490.8s
+[drive_v3] run r3J:sweep:tabular:MiniBooNE:random:ts2: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 2 --policy random  (log results_v3\logs\r3J_sweep_tabular-MiniBooNE_random_ts2.log)
+    [cascade] tabular-MiniBooNE ts2 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 random lr[0.7]=0.700 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 random lr[dep]=0.747 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.91, '2': 0.0, '3': 0.09} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3\tabular-MiniBooNE_ts2_random_softmax.json
+[drive_v3] done r3J:sweep:tabular:MiniBooNE:random:ts2: rc=0 in 521.6s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 15:23:31 am10 ts1 tabular:MiniBooNE
+[drive_v3] run r3Jam10:sweep:tabular:MiniBooNE:greedy_entropy:ts1: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 1 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_tabular-MiniBooNE_ts1.json  (log results_v3\logs\r3Jam10_sweep_tabular-MiniBooNE_greedy_entropy_ts1.log)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.04, '2': 0.0, '3': 0.96} viol=0.040 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=unresolved (agree 2/5)
+    [cascade] tabular-MiniBooNE ts1 greedy_entropy lr[dep]=0.737 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\tabular-MiniBooNE_ts1_greedy_entropy_softmax.json
+[drive_v3] done r3Jam10:sweep:tabular:MiniBooNE:greedy_entropy:ts1: rc=0 in 508.4s
+[drive_v3] run r3Jam10:sweep:tabular:MiniBooNE:random:ts1: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 1 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_tabular-MiniBooNE_ts1.json  (log results_v3\logs\r3Jam10_sweep_tabular-MiniBooNE_random_ts1.log)
+    [cascade] tabular-MiniBooNE ts1 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.06, '2': 0.0, '3': 0.94} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts1 random lr[dep]=0.747 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\tabular-MiniBooNE_ts1_random_softmax.json
+[drive_v3] done r3Jam10:sweep:tabular:MiniBooNE:random:ts1: rc=0 in 524.0s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 15:40:46 am10 ts2 tabular:MiniBooNE
+[drive_v3] run r3Jam10:sweep:tabular:MiniBooNE:greedy_entropy:ts2: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 2 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_tabular-MiniBooNE_ts2.json  (log results_v3\logs\r3Jam10_sweep_tabular-MiniBooNE_greedy_entropy_ts2.log)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[0.7]=0.700 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.040 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=unresolved (agree 2/5)
+    [cascade] tabular-MiniBooNE ts2 greedy_entropy lr[dep]=0.687 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.060 (by split 0.00-0.25) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\tabular-MiniBooNE_ts2_greedy_entropy_softmax.json
+[drive_v3] done r3Jam10:sweep:tabular:MiniBooNE:greedy_entropy:ts2: rc=0 in 500.8s
+[drive_v3] run r3Jam10:sweep:tabular:MiniBooNE:random:ts2: python scripts/run_cascade_sweep.py --dataset tabular:MiniBooNE --train-seed 2 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_tabular-MiniBooNE_ts2.json  (log results_v3\logs\r3Jam10_sweep_tabular-MiniBooNE_random_ts2.log)
+    [cascade] tabular-MiniBooNE ts2 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 random lr[0.7]=0.700 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-MiniBooNE ts2 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=unresolved (agree 2/5)
+    [cascade] tabular-MiniBooNE ts2 random lr[dep]=0.697 G=4 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\tabular-MiniBooNE_ts2_random_softmax.json
+[drive_v3] done r3Jam10:sweep:tabular:MiniBooNE:random:ts2: rc=0 in 541.3s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 15:58:10 am02 ts1 csv:physionet
+[drive_v3] run r3Jam02:sweep:csv:physionet:greedy_entropy:ts1: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 1 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_csv-physionet_ts1.json  (log results_v3\logs\r3Jam02_sweep_csv-physionet_greedy_entropy_ts1.log)
+    [cascade] csv-physionet ts1 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.96, '2': 0.0, '3': 0.04} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts1 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.96, '2': 0.0, '3': 0.04} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts1 greedy_entropy lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts1 greedy_entropy lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.96, '2': 0.0, '3': 0.04} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\csv-physionet_ts1_greedy_entropy_softmax.json
+[drive_v3] done r3Jam02:sweep:csv:physionet:greedy_entropy:ts1: rc=0 in 48.5s
+[drive_v3] run r3Jam02:sweep:csv:physionet:random:ts1: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 1 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_csv-physionet_ts1.json  (log results_v3\logs\r3Jam02_sweep_csv-physionet_random_ts1.log)
+    [cascade] csv-physionet ts1 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.96, '2': 0.0, '3': 0.04} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts1 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.96, '2': 0.0, '3': 0.04} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts1 random lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.21, '2': 0.0, '3': 0.79} viol=0.080 (by split 0.00-0.30) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts1 random lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.96, '2': 0.0, '3': 0.04} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\csv-physionet_ts1_random_softmax.json
+[drive_v3] done r3Jam02:sweep:csv:physionet:random:ts1: rc=0 in 45.6s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 15:59:47 am02 ts2 csv:physionet
+[drive_v3] run r3Jam02:sweep:csv:physionet:greedy_entropy:ts2: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 2 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_csv-physionet_ts2.json  (log results_v3\logs\r3Jam02_sweep_csv-physionet_greedy_entropy_ts2.log)
+    [cascade] csv-physionet ts2 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts2 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts2 greedy_entropy lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts2 greedy_entropy lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\csv-physionet_ts2_greedy_entropy_softmax.json
+[drive_v3] done r3Jam02:sweep:csv:physionet:greedy_entropy:ts2: rc=0 in 45.9s
+[drive_v3] run r3Jam02:sweep:csv:physionet:random:ts2: python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 2 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_csv-physionet_ts2.json  (log results_v3\logs\r3Jam02_sweep_csv-physionet_random_ts2.log)
+    [cascade] csv-physionet ts2 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts2 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts2 random lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.05, '2': 0.0, '3': 0.95} viol=0.040 (by split 0.00-0.15) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] csv-physionet ts2 random lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\csv-physionet_ts2_random_softmax.json
+[drive_v3] done r3Jam02:sweep:csv:physionet:random:ts2: rc=0 in 45.2s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 16:01:20 am10 ts1 image:imagenette
+[drive_v3] run r3Jam10:sweep:image:imagenette:greedy_entropy:ts1: python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 1 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_image-imagenette_ts1.json  (log results_v3\logs\r3Jam10_sweep_image-imagenette_greedy_entropy_ts1.log)
+    [cascade] image-imagenette ts1 greedy_entropy lr[0.5]=0.500 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts1 greedy_entropy lr[0.7]=0.700 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts1 greedy_entropy lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.050 (by split 0.00-0.25) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts1 greedy_entropy lr[dep]=0.778 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\image-imagenette_ts1_greedy_entropy_softmax.json
+[drive_v3] done r3Jam10:sweep:image:imagenette:greedy_entropy:ts1: rc=0 in 34.1s
+[drive_v3] run r3Jam10:sweep:image:imagenette:random:ts1: python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 1 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_image-imagenette_ts1.json  (log results_v3\logs\r3Jam10_sweep_image-imagenette_random_ts1.log)
+    [cascade] image-imagenette ts1 random lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts1 random lr[0.7]=0.700 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.020 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts1 random lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts1 random lr[dep]=0.758 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\image-imagenette_ts1_random_softmax.json
+[drive_v3] done r3Jam10:sweep:image:imagenette:random:ts1: rc=0 in 35.2s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] 16:02:31 am10 ts2 image:imagenette
+[drive_v3] run r3Jam10:sweep:image:imagenette:greedy_entropy:ts2: python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 2 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_image-imagenette_ts2.json  (log results_v3\logs\r3Jam10_sweep_image-imagenette_greedy_entropy_ts2.log)
+    [cascade] image-imagenette ts2 greedy_entropy lr[0.5]=0.500 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.070 (by split 0.00-0.30) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts2 greedy_entropy lr[0.7]=0.700 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.180 (by split 0.00-0.45) certviol=0.030 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts2 greedy_entropy lr[0.9]=0.900 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.020 (by split 0.00-0.10) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts2 greedy_entropy lr[dep]=0.758 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.130 (by split 0.00-0.35) certviol=0.030 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\image-imagenette_ts2_greedy_entropy_softmax.json
+[drive_v3] done r3Jam10:sweep:image:imagenette:greedy_entropy:ts2: rc=0 in 34.3s
+[drive_v3] run r3Jam10:sweep:image:imagenette:random:ts2: python scripts/run_cascade_sweep.py --dataset image:imagenette --train-seed 2 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin10 --committed configs/committed_v3_am10_image-imagenette_ts2.json  (log results_v3\logs\r3Jam10_sweep_image-imagenette_random_ts2.log)
+    [cascade] image-imagenette ts2 random lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts2 random lr[0.7]=0.700 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.030 (by split 0.00-0.15) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts2 random lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.090 (by split 0.00-0.20) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] image-imagenette ts2 random lr[dep]=0.737 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.060 (by split 0.00-0.30) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin10\image-imagenette_ts2_random_softmax.json
+[drive_v3] done r3Jam10:sweep:image:imagenette:random:ts2: rc=0 in 37.0s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J1] end 2026-10-03 16:03:45

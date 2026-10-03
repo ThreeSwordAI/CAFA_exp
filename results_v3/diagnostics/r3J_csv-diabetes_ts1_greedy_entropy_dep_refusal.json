@@ -1,0 +1,656 @@
+{
+ "dataset": "csv:diabetes",
+ "policy": "greedy_entropy",
+ "train_seed": 1,
+ "lambda_ref_key": "dep",
+ "lambda_ref": 0.8080808080808082,
+ "alpha": 0.15,
+ "delta_3": 0.025,
+ "edges": [
+  3.0
+ ],
+ "n_draws": 20,
+ "n_draws_tier3_refused": 18,
+ "draws": [
+  {
+   "draw": 0,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.046895160534275525,
+     "strata": {
+      "0": {
+       "n_answered": 6019,
+       "n_stratum": 6476,
+       "sel_risk": 0.004651935537464695,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 78,
+       "n_stratum": 1810,
+       "sel_risk": 0.0641025641025641,
+       "p": 0.046895160534275525
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 1,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.10288456915292574,
+     "strata": {
+      "0": {
+       "n_answered": 5969,
+       "n_stratum": 6447,
+       "sel_risk": 0.004523370748869157,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 79,
+       "n_stratum": 1839,
+       "sel_risk": 0.0759493670886076,
+       "p": 0.10288456915292574
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 2,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.07776829733109754,
+     "strata": {
+      "0": {
+       "n_answered": 5988,
+       "n_stratum": 6451,
+       "sel_risk": 0.004676018704074816,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 73,
+       "n_stratum": 1835,
+       "sel_risk": 0.0684931506849315,
+       "p": 0.07776829733109754
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 3,
+   "n_certified": 3,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.015499261219500161,
+     "strata": {
+      "0": {
+       "n_answered": 6006,
+       "n_stratum": 6466,
+       "sel_risk": 0.005328005328005328,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 68,
+       "n_stratum": 1820,
+       "sel_risk": 0.04411764705882353,
+       "p": 0.015499261219500161
+      }
+     }
+    },
+    {
+     "level": 39,
+     "mu": 0.929155053794384,
+     "probe_answered_fraction": 0.07375000000000001,
+     "union_p": 0.017504279334594072,
+     "strata": {
+      "0": {
+       "n_answered": 6063,
+       "n_stratum": 6466,
+       "sel_risk": 0.005607784924954643,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 97,
+       "n_stratum": 1820,
+       "sel_risk": 0.061855670103092786,
+       "p": 0.017504279334594072
+      }
+     }
+    },
+    {
+     "level": 37,
+     "mu": 0.898497946113348,
+     "probe_answered_fraction": 0.12125000000000001,
+     "union_p": 0.004992491554283241,
+     "strata": {
+      "0": {
+       "n_answered": 6161,
+       "n_stratum": 6466,
+       "sel_risk": 0.0064924525239409185,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 184,
+       "n_stratum": 1820,
+       "sel_risk": 0.07608695652173914,
+       "p": 0.004992491554283241
+      }
+     }
+    },
+    {
+     "level": 0,
+     "mu": 0.34260794520378113,
+     "probe_answered_fraction": 1.0,
+     "union_p": 1.0,
+     "strata": {
+      "0": {
+       "n_answered": 6466,
+       "n_stratum": 6466,
+       "sel_risk": 0.016238787503866377,
+       "p": 5.179744466859247e-304
+      },
+      "1": {
+       "n_answered": 1820,
+       "n_stratum": 1820,
+       "sel_risk": 0.37637362637362637,
+       "p": 1.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 4,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.565644088874551,
+     "strata": {
+      "0": {
+       "n_answered": 6067,
+       "n_stratum": 6517,
+       "sel_risk": 0.004944783253667381,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 81,
+       "n_stratum": 1769,
+       "sel_risk": 0.1111111111111111,
+       "p": 0.565644088874551
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 5,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.2920247563536409,
+     "strata": {
+      "0": {
+       "n_answered": 6059,
+       "n_stratum": 6511,
+       "sel_risk": 0.006601749463607856,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 67,
+       "n_stratum": 1775,
+       "sel_risk": 0.08955223880597014,
+       "p": 0.2920247563536409
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 6,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.07603412095111726,
+     "strata": {
+      "0": {
+       "n_answered": 5988,
+       "n_stratum": 6464,
+       "sel_risk": 0.0045090180360721445,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 64,
+       "n_stratum": 1822,
+       "sel_risk": 0.0625,
+       "p": 0.07603412095111726
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 7,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.5643786045698006,
+     "strata": {
+      "0": {
+       "n_answered": 6036,
+       "n_stratum": 6516,
+       "sel_risk": 0.004307488402915839,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 66,
+       "n_stratum": 1770,
+       "sel_risk": 0.10606060606060606,
+       "p": 0.5643786045698006
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 8,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.02857371069248149,
+     "strata": {
+      "0": {
+       "n_answered": 5988,
+       "n_stratum": 6475,
+       "sel_risk": 0.00501002004008016,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 73,
+       "n_stratum": 1811,
+       "sel_risk": 0.0547945205479452,
+       "p": 0.02857371069248149
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 9,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.9005233022975657,
+     "strata": {
+      "0": {
+       "n_answered": 6001,
+       "n_stratum": 6457,
+       "sel_risk": 0.005832361273121147,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 76,
+       "n_stratum": 1829,
+       "sel_risk": 0.13157894736842105,
+       "p": 0.9005233022975657
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 10,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.8900809286928024,
+     "strata": {
+      "0": {
+       "n_answered": 5999,
+       "n_stratum": 6457,
+       "sel_risk": 0.004667444574095682,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 55,
+       "n_stratum": 1829,
+       "sel_risk": 0.12727272727272726,
+       "p": 0.8900809286928024
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 11,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.14774759682452887,
+     "strata": {
+      "0": {
+       "n_answered": 6038,
+       "n_stratum": 6499,
+       "sel_risk": 0.0059622391520370984,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 75,
+       "n_stratum": 1787,
+       "sel_risk": 0.08,
+       "p": 0.14774759682452887
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 12,
+   "n_certified": 3,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.016216032524056227,
+     "strata": {
+      "0": {
+       "n_answered": 5999,
+       "n_stratum": 6471,
+       "sel_risk": 0.004667444574095682,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 78,
+       "n_stratum": 1815,
+       "sel_risk": 0.05128205128205128,
+       "p": 0.016216032524056227
+      }
+     }
+    },
+    {
+     "level": 39,
+     "mu": 0.929155053794384,
+     "probe_answered_fraction": 0.07375000000000001,
+     "union_p": 0.006720372659878064,
+     "strata": {
+      "0": {
+       "n_answered": 6059,
+       "n_stratum": 6471,
+       "sel_risk": 0.004951312097705892,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 106,
+       "n_stratum": 1815,
+       "sel_risk": 0.05660377358490566,
+       "p": 0.006720372659878064
+      }
+     }
+    },
+    {
+     "level": 37,
+     "mu": 0.898497946113348,
+     "probe_answered_fraction": 0.12125000000000001,
+     "union_p": 0.01666481163481375,
+     "strata": {
+      "0": {
+       "n_answered": 6159,
+       "n_stratum": 6471,
+       "sel_risk": 0.00649456080532554,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 187,
+       "n_stratum": 1815,
+       "sel_risk": 0.0855614973262032,
+       "p": 0.01666481163481375
+      }
+     }
+    },
+    {
+     "level": 0,
+     "mu": 0.34260794520378113,
+     "probe_answered_fraction": 1.0,
+     "union_p": 1.0,
+     "strata": {
+      "0": {
+       "n_answered": 6471,
+       "n_stratum": 6471,
+       "sel_risk": 0.015608097666512132,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 1815,
+       "n_stratum": 1815,
+       "sel_risk": 0.38126721763085397,
+       "p": 1.0
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 13,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.20927876314351962,
+     "strata": {
+      "0": {
+       "n_answered": 5974,
+       "n_stratum": 6439,
+       "sel_risk": 0.004519584867760294,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 71,
+       "n_stratum": 1847,
+       "sel_risk": 0.08450704225352113,
+       "p": 0.20927876314351962
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 14,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.34287640531756514,
+     "strata": {
+      "0": {
+       "n_answered": 6020,
+       "n_stratum": 6489,
+       "sel_risk": 0.0048172757475083055,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 65,
+       "n_stratum": 1797,
+       "sel_risk": 0.09230769230769231,
+       "p": 0.34287640531756514
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 15,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.7145489251770087,
+     "strata": {
+      "0": {
+       "n_answered": 6046,
+       "n_stratum": 6533,
+       "sel_risk": 0.004465762487595104,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 69,
+       "n_stratum": 1753,
+       "sel_risk": 0.11594202898550725,
+       "p": 0.7145489251770087
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 16,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.7550624141716687,
+     "strata": {
+      "0": {
+       "n_answered": 6039,
+       "n_stratum": 6504,
+       "sel_risk": 0.004967709885742673,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 75,
+       "n_stratum": 1782,
+       "sel_risk": 0.12,
+       "p": 0.7550624141716687
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 17,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.27207373743220986,
+     "strata": {
+      "0": {
+       "n_answered": 5980,
+       "n_stratum": 6459,
+       "sel_risk": 0.0045150501672240806,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 76,
+       "n_stratum": 1827,
+       "sel_risk": 0.09210526315789473,
+       "p": 0.27207373743220986
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 18,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.565644088874551,
+     "strata": {
+      "0": {
+       "n_answered": 5953,
+       "n_stratum": 6428,
+       "sel_risk": 0.005879388543591466,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 81,
+       "n_stratum": 1858,
+       "sel_risk": 0.1111111111111111,
+       "p": 0.565644088874551
+      }
+     }
+    }
+   ]
+  },
+  {
+   "draw": 19,
+   "n_certified": 0,
+   "walk": [
+    {
+     "level": 40,
+     "mu": 0.9430107653141021,
+     "probe_answered_fraction": 0.05,
+     "union_p": 0.36885911464392934,
+     "strata": {
+      "0": {
+       "n_answered": 6044,
+       "n_stratum": 6499,
+       "sel_risk": 0.00413633355393779,
+       "p": 2.2250738585072014e-308
+      },
+      "1": {
+       "n_answered": 72,
+       "n_stratum": 1787,
+       "sel_risk": 0.09722222222222222,
+       "p": 0.36885911464392934
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

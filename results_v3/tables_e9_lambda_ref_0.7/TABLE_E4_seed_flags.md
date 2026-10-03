@@ -1,0 +1,22 @@
+# TABLE_E4_seed_flags (lambda_ref key = 0.7, scheme = uniform)
+
+Per (dataset, policy) with several train seeds, values per seed in seed order.  `flag` = FLAG when the tier-1 share differs across seeds by more than 0.25 (`tier1_range` = max - min; instruction_round3 Task J.3).  `deepest_k`, `n_k`, `r_full` (full-information risk), `rmin_thr` and `deepest_verdict` are the deepest stratum's audit of record (primary split's calibration pool, TABLE_E3_audit).
+
+| dataset | policy | seeds | alpha | tier1 | tier3 | tier1_range | flag | deepest_k | n_k | r_full | rmin_thr | deepest_verdict |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| csv-diabetes | greedy_entropy | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 16571 / 16571 / 16571 | 0.095 / 0.097 / 0.095 | 0.095 / 0.097 / 0.094 | feasible / feasible / feasible |
+| csv-diabetes | random | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 16571 / 16571 / 16571 | 0.095 / 0.097 / 0.095 | 0.095 / 0.097 / 0.095 | feasible / feasible / feasible |
+| csv-physionet | greedy_entropy | 0 / 1 / 2 | 0.2 / 0.2 / 0.2 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 2160 / 2160 / 2160 | 0.126 / 0.131 / 0.120 | 0.126 / 0.131 / 0.120 | feasible / feasible / feasible |
+| csv-physionet | random | 0 / 1 / 2 | 0.2 / 0.2 / 0.2 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 2160 / 2160 / 2160 | 0.126 / 0.131 / 0.120 | 0.126 / 0.130 / 0.120 | feasible / feasible / feasible |
+| cube | greedy_entropy | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 1.000 / 0.500 / 1.000 | 0.000 / 0.500 / 0.000 | 0.500 | FLAG | 2 / 3 / 2 | 1548 / 659 / 1387 | 0.061 / 0.105 / 0.073 | 0.061 / 0.105 / 0.073 | feasible / feasible / feasible |
+| cube | random | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 0.990 / 0.990 / 1.000 | 0.010 / 0.010 / 0.000 | 0.010 |  | 3 / 3 / 2 | 689 / 707 / 850 | 0.083 / 0.086 / 0.074 | 0.080 / 0.086 / 0.072 | feasible / feasible / feasible |
+| fashionmnist | greedy_entropy | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 0.920 / 0.570 / 0.980 | 0.080 / 0.430 / 0.020 | 0.410 | FLAG | 3 / 4 / 4 | 3071 / 2516 / 3360 | 0.120 / 0.124 / 0.119 | 0.120 / 0.124 / 0.119 | feasible / feasible / feasible |
+| fashionmnist | random | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 0.700 / 0.170 / 0.490 | 0.300 / 0.830 / 0.510 | 0.530 | FLAG | 4 / 4 / 4 | 2779 / 2678 / 2869 | 0.116 / 0.139 / 0.126 | 0.116 / 0.139 / 0.126 | feasible / feasible / feasible |
+| image-imagenette | greedy_entropy | 0 / 1 / 2 | 0.1 / 0.1 / 0.1 | 0.340 / 0.560 / 0.600 | 0.660 / 0.440 / 0.400 | 0.260 | FLAG | 2 / 3 / 3 | 480 / 547 / 469 | 0.071 / 0.073 / 0.060 | 0.071 / 0.073 / 0.060 | feasible / feasible / feasible |
+| image-imagenette | random | 0 / 1 / 2 | 0.1 / 0.1 / 0.1 | 0.580 / 0.700 / 0.840 | 0.420 / 0.300 / 0.160 | 0.260 | FLAG | 3 / 3 / 3 | 538 / 515 / 557 | 0.050 / 0.060 / 0.057 | 0.050 / 0.060 / 0.057 | feasible / feasible / feasible |
+| mnist | greedy_entropy | 0 / 1 / 2 | 0.1 / 0.1 / 0.1 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 3 / 3 / 3 | 3364 / 3505 / 3688 | 0.009 / 0.006 / 0.006 | 0.009 / 0.006 / 0.006 | feasible / feasible / feasible |
+| mnist | random | 0 / 1 / 2 | 0.1 / 0.1 / 0.1 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 4 / 4 / 4 | 2556 / 3229 / 2529 | 0.008 / 0.008 / 0.009 | 0.008 / 0.008 / 0.009 | feasible / feasible / feasible |
+| tabular-MiniBooNE | greedy_entropy | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 1.000 / 1.000 / 0.030 | 0.000 / 0.000 / 0.970 | 0.970 | FLAG | 0 / 0 / 2 | 23411 / 23411 / 6053 | 0.075 / 0.079 / 0.147 | 0.075 / 0.079 / 0.146 | feasible / feasible / feasible |
+| tabular-MiniBooNE | random | 0 / 1 / 2 | 0.15 / 0.15 / 0.15 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 3 | 23411 / 23411 / 5407 | 0.075 / 0.079 / 0.110 | 0.075 / 0.079 / 0.110 | feasible / feasible / feasible |
+| tabular-adult | greedy_entropy | 0 / 1 / 2 | 0.25 / 0.25 / 0.2 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 8140 / 8140 / 8140 | 0.147 / 0.155 / 0.149 | 0.147 / 0.155 / 0.149 | feasible / feasible / feasible |
+| tabular-adult | random | 0 / 1 / 2 | 0.25 / 0.25 / 0.2 | 1.000 / 1.000 / 1.000 | 0.000 / 0.000 / 0.000 | 0.000 |  | 0 / 0 / 0 | 8140 / 8140 / 8140 | 0.147 / 0.155 / 0.149 | 0.147 / 0.155 / 0.149 | feasible / feasible / feasible |

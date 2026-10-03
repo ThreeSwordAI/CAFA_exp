@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset tabular:MiniBooNE --train-seed 2 --before-cache F:/CAFA_results/pool_v3/tabular-MiniBooNE_ts2_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/tabular-MiniBooNE_ts2_greedy_entropy_softmax.npz --committed configs/committed_v3_tabular-MiniBooNE_ts2.json --policy random --label policy_change
+# start 2026-10-03T13:15:28.142134+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.076, full 0.076) -> feasible (rmin 0.076, full 0.076); tier1 1.00 -> 1.00; viol 0.01 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=3: feasible (rmin 0.110, full 0.110) -> feasible (rmin 0.110, full 0.110); tier1 1.00 -> 1.00; viol 0.00 -> 0.07; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.209, full 0.209) -> type_II (rmin 0.208, full 0.209); tier1 0.00 -> 0.00; viol 0.02 -> 0.02; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[dep]=0.747 deepest k=4: feasible (rmin 0.130, full 0.130) -> feasible (rmin 0.129, full 0.130); tier1 0.91 -> 0.91; viol 0.00 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\tabular-MiniBooNE_ts2_policy_change.json
+# returncode 0

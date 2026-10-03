@@ -1,0 +1,50 @@
+[lane J6] start 2026-10-03 15:56:54
+[lane J6] 15:56:54 am02 ts2 cube
+[drive_v3] run r3Jam02:sweep:cube:greedy_entropy:ts2: python scripts/run_cascade_sweep.py --dataset cube --train-seed 2 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_cube_ts2.json  (log results_v3\logs\r3Jam02_sweep_cube_greedy_entropy_ts2.log)
+    [cascade] cube ts2 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.72, '2': 0.0, '3': 0.28} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] cube ts2 greedy_entropy lr[0.7]=0.700 G=3 | cert=1.00 tiers={'0': 0.0, '1': 0.02, '2': 0.0, '3': 0.98} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] cube ts2 greedy_entropy lr[0.9]=0.900 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] cube ts2 greedy_entropy lr[dep]=0.929 G=4 | cert=0.53 tiers={'0': 0.47, '1': 0.0, '2': 0.0, '3': 0.53} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\cube_ts2_greedy_entropy_softmax.json
+[drive_v3] done r3Jam02:sweep:cube:greedy_entropy:ts2: rc=0 in 76.9s
+[drive_v3] run r3Jam02:sweep:cube:random:ts2: python scripts/run_cascade_sweep.py --dataset cube --train-seed 2 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_cube_ts2.json  (log results_v3\logs\r3Jam02_sweep_cube_random_ts2.log)
+    [cascade] cube ts2 random lr[0.5]=0.500 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.04, '2': 0.0, '3': 0.96} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] cube ts2 random lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 3/5)
+    [cascade] cube ts2 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] cube ts2 random lr[dep]=0.899 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\cube_ts2_random_softmax.json
+[drive_v3] done r3Jam02:sweep:cube:random:ts2: rc=0 in 77.2s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J6] 15:59:32 am02 ts1 cube
+[drive_v3] run r3Jam02:sweep:cube:greedy_entropy:ts1: python scripts/run_cascade_sweep.py --dataset cube --train-seed 1 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_cube_ts1.json  (log results_v3\logs\r3Jam02_sweep_cube_greedy_entropy_ts1.log)
+    [cascade] cube ts1 greedy_entropy lr[0.5]=0.500 G=3 | cert=1.00 tiers={'0': 0.0, '1': 1.0, '2': 0.0, '3': 0.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] cube ts1 greedy_entropy lr[0.7]=0.700 G=4 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=unresolved (agree 3/5)
+    [cascade] cube ts1 greedy_entropy lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] cube ts1 greedy_entropy lr[dep]=0.960 G=5 | cert=0.87 tiers={'0': 0.13, '1': 0.0, '2': 0.0, '3': 0.87} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\cube_ts1_greedy_entropy_softmax.json
+[drive_v3] done r3Jam02:sweep:cube:greedy_entropy:ts1: rc=0 in 69.7s
+[drive_v3] run r3Jam02:sweep:cube:random:ts1: python scripts/run_cascade_sweep.py --dataset cube --train-seed 1 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_cube_ts1.json  (log results_v3\logs\r3Jam02_sweep_cube_random_ts1.log)
+    [cascade] cube ts1 random lr[0.5]=0.500 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.55, '2': 0.0, '3': 0.45} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] cube ts1 random lr[0.7]=0.700 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 3/5)
+    [cascade] cube ts1 random lr[0.9]=0.900 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] cube ts1 random lr[dep]=0.919 G=5 | cert=1.00 tiers={'0': 0.0, '1': 0.0, '2': 0.0, '3': 1.0} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\cube_ts1_random_softmax.json
+[drive_v3] done r3Jam02:sweep:cube:random:ts1: rc=0 in 74.2s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J6] 16:01:58 am02 ts2 tabular:adult
+[drive_v3] run r3Jam02:sweep:tabular:adult:greedy_entropy:ts2: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 2 --policy greedy_entropy --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_tabular-adult_ts2.json  (log results_v3\logs\r3Jam02_sweep_tabular-adult_greedy_entropy_ts2.log)
+    [cascade] tabular-adult ts2 greedy_entropy lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.99, '2': 0.0, '3': 0.01} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts2 greedy_entropy lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.99, '2': 0.0, '3': 0.01} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts2 greedy_entropy lr[0.9]=0.900 G=4 | cert=0.03 tiers={'0': 0.97, '1': 0.0, '2': 0.0, '3': 0.03} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-adult ts2 greedy_entropy lr[dep]=0.778 G=4 | cert=0.97 tiers={'0': 0.03, '1': 0.0, '2': 0.0, '3': 0.97} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\tabular-adult_ts2_greedy_entropy_softmax.json
+[drive_v3] done r3Jam02:sweep:tabular:adult:greedy_entropy:ts2: rc=0 in 99.0s
+[drive_v3] run r3Jam02:sweep:tabular:adult:random:ts2: python scripts/run_cascade_sweep.py --dataset tabular:adult --train-seed 2 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_tabular-adult_ts2.json  (log results_v3\logs\r3Jam02_sweep_tabular-adult_random_ts2.log)
+    [cascade] tabular-adult ts2 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.99, '2': 0.0, '3': 0.01} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts2 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.99, '2': 0.0, '3': 0.01} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+    [cascade] tabular-adult ts2 random lr[0.9]=0.900 G=4 | cert=0.31 tiers={'0': 0.69, '1': 0.0, '2': 0.0, '3': 0.31} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] tabular-adult ts2 random lr[dep]=0.768 G=4 | cert=0.70 tiers={'0': 0.3, '1': 0.0, '2': 0.0, '3': 0.7} viol=0.010 (by split 0.00-0.05) certviol=0.000 | deepest stratum verdict=type_II (agree 5/5)
+    [cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\tabular-adult_ts2_random_softmax.json
+[drive_v3] done r3Jam02:sweep:tabular:adult:random:ts2: rc=0 in 87.6s
+[drive_v3] sweep: ran 2, skipped 0 existing, 0 missing prerequisites
+[lane J6] end 2026-10-03 16:05:06

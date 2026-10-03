@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset image:imagenette --train-seed 1 --before-cache F:/CAFA_results/pool_v3/image-imagenette_ts1_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/image-imagenette_ts1_greedy_entropy_softmax.npz --committed configs/committed_v3_image-imagenette_ts1.json --policy random --label policy_change
+# start 2026-10-03T13:54:35.925689+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=2: feasible (rmin 0.040, full 0.041) -> feasible (rmin 0.038, full 0.041); tier1 1.00 -> 1.00; viol 0.02 -> 0.07; certviol 0.00 -> 0.01; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=3: feasible (rmin 0.058, full 0.060) -> feasible (rmin 0.056, full 0.060); tier1 0.70 -> 0.70; viol 0.01 -> 0.01; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=3: feasible (rmin 0.074, full 0.074) -> feasible (rmin 0.073, full 0.074); tier1 0.55 -> 0.55; viol 0.09 -> 0.05; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[dep]=0.838 deepest k=3: feasible (rmin 0.075, full 0.075) -> feasible (rmin 0.072, full 0.075); tier1 0.39 -> 0.39; viol 0.11 -> 0.09; certviol 0.00 -> 0.01; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\image-imagenette_ts1_policy_change.json
+# returncode 0

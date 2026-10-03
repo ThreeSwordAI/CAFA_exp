@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset cube --train-seed 2 --before-cache F:/CAFA_results/pool_v3/cube_ts2_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/cube_ts2_greedy_entropy_softmax.npz --committed configs/committed_v3_cube_ts2.json --policy random --label policy_change
+# start 2026-10-03T13:39:20.152595+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=3: feasible (rmin 0.068, full 0.068) -> feasible (rmin 0.068, full 0.068); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=2: feasible (rmin 0.072, full 0.074) -> feasible (rmin 0.074, full 0.074); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=4: unresolved (rmin 0.154, full 0.156) -> unresolved (rmin 0.156, full 0.156); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 3/5 -> 3/5
+[repair:policy_change] lr[dep]=0.747 deepest k=4: feasible (rmin 0.088, full 0.090) -> feasible (rmin 0.090, full 0.090); tier1 1.00 -> 1.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\cube_ts2_policy_change.json
+# returncode 0

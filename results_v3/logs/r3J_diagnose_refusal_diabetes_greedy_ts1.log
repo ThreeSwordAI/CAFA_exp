@@ -1,0 +1,8 @@
+# .venv/Scripts/python.exe scripts/diagnose_refusal_v3.py --dataset csv:diabetes --policy greedy_entropy --train-seed 1 --lambda-ref-key dep --n-draws 20 --output results_v3/diagnostics/r3J_csv-diabetes_ts1_greedy_entropy_dep_refusal.json
+[refusal] csv-diabetes ts1 greedy_entropy lr[dep]=0.8081 G=2 alpha=0.15 delta_3=0.025 levels=41; first 4 levels of the committed order (index: probe answered fraction): 40: 0.050, 39: 0.074, 37: 0.121, 0: 1.000
+[refusal] draw 0: certified 0 level(s); stopped at level 40 (probe answered 0.050, mu 0.9430, union p 0.0469 > 0.025): k0: answered 6019/6476 sel risk 0.0047 p 2.225e-308; k1: answered 78/1810 sel risk 0.0641 p 0.0469  [binding stratum k1]
+[refusal] draw 1: certified 0 level(s); stopped at level 40 (probe answered 0.050, mu 0.9430, union p 0.1029 > 0.025): k0: answered 5969/6447 sel risk 0.0045 p 2.225e-308; k1: answered 79/1839 sel risk 0.0759 p 0.1029  [binding stratum k1]
+[refusal] draw 2: certified 0 level(s); stopped at level 40 (probe answered 0.050, mu 0.9430, union p 0.07777 > 0.025): k0: answered 5988/6451 sel risk 0.0047 p 2.225e-308; k1: answered 73/1835 sel risk 0.0685 p 0.07777  [binding stratum k1]
+[refusal] tier 3 certified no level in 18/20 draws; probe stratum sizes {0: 2895, 1: 787}
+[refusal] wrote results_v3/diagnostics/r3J_csv-diabetes_ts1_greedy_entropy_dep_refusal.json
+# returncode 0

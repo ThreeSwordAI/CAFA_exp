@@ -1,0 +1,303 @@
+{
+ "dataset": "csv:diabetes",
+ "policy": "greedy_entropy",
+ "train_seed": 1,
+ "lambda_ref_key": "dep",
+ "alpha": 0.15,
+ "test_seeds": [
+  778,
+  779,
+  780,
+  781,
+  782
+ ],
+ "checks": {
+  "split_digests_match": true,
+  "split_sizes_match": true,
+  "probe_calpool_test_disjoint_and_cover": true,
+  "bucket_ids_numpy_vs_reference_buckets": true,
+  "all_flagged_cal_rows_ok": true,
+  "all_test_pvalues_match_sweep": true
+ },
+ "by_split": {
+  "778": {
+   "checks": {
+    "split_digests_match": true,
+    "split_sizes_match": true,
+    "probe_calpool_test_disjoint_and_cover": true,
+    "bucket_ids": {
+     "calpool": true,
+     "test": true
+    }
+   },
+   "stratum_sizes": {
+    "calpool": {
+     "0": 12957,
+     "1": 3614
+    },
+    "test": {
+     "0": 12915,
+     "1": 3657
+    }
+   },
+   "full_acq_stratum_risk": {
+    "0": {
+     "calpool": 0.016053098711121403,
+     "test": 0.016415021293070074
+    },
+    "1": {
+     "calpool": 0.38848920863309355,
+     "test": 0.39103089964451737
+    }
+   },
+   "n_draws": 20,
+   "raw_violation_rate": 0.0,
+   "certified_violation_rate": 0.0,
+   "deployed_rules": [
+    {
+     "tier": 3,
+     "param": 0.898497946113,
+     "n_draws": 2,
+     "n_flagged": 0,
+     "strata": {
+      "0": {
+       "n_answered_calpool": 12342,
+       "risk_calpool": 0.0065629557608167235,
+       "n_answered_test": 12280,
+       "risk_test": 0.0071661237785016286,
+       "test_errors": 88,
+       "risk_pooled": 0.006863780359028511
+      },
+      "1": {
+       "n_answered_calpool": 370,
+       "risk_calpool": 0.0918918918918919,
+       "n_answered_test": 380,
+       "risk_test": 0.12368421052631579,
+       "test_errors": 47,
+       "risk_pooled": 0.108
+      }
+     }
+    }
+   ],
+   "flagged_draws": []
+  },
+  "779": {
+   "checks": {
+    "split_digests_match": true,
+    "split_sizes_match": true,
+    "probe_calpool_test_disjoint_and_cover": true,
+    "bucket_ids": {
+     "calpool": true,
+     "test": true
+    }
+   },
+   "stratum_sizes": {
+    "calpool": {
+     "0": 12942,
+     "1": 3629
+    },
+    "test": {
+     "0": 12930,
+     "1": 3642
+    }
+   },
+   "full_acq_stratum_risk": {
+    "0": {
+     "calpool": 0.015608097666512132,
+     "test": 0.0168600154679041
+    },
+    "1": {
+     "calpool": 0.3835767429043814,
+     "test": 0.39593629873695774
+    }
+   },
+   "n_draws": 20,
+   "raw_violation_rate": 0.0,
+   "certified_violation_rate": 0.0,
+   "deployed_rules": [],
+   "flagged_draws": []
+  },
+  "780": {
+   "checks": {
+    "split_digests_match": true,
+    "split_sizes_match": true,
+    "probe_calpool_test_disjoint_and_cover": true,
+    "bucket_ids": {
+     "calpool": true,
+     "test": true
+    }
+   },
+   "stratum_sizes": {
+    "calpool": {
+     "0": 12928,
+     "1": 3643
+    },
+    "test": {
+     "0": 12944,
+     "1": 3628
+    }
+   },
+   "full_acq_stratum_risk": {
+    "0": {
+     "calpool": 0.016785272277227724,
+     "test": 0.01568294190358467
+    },
+    "1": {
+     "calpool": 0.39445511940708206,
+     "test": 0.3850606394707828
+    }
+   },
+   "n_draws": 20,
+   "raw_violation_rate": 0.0,
+   "certified_violation_rate": 0.0,
+   "deployed_rules": [
+    {
+     "tier": 3,
+     "param": 0.943010765314,
+     "n_draws": 1,
+     "n_flagged": 0,
+     "strata": {
+      "0": {
+       "n_answered_calpool": 11995,
+       "risk_calpool": 0.00566902876198416,
+       "n_answered_test": 12015,
+       "risk_test": 0.0043279234290470245,
+       "test_errors": 52,
+       "risk_pooled": 0.0049979175343606835
+      },
+      "1": {
+       "n_answered_calpool": 131,
+       "risk_calpool": 0.10687022900763359,
+       "n_answered_test": 156,
+       "risk_test": 0.07692307692307693,
+       "test_errors": 12,
+       "risk_pooled": 0.09059233449477352
+      }
+     }
+    }
+   ],
+   "flagged_draws": []
+  },
+  "781": {
+   "checks": {
+    "split_digests_match": true,
+    "split_sizes_match": true,
+    "probe_calpool_test_disjoint_and_cover": true,
+    "bucket_ids": {
+     "calpool": true,
+     "test": true
+    }
+   },
+   "stratum_sizes": {
+    "calpool": {
+     "0": 12933,
+     "1": 3638
+    },
+    "test": {
+     "0": 12939,
+     "1": 3633
+    }
+   },
+   "full_acq_stratum_risk": {
+    "0": {
+     "calpool": 0.01616021031469883,
+     "test": 0.01630728804389829
+    },
+    "1": {
+     "calpool": 0.3892248488180319,
+     "test": 0.3903110377098816
+    }
+   },
+   "n_draws": 20,
+   "raw_violation_rate": 0.0,
+   "certified_violation_rate": 0.0,
+   "deployed_rules": [],
+   "flagged_draws": []
+  },
+  "782": {
+   "checks": {
+    "split_digests_match": true,
+    "split_sizes_match": true,
+    "probe_calpool_test_disjoint_and_cover": true,
+    "bucket_ids": {
+     "calpool": true,
+     "test": true
+    }
+   },
+   "stratum_sizes": {
+    "calpool": {
+     "0": 12994,
+     "1": 3577
+    },
+    "test": {
+     "0": 12878,
+     "1": 3694
+    }
+   },
+   "full_acq_stratum_risk": {
+    "0": {
+     "calpool": 0.013929505925811913,
+     "test": 0.01855878241963038
+    },
+    "1": {
+     "calpool": 0.3913894324853229,
+     "test": 0.3881970763400108
+    }
+   },
+   "n_draws": 20,
+   "raw_violation_rate": 0.0,
+   "certified_violation_rate": 0.0,
+   "deployed_rules": [
+    {
+     "tier": 3,
+     "param": 0.929155053794,
+     "n_draws": 1,
+     "n_flagged": 0,
+     "strata": {
+      "0": {
+       "n_answered_calpool": 12143,
+       "risk_calpool": 0.004776414395124763,
+       "n_answered_test": 12083,
+       "risk_test": 0.006041545973682032,
+       "test_errors": 73,
+       "risk_pooled": 0.005407413522661603
+      },
+      "1": {
+       "n_answered_calpool": 213,
+       "risk_calpool": 0.09859154929577464,
+       "n_answered_test": 211,
+       "risk_test": 0.10900473933649289,
+       "test_errors": 23,
+       "risk_pooled": 0.10377358490566038
+      }
+     }
+    },
+    {
+     "tier": 3,
+     "param": 0.943010765314,
+     "n_draws": 1,
+     "n_flagged": 0,
+     "strata": {
+      "0": {
+       "n_answered_calpool": 12044,
+       "risk_calpool": 0.004400531384921953,
+       "n_answered_test": 11966,
+       "risk_test": 0.005599197726892863,
+       "test_errors": 67,
+       "risk_pooled": 0.0049979175343606835
+      },
+      "1": {
+       "n_answered_calpool": 147,
+       "risk_calpool": 0.07482993197278912,
+       "n_answered_test": 140,
+       "risk_test": 0.10714285714285714,
+       "test_errors": 15,
+       "risk_pooled": 0.09059233449477352
+      }
+     }
+    }
+   ],
+   "flagged_draws": []
+  }
+ }
+}

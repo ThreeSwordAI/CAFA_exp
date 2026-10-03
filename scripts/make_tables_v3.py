@@ -37,6 +37,9 @@ Round 3 (Task I; appended after the round-2 columns, which keep their order and 
     not)?  The label uses the pooled costs only; ``label_note`` qualifies it with the splits whose oracle is
     infeasible or whose n_needed is inf, ``n_splits_finite`` counts the splits with a finite n_needed.  Definitions
     in :func:`cost_gap_row` and in the md header.
+  * TABLE_E4_seed_flags.md / .csv (round 3b, Task J.3; only when a (dataset, policy) has several seeds): per-seed
+    tier-1 / tier-3 shares, alpha and the deepest stratum's r_full / verdict; ``flag`` when the tier-1 share differs
+    across seeds by more than 0.25 (:func:`seed_flags`).
 
     python scripts/make_tables_v3.py --metrics-dir $RESULTS_ROOT/metrics_v3 --lambda-ref-key dep --scheme uniform
 """
@@ -240,6 +243,35 @@ def seed_summary(e4: list) -> "tuple[list, list]":
     return md, cs
 
 
+SEED_FLAG_RANGE = 0.25   # instruction_round3 Task J.3: flag a cell whose tier-1 share differs across seeds by more
+
+
+def seed_flags(e4: list, e3: list) -> list:
+    """TABLE_E4_seed_flags rows: one per (dataset, policy) with >= 2 seeds -- the per-seed tier-1 / tier-3 shares,
+    alpha and the deepest stratum's verdict and full-information risk ``r_full`` (E3, audit of record), and
+    ``flag`` = "FLAG" when max - min of the tier-1 share over the seeds exceeds SEED_FLAG_RANGE."""
+    aud = {(r["dataset"], r["policy"], int(r["seed"])): r for r in e3}
+    groups = {}
+    for r in e4:
+        groups.setdefault((r["dataset"], r["policy"]), []).append(r)
+    out = []
+    for (ds, pol), rs in sorted(groups.items()):
+        if len(rs) < 2:
+            continue
+        rs = sorted(rs, key=lambda r: int(r["seed"]))
+        a = [aud.get((ds, pol, int(r["seed"]))) or {} for r in rs]
+        t1 = [float(r["tier1"]) for r in rs]
+        j = lambda vals, fmt="{:.3f}": " / ".join("" if v is None else fmt.format(v) for v in vals)  # noqa: E731
+        out.append({"dataset": ds, "policy": pol, "seeds": " / ".join(str(r["seed"]) for r in rs),
+                    "alpha": j([r["alpha"] for r in rs], "{:g}"), "tier1": j(t1),
+                    "tier3": j([float(r["tier3"]) for r in rs]), "tier1_range": max(t1) - min(t1),
+                    "flag": "FLAG" if max(t1) - min(t1) > SEED_FLAG_RANGE else "",
+                    "deepest_k": j([x.get("k") for x in a], "{}"), "n_k": j([x.get("n_k") for x in a], "{}"),
+                    "r_full": j([x.get("r_full") for x in a]), "rmin_thr": j([x.get("rmin_thr") for x in a]),
+                    "deepest_verdict": j([x.get("verdict") for x in a], "{}")})
+    return out
+
+
 def main(argv=None) -> int:
     p = argparse.ArgumentParser()
     p.add_argument("--metrics-dir", required=True)
@@ -340,6 +372,11 @@ def main(argv=None) -> int:
         (out / "TABLE_E4_cascade_seeds.md").write_text(
             f"# TABLE_E4_cascade_seeds (lambda_ref key = {a.lambda_ref_key}, scheme = {a.scheme}; mean ± sd over train "
             f"seeds, sample sd; single-seed rows show the value only)\n\n" + "\n".join(lines) + "\n", encoding="utf-8")
+    write("TABLE_E4_seed_flags", seed_flags(e4, e3), note=(
+        f"Per (dataset, policy) with several train seeds, values per seed in seed order.  `flag` = FLAG when the tier-1 "
+        f"share differs across seeds by more than {SEED_FLAG_RANGE} (`tier1_range` = max - min; instruction_round3 "
+        "Task J.3).  `deepest_k`, `n_k`, `r_full` (full-information risk), `rmin_thr` and `deepest_verdict` are the "
+        "deepest stratum's audit of record (primary split's calibration pool, TABLE_E3_audit)."))
     print(f"wrote tables for {len(e4)} cells to {out}")
     return 0
 

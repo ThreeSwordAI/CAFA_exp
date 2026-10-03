@@ -1,0 +1,45 @@
+results_v3/tables/TABLE_E10_margin.csv: rows 320 -> 960, key ['dataset', 'policy', 'seed', 'key', 'split'], old rows missing 0, value differences 0
+results_v3/tables/TABLE_E11_calfrac.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed', 'key'], old rows missing 0, value differences 0
+results_v3/tables/TABLE_E2_blindness.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables/TABLE_E3_audit.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables/TABLE_E4_cascade.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables/TABLE_E4_cascade_seeds.csv: rows 16 -> 16, key ['dataset', 'policy', 'seeds'], old rows missing 16, value differences 0
+results_v3/tables/TABLE_E4_cost_gap.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables/TABLE_E6_baselines.csv: rows 192 -> 576, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin02/TABLE_E2_blindness.csv: rows 12 -> 36, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin02/TABLE_E3_audit.csv: rows 12 -> 36, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade.csv: rows 12 -> 36, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin02/TABLE_E4_cascade_seeds.csv: rows 12 -> 12, key ['dataset', 'policy', 'seeds'], old rows missing 12, value differences 0
+results_v3/tables_e9_alpha_margin02/TABLE_E6_baselines.csv: rows 120 -> 408, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin10/TABLE_E2_blindness.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin10/TABLE_E3_audit.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin10/TABLE_E4_cascade.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin10/TABLE_E4_cascade_seeds.csv: rows 16 -> 16, key ['dataset', 'policy', 'seeds'], old rows missing 16, value differences 0
+results_v3/tables_e9_alpha_margin10/TABLE_E4_cost_gap.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_alpha_margin10/TABLE_E6_baselines.csv: rows 192 -> 576, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E2_blindness.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E3_audit.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E4_cascade.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E4_cascade_seeds.csv: rows 16 -> 16, key ['dataset', 'policy', 'seeds'], old rows missing 16, value differences 0
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E4_cost_gap.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.5/TABLE_E6_baselines.csv: rows 192 -> 576, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E2_blindness.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E3_audit.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E4_cascade.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E4_cascade_seeds.csv: rows 16 -> 16, key ['dataset', 'policy', 'seeds'], old rows missing 16, value differences 0
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E4_cost_gap.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.7/TABLE_E6_baselines.csv: rows 192 -> 576, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E2_blindness.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E3_audit.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E4_cascade.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E4_cascade_seeds.csv: rows 16 -> 16, key ['dataset', 'policy', 'seeds'], old rows missing 16, value differences 0
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E4_cost_gap.csv: rows 16 -> 48, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_e9_lambda_ref_0.9/TABLE_E6_baselines.csv: rows 192 -> 576, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+results_v3/tables_inverse_info/TABLE_E2_blindness.csv: rows 10 -> 30, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_inverse_info/TABLE_E3_audit.csv: rows 10 -> 30, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_inverse_info/TABLE_E4_cascade.csv: rows 10 -> 30, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_inverse_info/TABLE_E4_cascade_seeds.csv: rows 10 -> 10, key ['dataset', 'policy', 'seeds'], old rows missing 10, value differences 0
+results_v3/tables_inverse_info/TABLE_E4_cost_gap.csv: rows 10 -> 30, key ['dataset', 'policy', 'seed'], old rows missing 0, value differences 0
+results_v3/tables_inverse_info/TABLE_E6_baselines.csv: rows 120 -> 360, key ['dataset', 'policy', 'seed', 'baseline'], old rows missing 0, value differences 0
+TOTAL differences: 102
+NOTE: the 102 = the TABLE_E4_cascade_seeds rows, whose key 'seeds' changed from '0' to '0 1 2' (they now aggregate three seeds, by design); every per-seed table keeps all committed rows and values (0 missing, 0 differences).

@@ -1,0 +1,8 @@
+# python scripts/run_cascade_sweep.py --dataset csv:physionet --train-seed 2 --policy random --out-dir F:/CAFA_results/metrics_v3_alpha_margin02 --committed configs/committed_v3_am02_csv-physionet_ts2.json
+# start 2026-10-03T14:00:34.679368+00:00
+[cascade] csv-physionet ts2 random lr[0.5]=0.500 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] csv-physionet ts2 random lr[0.7]=0.700 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] csv-physionet ts2 random lr[0.9]=0.900 G=2 | cert=1.00 tiers={'0': 0.0, '1': 0.05, '2': 0.0, '3': 0.95} viol=0.040 (by split 0.00-0.15) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] csv-physionet ts2 random lr[dep]=0.000 G=1 | cert=1.00 tiers={'0': 0.0, '1': 0.8, '2': 0.0, '3': 0.2} viol=0.000 (by split 0.00-0.00) certviol=0.000 | deepest stratum verdict=feasible (agree 5/5)
+[cascade] wrote F:\CAFA_results\metrics_v3_alpha_margin02\csv-physionet_ts2_random_softmax.json
+# returncode 0

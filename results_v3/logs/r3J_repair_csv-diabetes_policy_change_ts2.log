@@ -1,0 +1,8 @@
+# python scripts/repair_experiment.py --dataset csv:diabetes --train-seed 2 --before-cache F:/CAFA_results/pool_v3/csv-diabetes_ts2_random_softmax.npz --after-cache F:/CAFA_results/pool_v3/csv-diabetes_ts2_greedy_entropy_softmax.npz --committed configs/committed_v3_csv-diabetes_ts2.json --policy random --label policy_change
+# start 2026-10-03T13:29:48.363804+00:00
+[repair:policy_change] lr[0.5]=0.500 deepest k=0: feasible (rmin 0.095, full 0.095) -> feasible (rmin 0.094, full 0.095); tier1 1.00 -> 1.00; viol 0.16 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.7]=0.700 deepest k=0: feasible (rmin 0.095, full 0.095) -> feasible (rmin 0.094, full 0.095); tier1 1.00 -> 1.00; viol 0.16 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[0.9]=0.900 deepest k=4: type_II (rmin 0.370, full 0.370) -> type_II (rmin 0.366, full 0.370); tier1 0.00 -> 0.00; viol 0.00 -> 0.00; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+[repair:policy_change] lr[dep]=0.828 deepest k=3: type_II (rmin 0.229, full 0.231) -> type_II (rmin 0.227, full 0.231); tier1 0.00 -> 0.00; viol 0.03 -> 0.03; certviol 0.00 -> 0.00; verdict agreement 5/5 -> 5/5
+wrote results_v3\repair\csv-diabetes_ts2_policy_change.json
+# returncode 0
