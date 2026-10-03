@@ -1,0 +1,18 @@
+# sha256sum -c results_v3/round1/metrics_v3_round1.sha256 in $RESULTS_ROOT/metrics_v3_round1, 2026-10-03T04:26:18+02:00
+./csv-diabetes_ts0_greedy_entropy_softmax.json: OK
+./csv-diabetes_ts0_random_softmax.json: OK
+./csv-physionet_ts0_greedy_entropy_softmax.json: OK
+./csv-physionet_ts0_random_softmax.json: OK
+./cube_ts0_greedy_entropy_softmax.json: OK
+./cube_ts0_random_softmax.json: OK
+./fashionmnist_ts0_greedy_entropy_softmax.json: OK
+./fashionmnist_ts0_random_softmax.json: OK
+./metrics_v3_G8/mnist_ts0_greedy_entropy_softmax.json: OK
+./metrics_v3_dw/csv-physionet_ts0_greedy_entropy_softmax.json: OK
+./mnist_ts0_greedy_entropy_softmax.json: OK
+./mnist_ts0_random_softmax.json: OK
+./tabular-MiniBooNE_ts0_greedy_entropy_softmax.json: OK
+./tabular-MiniBooNE_ts0_random_softmax.json: OK
+./tabular-adult_ts0_greedy_entropy_softmax.json: OK
+./tabular-adult_ts0_random_softmax.json: OK
+files now: 16

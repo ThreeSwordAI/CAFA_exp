@@ -1,0 +1,4 @@
+[drive_v3] run rollouts:image:imagenette:greedy_entropy:ts0: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy greedy_entropy --device cuda --batch-size 16 --policy-amp  (log results_v3\logs\rollouts_image-imagenette_greedy_entropy_ts0.log)
+    [rollout_v3] image:imagenette ts0 greedy_entropy: n=5358 T=49 full-acq acc=0.9718 -> F:\CAFA_results\pool_v3\image-imagenette_ts0_greedy_entropy_softmax.npz
+[drive_v3] done rollouts:image:imagenette:greedy_entropy:ts0: rc=0 in 26368.4s
+[drive_v3] rollouts: ran 1, skipped 0 existing, 0 missing prerequisites

@@ -1,0 +1,2 @@
+dataset,policy,n_seeds,seeds,tier1_mean,tier1_sd,tier2_mean,tier2_sd,tier3_mean,tier3_sd,none_mean,none_sd,certified_deployment_mean,certified_deployment_sd,deployed_cost_mean,deployed_cost_sd,cost_premium_mean,cost_premium_sd,answered_fraction_mean,answered_fraction_sd,test_stratum_violation_mean,test_stratum_violation_sd,certified_violation_mean,certified_violation_sd,max_excess_se_mean,max_excess_se_sd
+mnist,greedy_entropy,1,0,1.0,,0.0,,0.0,,0.0,,1.0,,3.79102619047619,,1.0840982500798881,,1.0,,0.0,,0.0,,-3.3608759500862466,

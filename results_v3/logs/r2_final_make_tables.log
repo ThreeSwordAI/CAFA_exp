@@ -1,0 +1,14 @@
+wrote tables for 16 cells to results_v3\tables
+skip fashionmnist_ts0_greedy_entropy_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip fashionmnist_ts0_random_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip image-imagenette_ts0_greedy_entropy_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip image-imagenette_ts0_random_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip mnist_ts0_greedy_entropy_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+skip mnist_ts0_random_softmax.json: no cost scheme 'inverse_info' (has ['uniform'])
+wrote tables for 10 cells to results_v3\tables_inverse_info
+wrote tables for 16 cells to results_v3\tables_e9_lambda_ref_0.5
+wrote tables for 16 cells to results_v3\tables_e9_lambda_ref_0.7
+wrote tables for 16 cells to results_v3\tables_e9_lambda_ref_0.9
+wrote tables for 1 cells to results_v3\tables_e9_delta_weights
+wrote tables for 1 cells to results_v3\tables_e9_G8
+wrote tables for 12 cells to results_v3\tables_e9_alpha_margin02

@@ -1,0 +1,11 @@
+dataset,policy,n_seeds,seeds,tier1_mean,tier1_sd,tier2_mean,tier2_sd,tier3_mean,tier3_sd,none_mean,none_sd,certified_deployment_mean,certified_deployment_sd,deployed_cost_mean,deployed_cost_sd,cost_premium_mean,cost_premium_sd,answered_fraction_mean,answered_fraction_sd,test_stratum_violation_mean,test_stratum_violation_sd,certified_violation_mean,certified_violation_sd,max_excess_se_mean,max_excess_se_sd
+csv-diabetes,greedy_entropy,1,0,0.0,,0.0,,1.0,,0.0,,1.0,,406.13137256186747,,7.406973952851843,,0.8168851074100896,,0.0,,0.0,,-3.876628590533219,
+csv-diabetes,random,1,0,0.0,,0.0,,1.0,,0.0,,1.0,,406.13137256186747,,4.029984136151724,,0.8916751146512192,,0.0,,0.0,,-3.937096255861731,
+csv-physionet,greedy_entropy,1,0,1.0,,0.0,,0.0,,0.0,,1.0,,0.0,,,,1.0,,0.0,,0.0,,-6.616346549771007,
+csv-physionet,random,1,0,1.0,,0.0,,0.0,,0.0,,1.0,,0.0,,,,1.0,,0.0,,0.0,,-6.616346549771007,
+cube,greedy_entropy,1,0,1.0,,0.0,,0.0,,0.0,,1.0,,21.2607757516925,,1.8750890233701474,,1.0,,0.01,,0.0,,-3.368013437525218,
+cube,random,1,0,0.99,,0.0,,0.01,,0.0,,1.0,,74.04839890224346,,1.163580741739232,,0.9997805555555556,,0.0,,0.0,,-3.3376270013395413,
+tabular-MiniBooNE,greedy_entropy,1,0,0.01,,0.0,,0.99,,0.0,,1.0,,338.6073882218567,,23.287016855622483,,0.964673244490005,,0.02,,0.01,,-4.055104315441211,
+tabular-MiniBooNE,random,1,0,0.26,,0.0,,0.74,,0.0,,1.0,,293.8795579876476,,5.589103808768377,,0.9853276097727658,,0.03,,0.0,,-4.612887770616716,
+tabular-adult,greedy_entropy,1,0,1.0,,0.0,,0.0,,0.0,,1.0,,22.282008706500793,,1.2000561214037988,,1.0,,0.01,,0.0,,-3.8118855086279018,
+tabular-adult,random,1,0,0.0,,0.0,,1.0,,0.0,,1.0,,95.27796275593288,,4.045444406225289,,0.9022186732186733,,0.02,,0.0,,-3.2731553676920813,

@@ -127,13 +127,13 @@ figures.
 | tabular:MiniBooNE | 60 (`--epochs 60`) | 379.6 → 268 s (0.07 h) | 869.8 → 614 s (0.17 h) | 42.1 → 30 s (0.01 h) | 12 / 20; 24,25 / 40,41 |
 | mnist | config | 1,533.4 → 1,082 s (0.30 h) | 15,491.9 → 10,927 s (3.04 h) | 389.9 → 275 s (0.08 h) | 13 / 21; 26,27 / 42,43 |
 | fashionmnist | config | 1,602.9 → 1,131 s (0.31 h) | 14,565.1 → 10,273 s (2.85 h) | 308.2 → 217 s (0.06 h) | 14 / 22; 28,29 / 44,45 |
-| image:imagenette | config | 1,067.0 → 753 s (0.21 h) | pending (Task D) | pending (Task D) | 15 / 23; 30,31 / 46,47 |
+| image:imagenette | config | 1,067.0 → 753 s (0.21 h) | 26,368.4 → 18,599 s (5.17 h) | 1,481.7 → 1,045 s (0.29 h) | 15 / 23; 30,31 / 46,47 |
 
 Sources: ledger cells `backbones:*:ts0` (`retrain60:*` for the 60-epoch CUBE/MiniBooNE) and `rollouts:*:ts0`; Imagenette rollouts at `--batch-size 16` locally (32 on the cluster).
 <!-- timing:end -->
 
 Critical path of one submission (all eight datasets): the longest backbone (FashionMNIST, ≈ 0.31 h) then, after
-`afterok`, the longest rollout (see the table), before any queueing time. Per seed this is ≈ 1.0 h of backbones (all eight) and ≈ 6.3 h of non-Imagenette rollouts if run serially. The array runs them in parallel, so the wall time is that of the longest task (MNIST or FashionMNIST greedy ≈ 3 h, Imagenette greedy pending (Task D) at full clock).
+`afterok`, the longest rollout (see the table), before any queueing time. Per seed this is ≈ 1.0 h of backbones (all eight) and ≈ 6.3 h of non-Imagenette rollouts if run serially. The array runs them in parallel, so the wall time is that of the longest task (MNIST or FashionMNIST greedy ≈ 3 h, Imagenette greedy ≈ 5.2 h at full clock).
 
 ## 6. What comes back (cluster → laptop)
 

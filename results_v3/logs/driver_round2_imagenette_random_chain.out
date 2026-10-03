@@ -1,0 +1,6 @@
+greedy driver finished 2026-10-03T08:34:58.5107918+02:00
+[drive_v3] run rollouts:image:imagenette:random:ts0: python scripts/run_pool_rollout_v3.py --dataset image:imagenette --train-seed 0 --policy random --device cuda --batch-size 16  (log results_v3\logs\rollouts_image-imagenette_random_ts0.log)
+    [rollout_v3] image:imagenette ts0 random: n=5358 T=49 full-acq acc=0.9718 -> F:\CAFA_results\pool_v3\image-imagenette_ts0_random_softmax.npz
+[drive_v3] done rollouts:image:imagenette:random:ts0: rc=0 in 1481.7s
+[drive_v3] rollouts: ran 1, skipped 0 existing, 0 missing prerequisites
+random done 2026-10-03T08:59:47.3268283+02:00

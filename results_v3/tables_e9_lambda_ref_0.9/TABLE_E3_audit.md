@@ -10,6 +10,8 @@
 | cube | random | 0 | 3 | 740 | 0.150 | 0.145 | 0.147 | 0.147 | 0.675 | 0.597 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible |
 | fashionmnist | greedy_entropy | 0 | 4 | 2644 | 0.150 | 0.162 | 0.161 | 0.162 | 0.047 | 0.059 | thr_failure_depth_unresolved | 0:feasible 1:feasible 2:feasible 3:feasible 4:thr_failure_depth_unresolved |
 | fashionmnist | random | 0 | 4 | 2654 | 0.150 | 0.171 | 0.170 | 0.171 | 0.002 | 0.003 | type_II | 0:feasible 1:feasible 2:feasible 3:feasible 4:type_II |
+| image-imagenette | greedy_entropy | 0 | 4 | 442 | 0.100 | 0.093 | 0.093 | 0.093 | 0.717 | 0.717 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible 4:feasible |
+| image-imagenette | random | 0 | 3 | 459 | 0.100 | 0.092 | 0.092 | 0.092 | 0.750 | 0.750 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible |
 | mnist | greedy_entropy | 0 | 3 | 2937 | 0.100 | 0.013 | 0.013 | 0.013 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible |
 | mnist | random | 0 | 4 | 2686 | 0.100 | 0.013 | 0.013 | 0.013 | 1.000 | 1.000 | feasible | 0:feasible 1:feasible 2:feasible 3:feasible 4:feasible |
 | tabular-adult | greedy_entropy | 0 | 2 | 3261 | 0.250 | 0.292 | 0.291 | 0.292 | 0.000 | 0.000 | type_II | 0:feasible 1:feasible 2:type_II |

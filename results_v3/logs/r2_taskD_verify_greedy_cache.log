@@ -1,0 +1,6 @@
+path F:/CAFA_results/pool_v3/image-imagenette_ts0_greedy_entropy_softmax.npz
+rows 5358 T 49 | shapes scores (5358, 50) correct (5358, 50) order (5358, 49) y (5358,)
+meta max_rows: None | policy_amp: True | batch_size: 16 | cand_chunk: 4
+meta keys: ['T', 'batch_size', 'cand_chunk', 'checkpoint', 'checkpoint_meta_arch', 'checkpoint_sha256', 'created', 'dataset', 'dsname', 'epsilon', 'feature_costs_by_scheme', 'heldout_digest', 'max_rows', 'n', 'numpy_version', 'orders_file', 'pipeline', 'policy', 'policy_amp', 'score', 'split_digest', 'torch_version', 'train_seed']
+heldout full-acquisition accuracy (mean correct[:, T]): 0.9718178424785368
+D.1 checks: PASS

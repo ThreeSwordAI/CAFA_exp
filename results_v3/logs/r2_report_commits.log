@@ -22,6 +22,8 @@
 | `committed_v3_fashionmnist_ts0.json` | 0.15 | 0.064286 | 6300 | 275 | random | 4 / 5 / 5 / 5 | 0.7778 | 0.454 |
 | `committed_v3_G8_mnist_ts0.json` | 0.1 | 0.003929 | 6300 | 180 | greedy_entropy | 3 / 5 / 5 / 4 | 0.7879 | 0.929 |
 | `committed_v3_G8_mnist_ts0.json` | 0.1 | 0.003929 | 6300 | 180 | random | 7 / 8 / 8 / 8 | 0.7879 | 0.929 |
+| `committed_v3_image-imagenette_ts0.json` | 0.1 | 0.029851 | 1206 | 180 | greedy_entropy | 3 / 3 / 5 / 4 | 0.8586 | 0.620 |
+| `committed_v3_image-imagenette_ts0.json` | 0.1 | 0.029851 | 1206 | 180 | random | 3 / 4 / 4 / 4 | 0.8384 | 0.549 |
 | `committed_v3_mnist_ts0.json` | 0.1 | 0.003929 | 6300 | 180 | greedy_entropy | 3 / 4 / 4 / 3 | 0.7879 | 0.976 |
 | `committed_v3_mnist_ts0.json` | 0.1 | 0.003929 | 6300 | 180 | random | 5 / 5 / 5 / 5 | 0.7879 | 0.881 |
 | `committed_v3_tabular-adult_ts0.json` | 0.25 | 0.154229 | 4070 | 428 | greedy_entropy | 1 / 1 / 3 / 2 | 0.7576 | 0.240 |

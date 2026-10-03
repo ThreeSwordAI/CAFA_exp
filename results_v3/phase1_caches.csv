@@ -7,6 +7,8 @@ cube,0,greedy_entropy,softmax,8000,20,0.953125,0.116375,2abc6ed1d248,e1fadee5673
 cube,0,random,softmax,8000,20,0.953125,0.116375,2abc6ed1d248,e1fadee56732,F:\CAFA_results\pool_v3\cube_ts0_random_softmax.npz
 fashionmnist,0,greedy_entropy,softmax,28000,49,0.9412857142857143,0.10089285714285715,0cfb3cca5dc5,08068a4d2a46,F:\CAFA_results\pool_v3\fashionmnist_ts0_greedy_entropy_softmax.npz
 fashionmnist,0,random,softmax,28000,49,0.9412857142857143,0.10089285714285715,0cfb3cca5dc5,08068a4d2a46,F:\CAFA_results\pool_v3\fashionmnist_ts0_random_softmax.npz
+image-imagenette,0,greedy_entropy,softmax,5358,49,0.9718178424785368,0.10078387458006718,5d6c8ed6c11f,5a8b1ac2c8d8,F:\CAFA_results\pool_v3\image-imagenette_ts0_greedy_entropy_softmax.npz
+image-imagenette,0,random,softmax,5358,49,0.9718178424785368,0.10078387458006718,5d6c8ed6c11f,5a8b1ac2c8d8,F:\CAFA_results\pool_v3\image-imagenette_ts0_random_softmax.npz
 mnist,0,greedy_entropy,softmax,28000,49,0.9948928571428571,0.11235714285714286,83bb6ca14a7a,08068a4d2a46,F:\CAFA_results\pool_v3\mnist_ts0_greedy_entropy_softmax.npz
 mnist,0,random,softmax,28000,49,0.9948928571428571,0.11235714285714286,83bb6ca14a7a,08068a4d2a46,F:\CAFA_results\pool_v3\mnist_ts0_random_softmax.npz
 tabular-MiniBooNE,0,greedy_entropy,softmax,52026,50,0.9225579517933341,0.7187944489293815,d23691461442,31626e74e71f,F:\CAFA_results\pool_v3\tabular-MiniBooNE_ts0_greedy_entropy_softmax.npz

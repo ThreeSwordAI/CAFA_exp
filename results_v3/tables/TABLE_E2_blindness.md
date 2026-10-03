@@ -10,6 +10,8 @@
 | cube | random | 0 | 0.150 | 0.136 | 0.070 | 1.109 | 0.930 | 0.500 |
 | fashionmnist | greedy_entropy | 0 | 0.150 | 0.137 | 0.000 | 1.533 | 1.000 | 1.000 |
 | fashionmnist | random | 0 | 0.150 | 0.139 | 0.000 | 1.438 | 1.000 | 1.000 |
+| image-imagenette | greedy_entropy | 0 | 0.100 | 0.083 | 0.050 | 1.308 | 1.000 | 0.520 |
+| image-imagenette | random | 0 | 0.100 | 0.084 | 0.010 | 1.245 | 1.000 | 0.350 |
 | mnist | greedy_entropy | 0 | 0.100 | 0.091 | 0.000 | 0.952 | 0.300 | 0.020 |
 | mnist | random | 0 | 0.100 | 0.089 | 0.000 | 0.949 | 0.140 | 0.000 |
 | tabular-adult | greedy_entropy | 0 | 0.250 | 0.197 | 0.010 | 1.180 | 1.000 | 1.000 |
